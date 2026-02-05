@@ -6,6 +6,12 @@
     "secondary_color": "#3b82f6",
     "accent_color": "#8b5cf6"
   },
+  "users": [
+    { "id": "cgordon", "name": "Courtney Gordon", "role": "executive", "title": "COO" },
+    { "id": "jsmith", "name": "Jane Smith", "role": "regional", "title": "Regional Manager", "region": "Southeast" },
+    { "id": "mwilson", "name": "Mike Wilson", "role": "property", "title": "Property Manager", "properties": ["prop_001", "prop_002"] },
+    { "id": "demo", "name": "Demo User", "role": "executive", "title": "Viewer" }
+  ],
   "features": {
     "dark_mode": true,
     "light_mode": true,
