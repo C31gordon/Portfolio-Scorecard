@@ -1,0 +1,75 @@
+{
+  "assetTypes": {
+    "CON": {
+      "name": "Conventional",
+      "metrics": {
+        "physical_occupancy": { "green": 93, "yellow": 88, "unit": "%", "higher_is_better": true },
+        "leased_percent": { "green": 95, "yellow": 90, "unit": "%", "higher_is_better": true },
+        "delinquency": { "green": 0.5, "yellow": 2, "unit": "%", "higher_is_better": false },
+        "closing_ratio": { "green": 40, "yellow": 28, "unit": "%", "higher_is_better": true },
+        "renewal_ratio": { "green": 55, "yellow": 48, "unit": "%", "higher_is_better": true },
+        "wo_sla": { "green": 95, "yellow": 88, "unit": "%", "higher_is_better": true },
+        "google_rating": { "green": 4.5, "yellow": 3.8, "unit": "stars", "higher_is_better": true },
+        "noi_variance": { "green": 0, "yellow": -5, "unit": "%", "higher_is_better": true }
+      }
+    },
+    "BFR": {
+      "name": "Build-for-Rent",
+      "metrics": {
+        "physical_occupancy": { "green": 93, "yellow": 88, "unit": "%", "higher_is_better": true },
+        "leased_percent": { "green": 95, "yellow": 90, "unit": "%", "higher_is_better": true },
+        "delinquency": { "green": 0.5, "yellow": 2, "unit": "%", "higher_is_better": false },
+        "closing_ratio": { "green": 35, "yellow": 25, "unit": "%", "higher_is_better": true },
+        "renewal_ratio": { "green": 60, "yellow": 52, "unit": "%", "higher_is_better": true },
+        "wo_sla": { "green": 95, "yellow": 88, "unit": "%", "higher_is_better": true },
+        "google_rating": { "green": 4.5, "yellow": 3.8, "unit": "stars", "higher_is_better": true },
+        "noi_variance": { "green": 0, "yellow": -5, "unit": "%", "higher_is_better": true }
+      }
+    },
+    "55+": {
+      "name": "Active Adult (55+)",
+      "metrics": {
+        "physical_occupancy": { "green": 93, "yellow": 88, "unit": "%", "higher_is_better": true },
+        "leased_percent": { "green": 95, "yellow": 90, "unit": "%", "higher_is_better": true },
+        "delinquency": { "green": 0.025, "yellow": 1, "unit": "%", "higher_is_better": false },
+        "closing_ratio": { "green": 30, "yellow": 20, "unit": "%", "higher_is_better": true },
+        "renewal_ratio": { "green": 75, "yellow": 68, "unit": "%", "higher_is_better": true },
+        "wo_sla": { "green": 95, "yellow": 88, "unit": "%", "higher_is_better": true },
+        "google_rating": { "green": 4.5, "yellow": 3.8, "unit": "stars", "higher_is_better": true },
+        "noi_variance": { "green": 0, "yellow": -5, "unit": "%", "higher_is_better": true }
+      }
+    },
+    "STU": {
+      "name": "Student Housing",
+      "metrics": {
+        "physical_occupancy": { "green": 98, "yellow": 94, "unit": "%", "higher_is_better": true },
+        "leased_percent": { "green": 98, "yellow": 94, "unit": "%", "higher_is_better": true },
+        "delinquency": { "green": 1, "yellow": 1.5, "unit": "%", "higher_is_better": false },
+        "closing_ratio": { "green": 60, "yellow": 45, "unit": "%", "higher_is_better": true },
+        "renewal_ratio": { "green": 45, "yellow": 35, "unit": "%", "higher_is_better": true },
+        "wo_sla": { "green": 95, "yellow": 88, "unit": "%", "higher_is_better": true },
+        "google_rating": { "green": 4.5, "yellow": 3.8, "unit": "stars", "higher_is_better": true },
+        "noi_variance": { "green": 0, "yellow": -5, "unit": "%", "higher_is_better": true }
+      }
+    },
+    "OC": {
+      "name": "On-Campus",
+      "metrics": {
+        "physical_occupancy": { "green": 99, "yellow": 96, "unit": "%", "higher_is_better": true },
+        "leased_percent": { "green": 99, "yellow": 96, "unit": "%", "higher_is_better": true },
+        "delinquency": { "green": 0.5, "yellow": 1, "unit": "%", "higher_is_better": false },
+        "closing_ratio": { "green": 70, "yellow": 55, "unit": "%", "higher_is_better": true },
+        "renewal_ratio": { "green": 50, "yellow": 40, "unit": "%", "higher_is_better": true },
+        "wo_sla": { "green": 95, "yellow": 88, "unit": "%", "higher_is_better": true },
+        "google_rating": { "green": 4.5, "yellow": 3.8, "unit": "stars", "higher_is_better": true },
+        "noi_variance": { "green": 0, "yellow": -5, "unit": "%", "higher_is_better": true }
+      }
+    }
+  },
+  "scoring": {
+    "green": 5,
+    "yellow": 2,
+    "red": 0
+  },
+  "leaseUpThreshold": 30
+}

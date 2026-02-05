@@ -1,0 +1,81 @@
+/* Dark Theme - Portfolio Scorecard v2 */
+
+[data-theme="dark"] {
+  /* Background Colors */
+  --bg-primary: #0c0f14;
+  --bg-secondary: #141820;
+  --bg-tertiary: #1a1f2a;
+  --bg-elevated: #1e2433;
+  --bg-hover: #252d3d;
+  --bg-active: #2d3748;
+  
+  /* Border Colors */
+  --border-primary: #2a3040;
+  --border-secondary: #3a4055;
+  --border-focus: #6366f1;
+  
+  /* Text Colors */
+  --text-primary: #e8eaf0;
+  --text-secondary: #8892a4;
+  --text-muted: #5a6478;
+  --text-inverse: #0c0f14;
+  
+  /* Card Colors */
+  --card-bg: #141820;
+  --card-border: #2a3040;
+  --card-hover: #1a1f2a;
+  
+  /* Input Colors */
+  --input-bg: #1a1f2a;
+  --input-border: #2a3040;
+  --input-focus: #6366f1;
+  --input-placeholder: #5a6478;
+  
+  /* Table Colors */
+  --table-header-bg: #1a1f2a;
+  --table-row-hover: #1e2433;
+  --table-border: #2a3040;
+  --table-stripe: #161b24;
+  
+  /* Score Colors - maintain semantic but adjust for dark */
+  --score-green-bg: rgba(34, 197, 94, 0.15);
+  --score-green-text: #4ade80;
+  --score-green-border: rgba(34, 197, 94, 0.3);
+  
+  --score-yellow-bg: rgba(234, 179, 8, 0.15);
+  --score-yellow-text: #facc15;
+  --score-yellow-border: rgba(234, 179, 8, 0.3);
+  
+  --score-red-bg: rgba(239, 68, 68, 0.15);
+  --score-red-text: #f87171;
+  --score-red-border: rgba(239, 68, 68, 0.3);
+  
+  /* Chart Colors */
+  --chart-grid: #2a3040;
+  --chart-axis: #5a6478;
+  --chart-tooltip-bg: #1e2433;
+  
+  /* Scrollbar */
+  --scrollbar-track: #1a1f2a;
+  --scrollbar-thumb: #3a4055;
+  --scrollbar-thumb-hover: #4a5065;
+}
+
+/* Dark mode scrollbar styling */
+[data-theme="dark"] ::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+[data-theme="dark"] ::-webkit-scrollbar-track {
+  background: var(--scrollbar-track);
+}
+
+[data-theme="dark"] ::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb);
+  border-radius: var(--radius-full);
+}
+
+[data-theme="dark"] ::-webkit-scrollbar-thumb:hover {
+  background: var(--scrollbar-thumb-hover);
+}

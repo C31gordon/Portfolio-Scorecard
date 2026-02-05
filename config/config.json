@@ -1,0 +1,33 @@
+{
+  "company": {
+    "name": "RISE Residential",
+    "logo_url": "./assets/logo.png",
+    "primary_color": "#6366f1",
+    "secondary_color": "#3b82f6",
+    "accent_color": "#8b5cf6"
+  },
+  "features": {
+    "dark_mode": true,
+    "light_mode": true,
+    "ai_insights": true,
+    "report_scheduling": true,
+    "email_delivery": true,
+    "market_comps": true,
+    "yoy_comparison": true
+  },
+  "integrations": {
+    "entrata": { "enabled": true, "api_url": "" },
+    "paycor": { "enabled": false, "api_url": "" },
+    "knock": { "enabled": false, "api_url": "" },
+    "apartmentiq": { "enabled": true, "api_url": "" },
+    "jturner": { "enabled": true, "api_url": "" },
+    "epms": { "enabled": false, "api_url": "" }
+  },
+  "defaults": {
+    "theme": "dark",
+    "date_range": "mtd",
+    "chart_period": "weekly",
+    "refresh_interval_ms": 300000
+  },
+  "version": "2.0.0"
+}
