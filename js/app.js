@@ -5,7 +5,7 @@
 import State from './core/state.js';
 import Router from './core/router.js';
 import Events, { EVENT } from './core/events.js';
-import { loadThresholds, calculatePropertyScore, calculatePortfolioScore, getRedFlags, getPortfolioRedFlags, getScoreColorClass } from './utils/scoring.js';
+import { loadThresholds, calculatePropertyScore, calculatePortfolioScore, getRedFlags, getPortfolioRedFlags, getScoreColorClass, getScoreColor } from './utils/scoring.js';
 import { formatPercent, formatCurrency, formatNumber, formatScore, getTrend, snakeToTitle } from './utils/formatting.js';
 import { mockPortfolio, mockProperties, mockSubmarkets } from './data/mock-data.js';
 import { generateLeaseData, generateWorkOrderData, generateAgentData, generateFinancialData, generateRentRollData, generateHistoricalData } from './data/mock-drilldown.js';
@@ -143,6 +143,7 @@ class App {
   setupStateSubscriptions() {
     State.subscribe('theme', (theme) => {
       document.documentElement.setAttribute('data-theme', theme);
+      this.renderHeader(); // Re-render header to update toggle
     });
     
     State.subscribe('currentView', () => {
@@ -853,7 +854,6 @@ class App {
    * Get metric color class
    */
   getMetricColor(value, metric, assetType, inverse = false) {
-    const { getScoreColor } = require('./utils/scoring.js');
     return getScoreColor(value, metric, assetType);
   }
 }
