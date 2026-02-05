@@ -8,6 +8,9 @@ import Events, { EVENT } from './core/events.js';
 import { loadThresholds, calculatePropertyScore, calculatePortfolioScore, getRedFlags, getPortfolioRedFlags, getScoreColorClass } from './utils/scoring.js';
 import { formatPercent, formatCurrency, formatNumber, formatScore, getTrend, snakeToTitle } from './utils/formatting.js';
 import { mockPortfolio, mockProperties, mockSubmarkets } from './data/mock-data.js';
+import { generateLeaseData, generateWorkOrderData, generateAgentData, generateFinancialData, generateRentRollData, generateHistoricalData } from './data/mock-drilldown.js';
+import { Charts } from './components/charts.js';
+import { DataTable } from './components/data-table.js';
 
 class App {
   constructor() {
@@ -123,6 +126,15 @@ class App {
         Router.back();
       }
     });
+    
+    // Drill-down card click
+    document.addEventListener('click', (e) => {
+      const card = e.target.closest('[data-route]');
+      if (card && !card.dataset.propertyId) {
+        e.preventDefault();
+        Router.navigate(card.dataset.route);
+      }
+    });
   }
   
   /**
@@ -203,8 +215,9 @@ class App {
           <span class="toggle__switch"></span>
           <span class="toggle__label">YoY</span>
         </label>
-        <button class="btn btn--ghost btn--icon" data-action="toggle-theme" title="Toggle theme">
-          ${theme === 'dark' ? '☀️' : '🌙'}
+        <button class="btn btn--secondary" data-action="toggle-theme" title="Toggle theme" style="gap: var(--space-2);">
+          <span style="opacity: ${theme === 'dark' ? '0.4' : '1'}">☀️</span>
+          <span style="opacity: ${theme === 'dark' ? '1' : '0.4'}">🌙</span>
         </button>
       </div>
     `;
@@ -594,7 +607,29 @@ class App {
           </div>
         </div>
       </div>
+      
+      ${this.getDrillDownLinks(property.id)}
     `;
+    
+    // Render sparklines after DOM is ready
+    setTimeout(() => this.renderPropertyCharts(property), 0);
+  }
+  
+  /**
+   * Render charts in property view
+   */
+  renderPropertyCharts(property) {
+    const historical = generateHistoricalData(8);
+    
+    // Add sparklines to metric cards if containers exist
+    document.querySelectorAll('.metric-card__sparkline').forEach((container, i) => {
+      const dataKey = container.dataset.metric;
+      if (historical[dataKey]) {
+        Charts.sparkline(container, historical[dataKey].map(d => d.value), {
+          color: dataKey === 'delinquency' ? '#ef4444' : '#6366f1'
+        });
+      }
+    });
   }
   
   /**
@@ -602,7 +637,178 @@ class App {
    */
   renderDataView() {
     const main = document.getElementById('main');
-    main.innerHTML = '<div class="section"><h2>Data View - Coming Soon</h2></div>';
+    const propertyId = State.get('selectedProperty')?.id;
+    const dataView = State.get('selectedDataView');
+    const property = mockProperties.find(p => p.id === propertyId);
+    
+    if (!property) {
+      main.innerHTML = '<div class="alert alert--danger">Property not found</div>';
+      return;
+    }
+    
+    const viewConfig = {
+      leases: {
+        title: 'Lease Activity',
+        icon: '📝',
+        getData: () => generateLeaseData(propertyId),
+        columns: [
+          { key: 'unit', label: 'Unit', width: '80px' },
+          { key: 'floorplan', label: 'Floorplan' },
+          { key: 'resident', label: 'Resident' },
+          { key: 'rent', label: 'Rent', render: (v) => `$${v.toLocaleString()}` },
+          { key: 'agent', label: 'Agent' },
+          { key: 'source', label: 'Source' },
+          { key: 'signDate', label: 'Signed' },
+          { key: 'status', label: 'Status', render: (v) => `<span class="badge badge--${v === 'Signed' ? 'success' : v === 'Pending' ? 'warning' : 'danger'}">${v}</span>` }
+        ]
+      },
+      workorders: {
+        title: 'Work Orders',
+        icon: '🔧',
+        getData: () => generateWorkOrderData(propertyId),
+        columns: [
+          { key: 'unit', label: 'Unit', width: '80px' },
+          { key: 'category', label: 'Category' },
+          { key: 'priority', label: 'Priority', render: (v) => `<span class="badge badge--${v === 'Emergency' ? 'danger' : v === 'Urgent' ? 'warning' : 'primary'}">${v}</span>` },
+          { key: 'tech', label: 'Technician' },
+          { key: 'createDate', label: 'Created' },
+          { key: 'completedDate', label: 'Completed', render: (v) => v || '—' },
+          { key: 'daysToComplete', label: 'Days', render: (v) => v != null ? v : '—' },
+          { key: 'status', label: 'Status', render: (v) => `<span class="badge badge--${v === 'Completed' ? 'success' : v === 'Open' ? 'danger' : 'warning'}">${v}</span>` }
+        ]
+      },
+      agents: {
+        title: 'Agent Performance',
+        icon: '👤',
+        getData: () => generateAgentData(propertyId),
+        columns: [
+          { key: 'name', label: 'Agent' },
+          { key: 'leads', label: 'Leads' },
+          { key: 'tours', label: 'Tours' },
+          { key: 'apps', label: 'Apps' },
+          { key: 'leases', label: 'Leases' },
+          { key: 'leadToTour', label: 'Lead→Tour', render: (v) => `${v}%` },
+          { key: 'closingRatio', label: 'Closing', render: (v) => `${v}%` },
+          { key: 'avgResponseMin', label: 'Avg Response', render: (v) => `${v} min` }
+        ]
+      },
+      financials: {
+        title: 'Financial Detail',
+        icon: '💰',
+        getData: () => generateFinancialData(propertyId),
+        columns: [
+          { key: 'code', label: 'GL Code', width: '80px' },
+          { key: 'name', label: 'Category' },
+          { key: 'actual', label: 'Actual', render: (v) => `$${v.toLocaleString()}` },
+          { key: 'budget', label: 'Budget', render: (v) => `$${v.toLocaleString()}` },
+          { key: 'variance', label: 'Variance', render: (v, row) => `<span style="color: ${(row.isExpense ? -v : v) >= 0 ? 'var(--success)' : 'var(--danger)'}">$${Math.abs(v).toLocaleString()}</span>` },
+          { key: 'variancePct', label: 'Var %', render: (v, row) => `<span style="color: ${(row.isExpense ? -parseFloat(v) : parseFloat(v)) >= 0 ? 'var(--success)' : 'var(--danger)'}">${v}%</span>` }
+        ]
+      },
+      rentroll: {
+        title: 'Rent Roll',
+        icon: '🏠',
+        getData: () => generateRentRollData(propertyId, property.units),
+        columns: [
+          { key: 'unit', label: 'Unit', width: '70px' },
+          { key: 'floorplan', label: 'Floorplan' },
+          { key: 'sqft', label: 'SqFt' },
+          { key: 'marketRent', label: 'Market', render: (v) => `$${v.toLocaleString()}` },
+          { key: 'effectiveRent', label: 'Effective', render: (v) => v ? `$${v.toLocaleString()}` : '—' },
+          { key: 'status', label: 'Status', render: (v) => `<span class="badge badge--${v === 'Occupied' ? 'success' : v === 'Notice' ? 'warning' : v === 'Vacant' ? 'danger' : 'primary'}">${v}</span>` },
+          { key: 'resident', label: 'Resident', render: (v) => v || '—' },
+          { key: 'leaseEnd', label: 'Lease End', render: (v) => v || '—' }
+        ]
+      }
+    };
+    
+    const config = viewConfig[dataView];
+    if (!config) {
+      main.innerHTML = '<div class="alert alert--danger">Unknown data view</div>';
+      return;
+    }
+    
+    main.innerHTML = `
+      <div class="breadcrumbs">
+        <span class="breadcrumbs__item">
+          <a href="/" class="breadcrumbs__link" data-route="/">Portfolio</a>
+          <span class="breadcrumbs__separator">›</span>
+        </span>
+        <span class="breadcrumbs__item">
+          <a href="/property/${propertyId}" class="breadcrumbs__link" data-route="/property/${propertyId}">${property.name}</a>
+          <span class="breadcrumbs__separator">›</span>
+        </span>
+        <span class="breadcrumbs__current">${config.title}</span>
+      </div>
+      
+      <div class="page-header">
+        <div>
+          <button class="btn btn--ghost" data-action="back">← Back</button>
+          <h1 class="page-header__title">${config.icon} ${config.title}</h1>
+          <p class="page-header__subtitle">${property.name}</p>
+        </div>
+      </div>
+      
+      <div id="data-table-container"></div>
+    `;
+    
+    // Initialize data table
+    const tableContainer = document.getElementById('data-table-container');
+    new DataTable(tableContainer, {
+      columns: config.columns,
+      data: config.getData(),
+      pageSize: 15
+    });
+  }
+  
+  /**
+   * Add drill-down links to property view
+   */
+  getDrillDownLinks(propertyId) {
+    return `
+      <div class="section">
+        <div class="section__header">
+          <h2 class="section__title">📊 Drill-Down Data</h2>
+        </div>
+        <div class="grid grid--3">
+          <div class="card card--clickable" data-route="/property/${propertyId}/leases">
+            <div class="card__body" style="text-align: center; padding: var(--space-6);">
+              <div style="font-size: 2rem; margin-bottom: var(--space-2);">📝</div>
+              <div style="font-weight: var(--font-semibold);">Lease Activity</div>
+              <div style="font-size: var(--text-sm); color: var(--text-muted);">View all leases</div>
+            </div>
+          </div>
+          <div class="card card--clickable" data-route="/property/${propertyId}/workorders">
+            <div class="card__body" style="text-align: center; padding: var(--space-6);">
+              <div style="font-size: 2rem; margin-bottom: var(--space-2);">🔧</div>
+              <div style="font-weight: var(--font-semibold);">Work Orders</div>
+              <div style="font-size: var(--text-sm); color: var(--text-muted);">Maintenance requests</div>
+            </div>
+          </div>
+          <div class="card card--clickable" data-route="/property/${propertyId}/agents">
+            <div class="card__body" style="text-align: center; padding: var(--space-6);">
+              <div style="font-size: 2rem; margin-bottom: var(--space-2);">👤</div>
+              <div style="font-weight: var(--font-semibold);">Agent Performance</div>
+              <div style="font-size: var(--text-sm); color: var(--text-muted);">Leasing team stats</div>
+            </div>
+          </div>
+          <div class="card card--clickable" data-route="/property/${propertyId}/financials">
+            <div class="card__body" style="text-align: center; padding: var(--space-6);">
+              <div style="font-size: 2rem; margin-bottom: var(--space-2);">💰</div>
+              <div style="font-weight: var(--font-semibold);">Financials</div>
+              <div style="font-size: var(--text-sm); color: var(--text-muted);">Budget vs Actual</div>
+            </div>
+          </div>
+          <div class="card card--clickable" data-route="/property/${propertyId}/rentroll">
+            <div class="card__body" style="text-align: center; padding: var(--space-6);">
+              <div style="font-size: 2rem; margin-bottom: var(--space-2);">🏠</div>
+              <div style="font-weight: var(--font-semibold);">Rent Roll</div>
+              <div style="font-size: var(--text-sm); color: var(--text-muted);">Unit-by-unit detail</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
   }
   
   /**
