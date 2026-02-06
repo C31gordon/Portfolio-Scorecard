@@ -576,10 +576,65 @@ class App {
       }
     });
 
-    // Print
+    // Print global
     document.addEventListener('click', (e) => {
       if (e.target.closest('[data-action="print"]')) {
         window.print();
+      }
+    });
+
+    // Print drill-down only
+    document.addEventListener('click', (e) => {
+      const printBtn = e.target.closest('[data-action="print-drill"]');
+      if (printBtn) {
+        const propName = printBtn.dataset.property;
+        const panel = document.querySelector(`[data-property-panel]`);
+        if (panel) {
+          const printWindow = window.open('', '_blank');
+          printWindow.document.write(`
+            <html>
+            <head>
+              <title>${propName} - Property Report</title>
+              <link rel="stylesheet" href="./css/variables.css">
+              <link rel="stylesheet" href="./css/components.css">
+              <style>
+                body { padding: 20px; background: white; color: black; }
+                .drill-panel { background: white; }
+                .drill-actions { display: none; }
+              </style>
+            </head>
+            <body>${panel.outerHTML}</body>
+            </html>
+          `);
+          printWindow.document.close();
+          printWindow.print();
+        }
+      }
+    });
+
+    // Info tip hover (JavaScript fallback for tooltip)
+    document.addEventListener('mouseover', (e) => {
+      const tip = e.target.closest('.info-tip');
+      if (tip && tip.dataset.tip) {
+        let tooltip = document.getElementById('info-tooltip');
+        if (!tooltip) {
+          tooltip = document.createElement('div');
+          tooltip.id = 'info-tooltip';
+          tooltip.className = 'info-tooltip';
+          document.body.appendChild(tooltip);
+        }
+        tooltip.textContent = tip.dataset.tip;
+        const rect = tip.getBoundingClientRect();
+        tooltip.style.left = rect.left + (rect.width / 2) + 'px';
+        tooltip.style.top = (rect.top - 10) + 'px';
+        tooltip.classList.add('visible');
+      }
+    });
+
+    document.addEventListener('mouseout', (e) => {
+      if (e.target.closest('.info-tip')) {
+        const tooltip = document.getElementById('info-tooltip');
+        if (tooltip) tooltip.classList.remove('visible');
       }
     });
 
@@ -963,13 +1018,17 @@ class App {
     const rdScore = this.calcWeightedScore(properties);
     const collapsed = this.expandedRegions[rd] === false;
     const totalUnits = properties.reduce((s, p) => s + (p.beds || p.units || 0), 0);
+    
+    // Check if all properties in this region are student/on-campus (use Beds) or not (use Units)
+    const allStudentOrOC = properties.every(p => p.type === 'STU' || p.type === 'OC');
+    const unitsLabel = allStudentOrOC ? 'Beds' : 'Units';
 
     return `
       <div class="regional-block ${collapsed ? 'regional-block--collapsed' : ''}">
         <div class="regional-block__header" data-toggle-region="${rd}">
           <div class="regional-block__info">
             <span class="regional-block__name">${rd}</span>
-            <span class="regional-block__meta">${properties.length} properties • ${totalUnits.toLocaleString()} units/beds</span>
+            <span class="regional-block__meta">${properties.length} properties • ${totalUnits.toLocaleString()} ${unitsLabel.toLowerCase()}</span>
           </div>
           <div class="regional-block__score">
             <span class="score-pill score-pill--${this.getScoreClass(rdScore)}">
@@ -986,8 +1045,8 @@ class App {
                   <tr>
                     <th>Property</th>
                     <th>Type</th>
-                    <th>${this.activeTab === 'oncampus' ? 'Beds' : 'Units'}</th>
-                    ${this.getVisibleColumns().map(key => `<th>${COLUMN_DEFS[key]?.label || key} <span class="info-icon" data-tooltip="${METRIC_INFO[key]?.desc || ''}" data-metric="${key}">ⓘ</span></th>`).join('')}
+                    <th>${unitsLabel}</th>
+                    ${this.getVisibleColumns().map(key => `<th class="metric-header">${COLUMN_DEFS[key]?.label || key} <span class="info-tip" data-tip="${METRIC_INFO[key]?.desc || ''}">ⓘ</span></th>`).join('')}
                     <th>Score</th>
                   </tr>
                 </thead>
@@ -1221,7 +1280,7 @@ class App {
         <div class="drill-actions">
           <button class="btn btn--primary btn--sm" data-action="generate-report" data-property="${prop.name}">📋 Generate Report</button>
           <button class="btn btn--secondary btn--sm btn--disabled" disabled title="Coming Soon">📊 Full Analytics <span class="badge badge--sm">Soon</span></button>
-          <button class="btn btn--secondary btn--sm" onclick="window.print()">🖨️ Print</button>
+          <button class="btn btn--secondary btn--sm" data-action="print-drill" data-property="${prop.name}">🖨️ Print</button>
         </div>
       </div>
     `;
