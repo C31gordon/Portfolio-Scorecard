@@ -438,7 +438,8 @@ class App {
     properties.forEach(prop => {
       const result = this.calcPropertyScore(prop);
       if (result.score !== null) {
-        const weight = prop.beds || prop.units || 1;
+        const isStudent = prop.type === 'OC' || prop.type === 'STU';
+        const weight = isStudent ? (prop.beds || prop.units || 1) : (prop.units || prop.beds || 1);
         totalWeight += weight;
         totalScore += result.score * weight;
       }
@@ -909,7 +910,7 @@ class App {
       let noiTotal = 0, noiWeight = 0;
       
       onCampusProps.forEach(p => {
-        const w = p.beds || p.units || 1;
+        const w = p.beds || p.units || 1; // On-Campus always uses beds
         if (p.woSla != null) { woSlaTotal += p.woSla * w; woSlaWeight += w; }
         if (p.training != null) { trainingTotal += p.training * w; trainingWeight += w; }
         if (p.tali != null) { taliTotal += p.tali * w; taliWeight += w; }
@@ -987,7 +988,8 @@ class App {
       let gWeight = 0, gScore = 0, gReviews = 0;
       leasingProps.forEach(p => {
         if (p.googleStars) {
-          const w = p.beds || p.units || 1;
+          const isStudent = p.type === 'OC' || p.type === 'STU';
+          const w = isStudent ? (p.beds || p.units || 1) : (p.units || p.beds || 1);
           gWeight += w;
           gScore += p.googleStars * w;
           gReviews += p.googleReviews || 0;
@@ -999,7 +1001,8 @@ class App {
       let tWeight = 0, tScore = 0;
       leasingProps.forEach(p => {
         if (p.tali) {
-          const w = p.beds || p.units || 1;
+          const isStudent = p.type === 'OC' || p.type === 'STU';
+          const w = isStudent ? (p.beds || p.units || 1) : (p.units || p.beds || 1);
           tWeight += w;
           tScore += p.tali * w;
         }
@@ -1140,11 +1143,15 @@ class App {
   renderRegionalBlock(rd, properties) {
     const rdScore = this.calcWeightedScore(properties);
     const collapsed = this.expandedRegions[rd] === false;
-    const totalUnits = properties.reduce((s, p) => s + (p.beds || p.units || 0), 0);
-    
     // Check if all properties in this region are student/on-campus (use Beds) or not (use Units)
     const allStudentOrOC = properties.every(p => p.type === 'STU' || p.type === 'OC');
     const unitsLabel = allStudentOrOC ? 'Beds' : 'Units';
+    
+    // Sum beds for student properties, units for conventional
+    const totalUnits = properties.reduce((s, p) => {
+      const isStudent = p.type === 'OC' || p.type === 'STU';
+      return s + (isStudent ? (p.beds || p.units || 0) : (p.units || p.beds || 0));
+    }, 0);
 
     return `
       <div class="regional-block ${collapsed ? 'regional-block--collapsed' : ''}">
@@ -1270,7 +1277,7 @@ class App {
         <div class="drill-panel__header">
           <div class="drill-panel__info">
             <h3>${prop.name}</h3>
-            <span class="drill-panel__meta">${prop.city}, ${prop.state || ''} • ${prop.type === 'OC' ? 'On-Camp' : prop.type} • ${prop.beds || prop.units} ${prop.beds ? 'beds' : 'units'} • GM: ${prop.gm || 'N/A'}</span>
+            <span class="drill-panel__meta">${prop.city}, ${prop.state || ''} • ${prop.type === 'OC' ? 'On-Camp' : prop.type} • ${(prop.type === 'OC' || prop.type === 'STU') ? (prop.beds || prop.units) : (prop.units || prop.beds)} ${(prop.type === 'OC' || prop.type === 'STU') ? 'beds' : 'units'} • GM: ${prop.gm || 'N/A'}</span>
             <div class="drill-panel__status">
               <span class="status-badge status-badge--${isLeaseUp ? 'leaseup' : 'stabilized'}">${isLeaseUp ? 'Lease-Up' : 'Stabilized'}</span>
               <span class="score-pill score-pill--${this.getScoreClass(propScore.score)}">
