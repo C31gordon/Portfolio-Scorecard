@@ -911,7 +911,9 @@ riseProperties.forEach(p => {
     delinq: generateTrend(p.delinq, 9, 0.003, 'down'),
     renewalRatio: generateTrend(p.renewalRatio, 9, 0.04, 'up'),
     googleStars: generateTrend(p.googleStars, 9, 0.1, 'up'),
-    training: generateTrend(p.training, 9, 0.03, 'up')
+    training: generateTrend(p.training, 9, 0.03, 'up'),
+    leadToTour: generateTrend(p.leadToTour || 0.25, 9, 0.03, 'up'),
+    avgRent: generateTrend(p.avgRent || 1500, 9, 30, 'up') // Small dollar variance for rent trends
   };
 });
 

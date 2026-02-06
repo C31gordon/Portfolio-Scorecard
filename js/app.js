@@ -1475,6 +1475,52 @@ class App {
               <div class="drill-card__drillin" id="drillin_renewal_${propId}"></div>
             </div>
           </div>
+
+          <!-- Lead-to-Tour -->
+          <div class="drill-card drill-card--chart" data-metric="leadToTour" data-prop="${propId}">
+            <div class="drill-card__header">
+              <h4>Lead-to-Tour</h4>
+              <div class="view-toggle">
+                <button class="view-toggle__btn view-toggle__btn--active" data-view="graph">Graph</button>
+                <button class="view-toggle__btn" data-view="table">Table</button>
+                <button class="view-toggle__btn" data-view="drillin">Drill In</button>
+              </div>
+            </div>
+            <div class="drill-card__value ${this.getMetricColor(prop.leadToTour, 'leadToTour', prop.type)}">${prop.leadToTour ? (prop.leadToTour * 100).toFixed(1) + '%' : '—'}</div>
+            <div class="drill-card__view drill-card__view--active" data-view-content="graph">
+              <div class="drill-card__chart" id="chart_leadToTour_${propId}"></div>
+              <div class="drill-card__target">Target: 30%</div>
+            </div>
+            <div class="drill-card__view" data-view-content="table">
+              <div class="drill-card__table-view" id="table_leadToTour_${propId}"></div>
+            </div>
+            <div class="drill-card__view" data-view-content="drillin">
+              <div class="drill-card__drillin" id="drillin_leadToTour_${propId}"></div>
+            </div>
+          </div>
+
+          <!-- Avg Effective Rent -->
+          <div class="drill-card drill-card--chart" data-metric="avgRent" data-prop="${propId}">
+            <div class="drill-card__header">
+              <h4>Avg Effective Rent</h4>
+              <div class="view-toggle">
+                <button class="view-toggle__btn view-toggle__btn--active" data-view="graph">Graph</button>
+                <button class="view-toggle__btn" data-view="table">Table</button>
+                <button class="view-toggle__btn" data-view="drillin">Drill In</button>
+              </div>
+            </div>
+            <div class="drill-card__value">${prop.avgRent ? '$' + Math.round(prop.avgRent).toLocaleString() : '—'}</div>
+            <div class="drill-card__view drill-card__view--active" data-view-content="graph">
+              <div class="drill-card__chart" id="chart_avgRent_${propId}"></div>
+              <div class="drill-card__target">Trend</div>
+            </div>
+            <div class="drill-card__view" data-view-content="table">
+              <div class="drill-card__table-view" id="table_avgRent_${propId}"></div>
+            </div>
+            <div class="drill-card__view" data-view-content="drillin">
+              <div class="drill-card__drillin" id="drillin_avgRent_${propId}"></div>
+            </div>
+          </div>
         </div>
 
         <!-- Revenue & Reputation Row -->
@@ -1550,7 +1596,9 @@ class App {
       closingRatio: generateClosingRatioData,
       woSla: generateWOSLAData,
       delinq: generateDelinquencyData,
-      renewalRatio: generateRenewalRatioData
+      renewalRatio: generateRenewalRatioData,
+      leadToTour: generateLeadToTourData,
+      avgRent: (p) => generateLeasedData(p, 15) // Reuse leased data format for rent roll
     };
     
     // Metric to column mapping (for drill-in)
@@ -1560,7 +1608,9 @@ class App {
       closingRatio: DRILL_COLUMNS.closingRatio,
       woSla: DRILL_COLUMNS.woSla,
       delinq: DRILL_COLUMNS.delinq,
-      renewalRatio: DRILL_COLUMNS.renewalRatio
+      renewalRatio: DRILL_COLUMNS.renewalRatio,
+      leadToTour: DRILL_COLUMNS.leadToTour,
+      avgRent: DRILL_COLUMNS.leased // Reuse leased columns for rent drill-in
     };
     
     const generator = generators[metric];
@@ -1616,8 +1666,10 @@ class App {
         leased: generatePriorYearData(hist.leased, { trend: 'up', variance: 0.04 }),
         mtdClosing: generatePriorYearData(hist.mtdClosing, { trend: 'up', variance: 0.10 }),
         woSla: generatePriorYearData(hist.woSla, { trend: 'up', variance: 0.05 }),
-        delinq: generatePriorYearData(hist.delinq, { trend: 'down', variance: 0.15 }), // Higher delinq in prior year
-        renewalRatio: generatePriorYearData(hist.renewalRatio, { trend: 'up', variance: 0.06 })
+        delinq: generatePriorYearData(hist.delinq, { trend: 'down', variance: 0.15 }),
+        renewalRatio: generatePriorYearData(hist.renewalRatio, { trend: 'up', variance: 0.06 }),
+        leadToTour: generatePriorYearData(hist.leadToTour, { trend: 'up', variance: 0.08 }),
+        avgRent: generatePriorYearData(hist.avgRent, { trend: 'up', variance: 0.03 })
       };
       
       const chartConfigs = [
@@ -1626,7 +1678,9 @@ class App {
         { id: `chart_closing_${propId}`, data: hist.mtdClosing, prior: priorYear.mtdClosing, color: this.getSparklineColor(prop.mtdClosing, 'mtdClosing', prop.type), metric: 'closingRatio' },
         { id: `chart_woSla_${propId}`, data: hist.woSla, prior: priorYear.woSla, color: this.getSparklineColor(prop.woSla, 'woSla', prop.type), metric: 'woSLA' },
         { id: `chart_delinq_${propId}`, data: hist.delinq, prior: priorYear.delinq, color: '#ef4444', metric: 'delinq' },
-        { id: `chart_renewal_${propId}`, data: hist.renewalRatio, prior: priorYear.renewalRatio, color: this.getSparklineColor(prop.renewalRatio, 'renewalRatio', prop.type), metric: 'renewalRatio' }
+        { id: `chart_renewal_${propId}`, data: hist.renewalRatio, prior: priorYear.renewalRatio, color: this.getSparklineColor(prop.renewalRatio, 'renewalRatio', prop.type), metric: 'renewalRatio' },
+        { id: `chart_leadToTour_${propId}`, data: hist.leadToTour, prior: priorYear.leadToTour, color: this.getSparklineColor(prop.leadToTour, 'leadToTour', prop.type), metric: 'leadToTour' },
+        { id: `chart_avgRent_${propId}`, data: hist.avgRent, prior: priorYear.avgRent, color: '#6366f1', metric: 'avgRent' }
       ];
       
       chartConfigs.forEach(({ id, data, prior, color, metric }) => {
