@@ -5,9 +5,9 @@
 
 export const risePortfolio = {
   name: 'RISE Residential',
-  totalUnits: 4258,
-  totalBeds: 4509,
-  totalProperties: 31
+  totalUnits: 2565,  // Non-student units (10 properties)
+  totalBeds: 2348,   // Student beds (6 properties)
+  totalProperties: 16
 };
 
 export const riseProperties = [
