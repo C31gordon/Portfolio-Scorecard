@@ -595,15 +595,111 @@ class App {
             <html>
             <head>
               <title>${propName} - Property Report</title>
-              <link rel="stylesheet" href="./css/variables.css">
-              <link rel="stylesheet" href="./css/components.css">
               <style>
-                body { padding: 20px; background: white; color: black; }
+                * { box-sizing: border-box; margin: 0; padding: 0; }
+                body { 
+                  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+                  padding: 30px; 
+                  background: white; 
+                  color: #1a1a2e;
+                  font-size: 12px;
+                  line-height: 1.5;
+                }
                 .drill-panel { background: white; }
-                .drill-actions { display: none; }
+                .drill-actions { display: none !important; }
+                .drill-panel__header { 
+                  border-bottom: 2px solid #1a1a2e; 
+                  padding-bottom: 15px; 
+                  margin-bottom: 20px;
+                  display: flex;
+                  justify-content: space-between;
+                  align-items: flex-start;
+                }
+                .drill-panel__header h3 { 
+                  font-size: 24px; 
+                  font-weight: 700;
+                  margin-bottom: 5px;
+                }
+                .drill-panel__meta { 
+                  font-size: 12px; 
+                  color: #666;
+                }
+                .drill-panel__actions { display: flex; gap: 10px; }
+                .badge { 
+                  padding: 4px 10px; 
+                  border-radius: 4px; 
+                  font-size: 10px;
+                  font-weight: 600;
+                  text-transform: uppercase;
+                }
+                .badge--success { background: #dcfce7; color: #166534; }
+                .badge--info { background: #dbeafe; color: #1e40af; }
+                .toggle { display: none; }
+                .funnel-section { margin-bottom: 25px; }
+                .funnel-section h4 { 
+                  font-size: 14px; 
+                  font-weight: 600; 
+                  margin-bottom: 10px;
+                  border-bottom: 1px solid #ddd;
+                  padding-bottom: 5px;
+                }
+                .funnel-bar { 
+                  display: flex; 
+                  align-items: center; 
+                  gap: 10px;
+                  background: #f8f9fa;
+                  padding: 15px;
+                  border-radius: 8px;
+                }
+                .funnel-step { text-align: center; flex: 1; }
+                .funnel-step__label { font-size: 10px; color: #666; text-transform: uppercase; }
+                .funnel-step__value { font-size: 20px; font-weight: 700; }
+                .funnel-step__pct { font-size: 11px; color: #888; }
+                .funnel-arrow { color: #ccc; font-size: 18px; }
+                .drill-grid { 
+                  display: grid; 
+                  gap: 15px; 
+                  margin-bottom: 20px;
+                }
+                .drill-grid--3 { grid-template-columns: repeat(3, 1fr); }
+                .drill-grid--2 { grid-template-columns: repeat(2, 1fr); }
+                .drill-card { 
+                  border: 1px solid #ddd; 
+                  border-radius: 8px; 
+                  padding: 15px;
+                  background: #fafafa;
+                }
+                .drill-card h4 { 
+                  font-size: 11px; 
+                  color: #666; 
+                  text-transform: uppercase;
+                  margin-bottom: 8px;
+                }
+                .drill-card__value { 
+                  font-size: 22px; 
+                  font-weight: 700;
+                }
+                .drill-card__value.green { color: #16a34a; }
+                .drill-card__value.yellow { color: #ca8a04; }
+                .drill-card__value.red { color: #dc2626; }
+                .drill-card__chart { display: none; }
+                .drill-card__target { font-size: 10px; color: #888; margin-top: 5px; }
+                .drill-metrics { display: flex; flex-direction: column; gap: 8px; }
+                .drill-metric { display: flex; justify-content: space-between; }
+                .drill-metric__label { color: #666; }
+                .drill-metric__value { font-weight: 600; }
+                @media print {
+                  body { padding: 15px; }
+                  .drill-grid--3 { grid-template-columns: repeat(3, 1fr); }
+                }
               </style>
             </head>
-            <body>${panel.outerHTML}</body>
+            <body>
+              <div style="text-align: right; font-size: 10px; color: #888; margin-bottom: 10px;">
+                RISE Residential | Printed ${new Date().toLocaleDateString()}
+              </div>
+              ${panel.outerHTML}
+            </body>
             </html>
           `);
           printWindow.document.close();
