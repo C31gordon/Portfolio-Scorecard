@@ -2109,3 +2109,47 @@
   margin-left: 6px;
   text-transform: uppercase;
 }
+
+/* Drill Card Header with Period Buttons */
+.drill-card__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: var(--space-2);
+}
+.drill-card__header h4 {
+  margin: 0;
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+}
+
+/* Chart Period Buttons (per chart) */
+.chart-period-btns {
+  display: flex;
+  gap: 2px;
+}
+.cpb {
+  padding: 2px 6px;
+  font-size: 0.6rem;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-primary);
+  color: var(--text-secondary);
+  cursor: pointer;
+  border-radius: 3px;
+  transition: all 0.15s;
+}
+.cpb:hover {
+  background: var(--bg-secondary);
+}
+.cpb.active {
+  background: var(--primary);
+  color: white;
+  border-color: var(--primary);
+}
+
+/* Property Score in Drill Panel - more prominent */
+.drill-panel__status .score-pill {
+  font-size: 1.1rem;
+  padding: 6px 12px;
+}

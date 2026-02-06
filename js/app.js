@@ -1306,7 +1306,12 @@ class App {
         <div class="drill-grid drill-grid--3">
           <!-- Occupancy with Sparkline -->
           <div class="drill-card drill-card--chart ${isLeaseUp ? 'drill-card--excluded' : ''}">
-            <h4>Physical Occupancy ${isLeaseUp ? '<span class="excluded-badge">Not Scored</span>' : ''}</h4>
+            <div class="drill-card__header">
+              <h4>Physical Occupancy ${isLeaseUp ? '<span class="excluded-badge">Not Scored</span>' : ''}</h4>
+              <div class="chart-period-btns">
+                <button class="cpb active">W</button><button class="cpb">M</button><button class="cpb">Q</button>
+              </div>
+            </div>
             <div class="drill-card__value ${this.getMetricColor(prop.physOcc, 'physOcc', prop.type)}">${prop.physOcc ? (prop.physOcc * 100).toFixed(1) + '%' : '—'}</div>
             <div class="drill-card__chart" id="chart_physOcc_${propId}"></div>
             <div class="drill-card__target">Target: ${prop.type === 'STU' ? '98%' : '93%'}</div>
@@ -1314,7 +1319,12 @@ class App {
 
           <!-- Leased % with Sparkline -->
           <div class="drill-card drill-card--chart ${isLeaseUp ? 'drill-card--excluded' : ''}">
-            <h4>Leased % ${isLeaseUp ? '<span class="excluded-badge">Not Scored</span>' : ''}</h4>
+            <div class="drill-card__header">
+              <h4>Leased % ${isLeaseUp ? '<span class="excluded-badge">Not Scored</span>' : ''}</h4>
+              <div class="chart-period-btns">
+                <button class="cpb active">W</button><button class="cpb">M</button><button class="cpb">Q</button>
+              </div>
+            </div>
             <div class="drill-card__value ${this.getMetricColor(prop.leased, 'leased', prop.type)}">${prop.leased ? (prop.leased * 100).toFixed(1) + '%' : '—'}</div>
             <div class="drill-card__chart" id="chart_leased_${propId}"></div>
             <div class="drill-card__target">Target: ${prop.type === 'STU' ? '98%' : '95%'}</div>
@@ -1322,7 +1332,12 @@ class App {
 
           <!-- Closing Ratio with Sparkline -->
           <div class="drill-card drill-card--chart">
-            <h4>Closing Ratio</h4>
+            <div class="drill-card__header">
+              <h4>Closing Ratio</h4>
+              <div class="chart-period-btns">
+                <button class="cpb active">W</button><button class="cpb">M</button><button class="cpb">Q</button>
+              </div>
+            </div>
             <div class="drill-card__value ${this.getMetricColor(prop.mtdClosing, 'mtdClosing', prop.type)}">${prop.mtdClosing ? (Math.min(prop.mtdClosing, 1) * 100).toFixed(1) + '%' : '—'}</div>
             <div class="drill-card__chart" id="chart_closing_${propId}"></div>
             <div class="drill-card__target">Target: ${prop.type === 'STU' ? '60%' : prop.type === '55+' ? '30%' : '40%'}</div>
@@ -1330,7 +1345,12 @@ class App {
 
           <!-- WO SLA -->
           <div class="drill-card drill-card--chart">
-            <h4>Work Order SLA</h4>
+            <div class="drill-card__header">
+              <h4>Work Order SLA</h4>
+              <div class="chart-period-btns">
+                <button class="cpb active">W</button><button class="cpb">M</button><button class="cpb">Q</button>
+              </div>
+            </div>
             <div class="drill-card__value ${this.getMetricColor(prop.woSla, 'woSla', prop.type)}">${prop.woSla ? (prop.woSla * 100).toFixed(1) + '%' : '—'}</div>
             <div class="drill-card__chart" id="chart_woSla_${propId}"></div>
             <div class="drill-card__target">Target: 95%</div>
@@ -1338,7 +1358,12 @@ class App {
 
           <!-- Delinquency -->
           <div class="drill-card drill-card--chart ${isLeaseUp ? 'drill-card--excluded' : ''}">
-            <h4>Delinquency ${isLeaseUp ? '<span class="excluded-badge">Not Scored</span>' : ''}</h4>
+            <div class="drill-card__header">
+              <h4>Delinquency ${isLeaseUp ? '<span class="excluded-badge">Not Scored</span>' : ''}</h4>
+              <div class="chart-period-btns">
+                <button class="cpb active">W</button><button class="cpb">M</button><button class="cpb">Q</button>
+              </div>
+            </div>
             <div class="drill-card__value ${this.getMetricColor(prop.delinq, 'delinq', prop.type)}">${prop.delinq != null ? (prop.delinq * 100).toFixed(2) + '%' : '—'}</div>
             <div class="drill-card__chart" id="chart_delinq_${propId}"></div>
             <div class="drill-card__target">Target: ≤${prop.type === '55+' ? '0.025%' : prop.type === 'STU' ? '1%' : '0.5%'}</div>
@@ -1346,7 +1371,12 @@ class App {
 
           <!-- Renewal Ratio -->
           <div class="drill-card drill-card--chart ${isLeaseUp ? 'drill-card--excluded' : ''}">
-            <h4>Renewal Ratio ${isLeaseUp ? '<span class="excluded-badge">Not Scored</span>' : ''}</h4>
+            <div class="drill-card__header">
+              <h4>Renewal Ratio ${isLeaseUp ? '<span class="excluded-badge">Not Scored</span>' : ''}</h4>
+              <div class="chart-period-btns">
+                <button class="cpb active">W</button><button class="cpb">M</button><button class="cpb">Q</button>
+              </div>
+            </div>
             <div class="drill-card__value ${this.getMetricColor(prop.renewalRatio, 'renewalRatio', prop.type)}">${prop.renewalRatio ? (prop.renewalRatio * 100).toFixed(1) + '%' : '—'}</div>
             <div class="drill-card__chart" id="chart_renewal_${propId}"></div>
             <div class="drill-card__target">Target: ${prop.type === '55+' ? '75%' : prop.type === 'STU' ? '45%' : '55%'}</div>
