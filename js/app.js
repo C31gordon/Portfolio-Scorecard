@@ -1523,47 +1523,145 @@ class App {
           </div>
         </div>
 
-        <!-- Revenue & Reputation Row -->
-        <div class="drill-grid drill-grid--2">
-          <div class="drill-card">
-            <h4>Revenue</h4>
-            <div class="drill-metrics">
-              <div class="drill-metric">
-                <span class="drill-metric__label">Avg Rent</span>
-                <span class="drill-metric__value">${prop.avgRent ? '$' + Math.round(prop.avgRent).toLocaleString() : '—'}</span>
+        <!-- Revenue & Reputation Cards -->
+        <div class="drill-grid drill-grid--4">
+          <!-- Trade-Out -->
+          <div class="drill-card drill-card--chart" data-metric="tradeOut" data-prop="${propId}">
+            <div class="drill-card__header">
+              <h4>Trade-Out</h4>
+              <div class="view-toggle">
+                <button class="view-toggle__btn view-toggle__btn--active" data-view="graph">Graph</button>
+                <button class="view-toggle__btn" data-view="table">Table</button>
+                <button class="view-toggle__btn" data-view="drillin">Drill In</button>
               </div>
-              <div class="drill-metric">
-                <span class="drill-metric__label">New Trade-Out</span>
-                <span class="drill-metric__value" style="color: ${prop.newTradeOut >= 0 ? 'var(--success)' : 'var(--danger)'}">
-                  ${prop.newTradeOut != null ? (prop.newTradeOut >= 0 ? '+' : '') + (prop.newTradeOut * 100).toFixed(1) + '%' : '—'}
-                </span>
-              </div>
-              <div class="drill-metric">
-                <span class="drill-metric__label">NOI vs Budget</span>
-                <span class="drill-metric__value">${prop.noiVariance ? (prop.noiVariance * 100).toFixed(1) + '%' : '—'}</span>
-              </div>
+            </div>
+            <div class="drill-card__value" style="color: ${prop.newTradeOut >= 0 ? 'var(--success)' : prop.newTradeOut != null ? 'var(--danger)' : 'inherit'}">
+              ${prop.newTradeOut != null ? (prop.newTradeOut >= 0 ? '+' : '') + (prop.newTradeOut * 100).toFixed(1) + '%' : '—'}
+            </div>
+            <div class="drill-card__view drill-card__view--active" data-view-content="graph">
+              <div class="drill-card__chart" id="chart_tradeOut_${propId}"></div>
+              <div class="drill-card__target">Target: ≥0%</div>
+            </div>
+            <div class="drill-card__view" data-view-content="table">
+              <div class="drill-card__table-view" id="table_tradeOut_${propId}"></div>
+            </div>
+            <div class="drill-card__view" data-view-content="drillin">
+              <div class="drill-card__drillin" id="drillin_tradeOut_${propId}"></div>
             </div>
           </div>
 
-          <div class="drill-card">
-            <h4>Reputation</h4>
-            <div class="drill-metrics">
-              <div class="drill-metric">
-                <span class="drill-metric__label">Google Rating</span>
-                <span class="drill-metric__value">${prop.googleStars ? prop.googleStars.toFixed(1) + ' ⭐ (' + (prop.googleReviews || 0) + ')' : '—'}</span>
+          <!-- NOI Variance -->
+          <div class="drill-card drill-card--chart" data-metric="noiVariance" data-prop="${propId}">
+            <div class="drill-card__header">
+              <h4>NOI vs Budget</h4>
+              <div class="view-toggle">
+                <button class="view-toggle__btn view-toggle__btn--active" data-view="graph">Graph</button>
+                <button class="view-toggle__btn" data-view="table">Table</button>
+                <button class="view-toggle__btn" data-view="drillin">Drill In</button>
               </div>
-              <div class="drill-metric">
-                <span class="drill-metric__label">TALi (J Turner)</span>
-                <span class="drill-metric__value">${prop.tali ? prop.tali.toFixed(1) + ' (Avg: ' + TURNER_TALI_AVG + ')' : '—'}</span>
+            </div>
+            <div class="drill-card__value ${this.getMetricColor(prop.noiVariance, 'noiVariance', prop.type)}">${prop.noiVariance ? (prop.noiVariance * 100).toFixed(1) + '%' : '—'}</div>
+            <div class="drill-card__view drill-card__view--active" data-view-content="graph">
+              <div class="drill-card__chart" id="chart_noiVariance_${propId}"></div>
+              <div class="drill-card__target">Target: ≥100%</div>
+            </div>
+            <div class="drill-card__view" data-view-content="table">
+              <div class="drill-card__table-view" id="table_noiVariance_${propId}"></div>
+            </div>
+            <div class="drill-card__view" data-view-content="drillin">
+              <div class="drill-card__drillin" id="drillin_noiVariance_${propId}"></div>
+            </div>
+          </div>
+
+          <!-- Google Rating -->
+          <div class="drill-card drill-card--chart" data-metric="googleStars" data-prop="${propId}">
+            <div class="drill-card__header">
+              <h4>Google Rating</h4>
+              <div class="view-toggle">
+                <button class="view-toggle__btn view-toggle__btn--active" data-view="graph">Graph</button>
+                <button class="view-toggle__btn" data-view="table">Table</button>
+                <button class="view-toggle__btn" data-view="drillin">Drill In</button>
               </div>
-              <div class="drill-metric">
-                <span class="drill-metric__label">ORA Score</span>
-                <span class="drill-metric__value">${prop.propIndex ? prop.propIndex.toFixed(1) + ' (Avg: ' + TURNER_PI_AVG + ')' : '—'}</span>
+            </div>
+            <div class="drill-card__value">${prop.googleStars ? prop.googleStars.toFixed(1) + ' ⭐' : '—'}<span class="drill-card__sub">(${prop.googleReviews || 0} reviews)</span></div>
+            <div class="drill-card__view drill-card__view--active" data-view-content="graph">
+              <div class="drill-card__chart" id="chart_googleStars_${propId}"></div>
+              <div class="drill-card__target">Target: ≥4.5</div>
+            </div>
+            <div class="drill-card__view" data-view-content="table">
+              <div class="drill-card__table-view" id="table_googleStars_${propId}"></div>
+            </div>
+            <div class="drill-card__view" data-view-content="drillin">
+              <div class="drill-card__drillin" id="drillin_googleStars_${propId}"></div>
+            </div>
+          </div>
+
+          <!-- TALi (Satisfaction) -->
+          <div class="drill-card drill-card--chart" data-metric="tali" data-prop="${propId}">
+            <div class="drill-card__header">
+              <h4>Satisfaction (TALi)</h4>
+              <div class="view-toggle">
+                <button class="view-toggle__btn view-toggle__btn--active" data-view="graph">Graph</button>
+                <button class="view-toggle__btn" data-view="table">Table</button>
+                <button class="view-toggle__btn" data-view="drillin">Drill In</button>
               </div>
-              <div class="drill-metric">
-                <span class="drill-metric__label">Training</span>
-                <span class="drill-metric__value">${prop.training ? (prop.training * 100).toFixed(0) + '%' : '—'}</span>
+            </div>
+            <div class="drill-card__value">${prop.tali ? prop.tali.toFixed(2) : '—'}<span class="drill-card__sub">(Avg: ${TURNER_TALI_AVG})</span></div>
+            <div class="drill-card__view drill-card__view--active" data-view-content="graph">
+              <div class="drill-card__chart" id="chart_tali_${propId}"></div>
+              <div class="drill-card__target">Target: ≥7.5</div>
+            </div>
+            <div class="drill-card__view" data-view-content="table">
+              <div class="drill-card__table-view" id="table_tali_${propId}"></div>
+            </div>
+            <div class="drill-card__view" data-view-content="drillin">
+              <div class="drill-card__drillin" id="drillin_tali_${propId}"></div>
+            </div>
+          </div>
+
+          <!-- ORA Score -->
+          <div class="drill-card drill-card--chart" data-metric="propIndex" data-prop="${propId}">
+            <div class="drill-card__header">
+              <h4>ORA Score</h4>
+              <div class="view-toggle">
+                <button class="view-toggle__btn view-toggle__btn--active" data-view="graph">Graph</button>
+                <button class="view-toggle__btn" data-view="table">Table</button>
+                <button class="view-toggle__btn" data-view="drillin">Drill In</button>
               </div>
+            </div>
+            <div class="drill-card__value">${prop.propIndex ? prop.propIndex.toFixed(1) : '—'}<span class="drill-card__sub">(Avg: ${TURNER_PI_AVG})</span></div>
+            <div class="drill-card__view drill-card__view--active" data-view-content="graph">
+              <div class="drill-card__chart" id="chart_propIndex_${propId}"></div>
+              <div class="drill-card__target">Target: ≥8.5</div>
+            </div>
+            <div class="drill-card__view" data-view-content="table">
+              <div class="drill-card__table-view" id="table_propIndex_${propId}"></div>
+            </div>
+            <div class="drill-card__view" data-view-content="drillin">
+              <div class="drill-card__drillin" id="drillin_propIndex_${propId}"></div>
+            </div>
+          </div>
+
+          <!-- Training -->
+          <div class="drill-card drill-card--chart" data-metric="training" data-prop="${propId}">
+            <div class="drill-card__header">
+              <h4>Training</h4>
+              <div class="view-toggle">
+                <button class="view-toggle__btn view-toggle__btn--active" data-view="graph">Graph</button>
+                <button class="view-toggle__btn" data-view="table">Table</button>
+                <button class="view-toggle__btn" data-view="drillin">Drill In</button>
+              </div>
+            </div>
+            <div class="drill-card__value ${this.getMetricColor(prop.training, 'training', prop.type)}">${prop.training ? (prop.training * 100).toFixed(0) + '%' : '—'}</div>
+            <div class="drill-card__view drill-card__view--active" data-view-content="graph">
+              <div class="drill-card__chart" id="chart_training_${propId}"></div>
+              <div class="drill-card__target">Target: 100%</div>
+            </div>
+            <div class="drill-card__view" data-view-content="table">
+              <div class="drill-card__table-view" id="table_training_${propId}"></div>
+            </div>
+            <div class="drill-card__view" data-view-content="drillin">
+              <div class="drill-card__drillin" id="drillin_training_${propId}"></div>
             </div>
           </div>
         </div>
@@ -1669,7 +1767,13 @@ class App {
         delinq: generatePriorYearData(hist.delinq, { trend: 'down', variance: 0.15 }),
         renewalRatio: generatePriorYearData(hist.renewalRatio, { trend: 'up', variance: 0.06 }),
         leadToTour: generatePriorYearData(hist.leadToTour, { trend: 'up', variance: 0.08 }),
-        avgRent: generatePriorYearData(hist.avgRent, { trend: 'up', variance: 0.03 })
+        avgRent: generatePriorYearData(hist.avgRent, { trend: 'up', variance: 0.03 }),
+        tradeOut: generatePriorYearData(hist.tradeOut, { trend: 'up', variance: 0.10 }),
+        noiVariance: generatePriorYearData(hist.noiVariance, { trend: 'flat', variance: 0.03 }),
+        googleStars: generatePriorYearData(hist.googleStars, { trend: 'up', variance: 0.05 }),
+        tali: generatePriorYearData(hist.tali, { trend: 'up', variance: 0.05 }),
+        propIndex: generatePriorYearData(hist.propIndex, { trend: 'up', variance: 0.05 }),
+        training: generatePriorYearData(hist.training, { trend: 'up', variance: 0.05 })
       };
       
       const chartConfigs = [
@@ -1680,7 +1784,13 @@ class App {
         { id: `chart_delinq_${propId}`, data: hist.delinq, prior: priorYear.delinq, color: '#ef4444', metric: 'delinq' },
         { id: `chart_renewal_${propId}`, data: hist.renewalRatio, prior: priorYear.renewalRatio, color: this.getSparklineColor(prop.renewalRatio, 'renewalRatio', prop.type), metric: 'renewalRatio' },
         { id: `chart_leadToTour_${propId}`, data: hist.leadToTour, prior: priorYear.leadToTour, color: this.getSparklineColor(prop.leadToTour, 'leadToTour', prop.type), metric: 'leadToTour' },
-        { id: `chart_avgRent_${propId}`, data: hist.avgRent, prior: priorYear.avgRent, color: '#6366f1', metric: 'avgRent' }
+        { id: `chart_avgRent_${propId}`, data: hist.avgRent, prior: priorYear.avgRent, color: '#6366f1', metric: 'avgRent' },
+        { id: `chart_tradeOut_${propId}`, data: hist.tradeOut, prior: priorYear.tradeOut, color: '#22c55e', metric: 'tradeOut' },
+        { id: `chart_noiVariance_${propId}`, data: hist.noiVariance, prior: priorYear.noiVariance, color: '#3b82f6', metric: 'noiVariance' },
+        { id: `chart_googleStars_${propId}`, data: hist.googleStars, prior: priorYear.googleStars, color: '#f59e0b', metric: 'googleStars' },
+        { id: `chart_tali_${propId}`, data: hist.tali, prior: priorYear.tali, color: '#8b5cf6', metric: 'tali' },
+        { id: `chart_propIndex_${propId}`, data: hist.propIndex, prior: priorYear.propIndex, color: '#06b6d4', metric: 'propIndex' },
+        { id: `chart_training_${propId}`, data: hist.training, prior: priorYear.training, color: this.getSparklineColor(prop.training, 'training', prop.type), metric: 'training' }
       ];
       
       chartConfigs.forEach(({ id, data, prior, color, metric }) => {

@@ -2484,3 +2484,12 @@
 .drill-card__table-view th {
   font-size: 0.65rem;
 }
+
+/* Drill card value sub-text */
+.drill-card__sub {
+  display: block;
+  font-size: 0.6rem;
+  color: var(--text-muted);
+  font-weight: normal;
+  margin-top: 2px;
+}

@@ -913,14 +913,22 @@ riseProperties.forEach(p => {
     googleStars: generateTrend(p.googleStars, 9, 0.1, 'up'),
     training: generateTrend(p.training, 9, 0.03, 'up'),
     leadToTour: generateTrend(p.leadToTour || 0.25, 9, 0.03, 'up'),
-    avgRent: generateTrend(p.avgRent || 1500, 9, 30, 'up') // Small dollar variance for rent trends
+    avgRent: generateTrend(p.avgRent || 1500, 9, 30, 'up'),
+    tradeOut: generateTrend(p.newTradeOut || 0.02, 9, 0.01, 'up'),
+    noiVariance: generateTrend(p.noiVariance || 1.0, 9, 0.02, 'flat'),
+    tali: generateTrend(p.tali || 7.0, 9, 0.2, 'up'),
+    propIndex: generateTrend(p.propIndex || 8.0, 9, 0.2, 'up')
   };
 });
 
 function generateTrend(current, n, variance, dir) {
   if (current === null || current === undefined || current === 0) return Array(n).fill(0);
   const data = [];
-  const start = current * (dir === 'up' ? 0.85 : 1.05);
+  let start;
+  if (dir === 'up') start = current * 0.85;
+  else if (dir === 'down') start = current * 1.15;
+  else start = current; // flat
+  
   for (let i = 0; i < n - 1; i++) {
     const t = i / (n - 2);
     const base = start + (current - start) * t;
