@@ -1,0 +1,1829 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>First 90 Days as a Property Manager</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+    
+    :root {
+      --primary: #1e40af;
+      --primary-light: #3b82f6;
+      --primary-dark: #1e3a8a;
+      --accent: #f59e0b;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --gray-50: #f9fafb;
+      --gray-100: #f3f4f6;
+      --gray-200: #e5e7eb;
+      --gray-300: #d1d5db;
+      --gray-600: #4b5563;
+      --gray-700: #374151;
+      --gray-800: #1f2937;
+      --gray-900: #111827;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: 11pt;
+      line-height: 1.6;
+      color: var(--gray-800);
+      background: white;
+    }
+    
+    .page {
+      width: 8.5in;
+      min-height: 11in;
+      padding: 0.75in;
+      margin: 0 auto;
+      background: white;
+      page-break-after: always;
+    }
+    
+    .page:last-child {
+      page-break-after: avoid;
+    }
+    
+    /* Cover Page */
+    .cover {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
+      color: white;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .cover::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -50%;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+    }
+    
+    .cover-icon {
+      font-size: 80px;
+      margin-bottom: 30px;
+      opacity: 0.9;
+    }
+    
+    .cover h1 {
+      font-size: 42px;
+      font-weight: 800;
+      margin-bottom: 15px;
+      letter-spacing: -1px;
+    }
+    
+    .cover h2 {
+      font-size: 22px;
+      font-weight: 500;
+      opacity: 0.9;
+      margin-bottom: 40px;
+    }
+    
+    .cover-badge {
+      background: var(--accent);
+      color: var(--gray-900);
+      padding: 10px 25px;
+      border-radius: 30px;
+      font-weight: 700;
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    
+    .cover-footer {
+      position: absolute;
+      bottom: 40px;
+      font-size: 12px;
+      opacity: 0.7;
+    }
+    
+    /* Section Headers */
+    h1.section-title {
+      font-size: 28px;
+      font-weight: 800;
+      color: var(--primary);
+      margin-bottom: 10px;
+      padding-bottom: 10px;
+      border-bottom: 3px solid var(--primary);
+    }
+    
+    h2 {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--gray-800);
+      margin-top: 25px;
+      margin-bottom: 12px;
+    }
+    
+    h3 {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--gray-700);
+      margin-top: 20px;
+      margin-bottom: 10px;
+    }
+    
+    p {
+      margin-bottom: 12px;
+    }
+    
+    ul, ol {
+      margin-left: 20px;
+      margin-bottom: 15px;
+    }
+    
+    li {
+      margin-bottom: 6px;
+    }
+    
+    /* Week Header */
+    .week-header {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+      color: white;
+      padding: 20px 25px;
+      border-radius: 12px;
+      margin-bottom: 25px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+    
+    .week-number {
+      font-size: 48px;
+      font-weight: 800;
+      opacity: 0.3;
+      line-height: 1;
+    }
+    
+    .week-info h2 {
+      color: white;
+      margin: 0;
+      font-size: 24px;
+    }
+    
+    .week-info p {
+      margin: 5px 0 0 0;
+      opacity: 0.9;
+      font-size: 14px;
+    }
+    
+    /* Callout Boxes */
+    .callout {
+      padding: 18px 20px;
+      border-radius: 10px;
+      margin: 20px 0;
+      display: flex;
+      gap: 15px;
+    }
+    
+    .callout-icon {
+      font-size: 24px;
+      flex-shrink: 0;
+    }
+    
+    .callout-content {
+      flex: 1;
+    }
+    
+    .callout-content strong {
+      display: block;
+      margin-bottom: 5px;
+    }
+    
+    .callout-tip {
+      background: #ecfdf5;
+      border-left: 4px solid var(--success);
+    }
+    
+    .callout-warning {
+      background: #fffbeb;
+      border-left: 4px solid var(--warning);
+    }
+    
+    .callout-key {
+      background: #eff6ff;
+      border-left: 4px solid var(--primary);
+    }
+    
+    /* Checklist */
+    .checklist {
+      background: var(--gray-50);
+      border: 1px solid var(--gray-200);
+      border-radius: 10px;
+      padding: 20px;
+      margin: 20px 0;
+    }
+    
+    .checklist h4 {
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--gray-600);
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .checklist ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+    
+    .checklist li {
+      padding: 8px 0;
+      border-bottom: 1px solid var(--gray-200);
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+    }
+    
+    .checklist li:last-child {
+      border-bottom: none;
+    }
+    
+    .checkbox {
+      width: 18px;
+      height: 18px;
+      border: 2px solid var(--gray-300);
+      border-radius: 4px;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    
+    /* Table of Contents */
+    .toc {
+      background: var(--gray-50);
+      border-radius: 12px;
+      padding: 30px;
+    }
+    
+    .toc h2 {
+      margin-top: 0;
+      margin-bottom: 20px;
+    }
+    
+    .toc-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 12px 0;
+      border-bottom: 1px dotted var(--gray-300);
+    }
+    
+    .toc-item:last-child {
+      border-bottom: none;
+    }
+    
+    .toc-week {
+      font-weight: 600;
+      color: var(--primary);
+    }
+    
+    .toc-title {
+      flex: 1;
+      margin-left: 15px;
+    }
+    
+    .toc-page {
+      color: var(--gray-600);
+    }
+    
+    /* Stats Box */
+    .stats-box {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 15px;
+      margin: 20px 0;
+    }
+    
+    .stat {
+      background: var(--gray-50);
+      border-radius: 10px;
+      padding: 20px;
+      text-align: center;
+    }
+    
+    .stat-value {
+      font-size: 32px;
+      font-weight: 800;
+      color: var(--primary);
+    }
+    
+    .stat-label {
+      font-size: 12px;
+      color: var(--gray-600);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    /* Quote */
+    .quote {
+      border-left: 4px solid var(--accent);
+      padding: 15px 20px;
+      margin: 25px 0;
+      background: var(--gray-50);
+      font-style: italic;
+      font-size: 14px;
+    }
+    
+    .quote-author {
+      display: block;
+      margin-top: 10px;
+      font-style: normal;
+      font-weight: 600;
+      color: var(--gray-600);
+    }
+    
+    /* Page Header/Footer */
+    .page-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 15px;
+      margin-bottom: 25px;
+      border-bottom: 1px solid var(--gray-200);
+      font-size: 11px;
+      color: var(--gray-600);
+    }
+    
+    .page-footer {
+      position: absolute;
+      bottom: 0.5in;
+      left: 0.75in;
+      right: 0.75in;
+      display: flex;
+      justify-content: space-between;
+      font-size: 10px;
+      color: var(--gray-500);
+    }
+    
+    /* Budget Table */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+    }
+    
+    th, td {
+      padding: 12px 15px;
+      text-align: left;
+      border-bottom: 1px solid var(--gray-200);
+    }
+    
+    th {
+      background: var(--gray-100);
+      font-weight: 600;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    tr:hover {
+      background: var(--gray-50);
+    }
+    
+    /* Print Styles */
+    @media print {
+      body {
+        print-color-adjust: exact;
+        -webkit-print-color-adjust: exact;
+      }
+      
+      .page {
+        margin: 0;
+        padding: 0.5in;
+        page-break-after: always;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<!-- COVER PAGE -->
+<div class="page cover">
+  <div class="cover-icon">🏢</div>
+  <h1>First 90 Days as a<br>Property Manager</h1>
+  <h2>The Week-by-Week Playbook for New PMs</h2>
+  <div class="cover-badge">Complete Guide + Checklists</div>
+  <div class="cover-footer">© 2026 Courtney Gordon | All Rights Reserved</div>
+</div>
+
+<!-- TABLE OF CONTENTS -->
+<div class="page">
+  <div class="page-header">
+    <span>First 90 Days as a Property Manager</span>
+    <span>Table of Contents</span>
+  </div>
+  
+  <h1 class="section-title">Table of Contents</h1>
+  
+  <div class="toc">
+    <div class="toc-item">
+      <span class="toc-week">Introduction</span>
+      <span class="toc-title">How to Use This Playbook</span>
+      <span class="toc-page">3</span>
+    </div>
+    <div class="toc-item">
+      <span class="toc-week">Week 1-2</span>
+      <span class="toc-title">Orientation: Hit the Ground Running</span>
+      <span class="toc-page">4</span>
+    </div>
+    <div class="toc-item">
+      <span class="toc-week">Week 3-4</span>
+      <span class="toc-title">Learn the Property Inside and Out</span>
+      <span class="toc-page">8</span>
+    </div>
+    <div class="toc-item">
+      <span class="toc-week">Week 5-6</span>
+      <span class="toc-title">Build Relationships That Matter</span>
+      <span class="toc-page">12</span>
+    </div>
+    <div class="toc-item">
+      <span class="toc-week">Week 7-8</span>
+      <span class="toc-title">Take Ownership</span>
+      <span class="toc-page">16</span>
+    </div>
+    <div class="toc-item">
+      <span class="toc-week">Week 9-10</span>
+      <span class="toc-title">Understand the Numbers</span>
+      <span class="toc-page">20</span>
+    </div>
+    <div class="toc-item">
+      <span class="toc-week">Week 11-12</span>
+      <span class="toc-title">Drive Results</span>
+      <span class="toc-page">24</span>
+    </div>
+    <div class="toc-item">
+      <span class="toc-week">Bonus</span>
+      <span class="toc-title">Printable Checklists & Templates</span>
+      <span class="toc-page">28</span>
+    </div>
+  </div>
+  
+  <div class="quote">
+    "The first 90 days will define your reputation for years to come. Residents, staff, and your supervisor are all watching. Make every day count."
+    <span class="quote-author">— Courtney Gordon, 20+ Year Industry Veteran</span>
+  </div>
+</div>
+
+<!-- INTRODUCTION -->
+<div class="page">
+  <div class="page-header">
+    <span>First 90 Days as a Property Manager</span>
+    <span>Introduction</span>
+  </div>
+  
+  <h1 class="section-title">How to Use This Playbook</h1>
+  
+  <p>Congratulations on your new role as a Property Manager. Whether you're stepping into your first PM position or taking over a new property, the next 90 days are critical. They'll set the tone for your tenure and establish your reputation with residents, staff, and leadership.</p>
+  
+  <p>This playbook breaks down your first three months into manageable, week-by-week chunks. Follow it sequentially, or jump to the section most relevant to where you are today.</p>
+  
+  <div class="stats-box">
+    <div class="stat">
+      <div class="stat-value">90</div>
+      <div class="stat-label">Days to Establish Yourself</div>
+    </div>
+    <div class="stat">
+      <div class="stat-value">12</div>
+      <div class="stat-label">Weeks of Focus Areas</div>
+    </div>
+    <div class="stat">
+      <div class="stat-value">∞</div>
+      <div class="stat-label">Career Impact</div>
+    </div>
+  </div>
+  
+  <h2>What This Playbook Covers</h2>
+  
+  <ul>
+    <li><strong>Week 1-2: Orientation</strong> — Survive your first days, meet key people, get system access, and understand what you're walking into.</li>
+    <li><strong>Week 3-4: Learn the Property</strong> — Deep-dive into the rent roll, understand the physical asset, and identify the landmines.</li>
+    <li><strong>Week 5-6: Build Relationships</strong> — Connect with residents, align with your team, and set expectations with your supervisor.</li>
+    <li><strong>Week 7-8: Take Ownership</strong> — Run your first meetings, establish your rhythm, and start making the property yours.</li>
+    <li><strong>Week 9-10: Understand the Numbers</strong> — Master the budget, learn what drives NOI, and speak the language of ownership.</li>
+    <li><strong>Week 11-12: Drive Results</strong> — Execute on occupancy, collections, renewals, and prepare for your 90-day review.</li>
+  </ul>
+  
+  <div class="callout callout-key">
+    <div class="callout-icon">💡</div>
+    <div class="callout-content">
+      <strong>Pro Tip: Document Everything</strong>
+      Keep a running log of what you learn, who you meet, and decisions you make. This will be invaluable for your 90-day review and for training your replacement someday.
+    </div>
+  </div>
+  
+  <h2>Who This Playbook Is For</h2>
+  
+  <ul>
+    <li><strong>First-time Property Managers</strong> transitioning from leasing, maintenance, or another industry</li>
+    <li><strong>Experienced PMs taking over a new property</strong> and needing a systematic approach</li>
+    <li><strong>Regional Directors</strong> onboarding new PMs who want a consistent training framework</li>
+    <li><strong>Career changers</strong> entering property management from hospitality, retail, or other customer-facing roles</li>
+  </ul>
+</div>
+
+<!-- WEEK 1-2 -->
+<div class="page">
+  <div class="page-header">
+    <span>First 90 Days as a Property Manager</span>
+    <span>Week 1-2</span>
+  </div>
+  
+  <div class="week-header">
+    <div class="week-number">1-2</div>
+    <div class="week-info">
+      <h2>Orientation</h2>
+      <p>Hit the Ground Running</p>
+    </div>
+  </div>
+  
+  <p>Your first two weeks are about survival and setup. You're drinking from a firehose — that's normal. Focus on getting access, meeting people, and understanding what you've inherited. Don't try to change anything yet.</p>
+  
+  <h2>Day 1 Survival Checklist</h2>
+  
+  <div class="checklist">
+    <h4>✓ Complete Before You Leave Day 1</h4>
+    <ul>
+      <li><span class="checkbox"></span> Get keys to the office, amenities, and model units</li>
+      <li><span class="checkbox"></span> Obtain property management software login (Yardi, RealPage, AppFolio, etc.)</li>
+      <li><span class="checkbox"></span> Set up your email and phone system</li>
+      <li><span class="checkbox"></span> Locate emergency contact list and after-hours procedures</li>
+      <li><span class="checkbox"></span> Review the property's emergency action plan</li>
+      <li><span class="checkbox"></span> Introduce yourself to whoever is on-site today</li>
+      <li><span class="checkbox"></span> Walk the property — just observe, don't judge yet</li>
+      <li><span class="checkbox"></span> Identify where key documents are stored (leases, invoices, vendor files)</li>
+    </ul>
+  </div>
+  
+  <h2>Key People to Meet</h2>
+  
+  <p>Your success depends on relationships. In the first two weeks, schedule time with:</p>
+  
+  <table>
+    <thead>
+      <tr>
+        <th>Person</th>
+        <th>Why They Matter</th>
+        <th>What to Ask</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Maintenance Supervisor</strong></td>
+        <td>Controls resident satisfaction and curb appeal</td>
+        <td>What's the biggest maintenance challenge right now?</td>
+      </tr>
+      <tr>
+        <td><strong>Lead Leasing Agent</strong></td>
+        <td>Drives revenue and knows prospect objections</td>
+        <td>Why do people choose us? Why do they say no?</td>
+      </tr>
+      <tr>
+        <td><strong>Regional Director</strong></td>
+        <td>Your boss — sets expectations and provides support</td>
+        <td>What does success look like in 90 days?</td>
+      </tr>
+      <tr>
+        <td><strong>Previous PM</strong> (if available)</td>
+        <td>Knows the history and hidden problems</td>
+        <td>What do you wish you'd known earlier?</td>
+      </tr>
+      <tr>
+        <td><strong>Top 3 Vendors</strong></td>
+        <td>Landscaping, cleaning, HVAC — your operational backbone</td>
+        <td>Are we current on payments? Any open issues?</td>
+      </tr>
+    </tbody>
+  </table>
+  
+  <div class="callout callout-warning">
+    <div class="callout-icon">⚠️</div>
+    <div class="callout-content">
+      <strong>Watch Out: The "Welcoming Committee"</strong>
+      Some staff will try to influence you early — complaining about coworkers, policies, or the previous PM. Listen politely, but don't commit to anything. Form your own opinions based on observation.
+    </div>
+  </div>
+</div>
+
+<!-- WEEK 1-2 CONTINUED -->
+<div class="page">
+  <div class="page-header">
+    <span>First 90 Days as a Property Manager</span>
+    <span>Week 1-2</span>
+  </div>
+  
+  <h2>Systems Access Checklist</h2>
+  
+  <p>You can't manage what you can't access. Push hard to get these logins in your first week:</p>
+  
+  <div class="checklist">
+    <h4>✓ System Access Required</h4>
+    <ul>
+      <li><span class="checkbox"></span> Property Management Software (Yardi, RealPage, AppFolio, Entrata)</li>
+      <li><span class="checkbox"></span> Company email and calendar</li>
+      <li><span class="checkbox"></span> Phone system / call tracking</li>
+      <li><span class="checkbox"></span> Accounting system (if separate from PMS)</li>
+      <li><span class="checkbox"></span> Work order system (if separate)</li>
+      <li><span class="checkbox"></span> CRM / Lead management tool</li>
+      <li><span class="checkbox"></span> Vendor portals (utilities, suppliers)</li>
+      <li><span class="checkbox"></span> Online reputation sites (Google Business, Yelp admin)</li>
+      <li><span class="checkbox"></span> Company intranet / shared drives</li>
+      <li><span class="checkbox"></span> Security camera system</li>
+    </ul>
+  </div>
+  
+  <h2>Property Walk Checklist</h2>
+  
+  <p>Walk the entire property in your first week with a critical eye. You're not looking to fix things yet — you're cataloging.</p>
+  
+  <div class="checklist">
+    <h4>✓ Exterior Inspection</h4>
+    <ul>
+      <li><span class="checkbox"></span> Curb appeal: signage, landscaping, parking lot condition</li>
+      <li><span class="checkbox"></span> Building exteriors: paint, siding, gutters, lighting</li>
+      <li><span class="checkbox"></span> Amenities: pool, gym, clubhouse, dog park condition</li>
+      <li><span class="checkbox"></span> Common areas: hallways, stairwells, laundry rooms</li>
+      <li><span class="checkbox"></span> Dumpster areas: cleanliness, capacity, enclosures</li>
+      <li><span class="checkbox"></span> Safety: lighting, trip hazards, railings, fire equipment</li>
+    </ul>
+  </div>
+  
+  <div class="checklist">
+    <h4>✓ Model/Vacant Units</h4>
+    <ul>
+      <li><span class="checkbox"></span> Model unit presentation and cleanliness</li>
+      <li><span class="checkbox"></span> Vacant unit count and make-ready status</li>
+      <li><span class="checkbox"></span> Down units: why are they down? What's the plan?</li>
+      <li><span class="checkbox"></span> Unit condition overall: flooring, appliances, fixtures</li>
+    </ul>
+  </div>
+  
+  <h2>Questions to Ask the Previous PM</h2>
+  
+  <p>If you can talk to your predecessor, these questions will save you months of learning:</p>
+  
+  <ol>
+    <li>Who are the problem residents I should know about?</li>
+    <li>Which vendors are great? Which ones should I replace?</li>
+    <li>What projects are in progress or promised to residents?</li>
+    <li>Where are the bodies buried? (What problems haven't surfaced yet?)</li>
+    <li>What would you do differently if you were starting over?</li>
+    <li>Who on the team is a star? Who needs coaching?</li>
+    <li>What does the Regional Director really care about?</li>
+  </ol>
+  
+  <div class="callout callout-tip">
+    <div class="callout-icon">✅</div>
+    <div class="callout-content">
+      <strong>Quick Win: The First Impression Email</strong>
+      By the end of Week 1, send a brief introduction email to all residents. Keep it warm and professional. Include: your name, a bit about your background, your commitment to the community, and how to reach you. This sets the tone that new leadership is engaged.
+    </div>
+  </div>
+</div>
+
+<!-- WEEK 3-4 -->
+<div class="page">
+  <div class="page-header">
+    <span>First 90 Days as a Property Manager</span>
+    <span>Week 3-4</span>
+  </div>
+  
+  <div class="week-header">
+    <div class="week-number">3-4</div>
+    <div class="week-info">
+      <h2>Learn the Property</h2>
+      <p>Inside and Out</p>
+    </div>
+  </div>
+  
+  <p>Now that you've survived orientation, it's time to truly understand your property. This means getting intimate with the numbers, the physical asset, and the people who live there. By the end of Week 4, you should be able to answer any question about your property without looking it up.</p>
+  
+  <h2>Unit Mix & Floorplan Mastery</h2>
+  
+  <p>Memorize your unit mix. When leadership asks, "How many 2-bedrooms do you have?" — you answer instantly.</p>
+  
+  <div class="checklist">
+    <h4>✓ Know These Numbers Cold</h4>
+    <ul>
+      <li><span class="checkbox"></span> Total unit count</li>
+      <li><span class="checkbox"></span> Unit mix by floorplan (Studios, 1BR, 2BR, 3BR)</li>
+      <li><span class="checkbox"></span> Square footage ranges</li>
+      <li><span class="checkbox"></span> Rent ranges by floorplan</li>
+      <li><span class="checkbox"></span> Which buildings have which floorplans</li>
+      <li><span class="checkbox"></span> Premium units (upgraded, views, patios)</li>
+      <li><span class="checkbox"></span> ADA-accessible unit locations</li>
+    </ul>
+  </div>
+  
+  <h2>Rent Roll Deep-Dive</h2>
+  
+  <p>The rent roll tells the story of your property. Spend serious time with it.</p>
+  
+  <h3>What to Look For:</h3>
+  
+  <table>
+    <thead>
+      <tr>
+        <th>Metric</th>
+        <th>What It Tells You</th>
+        <th>Red Flag If...</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Rent vs. Market</td>
+        <td>Are you leaving money on the table?</td>
+        <td>>10% below market on renewals</td>
+      </tr>
+      <tr>
+        <td>Lease Expirations</td>
+        <td>Workload and renewal opportunities</td>
+        <td>>20% expiring in one month</td>
+      </tr>
+      <tr>
+        <td>Move-In Dates</td>
+        <td>Resident tenure and stability</td>
+        <td>High turnover (avg tenure <12 months)</td>
+      </tr>
+      <tr>
+        <td>Concessions</td>
+        <td>How hard you're working for leases</td>
+        <td>Heavy concessions + low occupancy</td>
+      </tr>
+      <tr>
+        <td>Balance Owed</td>
+        <td>Collection problems</td>
+        <td>>5% of residents with balance</td>
+      </tr>
+    </tbody>
+  </table>
+  
+  <h2>Lease Expiration Calendar</h2>
+  
+  <p>Map out the next 12 months of lease expirations. This drives your renewal campaign timing and helps you anticipate vacancy.</p>
+  
+  <div class="callout callout-key">
+    <div class="callout-icon">💡</div>
+    <div class="callout-content">
+      <strong>The 120-Day Rule</strong>
+      Start renewal conversations 120 days before lease expiration. This gives residents time to decide and gives you time to market the unit if they decline. Waiting until 60 days is too late.
+    </div>
+  </div>
+</div>
+
+<!-- WEEK 3-4 CONTINUED -->
+<div class="page">
+  <div class="page-header">
+    <span>First 90 Days as a Property Manager</span>
+    <span>Week 3-4</span>
+  </div>
+  
+  <h2>Delinquency Assessment</h2>
+  
+  <p>Understand who owes money and why. Delinquency is often inherited — don't feel guilty about it, but do own fixing it.</p>
+  
+  <div class="checklist">
+    <h4>✓ Delinquency Audit Steps</h4>
+    <ul>
+      <li><span class="checkbox"></span> Pull a full aging report (current, 1-30, 31-60, 61-90, 90+)</li>
+      <li><span class="checkbox"></span> Calculate total delinquency as a % of potential rent</li>
+      <li><span class="checkbox"></span> Identify your top 10 delinquent accounts by dollar amount</li>
+      <li><span class="checkbox"></span> Review each file: payment history, communication log, legal status</li>
+      <li><span class="checkbox"></span> Note which accounts have payment plans in place</li>
+      <li><span class="checkbox"></span> Identify accounts that should be in eviction but aren't</li>
+    </ul>
+  </div>
+  
+  <h2>Maintenance Backlog Review</h2>
+  
+  <p>Open work orders are promises to residents. Understand what's been promised and what's overdue.</p>
+  
+  <table>
+    <thead>
+      <tr>
+        <th>Priority</th>
+        <th>SLA Target</th>
+        <th>Your Property's Avg</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Emergency (no heat, flood, lock-out)</td>
+        <td>4 hours</td>
+        <td>______</td>
+      </tr>
+      <tr>
+        <td>Urgent (no hot water, AC out, appliance down)</td>
+        <td>24 hours</td>
+        <td>______</td>
+      </tr>
+      <tr>
+        <td>Routine (minor repairs, cosmetic)</td>
+        <td>72 hours</td>
+        <td>______</td>
+      </tr>
+      <tr>
+        <td>Scheduled (not time-sensitive)</td>
+        <td>7 days</td>
+        <td>______</td>
+      </tr>
+    </tbody>
+  </table>
+  
+  <div class="callout callout-warning">
+    <div class="callout-icon">⚠️</div>
+    <div class="callout-content">
+      <strong>The Maintenance Reputation</strong>
+      Nothing kills resident satisfaction faster than ignored work orders. If you inherit a backlog, communicate with affected residents immediately. Acknowledgment and a timeline beats silence.
+    </div>
+  </div>
+  
+  <h2>Vendor Roster & Contract Status</h2>
+  
+  <p>You rely on vendors for landscaping, cleaning, pest control, HVAC, and more. Know who they are and what you're paying.</p>
+  
+  <div class="checklist">
+    <h4>✓ Vendor Review</h4>
+    <ul>
+      <li><span class="checkbox"></span> List all active vendors and their services</li>
+      <li><span class="checkbox"></span> Verify contract terms and expiration dates</li>
+      <li><span class="checkbox"></span> Check payment status — are we current?</li>
+      <li><span class="checkbox"></span> Review insurance certificates (valid and adequate?)</li>
+      <li><span class="checkbox"></span> Ask staff: Which vendors are great? Which are problems?</li>
+      <li><span class="checkbox"></span> Get vendor contact info in your phone</li>
+    </ul>
+  </div>
+  
+  <div class="callout callout-tip">
+    <div class="callout-icon">✅</div>
+    <div class="callout-content">
+      <strong>Quick Win: The Vendor Reset</strong>
+      Call your top 5 vendors personally. Introduce yourself, confirm the scope of work, and ask if there are any outstanding issues. This shows you're engaged and often surfaces problems before they escalate.
+    </div>
+  </div>
+</div>
+
+<!-- WEEK 5-6 -->
+<div class="page">
+  <div class="page-header">
+    <span>First 90 Days as a Property Manager</span>
+    <span>Week 5-6</span>
+  </div>
+  
+  <div class="week-header">
+    <div class="week-number">5-6</div>
+    <div class="week-info">
+      <h2>Build Relationships</h2>
+      <p>That Matter</p>
+    </div>
+  </div>
+  
+  <p>You've learned the systems and the property. Now it's time to invest in people. The relationships you build in these two weeks will determine how much support you get when things go sideways — and they will.</p>
+  
+  <h2>Resident Meet-and-Greet Strategies</h2>
+  
+  <p>Residents want to know who's running the show. Make yourself visible and approachable.</p>
+  
+  <h3>Tactics That Work:</h3>
+  
+  <ul>
+    <li><strong>Office Hours:</strong> Set specific times when you're available for walk-ins. Post them on your door and in common areas.</li>
+    <li><strong>Property Walks:</strong> Walk the property at different times — morning, evening, weekends. Stop and chat when you see residents.</li>
+    <li><strong>Welcome Calls:</strong> Personally call residents who moved in recently. Ask how move-in went and if they need anything.</li>
+    <li><strong>Community Events:</strong> If budget allows, host a simple meet-and-greet. Coffee and donuts on a Saturday morning works.</li>
+    <li><strong>Problem Resolution:</strong> When you solve a problem, follow up personally. "I wanted to make sure that work order was handled to your satisfaction."</li>
+  </ul>
+  
+  <div class="callout callout-key">
+    <div class="callout-icon">💡</div>
+    <div class="callout-content">
+      <strong>The Name Game</strong>
+      Learn residents' names. Greet them by name when you see them. This small act of recognition builds loyalty faster than any amenity upgrade.
+    </div>
+  </div>
+  
+  <h2>Maintenance Tech 1-on-1s</h2>
+  
+  <p>Your maintenance team makes or breaks resident satisfaction. Invest time in understanding their world.</p>
+  
+  <h3>Questions for Each Tech:</h3>
+  
+  <ol>
+    <li>What do you like most about working here?</li>
+    <li>What's your biggest frustration right now?</li>
+    <li>Do you have the tools and supplies you need?</li>
+    <li>What building or unit type gives you the most problems?</li>
+    <li>If you could change one thing about how we operate, what would it be?</li>
+    <li>How do you prefer to receive work orders and communicate?</li>
+  </ol>
+  
+  <div class="callout callout-warning">
+    <div class="callout-icon">⚠️</div>
+    <div class="callout-content">
+      <strong>Maintenance Respect</strong>
+      Never treat maintenance as "less than" the office staff. Skilled techs are hard to find. Losing a good one costs you thousands in turnover and resident complaints.
+    </div>
+  </div>
+</div>
+
+<!-- WEEK 5-6 CONTINUED -->
+<div class="page">
+  <div class="page-header">
+    <span>First 90 Days as a Property Manager</span>
+    <span>Week 5-6</span>
+  </div>
+  
+  <h2>Leasing Team Alignment</h2>
+  
+  <p>Your leasing team is the revenue engine. Make sure you're aligned on goals, process, and expectations.</p>
+  
+  <div class="checklist">
+    <h4>✓ Leasing Alignment Meeting Agenda</h4>
+    <ul>
+      <li><span class="checkbox"></span> Review current occupancy and leasing goal</li>
+      <li><span class="checkbox"></span> Discuss traffic sources: where are leads coming from?</li>
+      <li><span class="checkbox"></span> Walk through the tour path together — is it compelling?</li>
+      <li><span class="checkbox"></span> Review follow-up process: how quickly? How many touches?</li>
+      <li><span class="checkbox"></span> Discuss common objections and how we overcome them</li>
+      <li><span class="checkbox"></span> Clarify approval authority: what can they approve without you?</li>
+      <li><span class="checkbox"></span> Set expectations for communication and reporting</li>
+    </ul>
+  </div>
+  
+  <h2>Regional Director Expectations</h2>
+  
+  <p>Your RD is your most important relationship. Get crystal clear on what they expect.</p>
+  
+  <h3>Questions to Ask Your RD:</h3>
+  
+  <ol>
+    <li>What does success look like at 90 days? At 6 months? At 1 year?</li>
+    <li>What are the non-negotiables I need to know about?</li>
+    <li>How do you prefer to communicate? How often?</li>
+    <li>What authority do I have? What decisions need your approval?</li>
+    <li>What happened with the previous PM? What should I do differently?</li>
+    <li>What's the biggest risk at this property right now?</li>
+    <li>How will you evaluate my performance?</li>
+  </ol>
+  
+  <div class="callout callout-tip">
+    <div class="callout-icon">✅</div>
+    <div class="callout-content">
+      <strong>The Weekly Update</strong>
+      Start sending a brief weekly update to your RD. Include: occupancy, leasing activity, delinquency, any issues, and your priorities for next week. This builds trust and keeps surprises to a minimum.
+    </div>
+  </div>
+  
+  <h2>Setting Office Hours</h2>
+  
+  <p>Protect your time while remaining accessible. Office hours create structure.</p>
+  
+  <table>
+    <thead>
+      <tr>
+        <th>Time Block</th>
+        <th>Purpose</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>8:00 - 9:00 AM</td>
+        <td>Admin: emails, reports, planning</td>
+      </tr>
+      <tr>
+        <td>9:00 - 11:00 AM</td>
+        <td>Property walk / Team check-ins</td>
+      </tr>
+      <tr>
+        <td>11:00 AM - 12:00 PM</td>
+        <td>Resident office hours (walk-ins welcome)</td>
+      </tr>
+      <tr>
+        <td>12:00 - 1:00 PM</td>
+        <td>Lunch (protect this!)</td>
+      </tr>
+      <tr>
+        <td>1:00 - 3:00 PM</td>
+        <td>Focused work: renewals, collections, projects</td>
+      </tr>
+      <tr>
+        <td>3:00 - 4:00 PM</td>
+        <td>Resident office hours (walk-ins welcome)</td>
+      </tr>
+      <tr>
+        <td>4:00 - 5:00 PM</td>
+        <td>End-of-day wrap: tomorrow's priorities, urgent items</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- WEEK 7-8 -->
+<div class="page">
+  <div class="page-header">
+    <span>First 90 Days as a Property Manager</span>
+    <span>Week 7-8</span>
+  </div>
+  
+  <div class="week-header">
+    <div class="week-number">7-8</div>
+    <div class="week-info">
+      <h2>Take Ownership</h2>
+      <p>Make It Yours</p>
+    </div>
+  </div>
+  
+  <p>You've observed, learned, and built relationships. Now it's time to lead. By the end of Week 8, your team should feel your presence and direction. You're no longer the new person — you're the PM.</p>
+  
+  <h2>Running Your First Team Meeting</h2>
+  
+  <p>A well-run team meeting sets the tone for your leadership. Here's a simple agenda that works:</p>
+  
+  <div class="checklist">
+    <h4>✓ Weekly Team Meeting Agenda (30-45 min)</h4>
+    <ul>
+      <li><span class="checkbox"></span> <strong>Wins</strong> (5 min): What went well this week? Celebrate something.</li>
+      <li><span class="checkbox"></span> <strong>Numbers</strong> (5 min): Occupancy, traffic, leases, delinquency, work orders</li>
+      <li><span class="checkbox"></span> <strong>Focus</strong> (10 min): What's the #1 priority this week?</li>
+      <li><span class="checkbox"></span> <strong>Issues</strong> (10 min): What's blocking us? Who needs help?</li>
+      <li><span class="checkbox"></span> <strong>Announcements</strong> (5 min): Corporate updates, policy changes, events</li>
+      <li><span class="checkbox"></span> <strong>Close</strong> (2 min): Recap action items, thank the team</li>
+    </ul>
+  </div>
+  
+  <div class="callout callout-key">
+    <div class="callout-icon">💡</div>
+    <div class="callout-content">
+      <strong>Meeting Rules</strong>
+      Start on time. End on time. No phones. Everyone speaks. Meetings without action items are just conversations.
+    </div>
+  </div>
+  
+  <h2>Establishing Your Daily Rhythm</h2>
+  
+  <p>Consistency builds trust. When your team knows what to expect, they perform better.</p>
+  
+  <h3>Sample Daily Rhythm:</h3>
+  
+  <ul>
+    <li><strong>Morning (first 30 min):</strong> Check overnight emails, review today's move-ins/outs, scan work order queue</li>
+    <li><strong>Mid-morning:</strong> Property walk — different route each day</li>
+    <li><strong>Before lunch:</strong> Touch base with maintenance supervisor</li>
+    <li><strong>Afternoon:</strong> Focused work block — renewals, collections calls, vendor management</li>
+    <li><strong>End of day:</strong> Review tomorrow's calendar, respond to any urgent items, send updates if needed</li>
+  </ul>
+  
+  <h2>Identifying Your Top 3 Problems</h2>
+  
+  <p>You can't fix everything at once. By Week 7, you should have a clear view of the property's biggest issues. Pick your top 3 and focus relentlessly.</p>
+  
+  <h3>Common Top 3 Problems:</h3>
+  
+  <ol>
+    <li><strong>Occupancy:</strong> Below target, need to drive leasing</li>
+    <li><strong>Delinquency:</strong> Collections are behind, need to implement process</li>
+    <li><strong>Maintenance backlog:</strong> Work orders piling up, resident satisfaction suffering</li>
+    <li><strong>Team performance:</strong> Someone not pulling their weight</li>
+    <li><strong>Curb appeal:</strong> Property looks tired, affecting leasing</li>
+    <li><strong>Renewals:</strong> Too many residents leaving, need retention focus</li>
+  </ol>
+  
+  <div class="callout callout-warning">
+    <div class="callout-icon">⚠️</div>
+    <div class="callout-content">
+      <strong>Focus Beats Scattered</strong>
+      Resist the urge to fix 10 things at once. Deep focus on 3 problems will yield better results than shallow attention to 10. You can always add more after you've made progress.
+    </div>
+  </div>
+</div>
+
+<!-- WEEK 7-8 CONTINUED -->
+<div class="page">
+  <div class="page-header">
+    <span>First 90 Days as a Property Manager</span>
+    <span>Week 7-8</span>
+  </div>
+  
+  <h2>Quick Wins to Build Credibility</h2>
+  
+  <p>Early wins build momentum and earn trust. Look for high-visibility, low-effort improvements.</p>
+  
+  <h3>Quick Win Ideas:</h3>
+  
+  <table>
+    <thead>
+      <tr>
+        <th>Category</th>
+        <th>Quick Win Example</th>
+        <th>Impact</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Curb Appeal</td>
+        <td>Fresh mulch at entrance, new welcome mat, clean the sign</td>
+        <td>Immediate visual improvement</td>
+      </tr>
+      <tr>
+        <td>Resident Experience</td>
+        <td>Fix the top 3 longest-open work orders</td>
+        <td>Resident trust restored</td>
+      </tr>
+      <tr>
+        <td>Team Morale</td>
+        <td>Stock the break room, recognize someone publicly</td>
+        <td>Team knows you care</td>
+      </tr>
+      <tr>
+        <td>Process</td>
+        <td>Create a move-in checklist that didn't exist</td>
+        <td>Fewer errors, better experience</td>
+      </tr>
+      <tr>
+        <td>Communication</td>
+        <td>Send a community newsletter (even simple)</td>
+        <td>Residents feel informed</td>
+      </tr>
+    </tbody>
+  </table>
+  
+  <h2>Reporting Cadence with Your RD</h2>
+  
+  <p>Don't wait for your RD to ask for updates. Proactive communication builds trust.</p>
+  
+  <h3>Suggested Reporting Rhythm:</h3>
+  
+  <ul>
+    <li><strong>Daily:</strong> Only if there's a crisis or major issue</li>
+    <li><strong>Weekly:</strong> Brief email update (occupancy, issues, priorities)</li>
+    <li><strong>Monthly:</strong> Formal report with financials, KPIs, and narrative</li>
+    <li><strong>Quarterly:</strong> In-depth review meeting, goal-setting for next quarter</li>
+  </ul>
+  
+  <div class="callout callout-tip">
+    <div class="callout-icon">✅</div>
+    <div class="callout-content">
+      <strong>The "No Surprises" Rule</strong>
+      Your RD should never learn about a problem from someone else first. If something bad happens — or is about to happen — tell them immediately. Bad news doesn't age well.
+    </div>
+  </div>
+  
+  <h2>Documenting Your Progress</h2>
+  
+  <p>Keep a running log of your first 90 days. This will be invaluable for your review and your own professional development.</p>
+  
+  <div class="checklist">
+    <h4>✓ Track These Items</h4>
+    <ul>
+      <li><span class="checkbox"></span> Key decisions you made and why</li>
+      <li><span class="checkbox"></span> Problems you identified and how you addressed them</li>
+      <li><span class="checkbox"></span> Quick wins you achieved</li>
+      <li><span class="checkbox"></span> Relationships you built</li>
+      <li><span class="checkbox"></span> Skills you developed or need to develop</li>
+      <li><span class="checkbox"></span> Feedback you received (positive and constructive)</li>
+    </ul>
+  </div>
+</div>
+
+<!-- WEEK 9-10: UNDERSTAND THE NUMBERS -->
+<div class="page">
+  <div class="page-header">
+    <span>First 90 Days as a Property Manager</span>
+    <span>Week 9-10</span>
+  </div>
+  
+  <div class="week-header">
+    <div class="week-number">9-10</div>
+    <div class="week-info">
+      <h2>Understand the Numbers</h2>
+      <p>Master the Budget</p>
+    </div>
+  </div>
+  
+  <p>You can't manage what you don't understand. Property management is ultimately a financial business, and your ability to read, interpret, and influence the numbers separates good PMs from great ones. These two weeks are about becoming fluent in the language of ownership.</p>
+  
+  <h2>Reading and Understanding the Budget</h2>
+  
+  <p>Every property operates on an annual budget. This document is your financial roadmap — it tells you what's expected for revenue, expenses, and profitability.</p>
+  
+  <h3>Budget Components:</h3>
+  
+  <table>
+    <thead>
+      <tr>
+        <th>Section</th>
+        <th>What It Contains</th>
+        <th>Your Influence</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Gross Potential Rent (GPR)</strong></td>
+        <td>Total rent if 100% occupied at market rates</td>
+        <td>Indirect — market sets rates</td>
+      </tr>
+      <tr>
+        <td><strong>Loss to Lease</strong></td>
+        <td>Gap between GPR and actual rents charged</td>
+        <td>High — renewal negotiations</td>
+      </tr>
+      <tr>
+        <td><strong>Vacancy Loss</strong></td>
+        <td>Revenue lost to empty units</td>
+        <td>High — occupancy management</td>
+      </tr>
+      <tr>
+        <td><strong>Concessions</strong></td>
+        <td>Move-in specials, free rent</td>
+        <td>High — leasing strategy</td>
+      </tr>
+      <tr>
+        <td><strong>Bad Debt</strong></td>
+        <td>Rent you won't collect</td>
+        <td>High — collections process</td>
+      </tr>
+      <tr>
+        <td><strong>Other Income</strong></td>
+        <td>Fees, parking, laundry, pet rent</td>
+        <td>Medium — enforcement</td>
+      </tr>
+      <tr>
+        <td><strong>Operating Expenses</strong></td>
+        <td>Payroll, utilities, R&M, contracts</td>
+        <td>High — cost control</td>
+      </tr>
+    </tbody>
+  </table>
+  
+  <h2>Revenue vs. Expenses Breakdown</h2>
+  
+  <div class="callout callout-key">
+    <div class="callout-icon">💡</div>
+    <div class="callout-content">
+      <strong>The Simple Formula</strong>
+      <strong>NOI = Total Revenue - Operating Expenses</strong><br><br>
+      Net Operating Income (NOI) is the number ownership cares about most. Everything you do either increases revenue or decreases expenses — both flow to NOI.
+    </div>
+  </div>
+  
+  <h3>Revenue Levers You Control:</h3>
+  <ul>
+    <li>Occupancy rate (fewer vacant days)</li>
+    <li>Renewal rent increases (closing loss to lease)</li>
+    <li>Concession discipline (giving away less)</li>
+    <li>Collections (reducing bad debt)</li>
+    <li>Fee income (pet rent, parking, late fees)</li>
+  </ul>
+  
+  <h3>Expense Levers You Control:</h3>
+  <ul>
+    <li>Vendor costs (negotiation, competitive bidding)</li>
+    <li>Utility management (common area efficiency)</li>
+    <li>Turn costs (reducing make-ready expenses)</li>
+    <li>Overtime management</li>
+    <li>Supply purchasing</li>
+  </ul>
+</div>
+
+<!-- WEEK 9-10 CONTINUED -->
+<div class="page">
+  <div class="page-header">
+    <span>First 90 Days as a Property Manager</span>
+    <span>Week 9-10</span>
+  </div>
+  
+  <h2>NOI and What Drives It</h2>
+  
+  <p>Net Operating Income is how properties are valued. A property worth $10M at a 6% cap rate generates $600K NOI. Every dollar you add to NOI increases property value by ~$16-17 at that cap rate.</p>
+  
+  <div class="stats-box">
+    <div class="stat">
+      <div class="stat-value">$100</div>
+      <div class="stat-label">Monthly Rent Increase</div>
+    </div>
+    <div class="stat">
+      <div class="stat-value">$1,200</div>
+      <div class="stat-label">Annual NOI Impact</div>
+    </div>
+    <div class="stat">
+      <div class="stat-value">$20,000</div>
+      <div class="stat-label">Property Value Added (6% Cap)</div>
+    </div>
+  </div>
+  
+  <h2>Variance Analysis Basics</h2>
+  
+  <p>Each month, you'll compare actual results to budget. This is called variance analysis. Learn to explain the "why" behind every significant variance.</p>
+  
+  <h3>Variance Analysis Questions:</h3>
+  
+  <ol>
+    <li><strong>What's the variance?</strong> (Actual vs. Budget, $ and %)</li>
+    <li><strong>Is it favorable or unfavorable?</strong> (Did we beat budget or miss?)</li>
+    <li><strong>Is it timing or permanent?</strong> (Will it reverse, or are we off-track?)</li>
+    <li><strong>What caused it?</strong> (Root cause: market, operations, one-time event?)</li>
+    <li><strong>What's the action?</strong> (What are we doing about it?)</li>
+  </ol>
+  
+  <div class="callout callout-warning">
+    <div class="callout-icon">⚠️</div>
+    <div class="callout-content">
+      <strong>The 5% Rule</strong>
+      Any line item that's more than 5% off budget (or $1,000+, whichever is less) deserves an explanation. Don't wait for your RD to ask — include explanations in your monthly report.
+    </div>
+  </div>
+  
+  <h2>CapEx vs. OpEx</h2>
+  
+  <p>Not all expenses are equal. Understanding the difference matters for budgeting and decision-making.</p>
+  
+  <table>
+    <thead>
+      <tr>
+        <th></th>
+        <th>Operating Expenses (OpEx)</th>
+        <th>Capital Expenses (CapEx)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Definition</strong></td>
+        <td>Day-to-day costs to run the property</td>
+        <td>Major improvements that add value or extend life</td>
+      </tr>
+      <tr>
+        <td><strong>Examples</strong></td>
+        <td>Repairs, supplies, utilities, payroll</td>
+        <td>New roof, HVAC replacement, parking lot resurface</td>
+      </tr>
+      <tr>
+        <td><strong>Budget Impact</strong></td>
+        <td>Hits NOI immediately</td>
+        <td>Usually separate capital budget</td>
+      </tr>
+      <tr>
+        <td><strong>Your Role</strong></td>
+        <td>Manage daily, stay within budget</td>
+        <td>Identify needs, request funding</td>
+      </tr>
+    </tbody>
+  </table>
+  
+  <h2>Questions to Ask About Budget Assumptions</h2>
+  
+  <div class="checklist">
+    <h4>✓ Budget Review Checklist</h4>
+    <ul>
+      <li><span class="checkbox"></span> What occupancy rate is assumed? Is it realistic?</li>
+      <li><span class="checkbox"></span> What rent growth is built in? How does it compare to market?</li>
+      <li><span class="checkbox"></span> What's budgeted for bad debt? Does it match recent history?</li>
+      <li><span class="checkbox"></span> Are there any known capital needs not in the budget?</li>
+      <li><span class="checkbox"></span> What contract renewals are coming that might change costs?</li>
+      <li><span class="checkbox"></span> Is payroll realistic given current staffing?</li>
+      <li><span class="checkbox"></span> What's the biggest risk to hitting this budget?</li>
+    </ul>
+  </div>
+</div>
+
+<!-- WEEK 11-12 -->
+<div class="page">
+  <div class="page-header">
+    <span>First 90 Days as a Property Manager</span>
+    <span>Week 11-12</span>
+  </div>
+  
+  <div class="week-header">
+    <div class="week-number">11-12</div>
+    <div class="week-info">
+      <h2>Drive Results</h2>
+      <p>Execute and Deliver</p>
+    </div>
+  </div>
+  
+  <p>The final two weeks of your first 90 days are about execution. You've learned, built relationships, and taken ownership. Now it's time to deliver measurable results and prepare for your review.</p>
+  
+  <h2>Occupancy Push Strategies</h2>
+  
+  <p>If occupancy is below target, these are your levers:</p>
+  
+  <h3>Short-Term Tactics (This Week):</h3>
+  <ul>
+    <li>Call every pending applicant — what's holding them up?</li>
+    <li>Review every lead from the past 30 days — any follow-up opportunities?</li>
+    <li>Audit your online listings — photos current? Pricing competitive?</li>
+    <li>Offer a limited-time concession to close fence-sitters</li>
+    <li>Ask current residents for referrals (offer a bonus)</li>
+  </ul>
+  
+  <h3>Medium-Term Tactics (This Month):</h3>
+  <ul>
+    <li>Refresh model unit staging</li>
+    <li>Improve curb appeal at entrance</li>
+    <li>Train leasing team on objection handling</li>
+    <li>Evaluate marketing spend — is it working?</li>
+    <li>Consider broker outreach for corporate/relocation leads</li>
+  </ul>
+  
+  <h2>Delinquency Reduction Plan</h2>
+  
+  <p>Collections require consistent process. Implement this if you don't have one:</p>
+  
+  <table>
+    <thead>
+      <tr>
+        <th>Day of Month</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>1st</td>
+        <td>Rent is due</td>
+      </tr>
+      <tr>
+        <td>2nd-4th</td>
+        <td>Friendly reminder calls/texts to anyone unpaid</td>
+      </tr>
+      <tr>
+        <td>5th</td>
+        <td>Late fee applied (per lease)</td>
+      </tr>
+      <tr>
+        <td>6th-10th</td>
+        <td>Personal phone calls, payment arrangements discussed</td>
+      </tr>
+      <tr>
+        <td>10th</td>
+        <td>Demand letter / Pay or Quit notice (per state law)</td>
+      </tr>
+      <tr>
+        <td>15th</td>
+        <td>File for eviction if no payment or arrangement</td>
+      </tr>
+    </tbody>
+  </table>
+  
+  <div class="callout callout-key">
+    <div class="callout-icon">💡</div>
+    <div class="callout-content">
+      <strong>Collections Mindset</strong>
+      Be firm but fair. Most residents who fall behind want to pay — they just need a plan. But don't let sympathy become a business problem. Unpaid rent hurts everyone, including residents who pay on time.
+    </div>
+  </div>
+</div>
+
+<!-- WEEK 11-12 CONTINUED -->
+<div class="page">
+  <div class="page-header">
+    <span>First 90 Days as a Property Manager</span>
+    <span>Week 11-12</span>
+  </div>
+  
+  <h2>Renewal Campaign Basics</h2>
+  
+  <p>Renewals are cheaper than new leases. A strong renewal program protects occupancy and reduces turn costs.</p>
+  
+  <h3>Renewal Timeline:</h3>
+  
+  <ul>
+    <li><strong>120 days out:</strong> Generate renewal offer, mail/email to resident</li>
+    <li><strong>90 days out:</strong> Personal follow-up call if no response</li>
+    <li><strong>60 days out:</strong> Final push — meet in person if needed</li>
+    <li><strong>45 days out:</strong> If declining, begin marketing the unit</li>
+    <li><strong>30 days out:</strong> Confirm move-out date, schedule pre-move inspection</li>
+  </ul>
+  
+  <h3>Renewal Conversation Tips:</h3>
+  
+  <ol>
+    <li>Lead with appreciation: "We value having you here..."</li>
+    <li>Present the offer clearly: term, rent, any incentives</li>
+    <li>Highlight what's improved since they moved in</li>
+    <li>Ask about any concerns and address them</li>
+    <li>Create urgency: "This offer is good until [date]"</li>
+  </ol>
+  
+  <h2>Work Order SLA Management</h2>
+  
+  <p>Track and improve your maintenance response times:</p>
+  
+  <div class="checklist">
+    <h4>✓ Weekly Maintenance Review</h4>
+    <ul>
+      <li><span class="checkbox"></span> Count of open work orders by priority</li>
+      <li><span class="checkbox"></span> Average days to completion by category</li>
+      <li><span class="checkbox"></span> Any work orders over 7 days old? Why?</li>
+      <li><span class="checkbox"></span> Resident callbacks (work not done right first time)</li>
+      <li><span class="checkbox"></span> Parts on order holding up completions?</li>
+    </ul>
+  </div>
+  
+  <h2>Preparing for Your 90-Day Review</h2>
+  
+  <p>Don't wait for your RD to structure the conversation. Come prepared with:</p>
+  
+  <div class="checklist">
+    <h4>✓ 90-Day Review Preparation</h4>
+    <ul>
+      <li><span class="checkbox"></span> Summary of property condition when you started</li>
+      <li><span class="checkbox"></span> Key metrics: then vs. now (occupancy, delinquency, work orders)</li>
+      <li><span class="checkbox"></span> Top 3 accomplishments with specific examples</li>
+      <li><span class="checkbox"></span> Top 3 challenges and how you're addressing them</li>
+      <li><span class="checkbox"></span> What you've learned about the property and team</li>
+      <li><span class="checkbox"></span> Goals for the next 90 days</li>
+      <li><span class="checkbox"></span> What support you need from your RD</li>
+      <li><span class="checkbox"></span> Questions you have about your performance</li>
+    </ul>
+  </div>
+  
+  <div class="callout callout-tip">
+    <div class="callout-icon">✅</div>
+    <div class="callout-content">
+      <strong>Own the Narrative</strong>
+      Your 90-day review is a chance to tell your story. If you don't frame it, someone else will. Come with data, examples, and a clear view of the path forward.
+    </div>
+  </div>
+</div>
+
+<!-- BONUS: CHECKLISTS -->
+<div class="page">
+  <div class="page-header">
+    <span>First 90 Days as a Property Manager</span>
+    <span>Bonus Materials</span>
+  </div>
+  
+  <h1 class="section-title">Bonus: Printable Checklists</h1>
+  
+  <h2>First 90 Days Master Checklist</h2>
+  
+  <div class="checklist">
+    <h4>✓ Week 1-2: Orientation</h4>
+    <ul>
+      <li><span class="checkbox"></span> Day 1 survival items complete</li>
+      <li><span class="checkbox"></span> All system access obtained</li>
+      <li><span class="checkbox"></span> Key people met (maintenance, leasing, RD, vendors)</li>
+      <li><span class="checkbox"></span> Property walk completed with notes</li>
+      <li><span class="checkbox"></span> Previous PM questions answered (if available)</li>
+      <li><span class="checkbox"></span> Introduction email sent to residents</li>
+    </ul>
+  </div>
+  
+  <div class="checklist">
+    <h4>✓ Week 3-4: Learn the Property</h4>
+    <ul>
+      <li><span class="checkbox"></span> Unit mix memorized</li>
+      <li><span class="checkbox"></span> Rent roll deep-dive complete</li>
+      <li><span class="checkbox"></span> Lease expiration calendar created</li>
+      <li><span class="checkbox"></span> Delinquency audit complete</li>
+      <li><span class="checkbox"></span> Maintenance backlog reviewed</li>
+      <li><span class="checkbox"></span> Vendor roster verified</li>
+    </ul>
+  </div>
+  
+  <div class="checklist">
+    <h4>✓ Week 5-6: Build Relationships</h4>
+    <ul>
+      <li><span class="checkbox"></span> Resident meet-and-greet held</li>
+      <li><span class="checkbox"></span> Maintenance tech 1-on-1s complete</li>
+      <li><span class="checkbox"></span> Leasing team alignment meeting held</li>
+      <li><span class="checkbox"></span> RD expectations clarified</li>
+      <li><span class="checkbox"></span> Office hours established and posted</li>
+    </ul>
+  </div>
+  
+  <div class="checklist">
+    <h4>✓ Week 7-8: Take Ownership</h4>
+    <ul>
+      <li><span class="checkbox"></span> First team meeting run</li>
+      <li><span class="checkbox"></span> Daily rhythm established</li>
+      <li><span class="checkbox"></span> Top 3 problems identified</li>
+      <li><span class="checkbox"></span> Quick wins achieved</li>
+      <li><span class="checkbox"></span> Weekly reporting to RD started</li>
+    </ul>
+  </div>
+  
+  <div class="checklist">
+    <h4>✓ Week 9-10: Understand the Numbers</h4>
+    <ul>
+      <li><span class="checkbox"></span> Budget reviewed and understood</li>
+      <li><span class="checkbox"></span> Revenue vs. expense breakdown clear</li>
+      <li><span class="checkbox"></span> NOI drivers identified</li>
+      <li><span class="checkbox"></span> Variance analysis process learned</li>
+      <li><span class="checkbox"></span> CapEx vs. OpEx distinction clear</li>
+    </ul>
+  </div>
+  
+  <div class="checklist">
+    <h4>✓ Week 11-12: Drive Results</h4>
+    <ul>
+      <li><span class="checkbox"></span> Occupancy action plan executing</li>
+      <li><span class="checkbox"></span> Collections process implemented</li>
+      <li><span class="checkbox"></span> Renewal campaign running</li>
+      <li><span class="checkbox"></span> Work order SLAs improving</li>
+      <li><span class="checkbox"></span> 90-day review prepared</li>
+    </ul>
+  </div>
+</div>
+
+<!-- BONUS: TEMPLATES -->
+<div class="page">
+  <div class="page-header">
+    <span>First 90 Days as a Property Manager</span>
+    <span>Bonus Materials</span>
+  </div>
+  
+  <h2>Daily PM Schedule Template</h2>
+  
+  <table>
+    <thead>
+      <tr>
+        <th>Time</th>
+        <th>Monday</th>
+        <th>Tuesday</th>
+        <th>Wednesday</th>
+        <th>Thursday</th>
+        <th>Friday</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>8:00-9:00</strong></td>
+        <td colspan="5">Admin: Emails, reports, daily planning</td>
+      </tr>
+      <tr>
+        <td><strong>9:00-10:00</strong></td>
+        <td>Team Mtg</td>
+        <td>Prop Walk</td>
+        <td>Prop Walk</td>
+        <td>Prop Walk</td>
+        <td>Prop Walk</td>
+      </tr>
+      <tr>
+        <td><strong>10:00-12:00</strong></td>
+        <td>Renewals</td>
+        <td>Collections</td>
+        <td>Renewals</td>
+        <td>Vendor Mgmt</td>
+        <td>Catch-up</td>
+      </tr>
+      <tr>
+        <td><strong>12:00-1:00</strong></td>
+        <td colspan="5">Lunch</td>
+      </tr>
+      <tr>
+        <td><strong>1:00-3:00</strong></td>
+        <td>Collections</td>
+        <td>Renewals</td>
+        <td>Maint Review</td>
+        <td>Leasing Support</td>
+        <td>Reports</td>
+      </tr>
+      <tr>
+        <td><strong>3:00-4:00</strong></td>
+        <td colspan="5">Resident Office Hours</td>
+      </tr>
+      <tr>
+        <td><strong>4:00-5:00</strong></td>
+        <td colspan="5">End-of-day wrap, tomorrow prep</td>
+      </tr>
+    </tbody>
+  </table>
+  
+  <h2>Sample 90-Day Goals</h2>
+  
+  <table>
+    <thead>
+      <tr>
+        <th>Category</th>
+        <th>Metric</th>
+        <th>Starting Point</th>
+        <th>90-Day Target</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Occupancy</td>
+        <td>Physical Occupancy %</td>
+        <td>______%</td>
+        <td>______%</td>
+      </tr>
+      <tr>
+        <td>Leasing</td>
+        <td>Leased %</td>
+        <td>______%</td>
+        <td>______%</td>
+      </tr>
+      <tr>
+        <td>Collections</td>
+        <td>Delinquency %</td>
+        <td>______%</td>
+        <td>______%</td>
+      </tr>
+      <tr>
+        <td>Renewals</td>
+        <td>Renewal Rate</td>
+        <td>______%</td>
+        <td>______%</td>
+      </tr>
+      <tr>
+        <td>Maintenance</td>
+        <td>Avg Days to Complete</td>
+        <td>______</td>
+        <td>______</td>
+      </tr>
+      <tr>
+        <td>Satisfaction</td>
+        <td>Google Rating</td>
+        <td>______</td>
+        <td>______</td>
+      </tr>
+    </tbody>
+  </table>
+  
+  <h2>Red Flags to Watch For</h2>
+  
+  <div class="callout callout-warning" style="margin-top: 20px;">
+    <div class="callout-content">
+      <ul style="margin: 0;">
+        <li>Staff resistant to any change or transparency</li>
+        <li>Delinquency over 5% with no action plan</li>
+        <li>Work orders over 30 days old</li>
+        <li>Vendors not being paid on time</li>
+        <li>Resident files missing or disorganized</li>
+        <li>High turnover with no clear reason</li>
+        <li>Safety issues being ignored</li>
+        <li>Significant gap between reported and actual occupancy</li>
+        <li>Previous PM left abruptly with no transition</li>
+        <li>Team members saying "that's how we've always done it"</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- FINAL PAGE -->
+<div class="page">
+  <div class="page-header">
+    <span>First 90 Days as a Property Manager</span>
+    <span>Closing</span>
+  </div>
+  
+  <h1 class="section-title">You've Got This</h1>
+  
+  <p style="font-size: 14px; margin-bottom: 30px;">The first 90 days are a marathon, not a sprint. Some days you'll feel overwhelmed. Some days you'll wonder if you made the right choice. That's normal.</p>
+  
+  <p style="font-size: 14px; margin-bottom: 30px;">What matters is showing up every day, learning constantly, and caring about your residents, your team, and your property. The tactical skills will come with time. The relationships you build and the reputation you establish in these first 90 days will carry you for years.</p>
+  
+  <div class="quote">
+    "Property management isn't about buildings. It's about people — the residents who call your property home, the team members who depend on your leadership, and the owners who trust you with their investment. Take care of the people, and the numbers take care of themselves."
+    <span class="quote-author">— Courtney Gordon</span>
+  </div>
+  
+  <h2>Key Takeaways</h2>
+  
+  <ol style="font-size: 13px; line-height: 1.8;">
+    <li><strong>Week 1-2:</strong> Survive and setup — get access, meet people, understand what you've inherited</li>
+    <li><strong>Week 3-4:</strong> Learn everything — rent roll, property condition, delinquency, vendors</li>
+    <li><strong>Week 5-6:</strong> Build relationships — residents, team, RD, vendors</li>
+    <li><strong>Week 7-8:</strong> Take ownership — run meetings, establish rhythm, pick your battles</li>
+    <li><strong>Week 9-10:</strong> Master the numbers — budget, NOI, variance analysis</li>
+    <li><strong>Week 11-12:</strong> Drive results — execute on occupancy, collections, renewals</li>
+  </ol>
+  
+  <div style="text-align: center; margin-top: 50px; padding: 40px; background: var(--gray-50); border-radius: 12px;">
+    <h3 style="margin-bottom: 15px;">Ready for More?</h3>
+    <p style="margin-bottom: 20px;">Check out our other resources for property managers:</p>
+    <ul style="list-style: none; padding: 0; margin: 0;">
+      <li style="margin-bottom: 8px;">📋 Property Management SOP Bundle</li>
+      <li style="margin-bottom: 8px;">📊 Due Diligence Checklist + Calculator</li>
+      <li style="margin-bottom: 8px;">✅ Tenant Screening Decision Framework</li>
+      <li style="margin-bottom: 8px;">📈 Regional Director KPI Dashboard</li>
+    </ul>
+    <p style="margin-top: 20px; font-size: 12px; color: var(--gray-600);">Visit <strong>gumroad.com/courtneygordon</strong></p>
+  </div>
+  
+  <div style="text-align: center; margin-top: 40px; font-size: 11px; color: var(--gray-500);">
+    <p>© 2026 Courtney Gordon. All Rights Reserved.</p>
+    <p>This playbook is for educational purposes. Always follow your company's specific policies and local laws.</p>
+  </div>
+</div>
+
+</body>
+</html>
