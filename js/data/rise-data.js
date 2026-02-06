@@ -5,7 +5,7 @@
 
 export const risePortfolio = {
   name: 'RISE Residential',
-  totalProperties: 32,
+  totalProperties: 31, // Removed LSU - Nicholson Gateway (0 units/beds)
   // Calculated from properties below
   onCampusUnits: 2458,
   onCampusBeds: 7486,
@@ -17,35 +17,8 @@ export const risePortfolio = {
 };
 
 export const riseProperties = [
-  // ========== ON-CAMPUS STUDENT (17 properties) ==========
-  {
-    name: "LSU - Nicholson Gateway",
-    type: "OC", // On-Campus
-    units: 0,
-    beds: 0,
-    city: "Baton Rouge",
-    state: "LA",
-    rd: "Alana Savoie",
-    gm: "Marc Nichols",
-    physOcc: null,
-    leased: null,
-    delinq: null,
-    woSla: null,
-    mtdClosing: null,
-    mtdTraffic: 0,
-    mtdLeases: 0,
-    leadToTour: null,
-    renewalRatio: null,
-    googleStars: null,
-    googleReviews: null,
-    training: null,
-    tali: null,
-    propIndex: null,
-    noiVariance: null,
-    avgRent: null,
-    newTradeOut: null,
-    defaultLeaseUp: false
-  },
+  // ========== ON-CAMPUS STUDENT (16 properties) ==========
+  // Note: LSU - Nicholson Gateway removed (0 units/beds)
   {
     name: "LSU - Spruce",
     type: "OC",

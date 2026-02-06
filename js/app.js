@@ -951,7 +951,7 @@ class App {
         <!-- Regional Blocks -->
         <div class="regional-blocks">
           ${Object.keys(byRD).length > 0 
-            ? Object.keys(byRD).map(rd => this.renderRegionalBlock(rd, byRD[rd])).join('')
+            ? Object.keys(byRD).sort((a, b) => a.localeCompare(b)).map(rd => this.renderRegionalBlock(rd, byRD[rd].sort((x, y) => x.name.localeCompare(y.name)))).join('')
             : '<div class="empty-state">No properties match your search.</div>'
           }
         </div>
@@ -1016,9 +1016,10 @@ class App {
           <div class="property-cell">
             <span class="property-name" data-drill-property="${prop.name}">${prop.name} <span class="drill-arrow">${isExpanded ? '▼' : '▶'}</span></span>
             <span class="property-city">${prop.city || ''}</span>
-            <label class="leaseup-toggle">
+            <label class="leaseup-toggle-switch">
               <input type="checkbox" ${isLeaseUp ? 'checked' : ''} data-leaseup-toggle="${prop.name}">
-              <span class="leaseup-label ${isLeaseUp ? 'leaseup-label--active' : ''}">${isLeaseUp ? 'Lease-Up' : 'Stabilized'}</span>
+              <span class="slider"></span>
+              <span class="leaseup-label">${isLeaseUp ? 'Lease-Up' : 'Stabilized'}</span>
             </label>
           </div>
         </td>
