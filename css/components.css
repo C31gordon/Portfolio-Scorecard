@@ -2431,3 +2431,56 @@
 .drill-card__drillin {
   margin-top: 8px;
 }
+
+/* ===== ADDITIONAL DRILL TABLE POLISH ===== */
+.drill-table tbody tr:nth-child(even) {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.drill-table td:first-child {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.drill-table td:nth-child(2) {
+  color: var(--text-secondary);
+}
+
+/* Status badges in tables */
+.drill-table td[data-status="Occupied"],
+.drill-table td:contains("Occupied") {
+  color: var(--success);
+}
+
+.drill-table td[data-status="Vacant"],
+.drill-table td:contains("Vacant") {
+  color: var(--danger);
+}
+
+.drill-table td[data-status="Notice"],
+.drill-table td:contains("Notice") {
+  color: var(--warning);
+}
+
+/* Compact cards when in drill view */
+.drill-card.drill-card--compact {
+  padding: 12px;
+}
+
+.drill-card.drill-card--compact .drill-card__header h4 {
+  font-size: 0.8rem;
+}
+
+.drill-card.drill-card--compact .drill-card__value {
+  font-size: 1.2rem;
+}
+
+/* Improve table view in cards */
+.drill-card__table-view table {
+  margin-top: 8px;
+}
+
+.drill-card__table-view td,
+.drill-card__table-view th {
+  font-size: 0.65rem;
+}
