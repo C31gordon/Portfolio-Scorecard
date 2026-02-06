@@ -106,29 +106,46 @@ const COLUMN_DEFS = {
   noiVariance: { label: 'NOI Var', default: true }
 };
 
-// Date range labels
+// Date range labels - RISE weeks are Fri-Thu, periods show PREVIOUS completed period
 const DATE_RANGES = {
-  wtd: { label: 'Week to Date', getRange: () => {
+  wtd: { label: 'Prior Week', getRange: () => {
+    // RISE weeks: Friday to Thursday
+    // Find the most recent completed week (last Thu back to prev Fri)
     const now = new Date();
-    const start = new Date(now);
-    start.setDate(now.getDate() - now.getDay());
-    return { start, end: now };
+    const day = now.getDay(); // 0=Sun, 1=Mon, ... 4=Thu, 5=Fri, 6=Sat
+    
+    // Find last Thursday (end of prior week)
+    let end = new Date(now);
+    const daysToLastThu = (day + 3) % 7; // Days back to most recent Thu
+    end.setDate(now.getDate() - daysToLastThu - (day <= 4 ? 7 : 0));
+    
+    // Start is 6 days before end (Friday)
+    let start = new Date(end);
+    start.setDate(end.getDate() - 6);
+    
+    return { start, end };
   }},
-  mtd: { label: 'Month to Date', getRange: () => {
+  mtd: { label: 'Prior Month', getRange: () => {
     const now = new Date();
-    const start = new Date(now.getFullYear(), now.getMonth(), 1);
-    return { start, end: now };
+    // Previous month
+    const start = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+    const end = new Date(now.getFullYear(), now.getMonth(), 0); // Last day of prev month
+    return { start, end };
   }},
-  qtd: { label: 'Quarter to Date', getRange: () => {
+  qtd: { label: 'Prior Quarter', getRange: () => {
     const now = new Date();
-    const qMonth = Math.floor(now.getMonth() / 3) * 3;
-    const start = new Date(now.getFullYear(), qMonth, 1);
-    return { start, end: now };
+    const currentQ = Math.floor(now.getMonth() / 3);
+    const prevQ = currentQ === 0 ? 3 : currentQ - 1;
+    const year = currentQ === 0 ? now.getFullYear() - 1 : now.getFullYear();
+    const start = new Date(year, prevQ * 3, 1);
+    const end = new Date(year, prevQ * 3 + 3, 0); // Last day of quarter
+    return { start, end };
   }},
-  ytd: { label: 'Year to Date', getRange: () => {
+  ytd: { label: 'Prior Year', getRange: () => {
     const now = new Date();
-    const start = new Date(now.getFullYear(), 0, 1);
-    return { start, end: now };
+    const start = new Date(now.getFullYear() - 1, 0, 1);
+    const end = new Date(now.getFullYear() - 1, 11, 31);
+    return { start, end };
   }}
 };
 
@@ -552,13 +569,6 @@ class App {
       }
     });
 
-    // Export JSON
-    document.addEventListener('click', (e) => {
-      if (e.target.closest('[data-action="export-json"]')) {
-        this.exportData();
-      }
-    });
-
     // Print
     document.addEventListener('click', (e) => {
       if (e.target.closest('[data-action="print"]')) {
@@ -777,7 +787,7 @@ class App {
             <div class="summary-card__detail">Coming soon</div>
           </div>
           <div class="summary-card">
-            <div class="summary-card__label">RISE Satisfaction (TALi)</div>
+            <div class="summary-card__label">Resident Sat.</div>
             <div class="summary-card__value" style="color: var(--success)">${avgTali > 0 ? avgTali.toFixed(2) : RISE_TALI_AVG}</div>
             <div class="summary-card__detail">Turner Avg: ${TURNER_TALI_AVG} (+${(((RISE_TALI_AVG - TURNER_TALI_AVG) / TURNER_TALI_AVG) * 100).toFixed(1)}%)</div>
           </div>
@@ -831,7 +841,6 @@ class App {
                 </div>
               ` : ''}
             </div>
-            <button class="btn btn--secondary btn--sm" data-action="export-json">📊 Export</button>
             <button class="btn btn--secondary btn--sm" data-action="print">🖨️ Print</button>
           </div>
         </div>
@@ -1149,41 +1158,6 @@ class App {
     if (score >= 4) return 'green';
     if (score >= 2) return 'yellow';
     return 'red';
-  }
-
-  exportData() {
-    const properties = this.getFilteredProperties();
-    const data = {
-      exportDate: new Date().toISOString(),
-      portfolioScore: this.calcWeightedScore(properties),
-      properties: properties.map(p => {
-        const metrics = {};
-        L_KEYS.forEach(k => {
-          const m = this.evalMetric(p, k);
-          metrics[k] = { value: m.val, formatted: m.fmt, color: m.rawColor, active: m.active };
-        });
-        return {
-          name: p.name,
-          type: p.type,
-          city: p.city,
-          units: p.units,
-          beds: p.beds,
-          rd: p.rd,
-          score: this.calcPropertyScore(p).score,
-          leaseUp: this.isLeaseUp(p),
-          metrics
-        };
-      })
-    };
-    
-    const json = JSON.stringify(data, null, 2);
-    const blob = new Blob([json], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `rise_scorecard_${new Date().toISOString().slice(0, 10)}.json`;
-    a.click();
-    URL.revokeObjectURL(url);
   }
 
   renderScoringGuide() {
