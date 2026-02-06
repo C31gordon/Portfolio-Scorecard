@@ -14,11 +14,51 @@ export class Charts {
     grid: 'rgba(255, 255, 255, 0.1)'
   };
   
+  // Shared tooltip element
+  static tooltip = null;
+  
+  static getTooltip() {
+    if (!this.tooltip) {
+      this.tooltip = document.createElement('div');
+      this.tooltip.className = 'chart-tooltip';
+      this.tooltip.style.cssText = `
+        position: fixed;
+        background: var(--bg-secondary, #1a1f2a);
+        border: 1px solid var(--border-primary, #2a3040);
+        border-radius: 6px;
+        padding: 6px 10px;
+        font-size: 11px;
+        font-family: 'JetBrains Mono', monospace;
+        color: var(--text-primary, #e8eaf0);
+        pointer-events: none;
+        z-index: 10000;
+        opacity: 0;
+        transition: opacity 0.15s;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      `;
+      document.body.appendChild(this.tooltip);
+    }
+    return this.tooltip;
+  }
+  
+  static showTooltip(x, y, html) {
+    const tip = this.getTooltip();
+    tip.innerHTML = html;
+    tip.style.left = `${x + 12}px`;
+    tip.style.top = `${y - 10}px`;
+    tip.style.opacity = '1';
+  }
+  
+  static hideTooltip() {
+    const tip = this.getTooltip();
+    tip.style.opacity = '0';
+  }
+  
   /**
-   * Create a sparkline chart (supports YoY comparison)
+   * Create a sparkline chart (supports YoY comparison + hover tooltips)
    * @param {HTMLElement} container
    * @param {number[]} data - Current period data
-   * @param {object} options - { color, height, fill, priorData, priorColor, showYoY }
+   * @param {object} options - { color, height, fill, priorData, priorColor, showYoY, labels, metric }
    */
   static sparkline(container, data, options = {}) {
     const canvas = document.createElement('canvas');
@@ -29,13 +69,16 @@ export class Charts {
     const color = options.color || this.colors.primary;
     const fill = options.fill !== false;
     const priorData = options.priorData || null;
-    const priorColor = options.priorColor || '#6b7280'; // Gray for prior year
+    const priorColor = options.priorColor || '#6b7280';
     const showYoY = options.showYoY && priorData && priorData.length > 0;
+    const labels = options.labels || null; // Week labels for tooltip
+    const metric = options.metric || ''; // Metric name for formatting
     
     canvas.width = width * 2; // Retina
     canvas.height = height * 2;
     canvas.style.width = `${width}px`;
     canvas.style.height = `${height}px`;
+    canvas.style.cursor = 'crosshair';
     ctx.scale(2, 2);
     
     if (!data || data.length === 0) {
@@ -50,13 +93,17 @@ export class Charts {
     const min = Math.min(...allData);
     const max = Math.max(...allData);
     const range = max - min || 1;
-    const padding = 2;
+    const padding = 6; // Increased for dot visibility
     
     const xStep = (width - padding * 2) / (data.length - 1);
     const yScale = (height - padding * 2) / range;
     
-    // Helper to draw a line
-    const drawLine = (lineData, lineColor, lineWidth = 2, dashed = false) => {
+    // Store point positions for hover detection
+    const points = [];
+    const priorPoints = [];
+    
+    // Helper to draw a line with dots
+    const drawLineWithDots = (lineData, lineColor, lineWidth = 2, dashed = false, pointsArray = null) => {
       ctx.beginPath();
       if (dashed) ctx.setLineDash([4, 2]);
       else ctx.setLineDash([]);
@@ -66,6 +113,7 @@ export class Charts {
         const y = height - padding - (val - min) * yScale;
         if (i === 0) ctx.moveTo(x, y);
         else ctx.lineTo(x, y);
+        if (pointsArray) pointsArray.push({ x, y, val, idx: i });
       });
       
       ctx.strokeStyle = lineColor;
@@ -73,11 +121,28 @@ export class Charts {
       ctx.lineCap = 'round';
       ctx.lineJoin = 'round';
       ctx.stroke();
+      ctx.setLineDash([]);
+      
+      // Draw dots at each point
+      lineData.forEach((val, i) => {
+        const x = padding + i * xStep;
+        const y = height - padding - (val - min) * yScale;
+        ctx.beginPath();
+        ctx.arc(x, y, dashed ? 2 : 3, 0, Math.PI * 2);
+        if (dashed) {
+          ctx.strokeStyle = lineColor;
+          ctx.lineWidth = 1.5;
+          ctx.stroke();
+        } else {
+          ctx.fillStyle = lineColor;
+          ctx.fill();
+        }
+      });
     };
     
     // Draw prior year line first (behind current)
     if (showYoY) {
-      drawLine(priorData, priorColor, 1.5, true);
+      drawLineWithDots(priorData, priorColor, 1.5, true, priorPoints);
     }
     
     // Draw fill for current period
@@ -101,26 +166,49 @@ export class Charts {
       ctx.fill();
     }
     
-    // Draw current period line
-    drawLine(data, color, 2, false);
+    // Draw current period line with dots
+    drawLineWithDots(data, color, 2, false, points);
     
-    // Draw end dot for current period
-    const lastX = padding + (data.length - 1) * xStep;
-    const lastY = height - padding - (data[data.length - 1] - min) * yScale;
-    ctx.beginPath();
-    ctx.arc(lastX, lastY, 3, 0, Math.PI * 2);
-    ctx.fillStyle = color;
-    ctx.fill();
+    // Mouse move handler for tooltips
+    const self = this;
+    canvas.addEventListener('mousemove', (e) => {
+      const rect = canvas.getBoundingClientRect();
+      const mx = e.clientX - rect.left;
+      const my = e.clientY - rect.top;
+      
+      // Find closest point
+      let closest = null;
+      let closestDist = 20; // Max distance to trigger
+      
+      points.forEach((p, i) => {
+        const dist = Math.sqrt((mx - p.x) ** 2 + (my - p.y) ** 2);
+        if (dist < closestDist) {
+          closestDist = dist;
+          closest = { ...p, type: 'current', priorVal: showYoY ? priorData[i] : null };
+        }
+      });
+      
+      if (closest) {
+        const label = labels ? labels[closest.idx] : `Wk ${closest.idx + 1}`;
+        const valFormatted = metric.includes('Occ') || metric.includes('leased') || metric.includes('Ratio') || metric.includes('SLA') 
+          ? `${closest.val.toFixed(1)}%` 
+          : closest.val.toFixed(2);
+        let html = `<div><strong>${label}</strong></div><div style="color:${color}">${valFormatted}</div>`;
+        if (closest.priorVal !== null) {
+          const priorFormatted = metric.includes('Occ') || metric.includes('leased') || metric.includes('Ratio') || metric.includes('SLA')
+            ? `${closest.priorVal.toFixed(1)}%`
+            : closest.priorVal.toFixed(2);
+          html += `<div style="color:${priorColor};font-size:10px">Prior: ${priorFormatted}</div>`;
+        }
+        self.showTooltip(e.clientX, e.clientY, html);
+      } else {
+        self.hideTooltip();
+      }
+    });
     
-    // Draw end dot for prior year (smaller, hollow)
-    if (showYoY) {
-      const priorLastY = height - padding - (priorData[priorData.length - 1] - min) * yScale;
-      ctx.beginPath();
-      ctx.arc(lastX, priorLastY, 2, 0, Math.PI * 2);
-      ctx.strokeStyle = priorColor;
-      ctx.lineWidth = 1.5;
-      ctx.stroke();
-    }
+    canvas.addEventListener('mouseleave', () => {
+      self.hideTooltip();
+    });
     
     container.innerHTML = '';
     container.appendChild(canvas);

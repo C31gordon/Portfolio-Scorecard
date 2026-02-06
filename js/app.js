@@ -1464,15 +1464,15 @@ class App {
       };
       
       const chartConfigs = [
-        { id: `chart_physOcc_${propId}`, data: hist.physOcc, prior: priorYear.physOcc, color: this.getSparklineColor(prop.physOcc, 'physOcc', prop.type) },
-        { id: `chart_leased_${propId}`, data: hist.leased, prior: priorYear.leased, color: this.getSparklineColor(prop.leased, 'leased', prop.type) },
-        { id: `chart_closing_${propId}`, data: hist.mtdClosing, prior: priorYear.mtdClosing, color: this.getSparklineColor(prop.mtdClosing, 'mtdClosing', prop.type) },
-        { id: `chart_woSla_${propId}`, data: hist.woSla, prior: priorYear.woSla, color: this.getSparklineColor(prop.woSla, 'woSla', prop.type) },
-        { id: `chart_delinq_${propId}`, data: hist.delinq, prior: priorYear.delinq, color: '#ef4444' }, // Always red for delinquency
-        { id: `chart_renewal_${propId}`, data: hist.renewalRatio, prior: priorYear.renewalRatio, color: this.getSparklineColor(prop.renewalRatio, 'renewalRatio', prop.type) }
+        { id: `chart_physOcc_${propId}`, data: hist.physOcc, prior: priorYear.physOcc, color: this.getSparklineColor(prop.physOcc, 'physOcc', prop.type), metric: 'physOcc' },
+        { id: `chart_leased_${propId}`, data: hist.leased, prior: priorYear.leased, color: this.getSparklineColor(prop.leased, 'leased', prop.type), metric: 'leased' },
+        { id: `chart_closing_${propId}`, data: hist.mtdClosing, prior: priorYear.mtdClosing, color: this.getSparklineColor(prop.mtdClosing, 'mtdClosing', prop.type), metric: 'closingRatio' },
+        { id: `chart_woSla_${propId}`, data: hist.woSla, prior: priorYear.woSla, color: this.getSparklineColor(prop.woSla, 'woSla', prop.type), metric: 'woSLA' },
+        { id: `chart_delinq_${propId}`, data: hist.delinq, prior: priorYear.delinq, color: '#ef4444', metric: 'delinq' },
+        { id: `chart_renewal_${propId}`, data: hist.renewalRatio, prior: priorYear.renewalRatio, color: this.getSparklineColor(prop.renewalRatio, 'renewalRatio', prop.type), metric: 'renewalRatio' }
       ];
       
-      chartConfigs.forEach(({ id, data, prior, color }) => {
+      chartConfigs.forEach(({ id, data, prior, color, metric }) => {
         const container = document.getElementById(id);
         if (container && data && data.length > 0) {
           Charts.sparkline(container, data, { 
@@ -1480,7 +1480,8 @@ class App {
             height: 50,
             showYoY,
             priorData: prior,
-            priorColor: '#6b7280' // Gray dashed line for prior year
+            priorColor: '#6b7280',
+            metric
           });
         }
       });
