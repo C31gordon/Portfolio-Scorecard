@@ -1269,12 +1269,14 @@ class App {
                 </div>
               </div>
             </div>
-            <label class="toggle" title="Year over Year comparison">
-              <input type="checkbox" class="toggle__input" data-action="toggle-yoy-drill" data-property="${prop.name}" ${State.get('showYoY') ? 'checked' : ''}>
-              <span class="toggle__switch"></span>
-              <span class="toggle__label">YoY</span>
-            </label>
-            ${State.get('showYoY') ? `<span class="yoy-legend"><span class="yoy-legend__line"></span> Prior Year</span>` : ''}
+            <div class="yoy-control">
+              <label class="toggle toggle--lg" title="Year over Year comparison">
+                <input type="checkbox" class="toggle__input" data-action="toggle-yoy-drill" data-property="${prop.name}" ${State.get('showYoY') ? 'checked' : ''}>
+                <span class="toggle__switch"></span>
+                <span class="toggle__label">YoY</span>
+              </label>
+              <span class="yoy-legend ${State.get('showYoY') ? 'yoy-legend--visible' : ''}"><span class="yoy-legend__line"></span> Prior Year</span>
+            </div>
           </div>
         </div>
 
