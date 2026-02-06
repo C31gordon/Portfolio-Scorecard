@@ -16,6 +16,7 @@ import { generateLeaseData, generateWorkOrderData, generateAgentData, generateFi
 import { generatePhysOccData, generateLeasedData, generateLeadToTourData, generateDelinquencyData, generateWOSLAData, generateClosingRatioData, generateRenewalRatioData, generateAvgRentData, generateTrainingTableData, generateTrainingDrillInData, generateWOTechnicianData, renderDrillTable, DRILL_COLUMNS } from './components/drill-tables.js';
 import { Charts } from './components/charts.js';
 import { DataTable } from './components/data-table.js';
+import { getActionItems, renderActionItemsList, renderActionForm } from './components/action-items.js';
 
 // Metric keys for leasing properties
 const L_KEYS = ['physOcc','leased','leadToTour','delinq','woSla','mtdClosing','renewalRatio','googleStars','training','tali','propIndex','noiVariance'];
@@ -840,6 +841,130 @@ class App {
         link.download = filename;
         link.click();
         URL.revokeObjectURL(link.href);
+      }
+    });
+
+    // Action Items: Add action
+    document.addEventListener('click', (e) => {
+      const addBtn = e.target.closest('[data-action="add-action"]');
+      if (addBtn) {
+        const propertyId = addBtn.dataset.property;
+        const metricOptions = Object.entries(METRIC_INFO).map(([key, info]) => ({ key, label: info.title }));
+        document.body.insertAdjacentHTML('beforeend', renderActionForm(propertyId, null, metricOptions));
+      }
+    });
+
+    // Action Items: Close form
+    document.addEventListener('click', (e) => {
+      if (e.target.closest('[data-action="close-form"]') || e.target.classList.contains('action-form-overlay')) {
+        const overlay = document.querySelector('.action-form-overlay');
+        if (overlay) overlay.remove();
+      }
+    });
+
+    // Action Items: Save action
+    document.addEventListener('submit', (e) => {
+      const form = e.target.closest('[data-action="save-action"]');
+      if (form) {
+        e.preventDefault();
+        const formData = new FormData(form);
+        const propertyId = form.dataset.property;
+        const actionId = form.dataset.id;
+        
+        const data = {
+          propertyId,
+          title: formData.get('title'),
+          description: formData.get('description'),
+          assignee: formData.get('assignee'),
+          dueDate: formData.get('dueDate') || null,
+          priority: formData.get('priority'),
+          metric: formData.get('metric') || null
+        };
+        
+        const actions = getActionItems();
+        if (actionId) {
+          data.status = formData.get('status');
+          actions.update(actionId, data);
+        } else {
+          actions.add(data);
+        }
+        
+        // Close form and refresh list
+        document.querySelector('.action-form-overlay')?.remove();
+        this.refreshActionItems(propertyId);
+      }
+    });
+
+    // Action Items: Toggle status
+    document.addEventListener('click', (e) => {
+      const toggleBtn = e.target.closest('[data-action="toggle-status"]');
+      if (toggleBtn) {
+        const card = toggleBtn.closest('.action-item');
+        const actionId = card.dataset.actionId;
+        const actions = getActionItems();
+        const item = actions.items.find(i => i.id === actionId);
+        
+        if (item) {
+          // Cycle: open -> in_progress -> complete -> open
+          const statusOrder = ['open', 'in_progress', 'complete'];
+          const currentIndex = statusOrder.indexOf(item.status);
+          const nextStatus = statusOrder[(currentIndex + 1) % statusOrder.length];
+          actions.update(actionId, { status: nextStatus });
+          
+          // Refresh
+          const propertyId = item.propertyId;
+          this.refreshActionItems(propertyId);
+        }
+      }
+    });
+
+    // Action Items: Edit
+    document.addEventListener('click', (e) => {
+      const editBtn = e.target.closest('.action-item__btn[data-action="edit"]');
+      if (editBtn) {
+        const card = editBtn.closest('.action-item');
+        const actionId = card.dataset.actionId;
+        const actions = getActionItems();
+        const item = actions.items.find(i => i.id === actionId);
+        
+        if (item) {
+          const metricOptions = Object.entries(METRIC_INFO).map(([key, info]) => ({ key, label: info.title }));
+          document.body.insertAdjacentHTML('beforeend', renderActionForm(item.propertyId, item, metricOptions));
+        }
+      }
+    });
+
+    // Action Items: Delete
+    document.addEventListener('click', (e) => {
+      const deleteBtn = e.target.closest('.action-item__btn[data-action="delete"]');
+      if (deleteBtn) {
+        if (confirm('Delete this action item?')) {
+          const card = deleteBtn.closest('.action-item');
+          const actionId = card.dataset.actionId;
+          const actions = getActionItems();
+          const item = actions.items.find(i => i.id === actionId);
+          const propertyId = item?.propertyId;
+          
+          actions.delete(actionId);
+          
+          if (propertyId) {
+            this.refreshActionItems(propertyId);
+          }
+        }
+      }
+    });
+
+    // Action Items: Filter
+    document.addEventListener('click', (e) => {
+      const filterBtn = e.target.closest('.action-items-filters .filter-btn');
+      if (filterBtn) {
+        const container = filterBtn.closest('.action-items-list');
+        const propertyId = container?.closest('.action-items-container')?.id.replace('action-items-', '');
+        const filter = filterBtn.dataset.filter;
+        
+        if (propertyId) {
+          this.refreshActionItems(propertyId, { openOnly: filter === 'open' });
+        }
       }
     });
 
@@ -1773,6 +1898,13 @@ class App {
           </div>
         </div>
 
+        <!-- Action Items Section -->
+        <div class="drill-section drill-section--actions">
+          <div id="action-items-${propId}" class="action-items-container">
+            ${renderActionItemsList(propId, getActionItems())}
+          </div>
+        </div>
+
         <div class="drill-actions">
           <button class="btn btn--primary btn--sm" data-action="generate-report" data-property="${prop.name}">📋 Generate Report</button>
           <button class="btn btn--secondary btn--sm btn--disabled" disabled title="Coming Soon">📊 Full Analytics <span class="badge badge--sm">Soon</span></button>
@@ -1982,6 +2114,16 @@ class App {
     }
     
     this.loadedDrillData[key] = true;
+  }
+  
+  /**
+   * Refresh action items list for a property
+   */
+  refreshActionItems(propertyId, options = {}) {
+    const container = document.getElementById(`action-items-${propertyId}`);
+    if (container) {
+      container.innerHTML = renderActionItemsList(propertyId, getActionItems(), options);
+    }
   }
   
   renderCharts() {
