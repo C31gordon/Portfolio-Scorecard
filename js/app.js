@@ -1712,29 +1712,112 @@ class App {
     const data = generator(prop);
     
     if (viewType === 'table') {
-      // Simple table view - show recent data summary
+      // Table view = SUMMARY (aggregated data)
       const containerId = `table_${metric}_${propId}`;
       const container = document.getElementById(containerId);
-      if (container) {
-        const tableData = data.slice(0, 8); // Show first 8 rows
-        container.innerHTML = `
-          <table>
-            <thead>
-              <tr>${columns.slice(0, 4).map(c => `<th>${c.label}</th>`).join('')}</tr>
-            </thead>
-            <tbody>
-              ${tableData.map(row => `
-                <tr>${columns.slice(0, 4).map(c => `<td>${c.format ? c.format(row[c.key], row) : row[c.key]}</td>`).join('')}</tr>
-              `).join('')}
-            </tbody>
-          </table>
-          <div style="text-align:center;margin-top:8px;font-size:0.65rem;color:var(--text-muted);">
-            Showing ${tableData.length} of ${data.length} • Click "Drill In" for full details
-          </div>
-        `;
+      if (!container) return;
+      
+      let summaryHTML = '';
+      
+      switch(metric) {
+        case 'physOcc':
+          // Summary by floorplan
+          const fpSummary = {};
+          data.forEach(d => {
+            if (!fpSummary[d.floorplan]) fpSummary[d.floorplan] = { count: 0, totalDays: 0 };
+            fpSummary[d.floorplan].count++;
+            fpSummary[d.floorplan].totalDays += d.daysVacant;
+          });
+          summaryHTML = `<table><thead><tr><th>Floorplan</th><th>Vacant Units</th><th>Avg Days</th></tr></thead><tbody>
+            ${Object.entries(fpSummary).map(([fp, s]) => `<tr><td>${fp}</td><td>${s.count}</td><td>${(s.totalDays/s.count).toFixed(0)}</td></tr>`).join('')}
+          </tbody></table>`;
+          break;
+          
+        case 'leased':
+          // Summary by type
+          const typeSummary = {};
+          data.forEach(d => {
+            if (!typeSummary[d.unitType]) typeSummary[d.unitType] = 0;
+            typeSummary[d.unitType]++;
+          });
+          summaryHTML = `<table><thead><tr><th>Type</th><th>Count</th></tr></thead><tbody>
+            ${Object.entries(typeSummary).map(([t, c]) => `<tr><td>${t}</td><td>${c}</td></tr>`).join('')}
+          </tbody></table>`;
+          break;
+          
+        case 'leadToTour':
+          // Summary by source
+          const srcSummary = {};
+          data.forEach(d => {
+            if (!srcSummary[d.source]) srcSummary[d.source] = 0;
+            srcSummary[d.source]++;
+          });
+          summaryHTML = `<table><thead><tr><th>Source</th><th>Leads</th></tr></thead><tbody>
+            ${Object.entries(srcSummary).sort((a,b) => b[1]-a[1]).map(([s, c]) => `<tr><td>${s}</td><td>${c}</td></tr>`).join('')}
+          </tbody></table>`;
+          break;
+          
+        case 'delinq':
+          // Summary by aging bucket
+          const ageSummary = {};
+          let totalBal = 0;
+          data.forEach(d => {
+            if (!ageSummary[d.agingBucket]) ageSummary[d.agingBucket] = { count: 0, total: 0 };
+            ageSummary[d.agingBucket].count++;
+            ageSummary[d.agingBucket].total += d.balance;
+            totalBal += d.balance;
+          });
+          summaryHTML = `<table><thead><tr><th>Aging</th><th>Accounts</th><th>Balance</th></tr></thead><tbody>
+            ${Object.entries(ageSummary).map(([a, s]) => `<tr><td>${a} days</td><td>${s.count}</td><td>$${s.total.toLocaleString()}</td></tr>`).join('')}
+            <tr style="font-weight:600;border-top:1px solid var(--border-primary)"><td>Total</td><td>${data.length}</td><td>$${totalBal.toLocaleString()}</td></tr>
+          </tbody></table>`;
+          break;
+          
+        case 'woSla':
+          // Summary by category
+          const catSummary = {};
+          data.forEach(d => {
+            if (!catSummary[d.category]) catSummary[d.category] = { open: 0, complete: 0 };
+            if (d.status === 'Complete') catSummary[d.category].complete++;
+            else catSummary[d.category].open++;
+          });
+          summaryHTML = `<table><thead><tr><th>Category</th><th>Open</th><th>Complete</th></tr></thead><tbody>
+            ${Object.entries(catSummary).map(([c, s]) => `<tr><td>${c}</td><td>${s.open}</td><td>${s.complete}</td></tr>`).join('')}
+          </tbody></table>`;
+          break;
+          
+        case 'closingRatio':
+          // Already agent-based, show top performers
+          const topAgents = data.slice(0, 5);
+          summaryHTML = `<table><thead><tr><th>Agent</th><th>Tours</th><th>Leases</th><th>Close %</th></tr></thead><tbody>
+            ${topAgents.map(a => `<tr><td>${a.agent}</td><td>${a.tours}</td><td>${a.leases}</td><td>${a.closingRatio}</td></tr>`).join('')}
+          </tbody></table>`;
+          break;
+          
+        case 'renewalRatio':
+          // Summary by status
+          const statusSummary = {};
+          data.forEach(d => {
+            if (!statusSummary[d.status]) statusSummary[d.status] = 0;
+            statusSummary[d.status]++;
+          });
+          summaryHTML = `<table><thead><tr><th>Status</th><th>Count</th></tr></thead><tbody>
+            ${Object.entries(statusSummary).map(([s, c]) => `<tr><td>${s}</td><td>${c}</td></tr>`).join('')}
+          </tbody></table>`;
+          break;
+          
+        default:
+          // Generic summary: first 5 rows, 3 columns
+          const tableData = data.slice(0, 5);
+          summaryHTML = `<table><thead><tr>${columns.slice(0, 3).map(c => `<th>${c.label}</th>`).join('')}</tr></thead><tbody>
+            ${tableData.map(row => `<tr>${columns.slice(0, 3).map(c => `<td>${c.format ? c.format(row[c.key], row) : row[c.key]}</td>`).join('')}</tr>`).join('')}
+          </tbody></table>`;
       }
+      
+      container.innerHTML = summaryHTML + `<div style="text-align:center;margin-top:8px;font-size:0.6rem;color:var(--text-muted);">Summary view • Click "Drill In" for full details</div>`;
+      
     } else if (viewType === 'drillin') {
-      // Full drill-in table with filtering and sorting
+      // Drill In = FULL DETAIL (all rows, all columns, filterable)
       const containerId = `drillin_${metric}_${propId}`;
       renderDrillTable(containerId, columns, data);
     }

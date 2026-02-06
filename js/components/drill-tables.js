@@ -324,13 +324,13 @@ export const DRILL_COLUMNS = {
     { key: 'rent', label: 'Rent', format: (v) => `$${v.toLocaleString()}` }
   ],
   leadToTour: [
-    { key: 'leadId', label: 'Lead ID' },
     { key: 'source', label: 'Source' },
     { key: 'agent', label: 'Agent' },
+    { key: 'leadId', label: 'Lead ID' },
     { key: 'leadDate', label: 'Lead Date' },
     { key: 'responseTime', label: 'Response Time' },
     { key: 'status', label: 'Status' },
-    { key: 'floorplanInterest', label: 'Floorplan Interest' }
+    { key: 'floorplanInterest', label: 'Floorplan' }
   ],
   avgRent: [
     { key: 'unit', label: 'Bldg-Unit' },
@@ -352,14 +352,14 @@ export const DRILL_COLUMNS = {
     { key: 'notes', label: 'Notes' }
   ],
   woSla: [
+    { key: 'category', label: 'Category' },
     { key: 'unit', label: 'Bldg-Unit' },
     { key: 'ticketId', label: 'Ticket #' },
-    { key: 'category', label: 'Category' },
     { key: 'ticketType', label: 'Type' },
+    { key: 'technician', label: 'Technician' },
     { key: 'openDate', label: 'Open Date' },
     { key: 'closeDate', label: 'Close Date' },
     { key: 'timeToComplete', label: 'Time (Bus. Days)' },
-    { key: 'technician', label: 'Technician' },
     { key: 'status', label: 'Status' }
   ],
   closingRatio: [
