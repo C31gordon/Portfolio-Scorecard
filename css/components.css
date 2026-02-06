@@ -1958,6 +1958,26 @@
   white-space: nowrap;
 }
 
+/* Status badge (read-only indicator) */
+.status-badge {
+  font-size: 0.65rem;
+  padding: 3px 8px;
+  border-radius: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 600;
+}
+.status-badge--stabilized {
+  background: var(--success-bg);
+  color: var(--success);
+  border: 1px solid var(--success-border);
+}
+.status-badge--leaseup {
+  background: var(--info-bg);
+  color: var(--info);
+  border: 1px solid var(--info-border);
+}
+
 /* Disabled button style */
 .btn--disabled {
   opacity: 0.5;

@@ -1245,11 +1245,7 @@ class App {
             <h3>${prop.name}</h3>
             <span class="drill-panel__meta">${prop.city}, ${prop.state || ''} • ${prop.type === 'OC' ? 'On-Camp' : prop.type} • ${prop.beds || prop.units} ${prop.beds ? 'beds' : 'units'} • GM: ${prop.gm || 'N/A'}</span>
             <div class="drill-panel__status">
-              <label class="leaseup-toggle-switch" title="Toggle Lease-Up / Stabilized">
-                <input type="checkbox" ${isLeaseUp ? 'checked' : ''} data-leaseup-toggle="${prop.name}">
-                <span class="slider"></span>
-                <span class="leaseup-label">${isLeaseUp ? 'Lease-Up' : 'Stabilized'}</span>
-              </label>
+              <span class="status-badge status-badge--${isLeaseUp ? 'leaseup' : 'stabilized'}">${isLeaseUp ? 'Lease-Up' : 'Stabilized'}</span>
               <span class="score-pill score-pill--${this.getScoreClass(propScore.score)}">
                 ${propScore.score !== null ? propScore.score.toFixed(2) : '—'}<span class="max-score"> / 5.00</span>
               </span>
