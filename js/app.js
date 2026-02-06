@@ -8,7 +8,10 @@ import Router from './core/router.js';
 import Events, { EVENT } from './core/events.js';
 import { loadThresholds } from './utils/scoring.js';
 import { formatPercent, formatCurrency, formatNumber, formatScore, getTrend, snakeToTitle } from './utils/formatting.js';
-import { riseProperties, risePortfolio, propertyHistory } from './data/rise-data.js';
+import { riseProperties, risePortfolio, propertyHistory, ON_CAMPUS_DEFAULT_METRICS } from './data/rise-data.js';
+
+// Metrics that should be ON by default for On-Campus properties
+const OC_DEFAULT_ON = ['woSla', 'training', 'tali', 'noiVariance'];
 import { generateLeaseData, generateWorkOrderData, generateAgentData, generateFinancialData, generateRentRollData, generateHistoricalData } from './data/mock-drilldown.js';
 import { Charts } from './components/charts.js';
 import { DataTable } from './components/data-table.js';
@@ -292,7 +295,17 @@ class App {
 
   isMetricActive(propName, metric) {
     const key = `${propName}_${metric}`;
+    // If user has explicitly toggled, use their preference
     if (key in this.metricToggles) return this.metricToggles[key];
+    
+    // Check if this is an on-campus property
+    const prop = this.properties.find(p => p.name === propName);
+    if (prop && prop.type === 'OC') {
+      // On-campus properties: only WO SLA, Training, Satisfaction, NOI are ON by default
+      return OC_DEFAULT_ON.includes(metric);
+    }
+    
+    // Leasing properties: all metrics ON by default
     return true;
   }
 
@@ -685,80 +698,169 @@ class App {
 
   renderDashboard() {
     const main = document.getElementById('main');
-    const properties = this.getFilteredProperties();
-    const portfolioScore = this.calcWeightedScore(properties);
+    const allProps = this.getFilteredProperties();
+    
+    // Split properties by type
+    const leasingProps = allProps.filter(p => p.type !== 'OC');
+    const onCampusProps = allProps.filter(p => p.type === 'OC');
+    
+    // Properties for current tab
+    const tabProps = this.activeTab === 'oncampus' ? onCampusProps : leasingProps;
+    const portfolioScore = this.calcWeightedScore(tabProps);
 
     // Group by RD
     const byRD = {};
-    properties.forEach(p => {
+    tabProps.forEach(p => {
       if (!byRD[p.rd]) byRD[p.rd] = [];
       byRD[p.rd].push(p);
     });
 
-    // Calculate summary stats
-    const nonStudentUnits = properties.filter(p => p.type !== 'STU').reduce((s, p) => s + (p.units || 0), 0);
-    const studentBeds = properties.filter(p => p.type === 'STU').reduce((s, p) => s + (p.beds || 0), 0);
-    const totalManaged = nonStudentUnits + studentBeds;
-    const leasingProps = properties.filter(p => p.type !== 'OC');
-    const onCampusProps = []; // TODO: Add on-campus properties
-
-    // Calculate weighted avg Google stars
-    let gWeight = 0, gScore = 0, gReviews = 0;
-    properties.forEach(p => {
-      if (p.googleStars) {
+    // Calculate summary stats based on active tab
+    let summaryHTML = '';
+    
+    if (this.activeTab === 'oncampus') {
+      // ON-CAMPUS SUMMARY
+      const ocBeds = onCampusProps.reduce((s, p) => s + (p.beds || 0), 0);
+      const ocScore = portfolioScore;
+      
+      // Calculate weighted averages for on-campus
+      let woSlaTotal = 0, woSlaWeight = 0;
+      let trainingTotal = 0, trainingWeight = 0;
+      let taliTotal = 0, taliWeight = 0;
+      let oraTotal = 0, oraWeight = 0;
+      let noiTotal = 0, noiWeight = 0;
+      
+      onCampusProps.forEach(p => {
         const w = p.beds || p.units || 1;
-        gWeight += w;
-        gScore += p.googleStars * w;
-        gReviews += p.googleReviews || 0;
-      }
-    });
-    const avgGoogle = gWeight > 0 ? gScore / gWeight : 0;
+        if (p.woSla != null) { woSlaTotal += p.woSla * w; woSlaWeight += w; }
+        if (p.training != null) { trainingTotal += p.training * w; trainingWeight += w; }
+        if (p.tali != null) { taliTotal += p.tali * w; taliWeight += w; }
+        if (p.propIndex != null) { oraTotal += p.propIndex * w; oraWeight += w; }
+        if (p.noiVariance != null) { noiTotal += p.noiVariance * w; noiWeight += w; }
+      });
+      
+      const avgWoSla = woSlaWeight > 0 ? woSlaTotal / woSlaWeight : null;
+      const avgTraining = trainingWeight > 0 ? trainingTotal / trainingWeight : null;
+      const avgTali = taliWeight > 0 ? taliTotal / taliWeight : null;
+      const avgOra = oraWeight > 0 ? oraTotal / oraWeight : null;
+      const avgNoi = noiWeight > 0 ? noiTotal / noiWeight : null;
+      
+      summaryHTML = `
+        <!-- On-Campus Summary -->
+        <div class="summary-grid summary-grid--6">
+          <div class="summary-card">
+            <div class="summary-card__label">Total On-Campus Beds</div>
+            <div class="summary-card__value">${ocBeds.toLocaleString()}</div>
+            <div class="summary-card__detail">${onCampusProps.length} properties</div>
+          </div>
+          <div class="summary-card">
+            <div class="summary-card__label">On-Campus Score</div>
+            <div class="summary-card__value score-pill score-pill--${this.getScoreClass(ocScore)}">
+              ${ocScore !== null ? ocScore.toFixed(2) : '—'}<span class="max-score"> / 5.00</span>
+            </div>
+          </div>
+          <div class="summary-card">
+            <div class="summary-card__label">W/O SLA</div>
+            <div class="summary-card__value" style="color: ${avgWoSla >= 0.95 ? 'var(--success)' : avgWoSla >= 0.88 ? 'var(--warning)' : 'var(--danger)'}">
+              ${avgWoSla != null ? (avgWoSla * 100).toFixed(1) + '%' : '—'}
+            </div>
+          </div>
+          <div class="summary-card">
+            <div class="summary-card__label">Resident Satisfaction</div>
+            <div class="summary-card__value" style="color: ${avgTali >= 7.17 ? 'var(--success)' : avgTali >= 6.83 ? 'var(--warning)' : 'var(--danger)'}">
+              ${avgTali != null ? avgTali.toFixed(2) : '—'}
+            </div>
+            <div class="summary-card__detail">Turner Avg: ${TURNER_TALI_AVG}</div>
+          </div>
+          <div class="summary-card">
+            <div class="summary-card__label">ORA Score</div>
+            <div class="summary-card__value" style="color: ${avgOra >= 8.96 ? 'var(--success)' : avgOra >= 8.53 ? 'var(--warning)' : 'var(--danger)'}">
+              ${avgOra != null ? avgOra.toFixed(2) : '—'}
+            </div>
+            <div class="summary-card__detail">Turner Avg: ${TURNER_PI_AVG}</div>
+          </div>
+          <div class="summary-card">
+            <div class="summary-card__label">Training</div>
+            <div class="summary-card__value" style="color: ${avgTraining >= 1.0 ? 'var(--success)' : avgTraining >= 0.90 ? 'var(--warning)' : 'var(--danger)'}">
+              ${avgTraining != null ? (avgTraining * 100).toFixed(0) + '%' : '—'}
+            </div>
+          </div>
+        </div>
+        <div class="summary-grid summary-grid--1" style="margin-top: var(--space-3);">
+          <div class="summary-card">
+            <div class="summary-card__label">NOI Variance (Avg)</div>
+            <div class="summary-card__value" style="color: ${avgNoi >= 1.0 ? 'var(--success)' : avgNoi >= 0.95 ? 'var(--warning)' : 'var(--danger)'}">
+              ${avgNoi != null ? (avgNoi * 100).toFixed(1) + '%' : '—'}
+            </div>
+            <div class="summary-card__detail">100% = on budget</div>
+          </div>
+        </div>
+      `;
+    } else {
+      // LEASING SUMMARY
+      const nonStudentProps = leasingProps.filter(p => p.type !== 'STU');
+      const studentProps = leasingProps.filter(p => p.type === 'STU');
+      const nonStudentUnits = nonStudentProps.reduce((s, p) => s + (p.units || 0), 0);
+      const studentBeds = studentProps.reduce((s, p) => s + (p.beds || 0), 0);
+      const ocBeds = onCampusProps.reduce((s, p) => s + (p.beds || 0), 0);
+      const totalManaged = nonStudentUnits + studentBeds + ocBeds;
 
-    // Calculate portfolio TALi avg
-    let tWeight = 0, tScore = 0;
-    properties.forEach(p => {
-      if (p.tali) {
-        const w = p.beds || p.units || 1;
-        tWeight += w;
-        tScore += p.tali * w;
-      }
-    });
-    const avgTali = tWeight > 0 ? tScore / tWeight : 0;
-
-    // Red flags
-    const redFlags = [];
-    properties.forEach(p => {
-      L_KEYS.forEach(key => {
-        const m = this.evalMetric(p, key);
-        if (m.active && m.rawColor === 'red') {
-          redFlags.push({ property: p.name, metric: key, value: m.fmt });
+      // Calculate weighted avg Google stars
+      let gWeight = 0, gScore = 0, gReviews = 0;
+      leasingProps.forEach(p => {
+        if (p.googleStars) {
+          const w = p.beds || p.units || 1;
+          gWeight += w;
+          gScore += p.googleStars * w;
+          gReviews += p.googleReviews || 0;
         }
       });
-    });
+      const avgGoogle = gWeight > 0 ? gScore / gWeight : 0;
 
-    main.innerHTML = `
-      <div class="dashboard">
-        <!-- Summary Tiles Row 1 -->
+      // Calculate portfolio TALi avg
+      let tWeight = 0, tScore = 0;
+      leasingProps.forEach(p => {
+        if (p.tali) {
+          const w = p.beds || p.units || 1;
+          tWeight += w;
+          tScore += p.tali * w;
+        }
+      });
+      const avgTali = tWeight > 0 ? tScore / tWeight : 0;
+
+      // Red flags for leasing properties
+      const redFlags = [];
+      leasingProps.forEach(p => {
+        L_KEYS.forEach(key => {
+          const m = this.evalMetric(p, key);
+          if (m.active && m.rawColor === 'red') {
+            redFlags.push({ property: p.name, metric: key, value: m.fmt });
+          }
+        });
+      });
+
+      summaryHTML = `
+        <!-- Leasing Summary Row 1 -->
         <div class="summary-grid summary-grid--5">
           <div class="summary-card">
             <div class="summary-card__label">Total Managed</div>
             <div class="summary-card__value">${totalManaged.toLocaleString()}</div>
-            <div class="summary-card__detail">${nonStudentUnits.toLocaleString()} units + ${studentBeds.toLocaleString()} beds</div>
+            <div class="summary-card__detail">${nonStudentUnits.toLocaleString()} units + ${(studentBeds + ocBeds).toLocaleString()} beds</div>
           </div>
           <div class="summary-card">
             <div class="summary-card__label">Leasing Units</div>
             <div class="summary-card__value">${nonStudentUnits.toLocaleString()}</div>
-            <div class="summary-card__detail">${properties.filter(p => p.type !== 'STU').length} non-student properties</div>
+            <div class="summary-card__detail">${nonStudentProps.length} non-student properties</div>
           </div>
           <div class="summary-card">
             <div class="summary-card__label">Leasing Beds</div>
             <div class="summary-card__value">${studentBeds.toLocaleString()}</div>
-            <div class="summary-card__detail">${properties.filter(p => p.type === 'STU').length} student properties</div>
+            <div class="summary-card__detail">${studentProps.length} off-campus student</div>
           </div>
           <div class="summary-card">
             <div class="summary-card__label">On-Campus Beds</div>
-            <div class="summary-card__value">—</div>
-            <div class="summary-card__detail">Coming soon</div>
+            <div class="summary-card__value">${ocBeds.toLocaleString()}</div>
+            <div class="summary-card__detail">${onCampusProps.length} on-campus properties</div>
           </div>
           <div class="summary-card">
             <div class="summary-card__label">Wtd Avg Google</div>
@@ -767,7 +869,7 @@ class App {
           </div>
         </div>
 
-        <!-- Summary Tiles Row 2 -->
+        <!-- Leasing Summary Row 2 -->
         <div class="summary-grid summary-grid--5">
           <div class="summary-card">
             <div class="summary-card__label">Leasing Score</div>
@@ -777,8 +879,9 @@ class App {
           </div>
           <div class="summary-card">
             <div class="summary-card__label">On-Campus Score</div>
-            <div class="summary-card__value">—</div>
-            <div class="summary-card__detail">Coming soon</div>
+            <div class="summary-card__value score-pill score-pill--${this.getScoreClass(this.calcWeightedScore(onCampusProps))}">
+              ${this.calcWeightedScore(onCampusProps) !== null ? this.calcWeightedScore(onCampusProps).toFixed(2) : '—'}<span class="max-score"> / 5.00</span>
+            </div>
           </div>
           <div class="summary-card">
             <div class="summary-card__label">Resident Satisfaction</div>
@@ -796,6 +899,12 @@ class App {
             <div class="summary-card__detail">${redFlags.length > 0 ? 'Requires attention' : 'All clear'}</div>
           </div>
         </div>
+      `;
+    }
+
+    main.innerHTML = `
+      <div class="dashboard">
+        ${summaryHTML}
 
         <!-- Tabs -->
         <div class="tabs">
@@ -841,7 +950,10 @@ class App {
 
         <!-- Regional Blocks -->
         <div class="regional-blocks">
-          ${Object.keys(byRD).map(rd => this.renderRegionalBlock(rd, byRD[rd])).join('')}
+          ${Object.keys(byRD).length > 0 
+            ? Object.keys(byRD).map(rd => this.renderRegionalBlock(rd, byRD[rd])).join('')
+            : '<div class="empty-state">No properties match your search.</div>'
+          }
         </div>
       </div>
     `;
@@ -1252,13 +1364,72 @@ class App {
           </div>
 
           <div class="sg-section">
-            <h3>J Turner Benchmarking</h3>
-            <p>TALi (Satisfaction) and ORA scores are compared against RISE portfolio average and J Turner industry average.</p>
+            <h3>Google Star Rating</h3>
+            <p>Google Business reviews are aggregated from the property's Google Maps listing.</p>
+            <table class="sg-table">
+              <thead>
+                <tr>
+                  <th>Rating</th>
+                  <th class="text-success">Green</th>
+                  <th class="text-warning">Yellow</th>
+                  <th class="text-danger">Red</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td>Google Stars</td><td>≥ 4.5</td><td>3.8-4.49</td><td>&lt; 3.8</td></tr>
+              </tbody>
+            </table>
+            <p style="margin-top: 8px; font-size: 0.85em; opacity: 0.8;">Review count shown in parentheses. Higher counts indicate more reliable ratings.</p>
+          </div>
+
+          <div class="sg-section">
+            <h3>ORA Score (Online Reputation Assessment)</h3>
+            <p>J Turner Research's ORA score measures online reputation across 20+ review sites on a 0-100 scale, normalized to 0-10 for display.</p>
+            <table class="sg-table">
+              <thead>
+                <tr>
+                  <th>Comparison</th>
+                  <th class="text-success">Green</th>
+                  <th class="text-warning">Yellow</th>
+                  <th class="text-danger">Red</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td>vs Turner Average (${TURNER_PI_AVG})</td><td>≥ 5% above</td><td>0-4.99% above</td><td>Below average</td></tr>
+              </tbody>
+            </table>
+            <p style="margin-top: 8px; font-size: 0.85em; opacity: 0.8;">RISE Portfolio Average: ${RISE_PI_AVG} | Industry Average: ${TURNER_PI_AVG}</p>
+          </div>
+
+          <div class="sg-section">
+            <h3>Resident Satisfaction (TALi)</h3>
+            <p>J Turner's TALi (Total Apartment Loyalty Index) measures resident satisfaction and likelihood to recommend on a 0-10 scale.</p>
+            <table class="sg-table">
+              <thead>
+                <tr>
+                  <th>Comparison</th>
+                  <th class="text-success">Green</th>
+                  <th class="text-warning">Yellow</th>
+                  <th class="text-danger">Red</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td>vs Turner Average (${TURNER_TALI_AVG})</td><td>≥ 5% above</td><td>0-4.99% above</td><td>Below average</td></tr>
+              </tbody>
+            </table>
+            <p style="margin-top: 8px; font-size: 0.85em; opacity: 0.8;">RISE Portfolio Average: ${RISE_TALI_AVG} | Industry Average: ${TURNER_TALI_AVG}</p>
+          </div>
+
+          <div class="sg-section">
+            <h3>On-Campus Properties</h3>
+            <p>On-Campus properties only score the following metrics by default:</p>
             <ul>
-              <li>Green = ≥ 5% above Turner Avg</li>
-              <li>Yellow = 0-4.99% above Turner Avg</li>
-              <li>Red = below Turner Avg</li>
+              <li>W/O SLA %</li>
+              <li>Training Completion %</li>
+              <li>Resident Satisfaction (TALi)</li>
+              <li>NOI Variance</li>
             </ul>
+            <p style="margin-top: 8px; font-size: 0.85em; opacity: 0.8;">Other metrics can be manually enabled via toggles.</p>
           </div>
         </div>
       </div>
