@@ -451,9 +451,9 @@ class App {
       }
     });
 
-    // YoY toggle
+    // YoY toggle (now in drill-down only)
     document.addEventListener('change', (e) => {
-      if (e.target.matches('[data-action="toggle-yoy"]')) {
+      if (e.target.matches('[data-action="toggle-yoy-drill"]')) {
         State.set({ showYoY: e.target.checked });
         this.render();
       }
@@ -570,17 +570,25 @@ class App {
       }
     });
 
-    // Custom date inputs
+    // Custom date inputs - don't auto-apply, wait for Apply button
     document.addEventListener('change', (e) => {
       if (e.target.matches('[data-action="custom-date-start"]')) {
         this.customDateStart = e.target.value;
-        State.set({ dateRange: 'custom' });
-        this.render();
       }
       if (e.target.matches('[data-action="custom-date-end"]')) {
         this.customDateEnd = e.target.value;
-        State.set({ dateRange: 'custom' });
-        this.render();
+      }
+    });
+
+    // Apply custom date button
+    document.addEventListener('click', (e) => {
+      if (e.target.closest('[data-action="apply-custom-date"]')) {
+        if (this.customDateStart && this.customDateEnd) {
+          State.set({ dateRange: 'custom' });
+          this.render();
+        } else {
+          alert('Please select both start and end dates');
+        }
       }
     });
   }
@@ -663,14 +671,10 @@ class App {
           <input type="date" class="date-input" data-action="custom-date-start" value="${this.customDateStart || ''}" title="Start Date">
           <span>to</span>
           <input type="date" class="date-input" data-action="custom-date-end" value="${this.customDateEnd || ''}" title="End Date">
+          <button class="btn btn--primary btn--sm" data-action="apply-custom-date" title="Apply custom date range">Apply</button>
         </div>
-        <label class="toggle" title="Year over Year comparison">
-          <input type="checkbox" class="toggle__input" data-action="toggle-yoy" ${showYoY ? 'checked' : ''}>
-          <span class="toggle__switch"></span>
-          <span class="toggle__label">YoY</span>
-        </label>
-        <button class="btn btn--ghost btn--sm" data-action="show-scoring-guide" title="Scoring Guide">
-          📖 Scoring
+        <button class="btn btn--ghost btn--sm" data-action="show-scoring-guide" title="How scores are calculated">
+          ❓ Legend
         </button>
         <button class="btn btn--secondary btn--icon" data-action="toggle-theme" title="Toggle theme">
           ${theme === 'dark' ? '☀️' : '🌙'}
@@ -912,9 +916,9 @@ class App {
           <td>
             <div class="metric-cell">
               <span class="metric-value metric-value--${m.color}">${m.fmt}</span>
-              <label class="metric-toggle">
+              <label class="metric-toggle-switch">
                 <input type="checkbox" ${m.active ? 'checked' : ''} data-metric-toggle="${prop.name}::${m.key}">
-                <span class="metric-toggle-label">${m.active ? 'scored' : 'off'}</span>
+                <span class="slider"></span>
               </label>
             </div>
           </td>
@@ -966,7 +970,12 @@ class App {
             <h3>${prop.name}</h3>
             <span class="drill-panel__meta">${prop.city} • ${prop.type} • ${prop.beds || prop.units} ${prop.beds ? 'beds' : 'units'} • GM: ${prop.gm || 'N/A'}</span>
           </div>
-          <div class="drill-panel__badges">
+          <div class="drill-panel__actions">
+            <label class="toggle" title="Year over Year comparison">
+              <input type="checkbox" class="toggle__input" data-action="toggle-yoy-drill" data-property="${prop.name}" ${State.get('showYoY') ? 'checked' : ''}>
+              <span class="toggle__switch"></span>
+              <span class="toggle__label">YoY</span>
+            </label>
             ${isLeaseUp ? '<span class="badge badge--info">Lease-Up</span>' : '<span class="badge badge--success">Stabilized</span>'}
           </div>
         </div>

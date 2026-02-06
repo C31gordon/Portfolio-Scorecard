@@ -1753,3 +1753,81 @@
 .info-icon[title] {
   position: relative;
 }
+
+/* Dark mode date input improvements */
+[data-theme="dark"] .date-input {
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+  border: 1px solid var(--border-secondary);
+}
+[data-theme="dark"] .date-input::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+  cursor: pointer;
+}
+[data-theme="dark"] .custom-date span {
+  color: var(--text-secondary);
+}
+
+/* Metric Toggle Switch (replacing checkbox) */
+.metric-toggle-switch {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+.metric-toggle-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+  position: absolute;
+}
+.metric-toggle-switch .slider {
+  width: 28px;
+  height: 16px;
+  background: var(--bg-tertiary);
+  border-radius: 16px;
+  cursor: pointer;
+  transition: background 0.2s;
+  position: relative;
+}
+.metric-toggle-switch .slider::before {
+  content: '';
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  background: var(--text-muted);
+  border-radius: 50%;
+  top: 2px;
+  left: 2px;
+  transition: transform 0.2s, background 0.2s;
+}
+.metric-toggle-switch input:checked + .slider {
+  background: var(--primary);
+}
+.metric-toggle-switch input:checked + .slider::before {
+  transform: translateX(12px);
+  background: white;
+}
+.metric-toggle-switch .label {
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
+
+/* Fix Leasing Score font consistency */
+.summary-card__value.score-pill {
+  font-size: var(--text-2xl);
+  font-weight: var(--font-bold);
+}
+.summary-card__value .max-score {
+  font-size: var(--text-sm);
+  font-weight: var(--font-normal);
+  opacity: 0.7;
+}
+
+/* Drill panel actions */
+.drill-panel__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
