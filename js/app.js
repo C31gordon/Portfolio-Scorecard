@@ -101,10 +101,42 @@ const COLUMN_DEFS = {
   renewalRatio: { label: 'Renewal%', default: true },
   googleStars: { label: 'Google', default: true },
   training: { label: 'Training', default: true },
-  tali: { label: 'TALi', default: true },
+  tali: { label: 'Satisfaction', default: true },
   propIndex: { label: 'ORA', default: true },
   noiVariance: { label: 'NOI Var', default: true }
 };
+
+// Date range labels
+const DATE_RANGES = {
+  wtd: { label: 'Week to Date', getRange: () => {
+    const now = new Date();
+    const start = new Date(now);
+    start.setDate(now.getDate() - now.getDay());
+    return { start, end: now };
+  }},
+  mtd: { label: 'Month to Date', getRange: () => {
+    const now = new Date();
+    const start = new Date(now.getFullYear(), now.getMonth(), 1);
+    return { start, end: now };
+  }},
+  qtd: { label: 'Quarter to Date', getRange: () => {
+    const now = new Date();
+    const qMonth = Math.floor(now.getMonth() / 3) * 3;
+    const start = new Date(now.getFullYear(), qMonth, 1);
+    return { start, end: now };
+  }},
+  ytd: { label: 'Year to Date', getRange: () => {
+    const now = new Date();
+    const start = new Date(now.getFullYear(), 0, 1);
+    return { start, end: now };
+  }}
+};
+
+// Turner benchmarks
+const TURNER_TALI_AVG = 6.83;
+const RISE_TALI_AVG = 7.43;
+const TURNER_PI_AVG = 8.53;
+const RISE_PI_AVG = 8.63;
 
 class App {
   constructor() {
@@ -117,6 +149,11 @@ class App {
     this.expandedProperty = null;
     this.visibleColumns = {};
     this.showColumnPicker = false;
+    this.showScoringGuide = false;
+    this.activeTab = 'leasing'; // 'leasing' or 'oncampus'
+    this.searchDebounce = null;
+    this.customDateStart = null;
+    this.customDateEnd = null;
     
     // Initialize default column visibility
     Object.keys(COLUMN_DEFS).forEach(key => {
@@ -411,11 +448,21 @@ class App {
       }
     });
 
-    // Search
+    // Search with debounce for better responsiveness
     document.addEventListener('input', (e) => {
       if (e.target.matches('[data-action="search"]')) {
-        State.set({ filters: { ...State.get('filters'), search: e.target.value } });
-        this.render();
+        const value = e.target.value;
+        clearTimeout(this.searchDebounce);
+        this.searchDebounce = setTimeout(() => {
+          State.set({ filters: { ...State.get('filters'), search: value } });
+          this.render();
+          // Re-focus the search input after render
+          const searchInput = document.getElementById('searchInput');
+          if (searchInput) {
+            searchInput.focus();
+            searchInput.setSelectionRange(value.length, value.length);
+          }
+        }, 150);
       }
     });
 
@@ -478,6 +525,60 @@ class App {
         this.render();
       }
     });
+
+    // Tab switching
+    document.addEventListener('click', (e) => {
+      const tab = e.target.closest('[data-tab]');
+      if (tab) {
+        this.activeTab = tab.dataset.tab;
+        this.render();
+      }
+    });
+
+    // Scoring guide
+    document.addEventListener('click', (e) => {
+      if (e.target.closest('[data-action="show-scoring-guide"]')) {
+        this.showScoringGuide = true;
+        this.render();
+      }
+    });
+
+    // Close scoring guide
+    document.addEventListener('click', (e) => {
+      if (e.target.closest('[data-action="close-scoring-guide"]') || 
+          (this.showScoringGuide && e.target.closest('.modal-overlay') && !e.target.closest('.modal'))) {
+        this.showScoringGuide = false;
+        this.render();
+      }
+    });
+
+    // Export JSON
+    document.addEventListener('click', (e) => {
+      if (e.target.closest('[data-action="export-json"]')) {
+        this.exportData();
+      }
+    });
+
+    // Print
+    document.addEventListener('click', (e) => {
+      if (e.target.closest('[data-action="print"]')) {
+        window.print();
+      }
+    });
+
+    // Custom date inputs
+    document.addEventListener('change', (e) => {
+      if (e.target.matches('[data-action="custom-date-start"]')) {
+        this.customDateStart = e.target.value;
+        State.set({ dateRange: 'custom' });
+        this.render();
+      }
+      if (e.target.matches('[data-action="custom-date-end"]')) {
+        this.customDateEnd = e.target.value;
+        State.set({ dateRange: 'custom' });
+        this.render();
+      }
+    });
   }
 
   setupStateSubscriptions() {
@@ -510,8 +611,19 @@ class App {
     this.renderHeader();
     this.renderDashboard();
     
+    // Add scoring guide modal if open
+    const modalContainer = document.getElementById('modal-container') || this.createModalContainer();
+    modalContainer.innerHTML = this.renderScoringGuide();
+    
     // Render charts after DOM update
     setTimeout(() => this.renderCharts(), 50);
+  }
+  
+  createModalContainer() {
+    const container = document.createElement('div');
+    container.id = 'modal-container';
+    document.body.appendChild(container);
+    return container;
   }
 
   renderHeader() {
@@ -519,27 +631,47 @@ class App {
     if (!header) return;
 
     const theme = State.get('theme');
-    const dateRange = State.get('dateRange');
+    const dateRange = State.get('dateRange') || 'mtd';
     const showYoY = State.get('showYoY');
+    
+    // Get date range display
+    const rangeInfo = DATE_RANGES[dateRange];
+    const range = rangeInfo?.getRange() || { start: new Date(), end: new Date() };
+    const formatDate = (d) => d.toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: 'numeric' });
+    const dateDisplay = `${formatDate(range.start)} - ${formatDate(range.end)}`;
 
     header.innerHTML = `
       <div class="header__logo">
         <span>${this.config?.company?.name || 'Portfolio Scorecard'}</span>
+        <div class="header__subtitle">Property Performance Dashboard</div>
       </div>
-      <nav class="header__nav">
-        <div class="period-selector">
-          <button class="period-selector__btn ${dateRange === 'wtd' ? 'period-selector__btn--active' : ''}" data-period="wtd">W</button>
-          <button class="period-selector__btn ${dateRange === 'mtd' ? 'period-selector__btn--active' : ''}" data-period="mtd">M</button>
-          <button class="period-selector__btn ${dateRange === 'qtd' ? 'period-selector__btn--active' : ''}" data-period="qtd">Q</button>
-          <button class="period-selector__btn ${dateRange === 'ytd' ? 'period-selector__btn--active' : ''}" data-period="ytd">Y</button>
+      <div class="header__center">
+        <div class="date-display">
+          <strong>${rangeInfo?.label || 'Period'}:</strong> ${dateDisplay}
         </div>
-      </nav>
+        <div class="period-controls">
+          <div class="period-selector">
+            <button class="period-selector__btn ${dateRange === 'wtd' ? 'period-selector__btn--active' : ''}" data-period="wtd" title="Week to Date">W</button>
+            <button class="period-selector__btn ${dateRange === 'mtd' ? 'period-selector__btn--active' : ''}" data-period="mtd" title="Month to Date">M</button>
+            <button class="period-selector__btn ${dateRange === 'qtd' ? 'period-selector__btn--active' : ''}" data-period="qtd" title="Quarter to Date">Q</button>
+            <button class="period-selector__btn ${dateRange === 'ytd' ? 'period-selector__btn--active' : ''}" data-period="ytd" title="Year to Date">Y</button>
+          </div>
+          <div class="custom-date">
+            <input type="date" class="date-input" data-action="custom-date-start" value="${this.customDateStart || ''}" title="Start Date">
+            <span>to</span>
+            <input type="date" class="date-input" data-action="custom-date-end" value="${this.customDateEnd || ''}" title="End Date">
+          </div>
+        </div>
+      </div>
       <div class="header__actions">
-        <label class="toggle">
+        <label class="toggle" title="Year over Year comparison">
           <input type="checkbox" class="toggle__input" data-action="toggle-yoy" ${showYoY ? 'checked' : ''}>
           <span class="toggle__switch"></span>
           <span class="toggle__label">YoY</span>
         </label>
+        <button class="btn btn--ghost btn--sm" data-action="show-scoring-guide" title="Scoring Guide">
+          📖 Scoring
+        </button>
         <button class="btn btn--secondary btn--icon" data-action="toggle-theme" title="Toggle theme">
           ${theme === 'dark' ? '☀️' : '🌙'}
         </button>
@@ -563,6 +695,31 @@ class App {
     const nonStudentUnits = properties.filter(p => p.type !== 'STU').reduce((s, p) => s + (p.units || 0), 0);
     const studentBeds = properties.filter(p => p.type === 'STU').reduce((s, p) => s + (p.beds || 0), 0);
     const totalManaged = nonStudentUnits + studentBeds;
+    const leasingProps = properties.filter(p => p.type !== 'OC');
+    const onCampusProps = []; // TODO: Add on-campus properties
+
+    // Calculate weighted avg Google stars
+    let gWeight = 0, gScore = 0, gReviews = 0;
+    properties.forEach(p => {
+      if (p.googleStars) {
+        const w = p.beds || p.units || 1;
+        gWeight += w;
+        gScore += p.googleStars * w;
+        gReviews += p.googleReviews || 0;
+      }
+    });
+    const avgGoogle = gWeight > 0 ? gScore / gWeight : 0;
+
+    // Calculate portfolio TALi avg
+    let tWeight = 0, tScore = 0;
+    properties.forEach(p => {
+      if (p.tali) {
+        const w = p.beds || p.units || 1;
+        tWeight += w;
+        tScore += p.tali * w;
+      }
+    });
+    const avgTali = tWeight > 0 ? tScore / tWeight : 0;
 
     // Red flags
     const redFlags = [];
@@ -577,23 +734,57 @@ class App {
 
     main.innerHTML = `
       <div class="dashboard">
-        <!-- Summary Tiles -->
-        <div class="summary-grid">
+        <!-- Summary Tiles Row 1 -->
+        <div class="summary-grid summary-grid--5">
           <div class="summary-card">
             <div class="summary-card__label">Total Managed</div>
             <div class="summary-card__value">${totalManaged.toLocaleString()}</div>
             <div class="summary-card__detail">${nonStudentUnits.toLocaleString()} units + ${studentBeds.toLocaleString()} beds</div>
           </div>
           <div class="summary-card">
-            <div class="summary-card__label">Portfolio Score</div>
+            <div class="summary-card__label">Leasing Units</div>
+            <div class="summary-card__value">${nonStudentUnits.toLocaleString()}</div>
+            <div class="summary-card__detail">${properties.filter(p => p.type !== 'STU').length} non-student properties</div>
+          </div>
+          <div class="summary-card">
+            <div class="summary-card__label">Leasing Beds</div>
+            <div class="summary-card__value">${studentBeds.toLocaleString()}</div>
+            <div class="summary-card__detail">${properties.filter(p => p.type === 'STU').length} student properties</div>
+          </div>
+          <div class="summary-card">
+            <div class="summary-card__label">On-Campus Beds</div>
+            <div class="summary-card__value">—</div>
+            <div class="summary-card__detail">Coming soon</div>
+          </div>
+          <div class="summary-card">
+            <div class="summary-card__label">Wtd Avg Google</div>
+            <div class="summary-card__value" style="color: ${avgGoogle >= 4.5 ? 'var(--success)' : avgGoogle >= 3.8 ? 'var(--warning)' : 'var(--danger)'}">${avgGoogle.toFixed(2)}</div>
+            <div class="summary-card__detail">${gReviews} total reviews</div>
+          </div>
+        </div>
+
+        <!-- Summary Tiles Row 2 -->
+        <div class="summary-grid summary-grid--5">
+          <div class="summary-card">
+            <div class="summary-card__label">Leasing Score</div>
             <div class="summary-card__value score-pill score-pill--${this.getScoreClass(portfolioScore)}">
               ${portfolioScore !== null ? portfolioScore.toFixed(2) : '—'}<span class="max-score"> / 5.00</span>
             </div>
           </div>
           <div class="summary-card">
-            <div class="summary-card__label">Properties</div>
-            <div class="summary-card__value">${properties.length}</div>
-            <div class="summary-card__detail">${properties.filter(p => this.isLeaseUp(p)).length} in lease-up</div>
+            <div class="summary-card__label">On-Campus Score</div>
+            <div class="summary-card__value">—</div>
+            <div class="summary-card__detail">Coming soon</div>
+          </div>
+          <div class="summary-card">
+            <div class="summary-card__label">RISE Satisfaction (TALi)</div>
+            <div class="summary-card__value" style="color: var(--success)">${avgTali > 0 ? avgTali.toFixed(2) : RISE_TALI_AVG}</div>
+            <div class="summary-card__detail">Turner Avg: ${TURNER_TALI_AVG} (+${(((RISE_TALI_AVG - TURNER_TALI_AVG) / TURNER_TALI_AVG) * 100).toFixed(1)}%)</div>
+          </div>
+          <div class="summary-card">
+            <div class="summary-card__label">RISE ORA Score</div>
+            <div class="summary-card__value">${RISE_PI_AVG}</div>
+            <div class="summary-card__detail">Turner Avg: ${TURNER_PI_AVG} (+${(((RISE_PI_AVG - TURNER_PI_AVG) / TURNER_PI_AVG) * 100).toFixed(1)}%)</div>
           </div>
           <div class="summary-card ${redFlags.length > 0 ? 'summary-card--alert' : ''}">
             <div class="summary-card__label">Red Flags</div>
@@ -602,10 +793,23 @@ class App {
           </div>
         </div>
 
+        <!-- Tabs -->
+        <div class="tabs">
+          <button class="tab ${this.activeTab === 'leasing' ? 'tab--active' : ''}" data-tab="leasing">
+            Leasing Properties (${leasingProps.length})
+          </button>
+          <button class="tab ${this.activeTab === 'oncampus' ? 'tab--active' : ''}" data-tab="oncampus">
+            On-Campus Properties (${onCampusProps.length})
+          </button>
+        </div>
+
         <!-- Controls Bar -->
         <div class="controls-bar">
-          <input type="text" class="input" placeholder="Search properties..." data-action="search" value="${State.get('filters')?.search || ''}">
+          <input type="text" class="input" placeholder="Search properties..." data-action="search" value="${State.get('filters')?.search || ''}" id="searchInput">
           <div class="controls-bar__actions">
+            <button class="btn btn--ghost btn--sm scoring-ref" data-action="show-scoring-guide">
+              <span class="g">●</span> ≥4 <span class="y">●</span> ≥2 <span class="r">●</span> &lt;2
+            </button>
             <div class="column-picker-wrapper">
               <button class="btn btn--secondary btn--sm" data-action="toggle-columns">
                 ⚙️ Columns (${this.getVisibleColumns().length}/${L_KEYS.length})
@@ -627,8 +831,8 @@ class App {
                 </div>
               ` : ''}
             </div>
-            <button class="btn btn--secondary btn--sm">📊 Export</button>
-            <button class="btn btn--secondary btn--sm">🖨️ Print</button>
+            <button class="btn btn--secondary btn--sm" data-action="export-json">📊 Export</button>
+            <button class="btn btn--secondary btn--sm" data-action="print">🖨️ Print</button>
           </div>
         </div>
 
@@ -945,6 +1149,147 @@ class App {
     if (score >= 4) return 'green';
     if (score >= 2) return 'yellow';
     return 'red';
+  }
+
+  exportData() {
+    const properties = this.getFilteredProperties();
+    const data = {
+      exportDate: new Date().toISOString(),
+      portfolioScore: this.calcWeightedScore(properties),
+      properties: properties.map(p => {
+        const metrics = {};
+        L_KEYS.forEach(k => {
+          const m = this.evalMetric(p, k);
+          metrics[k] = { value: m.val, formatted: m.fmt, color: m.rawColor, active: m.active };
+        });
+        return {
+          name: p.name,
+          type: p.type,
+          city: p.city,
+          units: p.units,
+          beds: p.beds,
+          rd: p.rd,
+          score: this.calcPropertyScore(p).score,
+          leaseUp: this.isLeaseUp(p),
+          metrics
+        };
+      })
+    };
+    
+    const json = JSON.stringify(data, null, 2);
+    const blob = new Blob([json], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `rise_scorecard_${new Date().toISOString().slice(0, 10)}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  renderScoringGuide() {
+    if (!this.showScoringGuide) return '';
+    
+    return `
+      <div class="modal-overlay">
+        <div class="modal scoring-guide">
+          <button class="modal__close" data-action="close-scoring-guide">&times;</button>
+          <h2>Scoring Methodology</h2>
+          
+          <div class="sg-section">
+            <h3>How Scores Work</h3>
+            <p>Each metric is evaluated against asset-type-specific thresholds and scored on a 5-point scale:</p>
+            <ul>
+              <li><span class="score-dot score-dot--green"></span> Green = 5 points (On Target)</li>
+              <li><span class="score-dot score-dot--yellow"></span> Yellow = 2 points (Watch)</li>
+              <li><span class="score-dot score-dot--red"></span> Red = 0 points (Action Needed)</li>
+            </ul>
+            <p>A property's overall score is the average of all active metrics. Maximum possible: 5.00</p>
+          </div>
+
+          <div class="sg-section">
+            <h3>Score Color Thresholds</h3>
+            <p>Score ≥ 4.0 = <span class="text-success">Green</span> | Score ≥ 2.0 = <span class="text-warning">Yellow</span> | Score &lt; 2.0 = <span class="text-danger">Red</span></p>
+          </div>
+
+          <div class="sg-section">
+            <h3>Lease-Up Handling</h3>
+            <p>Properties in Lease-Up automatically exclude Physical Occupancy, Leased %, Delinquency, and Renewal Ratio from scoring. Operational metrics remain scored.</p>
+          </div>
+
+          <div class="sg-section">
+            <h3>Conventional / BFR Thresholds</h3>
+            <table class="sg-table">
+              <thead>
+                <tr>
+                  <th>Metric</th>
+                  <th class="text-success">Green</th>
+                  <th class="text-warning">Yellow</th>
+                  <th class="text-danger">Red</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td>Physical Occupancy</td><td>≥ 93%</td><td>88-92.99%</td><td>&lt; 88%</td></tr>
+                <tr><td>Leased %</td><td>≥ 95%</td><td>90-94.99%</td><td>&lt; 90%</td></tr>
+                <tr><td>Delinquency</td><td>≤ 0.5%</td><td>0.51-2%</td><td>&gt; 2%</td></tr>
+                <tr><td>WO SLA %</td><td>≥ 95%</td><td>88-94.99%</td><td>&lt; 88%</td></tr>
+                <tr><td>Closing Ratio</td><td>≥ 40%</td><td>28-39.99%</td><td>&lt; 28%</td></tr>
+                <tr><td>Renewal Ratio</td><td>≥ 55%</td><td>48-54.99%</td><td>&lt; 48%</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="sg-section">
+            <h3>55+ (Active Adult) Thresholds</h3>
+            <table class="sg-table">
+              <thead>
+                <tr>
+                  <th>Metric</th>
+                  <th class="text-success">Green</th>
+                  <th class="text-warning">Yellow</th>
+                  <th class="text-danger">Red</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td>Physical Occupancy</td><td>≥ 93%</td><td>88-92.99%</td><td>&lt; 88%</td></tr>
+                <tr><td>Delinquency</td><td>≤ 0.025%</td><td>0.026-1%</td><td>&gt; 1%</td></tr>
+                <tr><td>Closing Ratio</td><td>≥ 30%</td><td>20-29.99%</td><td>&lt; 20%</td></tr>
+                <tr><td>Renewal Ratio</td><td>≥ 75%</td><td>68-74.99%</td><td>&lt; 68%</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="sg-section">
+            <h3>Student Housing Thresholds</h3>
+            <table class="sg-table">
+              <thead>
+                <tr>
+                  <th>Metric</th>
+                  <th class="text-success">Green</th>
+                  <th class="text-warning">Yellow</th>
+                  <th class="text-danger">Red</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td>Physical Occupancy</td><td>≥ 98%</td><td>94-97.99%</td><td>&lt; 94%</td></tr>
+                <tr><td>Delinquency</td><td>≤ 1%</td><td>1.01-1.5%</td><td>&gt; 1.5%</td></tr>
+                <tr><td>Closing Ratio</td><td>≥ 60%</td><td>45-59.99%</td><td>&lt; 45%</td></tr>
+                <tr><td>Renewal Ratio</td><td>≥ 45%</td><td>35-44.99%</td><td>&lt; 35%</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="sg-section">
+            <h3>J Turner Benchmarking</h3>
+            <p>TALi (Satisfaction) and ORA scores are compared against RISE portfolio average and J Turner industry average.</p>
+            <ul>
+              <li>Green = ≥ 5% above Turner Avg</li>
+              <li>Yellow = 0-4.99% above Turner Avg</li>
+              <li>Red = below Turner Avg</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    `;
   }
 }
 
