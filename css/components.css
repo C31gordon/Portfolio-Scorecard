@@ -2027,3 +2027,85 @@
   border: 7px solid transparent;
   border-top-color: #1e1e2f;
 }
+
+/* Drill Panel Header Updates */
+.drill-panel__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+  padding-bottom: var(--space-4);
+  margin-bottom: var(--space-4);
+  border-bottom: 1px solid var(--border-primary);
+}
+
+.drill-panel__info {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.drill-panel__status {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  margin-top: var(--space-2);
+}
+
+.drill-panel__controls {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+}
+
+.drill-period {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: var(--space-1);
+}
+
+.drill-period__label {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+}
+
+.period-selector--sm .period-selector__btn {
+  padding: 4px 8px;
+  font-size: 0.7rem;
+}
+
+/* Excluded/Grayed out metric cards for lease-up */
+.drill-card--excluded {
+  opacity: 0.5;
+  position: relative;
+}
+.drill-card--excluded::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: repeating-linear-gradient(
+    45deg,
+    transparent,
+    transparent 10px,
+    rgba(128,128,128,0.05) 10px,
+    rgba(128,128,128,0.05) 20px
+  );
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+.excluded-badge {
+  font-size: 0.6rem;
+  background: var(--bg-tertiary);
+  color: var(--text-muted);
+  padding: 2px 6px;
+  border-radius: 4px;
+  margin-left: 6px;
+  text-transform: uppercase;
+}

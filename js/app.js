@@ -1231,20 +1231,45 @@ class App {
     this.pendingCharts = this.pendingCharts || {};
     this.pendingCharts[propId] = { prop, hist };
     
+    // Calculate property score
+    const propScore = this.calcPropertyScore(prop);
+    const dateRange = State.get('dateRange') || 'mtd';
+    const rangeInfo = DATE_RANGES[dateRange];
+    const range = rangeInfo?.getRange() || { start: new Date(), end: new Date() };
+    const formatDate = (d) => d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    
     return `
       <div class="drill-panel" data-property-panel="${propId}">
         <div class="drill-panel__header">
-          <div>
+          <div class="drill-panel__info">
             <h3>${prop.name}</h3>
-            <span class="drill-panel__meta">${prop.city} • ${prop.type} • ${prop.beds || prop.units} ${prop.beds ? 'beds' : 'units'} • GM: ${prop.gm || 'N/A'}</span>
+            <span class="drill-panel__meta">${prop.city}, ${prop.state || ''} • ${prop.type === 'OC' ? 'On-Camp' : prop.type} • ${prop.beds || prop.units} ${prop.beds ? 'beds' : 'units'} • GM: ${prop.gm || 'N/A'}</span>
+            <div class="drill-panel__status">
+              <label class="leaseup-toggle-switch" title="Toggle Lease-Up / Stabilized">
+                <input type="checkbox" ${isLeaseUp ? 'checked' : ''} data-leaseup-toggle="${prop.name}">
+                <span class="slider"></span>
+                <span class="leaseup-label">${isLeaseUp ? 'Lease-Up' : 'Stabilized'}</span>
+              </label>
+              <span class="score-pill score-pill--${this.getScoreClass(propScore.score)}">
+                ${propScore.score !== null ? propScore.score.toFixed(2) : '—'}<span class="max-score"> / 5.00</span>
+              </span>
+            </div>
           </div>
-          <div class="drill-panel__actions">
+          <div class="drill-panel__controls">
+            <div class="drill-period">
+              <span class="drill-period__label">${rangeInfo?.label}: ${formatDate(range.start)} - ${formatDate(range.end)}</span>
+              <div class="period-selector period-selector--sm">
+                <button class="period-selector__btn ${dateRange === 'wtd' ? 'period-selector__btn--active' : ''}" data-period="wtd">W</button>
+                <button class="period-selector__btn ${dateRange === 'mtd' ? 'period-selector__btn--active' : ''}" data-period="mtd">M</button>
+                <button class="period-selector__btn ${dateRange === 'qtd' ? 'period-selector__btn--active' : ''}" data-period="qtd">Q</button>
+                <button class="period-selector__btn ${dateRange === 'ytd' ? 'period-selector__btn--active' : ''}" data-period="ytd">Y</button>
+              </div>
+            </div>
             <label class="toggle" title="Year over Year comparison">
               <input type="checkbox" class="toggle__input" data-action="toggle-yoy-drill" data-property="${prop.name}" ${State.get('showYoY') ? 'checked' : ''}>
               <span class="toggle__switch"></span>
               <span class="toggle__label">YoY</span>
             </label>
-            ${isLeaseUp ? '<span class="badge badge--info">Lease-Up</span>' : '<span class="badge badge--success">Stabilized</span>'}
           </div>
         </div>
 
@@ -1280,16 +1305,16 @@ class App {
 
         <div class="drill-grid drill-grid--3">
           <!-- Occupancy with Sparkline -->
-          <div class="drill-card drill-card--chart">
-            <h4>Physical Occupancy</h4>
+          <div class="drill-card drill-card--chart ${isLeaseUp ? 'drill-card--excluded' : ''}">
+            <h4>Physical Occupancy ${isLeaseUp ? '<span class="excluded-badge">Not Scored</span>' : ''}</h4>
             <div class="drill-card__value ${this.getMetricColor(prop.physOcc, 'physOcc', prop.type)}">${prop.physOcc ? (prop.physOcc * 100).toFixed(1) + '%' : '—'}</div>
             <div class="drill-card__chart" id="chart_physOcc_${propId}"></div>
             <div class="drill-card__target">Target: ${prop.type === 'STU' ? '98%' : '93%'}</div>
           </div>
 
           <!-- Leased % with Sparkline -->
-          <div class="drill-card drill-card--chart">
-            <h4>Leased %</h4>
+          <div class="drill-card drill-card--chart ${isLeaseUp ? 'drill-card--excluded' : ''}">
+            <h4>Leased % ${isLeaseUp ? '<span class="excluded-badge">Not Scored</span>' : ''}</h4>
             <div class="drill-card__value ${this.getMetricColor(prop.leased, 'leased', prop.type)}">${prop.leased ? (prop.leased * 100).toFixed(1) + '%' : '—'}</div>
             <div class="drill-card__chart" id="chart_leased_${propId}"></div>
             <div class="drill-card__target">Target: ${prop.type === 'STU' ? '98%' : '95%'}</div>
@@ -1312,16 +1337,16 @@ class App {
           </div>
 
           <!-- Delinquency -->
-          <div class="drill-card drill-card--chart">
-            <h4>Delinquency</h4>
+          <div class="drill-card drill-card--chart ${isLeaseUp ? 'drill-card--excluded' : ''}">
+            <h4>Delinquency ${isLeaseUp ? '<span class="excluded-badge">Not Scored</span>' : ''}</h4>
             <div class="drill-card__value ${this.getMetricColor(prop.delinq, 'delinq', prop.type)}">${prop.delinq != null ? (prop.delinq * 100).toFixed(2) + '%' : '—'}</div>
             <div class="drill-card__chart" id="chart_delinq_${propId}"></div>
             <div class="drill-card__target">Target: ≤${prop.type === '55+' ? '0.025%' : prop.type === 'STU' ? '1%' : '0.5%'}</div>
           </div>
 
           <!-- Renewal Ratio -->
-          <div class="drill-card drill-card--chart">
-            <h4>Renewal Ratio</h4>
+          <div class="drill-card drill-card--chart ${isLeaseUp ? 'drill-card--excluded' : ''}">
+            <h4>Renewal Ratio ${isLeaseUp ? '<span class="excluded-badge">Not Scored</span>' : ''}</h4>
             <div class="drill-card__value ${this.getMetricColor(prop.renewalRatio, 'renewalRatio', prop.type)}">${prop.renewalRatio ? (prop.renewalRatio * 100).toFixed(1) + '%' : '—'}</div>
             <div class="drill-card__chart" id="chart_renewal_${propId}"></div>
             <div class="drill-card__target">Target: ${prop.type === '55+' ? '75%' : prop.type === 'STU' ? '45%' : '55%'}</div>
