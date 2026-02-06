@@ -1313,12 +1313,22 @@
 }
 
 /* ===== DRILL GRID VARIANTS ===== */
+.drill-grid--4 {
+  grid-template-columns: repeat(4, 1fr);
+}
+
 .drill-grid--3 {
   grid-template-columns: repeat(3, 1fr);
 }
 
 .drill-grid--2 {
   grid-template-columns: repeat(2, 1fr);
+}
+
+@media (max-width: 1400px) {
+  .drill-grid--4 {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
 @media (max-width: 1200px) {

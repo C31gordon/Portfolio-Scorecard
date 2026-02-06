@@ -1337,7 +1337,7 @@ class App {
           </div>
         </div>
 
-        <div class="drill-grid drill-grid--3">
+        <div class="drill-grid drill-grid--4">
           <!-- Physical Occupancy -->
           <div class="drill-card drill-card--chart ${isLeaseUp ? 'drill-card--excluded' : ''}" data-metric="physOcc" data-prop="${propId}">
             <div class="drill-card__header">
