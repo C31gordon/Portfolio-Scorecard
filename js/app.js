@@ -149,12 +149,6 @@ const DATE_RANGES = {
   }}
 };
 
-// Turner benchmarks
-const TURNER_TALI_AVG = 6.83;
-const RISE_TALI_AVG = 7.43;
-const TURNER_PI_AVG = 8.53;
-const RISE_PI_AVG = 8.63;
-
 class App {
   constructor() {
     this.config = null;
