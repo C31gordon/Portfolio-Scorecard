@@ -2546,3 +2546,34 @@
 .metrics-table thead th .info-icon {
   margin-left: 4px;
 }
+
+/* ===== TRADE-OUT MULTI-VALUE ===== */
+.drill-card__value-multi {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 8px 0;
+}
+
+.trade-line {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.75rem;
+}
+
+.trade-line--total {
+  margin-top: 4px;
+  padding-top: 6px;
+  border-top: 1px solid var(--border-primary);
+  font-weight: 600;
+}
+
+.trade-label {
+  color: var(--text-secondary);
+}
+
+.trade-value {
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 600;
+}
