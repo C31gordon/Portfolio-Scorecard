@@ -64,7 +64,12 @@ export class Charts {
     const canvas = document.createElement('canvas');
     const ctx = canvas.getContext('2d');
     
-    const width = options.width || container.offsetWidth || 100;
+    // Get container width, accounting for mobile constraints
+    let width = options.width || container.offsetWidth || 100;
+    // Ensure we don't exceed container bounds on mobile
+    const maxWidth = container.parentElement ? container.parentElement.offsetWidth - 16 : width;
+    width = Math.min(width, maxWidth);
+    
     const height = options.height || 40;
     const color = options.color || this.colors.primary;
     const fill = options.fill !== false;
@@ -76,9 +81,11 @@ export class Charts {
     
     canvas.width = width * 2; // Retina
     canvas.height = height * 2;
-    canvas.style.width = `${width}px`;
+    canvas.style.width = '100%';
+    canvas.style.maxWidth = `${width}px`;
     canvas.style.height = `${height}px`;
     canvas.style.cursor = 'crosshair';
+    canvas.style.display = 'block';
     ctx.scale(2, 2);
     
     if (!data || data.length === 0) {
@@ -93,10 +100,10 @@ export class Charts {
     const min = Math.min(...allData);
     const max = Math.max(...allData);
     const range = max - min || 1;
-    const padding = 6; // Increased for dot visibility
+    const padding = { left: 8, right: 10, top: 6, bottom: 6 }; // Extra right padding for last dot
     
-    const xStep = (width - padding * 2) / (data.length - 1);
-    const yScale = (height - padding * 2) / range;
+    const xStep = (width - padding.left - padding.right) / (data.length - 1);
+    const yScale = (height - padding.top - padding.bottom) / range;
     
     // Store point positions for hover detection
     const points = [];
@@ -109,8 +116,8 @@ export class Charts {
       else ctx.setLineDash([]);
       
       lineData.forEach((val, i) => {
-        const x = padding + i * xStep;
-        const y = height - padding - (val - min) * yScale;
+        const x = padding.left + i * xStep;
+        const y = height - padding.bottom - (val - min) * yScale;
         if (i === 0) ctx.moveTo(x, y);
         else ctx.lineTo(x, y);
         if (pointsArray) pointsArray.push({ x, y, val, idx: i });
@@ -125,8 +132,8 @@ export class Charts {
       
       // Draw dots at each point
       lineData.forEach((val, i) => {
-        const x = padding + i * xStep;
-        const y = height - padding - (val - min) * yScale;
+        const x = padding.left + i * xStep;
+        const y = height - padding.bottom - (val - min) * yScale;
         ctx.beginPath();
         ctx.arc(x, y, dashed ? 2 : 3, 0, Math.PI * 2);
         if (dashed) {
@@ -148,15 +155,15 @@ export class Charts {
     // Draw fill for current period
     if (fill) {
       ctx.beginPath();
-      ctx.moveTo(padding, height - padding);
+      ctx.moveTo(padding.left, height - padding.bottom);
       
       data.forEach((val, i) => {
-        const x = padding + i * xStep;
-        const y = height - padding - (val - min) * yScale;
+        const x = padding.left + i * xStep;
+        const y = height - padding.bottom - (val - min) * yScale;
         ctx.lineTo(x, y);
       });
       
-      ctx.lineTo(padding + (data.length - 1) * xStep, height - padding);
+      ctx.lineTo(padding.left + (data.length - 1) * xStep, height - padding.bottom);
       ctx.closePath();
       
       const gradient = ctx.createLinearGradient(0, 0, 0, height);

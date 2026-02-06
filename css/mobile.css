@@ -221,12 +221,15 @@
   
   .drill-card__chart {
     max-width: 100% !important;
-    overflow: hidden !important;
+    overflow: visible !important;
+    box-sizing: border-box !important;
+    padding-right: 4px !important;
   }
   
   .drill-card__chart canvas {
     max-width: 100% !important;
     width: 100% !important;
+    display: block !important;
   }
   
   /* Drill panel - prevent any horizontal scroll */
