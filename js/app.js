@@ -986,8 +986,8 @@ class App {
                   <tr>
                     <th>Property</th>
                     <th>Type</th>
-                    <th>Units</th>
-                    ${this.getVisibleColumns().map(key => `<th>${COLUMN_DEFS[key]?.label || key} <span class="info-icon" title="${METRIC_INFO[key]?.desc || ''}" data-metric="${key}">ⓘ</span></th>`).join('')}
+                    <th>${this.activeTab === 'oncampus' ? 'Beds' : 'Units'}</th>
+                    ${this.getVisibleColumns().map(key => `<th>${COLUMN_DEFS[key]?.label || key} <span class="info-icon" data-tooltip="${METRIC_INFO[key]?.desc || ''}" data-metric="${key}">ⓘ</span></th>`).join('')}
                     <th>Score</th>
                   </tr>
                 </thead>
@@ -1023,8 +1023,8 @@ class App {
             </label>
           </div>
         </td>
-        <td class="type-cell">${prop.type}</td>
-        <td class="units-cell">${prop.beds || prop.units || '—'}</td>
+        <td class="type-cell">${prop.type === 'OC' ? 'On-Camp' : prop.type}</td>
+        <td class="units-cell">${(prop.type === 'OC' || prop.type === 'STU') ? (prop.beds || '—') : (prop.units || '—')}</td>
         ${metrics.map(m => `
           <td>
             <div class="metric-cell">
@@ -1219,9 +1219,9 @@ class App {
         </div>
 
         <div class="drill-actions">
-          <button class="btn btn--primary btn--sm">📋 Generate Report</button>
-          <button class="btn btn--secondary btn--sm">📊 Full Analytics</button>
-          <button class="btn btn--secondary btn--sm">🖨️ Print</button>
+          <button class="btn btn--primary btn--sm" data-action="generate-report" data-property="${prop.name}">📋 Generate Report</button>
+          <button class="btn btn--secondary btn--sm btn--disabled" disabled title="Coming Soon">📊 Full Analytics <span class="badge badge--sm">Soon</span></button>
+          <button class="btn btn--secondary btn--sm" onclick="window.print()">🖨️ Print</button>
         </div>
       </div>
     `;

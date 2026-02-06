@@ -1741,64 +1741,61 @@
   font-size: 0.8rem;
   color: var(--text-muted);
   margin-left: 4px;
-  opacity: 0.6;
-  transition: opacity 0.2s;
+  opacity: 0.7;
+  transition: opacity 0.2s, color 0.2s;
   position: relative;
   display: inline-block;
+  vertical-align: middle;
 }
 .info-icon:hover {
   opacity: 1;
   color: var(--primary);
 }
-/* Remove native title tooltip */
-.info-icon[title] {
-  pointer-events: auto;
-}
-/* Custom tooltip - appears ABOVE the icon */
-.info-icon::after {
-  content: attr(title);
+/* Custom tooltip - appears ABOVE the icon using data-tooltip */
+.info-icon[data-tooltip]::after {
+  content: attr(data-tooltip);
   position: absolute;
-  bottom: calc(100% + 10px);
+  bottom: calc(100% + 12px);
   left: 50%;
   transform: translateX(-50%);
-  background: #1a1a2e;
-  color: #ffffff;
-  border: 1px solid var(--border-secondary);
+  background: #1e1e2f;
+  color: #f0f0f0;
+  border: 1px solid #3a3a5c;
   padding: 10px 14px;
   border-radius: 8px;
   font-size: 0.8rem;
-  font-weight: normal;
-  line-height: 1.4;
-  min-width: 200px;
-  max-width: 280px;
+  font-weight: 400;
+  line-height: 1.5;
+  min-width: 180px;
+  max-width: 260px;
   white-space: normal;
   text-align: left;
   z-index: 9999;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.5);
   opacity: 0;
   visibility: hidden;
-  transition: opacity 0.15s, visibility 0.15s;
+  transition: opacity 0.2s ease, visibility 0.2s ease;
   pointer-events: none;
 }
-.info-icon:hover::after {
+.info-icon[data-tooltip]:hover::after {
   opacity: 1;
   visibility: visible;
 }
 /* Arrow pointing DOWN toward the icon */
-.info-icon::before {
+.info-icon[data-tooltip]::before {
   content: '';
   position: absolute;
-  bottom: calc(100% + 4px);
+  bottom: calc(100% + 6px);
   left: 50%;
   transform: translateX(-50%);
-  border: 6px solid transparent;
-  border-top-color: #1a1a2e;
+  border: 7px solid transparent;
+  border-top-color: #1e1e2f;
   opacity: 0;
   visibility: hidden;
-  transition: opacity 0.15s, visibility 0.15s;
+  transition: opacity 0.2s ease, visibility 0.2s ease;
   z-index: 10000;
 }
-.info-icon:hover::before {
+.info-icon[data-tooltip]:hover::before {
   opacity: 1;
   visibility: visible;
 }
@@ -1959,4 +1956,26 @@
   text-transform: uppercase;
   letter-spacing: 0.5px;
   white-space: nowrap;
+}
+
+/* Disabled button style */
+.btn--disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.btn--disabled:hover {
+  transform: none;
+  box-shadow: none;
+}
+
+/* Small badge for "Coming Soon" */
+.badge--sm {
+  font-size: 0.6rem;
+  padding: 2px 6px;
+  margin-left: 4px;
+  background: var(--warning);
+  color: #000;
+  border-radius: 4px;
+  text-transform: uppercase;
+  font-weight: 600;
 }
