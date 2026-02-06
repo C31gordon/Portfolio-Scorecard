@@ -1449,12 +1449,18 @@ class App {
     const isLeaseUp = this.isLeaseUp(prop);
     const isExpanded = this.expandedProperty === prop.name;
     const colSpan = 3 + visibleCols.length + 1; // Property, Type, Units + metrics + Score
+    
+    // Get open action items count for this property
+    const actionCount = getActionItems().getOpenCount(prop.name);
+    const actionBadge = actionCount > 0 
+      ? `<span class="action-count-badge" title="${actionCount} open action${actionCount > 1 ? 's' : ''}">${actionCount}</span>` 
+      : '';
 
     let html = `
       <tr class="${isExpanded ? 'property-row--expanded' : ''}">
         <td>
           <div class="property-cell">
-            <span class="property-name" data-drill-property="${prop.name}">${prop.name} <span class="drill-arrow">${isExpanded ? '▼' : '▶'}</span></span>
+            <span class="property-name" data-drill-property="${prop.name}">${prop.name} ${actionBadge}<span class="drill-arrow">${isExpanded ? '▼' : '▶'}</span></span>
             <span class="property-city">${prop.city || ''}</span>
             <label class="leaseup-toggle-switch">
               <input type="checkbox" ${isLeaseUp ? 'checked' : ''} data-leaseup-toggle="${prop.name}">
