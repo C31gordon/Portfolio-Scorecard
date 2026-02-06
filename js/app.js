@@ -552,12 +552,17 @@ class App {
       }
     });
 
-    // Tab switching
+    // Tab switching - preserve scroll position
     document.addEventListener('click', (e) => {
       const tab = e.target.closest('[data-tab]');
       if (tab) {
+        const scrollY = window.scrollY;
         this.activeTab = tab.dataset.tab;
         this.render();
+        // Restore scroll position after render
+        requestAnimationFrame(() => {
+          window.scrollTo(0, scrollY);
+        });
       }
     });
 

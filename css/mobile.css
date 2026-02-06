@@ -192,6 +192,32 @@
     gap: var(--space-3);
   }
   
+  /* Drill cards - prevent horizontal overflow */
+  .drill-card {
+    max-width: 100%;
+    overflow: hidden;
+  }
+  
+  .drill-card__chart {
+    max-width: 100%;
+    overflow: hidden;
+  }
+  
+  .drill-card__chart canvas {
+    max-width: 100% !important;
+  }
+  
+  /* Drill panel - prevent any horizontal scroll */
+  .drill-panel {
+    max-width: 100vw;
+    overflow-x: hidden;
+  }
+  
+  .drill-panel__content {
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+  
   /* Funnel bar - wrap */
   .funnel-bar {
     flex-wrap: wrap;
@@ -211,17 +237,36 @@
     display: none;
   }
   
-  /* Regional blocks */
+  /* Regional blocks - keep as row, allow wrapping */
   .regional-block__header {
-    flex-direction: column;
-    align-items: flex-start;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
     gap: var(--space-2);
+    padding: var(--space-3);
+  }
+  
+  .regional-block__info {
+    flex: 1;
+    min-width: 150px;
+  }
+  
+  .regional-block__name {
+    font-size: var(--text-sm);
+  }
+  
+  .regional-block__meta {
+    font-size: 10px;
   }
   
   .regional-block__score {
-    width: 100%;
     display: flex;
-    justify-content: flex-end;
+    align-items: center;
+    gap: var(--space-2);
+  }
+  
+  .regional-block__arrow {
+    font-size: var(--text-sm);
   }
   
   /* Property table - horizontal scroll */
@@ -476,10 +521,47 @@
 
 /* ===== LANDSCAPE ORIENTATION ===== */
 @media (max-width: 991px) and (orientation: landscape) {
-  /* Reduce header height in landscape */
+  /* Drastically reduce header height in landscape */
   .header {
-    padding: var(--space-1) var(--space-4);
+    position: relative; /* Not sticky in landscape */
+    padding: var(--space-1) var(--space-3);
     min-height: auto;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    gap: var(--space-2);
+  }
+  
+  .header__logo {
+    font-size: var(--text-sm);
+  }
+  
+  .header__subtitle {
+    display: none;
+  }
+  
+  .header__nav {
+    flex: 1;
+    justify-content: flex-end;
+  }
+  
+  .header__center {
+    gap: var(--space-2);
+  }
+  
+  .header__actions {
+    width: auto;
+    gap: var(--space-1);
+  }
+  
+  /* Smaller buttons in landscape */
+  .header .btn {
+    min-height: 32px;
+    padding: var(--space-1) var(--space-2);
+    font-size: var(--text-xs);
+  }
+  
+  .period-selector__btn {
+    padding: var(--space-1) var(--space-2);
   }
   
   /* More columns in landscape */
@@ -489,6 +571,37 @@
   
   .drill-grid {
     grid-template-columns: repeat(2, 1fr);
+  }
+  
+  /* Smaller summary cards */
+  .summary-card {
+    padding: var(--space-2);
+  }
+  
+  .summary-card__value {
+    font-size: var(--text-lg);
+  }
+}
+
+/* Extra small landscape (phones) */
+@media (max-height: 500px) and (orientation: landscape) {
+  .header {
+    position: relative;
+    padding: var(--space-1) var(--space-2);
+  }
+  
+  .header__logo {
+    font-size: var(--text-xs);
+  }
+  
+  .main {
+    padding: var(--space-2);
+  }
+  
+  /* Hide less critical header elements */
+  .header__subtitle,
+  .theme-toggle {
+    display: none;
   }
 }
 
