@@ -101,52 +101,72 @@
 
 /* ===== MOBILE LANDSCAPE (576px - 767px) ===== */
 @media (max-width: 767px) {
-  /* Header - stack on mobile */
+  /* Header - compact on mobile */
   .header {
-    flex-direction: column;
-    align-items: stretch;
-    padding: var(--space-3);
-    gap: var(--space-3);
+    flex-direction: column !important;
+    align-items: stretch !important;
+    padding: 8px !important;
+    gap: 8px !important;
   }
   
   .header__logo {
-    font-size: var(--text-lg);
+    font-size: 16px !important;
   }
   
   .header__subtitle {
-    font-size: var(--text-xs);
+    font-size: 10px !important;
   }
   
   .header__nav {
-    width: 100%;
-    justify-content: space-between;
-    margin-left: 0;
+    width: 100% !important;
+    justify-content: space-between !important;
+    margin-left: 0 !important;
   }
   
   .header__center {
-    flex-wrap: wrap;
-    gap: var(--space-2);
+    flex-wrap: wrap !important;
+    gap: 4px !important;
   }
   
   .header__actions {
-    width: 100%;
-    justify-content: space-between;
+    width: 100% !important;
+    justify-content: space-between !important;
+    flex-wrap: wrap !important;
+    gap: 4px !important;
   }
   
-  /* Column visibility toggle - hide labels, icon only */
+  /* Column visibility toggle - hide on mobile */
+  .column-toggle,
   .column-toggle-label {
-    display: none;
+    display: none !important;
   }
   
-  /* Period selector - full width */
+  /* Hide date range pickers on mobile - use period selector only */
+  .header .date-range,
+  .header input[type="date"] {
+    display: none !important;
+  }
+  
+  /* Period selector - compact */
   .period-selector {
-    width: 100%;
-    justify-content: space-between;
+    width: auto !important;
   }
   
   .period-selector__btn {
-    flex: 1;
-    text-align: center;
+    padding: 6px 10px !important;
+    font-size: 11px !important;
+  }
+  
+  /* Theme toggle - smaller */
+  .theme-toggle {
+    font-size: 16px !important;
+    padding: 4px !important;
+  }
+  
+  /* Legend button - smaller */
+  .btn--legend {
+    padding: 4px 8px !important;
+    font-size: 10px !important;
   }
   
   /* Main content - less padding */
@@ -320,11 +340,65 @@
 @media (max-width: 575px) {
   /* Even smaller padding */
   .main {
-    padding: var(--space-2);
+    padding: 8px !important;
   }
   
   .header {
-    padding: var(--space-2);
+    padding: 8px !important;
+  }
+  
+  /* View toggle buttons - make them fit */
+  .view-toggle {
+    gap: 1px !important;
+    padding: 1px !important;
+  }
+  
+  .view-toggle__btn {
+    padding: 2px 4px !important;
+    font-size: 8px !important;
+    white-space: nowrap !important;
+  }
+  
+  /* Drill card header - stack title and toggle */
+  .drill-card__header {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 8px !important;
+  }
+  
+  .drill-card__header h4 {
+    font-size: 10px !important;
+  }
+  
+  /* Drill panel controls - more compact */
+  .drill-panel__controls {
+    flex-direction: column !important;
+    gap: 8px !important;
+  }
+  
+  .drill-period {
+    flex-direction: column !important;
+    gap: 4px !important;
+    width: 100% !important;
+  }
+  
+  .drill-period__row {
+    flex-wrap: wrap !important;
+    gap: 4px !important;
+  }
+  
+  .drill-period__label {
+    font-size: 10px !important;
+  }
+  
+  /* Hide duplicate period selector in drill panel if header has one */
+  .drill-panel .period-selector {
+    display: none !important;
+  }
+  
+  /* YoY toggle - inline */
+  .drill-yoy-toggle {
+    font-size: 11px !important;
   }
   
   /* Summary grid - single column on smallest screens */
