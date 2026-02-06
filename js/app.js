@@ -90,6 +90,22 @@ const RISE_TALI_AVG = 7.43;
 const TURNER_PI_AVG = 8.53;
 const RISE_PI_AVG = 8.63;
 
+// Column definitions with labels
+const COLUMN_DEFS = {
+  physOcc: { label: 'Phys Occ%', default: true },
+  leased: { label: 'Leased%', default: true },
+  leadToTour: { label: 'Lead→Tour', default: true },
+  delinq: { label: 'Delinq%', default: true },
+  woSla: { label: 'WO SLA%', default: true },
+  mtdClosing: { label: 'Closing%', default: true },
+  renewalRatio: { label: 'Renewal%', default: true },
+  googleStars: { label: 'Google', default: true },
+  training: { label: 'Training', default: true },
+  tali: { label: 'TALi', default: true },
+  propIndex: { label: 'ORA', default: true },
+  noiVariance: { label: 'NOI Var', default: true }
+};
+
 class App {
   constructor() {
     this.config = null;
@@ -99,6 +115,13 @@ class App {
     this.metricToggles = {};
     this.expandedRegions = {};
     this.expandedProperty = null;
+    this.visibleColumns = {};
+    this.showColumnPicker = false;
+    
+    // Initialize default column visibility
+    Object.keys(COLUMN_DEFS).forEach(key => {
+      this.visibleColumns[key] = COLUMN_DEFS[key].default;
+    });
   }
 
   async init() {
@@ -149,6 +172,9 @@ class App {
         this.leaseUpState = state.leaseUp || {};
         this.metricToggles = state.toggles || {};
         this.expandedRegions = state.regions || {};
+        if (state.columns) {
+          this.visibleColumns = { ...this.visibleColumns, ...state.columns };
+        }
       }
     } catch (e) {
       console.warn('Could not load saved state');
@@ -160,11 +186,35 @@ class App {
       localStorage.setItem('scorecard_state', JSON.stringify({
         leaseUp: this.leaseUpState,
         toggles: this.metricToggles,
-        regions: this.expandedRegions
+        regions: this.expandedRegions,
+        columns: this.visibleColumns
       }));
     } catch (e) {
       console.warn('Could not save state');
     }
+  }
+  
+  toggleColumn(key) {
+    this.visibleColumns[key] = !this.visibleColumns[key];
+    this.saveState();
+    this.render();
+  }
+  
+  toggleColumnPicker() {
+    this.showColumnPicker = !this.showColumnPicker;
+    this.render();
+  }
+  
+  getVisibleColumns() {
+    return L_KEYS.filter(key => this.visibleColumns[key]);
+  }
+  
+  resetColumns() {
+    Object.keys(COLUMN_DEFS).forEach(key => {
+      this.visibleColumns[key] = COLUMN_DEFS[key].default;
+    });
+    this.saveState();
+    this.render();
   }
 
   isLeaseUp(prop) {
@@ -405,6 +455,29 @@ class App {
         this.setMetricToggle(propName, metric, e.target.checked);
       }
     });
+
+    // Column visibility toggle
+    document.addEventListener('change', (e) => {
+      if (e.target.matches('[data-column-toggle]')) {
+        const column = e.target.dataset.columnToggle;
+        this.toggleColumn(column);
+      }
+    });
+
+    // Column picker toggle button
+    document.addEventListener('click', (e) => {
+      if (e.target.closest('[data-action="toggle-columns"]')) {
+        this.toggleColumnPicker();
+      }
+    });
+
+    // Close column picker when clicking outside
+    document.addEventListener('click', (e) => {
+      if (this.showColumnPicker && !e.target.closest('.column-picker') && !e.target.closest('[data-action="toggle-columns"]')) {
+        this.showColumnPicker = false;
+        this.render();
+      }
+    });
   }
 
   setupStateSubscriptions() {
@@ -529,9 +602,34 @@ class App {
           </div>
         </div>
 
-        <!-- Search -->
-        <div class="search-bar">
+        <!-- Controls Bar -->
+        <div class="controls-bar">
           <input type="text" class="input" placeholder="Search properties..." data-action="search" value="${State.get('filters')?.search || ''}">
+          <div class="controls-bar__actions">
+            <div class="column-picker-wrapper">
+              <button class="btn btn--secondary btn--sm" data-action="toggle-columns">
+                ⚙️ Columns (${this.getVisibleColumns().length}/${L_KEYS.length})
+              </button>
+              ${this.showColumnPicker ? `
+                <div class="column-picker">
+                  <div class="column-picker__header">Show/Hide Columns</div>
+                  <div class="column-picker__list">
+                    ${L_KEYS.map(key => `
+                      <label class="column-picker__item">
+                        <input type="checkbox" ${this.visibleColumns[key] ? 'checked' : ''} data-column-toggle="${key}">
+                        <span>${COLUMN_DEFS[key]?.label || key}</span>
+                      </label>
+                    `).join('')}
+                  </div>
+                  <div class="column-picker__footer">
+                    <button class="btn btn--sm btn--ghost" onclick="app.resetColumns()">Reset to Default</button>
+                  </div>
+                </div>
+              ` : ''}
+            </div>
+            <button class="btn btn--secondary btn--sm">📊 Export</button>
+            <button class="btn btn--secondary btn--sm">🖨️ Print</button>
+          </div>
         </div>
 
         <!-- Regional Blocks -->
@@ -570,18 +668,7 @@ class App {
                     <th>Property</th>
                     <th>Type</th>
                     <th>Units</th>
-                    <th>Phys Occ%</th>
-                    <th>Leased%</th>
-                    <th>Lead→Tour</th>
-                    <th>Delinq%</th>
-                    <th>WO SLA%</th>
-                    <th>Closing%</th>
-                    <th>Renewal%</th>
-                    <th>Google</th>
-                    <th>Training</th>
-                    <th>TALi</th>
-                    <th>ORA</th>
-                    <th>NOI Var</th>
+                    ${this.getVisibleColumns().map(key => `<th>${COLUMN_DEFS[key]?.label || key}</th>`).join('')}
                     <th>Score</th>
                   </tr>
                 </thead>
@@ -597,10 +684,12 @@ class App {
   }
 
   renderPropertyRow(prop) {
-    const metrics = L_KEYS.map(k => this.evalMetric(prop, k));
+    const visibleCols = this.getVisibleColumns();
+    const metrics = visibleCols.map(k => this.evalMetric(prop, k));
     const score = this.calcPropertyScore(prop);
     const isLeaseUp = this.isLeaseUp(prop);
     const isExpanded = this.expandedProperty === prop.name;
+    const colSpan = 3 + visibleCols.length + 1; // Property, Type, Units + metrics + Score
 
     let html = `
       <tr class="${isExpanded ? 'property-row--expanded' : ''}">
@@ -639,7 +728,7 @@ class App {
     if (isExpanded) {
       html += `
         <tr class="drill-row">
-          <td colspan="16">
+          <td colspan="${colSpan}">
             ${this.renderDrillPanel(prop)}
           </td>
         </tr>
