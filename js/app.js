@@ -1258,11 +1258,19 @@ class App {
           <div class="drill-panel__controls">
             <div class="drill-period">
               <span class="drill-period__label">${rangeInfo?.label}: ${formatDate(range.start)} - ${formatDate(range.end)}</span>
-              <div class="period-selector period-selector--sm">
-                <button class="period-selector__btn ${dateRange === 'wtd' ? 'period-selector__btn--active' : ''}" data-period="wtd">W</button>
-                <button class="period-selector__btn ${dateRange === 'mtd' ? 'period-selector__btn--active' : ''}" data-period="mtd">M</button>
-                <button class="period-selector__btn ${dateRange === 'qtd' ? 'period-selector__btn--active' : ''}" data-period="qtd">Q</button>
-                <button class="period-selector__btn ${dateRange === 'ytd' ? 'period-selector__btn--active' : ''}" data-period="ytd">Y</button>
+              <div class="drill-period__row">
+                <div class="period-selector period-selector--sm">
+                  <button class="period-selector__btn ${dateRange === 'wtd' ? 'period-selector__btn--active' : ''}" data-period="wtd">W</button>
+                  <button class="period-selector__btn ${dateRange === 'mtd' ? 'period-selector__btn--active' : ''}" data-period="mtd">M</button>
+                  <button class="period-selector__btn ${dateRange === 'qtd' ? 'period-selector__btn--active' : ''}" data-period="qtd">Q</button>
+                  <button class="period-selector__btn ${dateRange === 'ytd' ? 'period-selector__btn--active' : ''}" data-period="ytd">Y</button>
+                </div>
+                <div class="custom-date custom-date--sm">
+                  <input type="date" class="date-input date-input--sm" data-action="custom-date-start" value="${this.customDateStart || ''}">
+                  <span>-</span>
+                  <input type="date" class="date-input date-input--sm" data-action="custom-date-end" value="${this.customDateEnd || ''}">
+                  <button class="btn btn--primary btn--xs" data-action="apply-custom-date">Go</button>
+                </div>
               </div>
             </div>
             <label class="toggle" title="Year over Year comparison">
@@ -1312,8 +1320,8 @@ class App {
                 <button class="cpb active">W</button><button class="cpb">M</button><button class="cpb">Q</button>
               </div>
             </div>
-            <div class="drill-card__value ${this.getMetricColor(prop.physOcc, 'physOcc', prop.type)}">${prop.physOcc ? (prop.physOcc * 100).toFixed(1) + '%' : '—'}</div>
-            <div class="drill-card__chart" id="chart_physOcc_${propId}"></div>
+            <div class="drill-card__value ${isLeaseUp ? 'grayed' : this.getMetricColor(prop.physOcc, 'physOcc', prop.type)}">${prop.physOcc ? (prop.physOcc * 100).toFixed(1) + '%' : '—'}</div>
+            <div class="drill-card__chart ${isLeaseUp ? 'chart--grayed' : ''}" id="chart_physOcc_${propId}"></div>
             <div class="drill-card__target">Target: ${prop.type === 'STU' ? '98%' : '93%'}</div>
           </div>
 
@@ -1325,8 +1333,8 @@ class App {
                 <button class="cpb active">W</button><button class="cpb">M</button><button class="cpb">Q</button>
               </div>
             </div>
-            <div class="drill-card__value ${this.getMetricColor(prop.leased, 'leased', prop.type)}">${prop.leased ? (prop.leased * 100).toFixed(1) + '%' : '—'}</div>
-            <div class="drill-card__chart" id="chart_leased_${propId}"></div>
+            <div class="drill-card__value ${isLeaseUp ? 'grayed' : this.getMetricColor(prop.leased, 'leased', prop.type)}">${prop.leased ? (prop.leased * 100).toFixed(1) + '%' : '—'}</div>
+            <div class="drill-card__chart ${isLeaseUp ? 'chart--grayed' : ''}" id="chart_leased_${propId}"></div>
             <div class="drill-card__target">Target: ${prop.type === 'STU' ? '98%' : '95%'}</div>
           </div>
 
@@ -1364,8 +1372,8 @@ class App {
                 <button class="cpb active">W</button><button class="cpb">M</button><button class="cpb">Q</button>
               </div>
             </div>
-            <div class="drill-card__value ${this.getMetricColor(prop.delinq, 'delinq', prop.type)}">${prop.delinq != null ? (prop.delinq * 100).toFixed(2) + '%' : '—'}</div>
-            <div class="drill-card__chart" id="chart_delinq_${propId}"></div>
+            <div class="drill-card__value ${isLeaseUp ? 'grayed' : this.getMetricColor(prop.delinq, 'delinq', prop.type)}">${prop.delinq != null ? (prop.delinq * 100).toFixed(2) + '%' : '—'}</div>
+            <div class="drill-card__chart ${isLeaseUp ? 'chart--grayed' : ''}" id="chart_delinq_${propId}"></div>
             <div class="drill-card__target">Target: ≤${prop.type === '55+' ? '0.025%' : prop.type === 'STU' ? '1%' : '0.5%'}</div>
           </div>
 
@@ -1377,8 +1385,8 @@ class App {
                 <button class="cpb active">W</button><button class="cpb">M</button><button class="cpb">Q</button>
               </div>
             </div>
-            <div class="drill-card__value ${this.getMetricColor(prop.renewalRatio, 'renewalRatio', prop.type)}">${prop.renewalRatio ? (prop.renewalRatio * 100).toFixed(1) + '%' : '—'}</div>
-            <div class="drill-card__chart" id="chart_renewal_${propId}"></div>
+            <div class="drill-card__value ${isLeaseUp ? 'grayed' : this.getMetricColor(prop.renewalRatio, 'renewalRatio', prop.type)}">${prop.renewalRatio ? (prop.renewalRatio * 100).toFixed(1) + '%' : '—'}</div>
+            <div class="drill-card__chart ${isLeaseUp ? 'chart--grayed' : ''}" id="chart_renewal_${propId}"></div>
             <div class="drill-card__target">Target: ${prop.type === '55+' ? '75%' : prop.type === 'STU' ? '45%' : '55%'}</div>
           </div>
         </div>

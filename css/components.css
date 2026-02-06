@@ -2153,3 +2153,38 @@
   font-size: 1.1rem;
   padding: 6px 12px;
 }
+
+/* Grayed value and chart for excluded metrics */
+.drill-card__value.grayed {
+  color: var(--text-muted) !important;
+  opacity: 0.5;
+}
+.chart--grayed {
+  filter: grayscale(100%) opacity(0.4);
+}
+
+/* Smaller custom date inputs for drill-down */
+.drill-period__row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+}
+.custom-date--sm {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.custom-date--sm span {
+  color: var(--text-muted);
+  font-size: 0.7rem;
+}
+.date-input--sm {
+  padding: 4px 6px;
+  font-size: 0.7rem;
+  width: 110px;
+}
+.btn--xs {
+  padding: 4px 8px;
+  font-size: 0.65rem;
+}
