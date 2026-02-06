@@ -649,25 +649,21 @@ class App {
         <span>${this.config?.company?.name || 'Portfolio Scorecard'}</span>
         <div class="header__subtitle">Property Performance Dashboard</div>
       </div>
-      <div class="header__center">
+      <div class="header__actions">
         <div class="date-display">
           <strong>${rangeInfo?.label || 'Period'}:</strong> ${dateDisplay}
         </div>
-        <div class="period-controls">
-          <div class="period-selector">
-            <button class="period-selector__btn ${dateRange === 'wtd' ? 'period-selector__btn--active' : ''}" data-period="wtd" title="Week to Date">W</button>
-            <button class="period-selector__btn ${dateRange === 'mtd' ? 'period-selector__btn--active' : ''}" data-period="mtd" title="Month to Date">M</button>
-            <button class="period-selector__btn ${dateRange === 'qtd' ? 'period-selector__btn--active' : ''}" data-period="qtd" title="Quarter to Date">Q</button>
-            <button class="period-selector__btn ${dateRange === 'ytd' ? 'period-selector__btn--active' : ''}" data-period="ytd" title="Year to Date">Y</button>
-          </div>
-          <div class="custom-date">
-            <input type="date" class="date-input" data-action="custom-date-start" value="${this.customDateStart || ''}" title="Start Date">
-            <span>to</span>
-            <input type="date" class="date-input" data-action="custom-date-end" value="${this.customDateEnd || ''}" title="End Date">
-          </div>
+        <div class="period-selector">
+          <button class="period-selector__btn ${dateRange === 'wtd' ? 'period-selector__btn--active' : ''}" data-period="wtd" title="Prior Week (Fri-Thu)">W</button>
+          <button class="period-selector__btn ${dateRange === 'mtd' ? 'period-selector__btn--active' : ''}" data-period="mtd" title="Prior Month">M</button>
+          <button class="period-selector__btn ${dateRange === 'qtd' ? 'period-selector__btn--active' : ''}" data-period="qtd" title="Prior Quarter">Q</button>
+          <button class="period-selector__btn ${dateRange === 'ytd' ? 'period-selector__btn--active' : ''}" data-period="ytd" title="Prior Year">Y</button>
         </div>
-      </div>
-      <div class="header__actions">
+        <div class="custom-date">
+          <input type="date" class="date-input" data-action="custom-date-start" value="${this.customDateStart || ''}" title="Start Date">
+          <span>to</span>
+          <input type="date" class="date-input" data-action="custom-date-end" value="${this.customDateEnd || ''}" title="End Date">
+        </div>
         <label class="toggle" title="Year over Year comparison">
           <input type="checkbox" class="toggle__input" data-action="toggle-yoy" ${showYoY ? 'checked' : ''}>
           <span class="toggle__switch"></span>
@@ -781,7 +777,7 @@ class App {
             <div class="summary-card__detail">Coming soon</div>
           </div>
           <div class="summary-card">
-            <div class="summary-card__label">Resident Sat.</div>
+            <div class="summary-card__label">Resident Satisfaction</div>
             <div class="summary-card__value" style="color: var(--success)">${avgTali > 0 ? avgTali.toFixed(2) : RISE_TALI_AVG}</div>
             <div class="summary-card__detail">Turner Avg: ${TURNER_TALI_AVG} (+${(((RISE_TALI_AVG - TURNER_TALI_AVG) / TURNER_TALI_AVG) * 100).toFixed(1)}%)</div>
           </div>
@@ -875,7 +871,7 @@ class App {
                     <th>Property</th>
                     <th>Type</th>
                     <th>Units</th>
-                    ${this.getVisibleColumns().map(key => `<th>${COLUMN_DEFS[key]?.label || key}</th>`).join('')}
+                    ${this.getVisibleColumns().map(key => `<th>${COLUMN_DEFS[key]?.label || key} <span class="info-icon" title="${METRIC_INFO[key]?.desc || ''}" data-metric="${key}">ⓘ</span></th>`).join('')}
                     <th>Score</th>
                   </tr>
                 </thead>

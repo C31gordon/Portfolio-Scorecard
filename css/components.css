@@ -1734,3 +1734,22 @@
 .text-success { color: var(--success); }
 .text-warning { color: var(--warning); }
 .text-danger { color: var(--danger); }
+
+/* Info Icon in Column Headers */
+.info-icon {
+  cursor: help;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-left: 4px;
+  opacity: 0.6;
+  transition: opacity 0.2s;
+}
+.info-icon:hover {
+  opacity: 1;
+  color: var(--primary);
+}
+
+/* Tooltip style via title attribute - enhance with CSS */
+.info-icon[title] {
+  position: relative;
+}
