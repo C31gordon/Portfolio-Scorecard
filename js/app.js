@@ -13,6 +13,7 @@ import { riseProperties, risePortfolio, propertyHistory, ON_CAMPUS_DEFAULT_METRI
 // Metrics that should be ON by default for On-Campus properties
 const OC_DEFAULT_ON = ['woSla', 'training', 'tali', 'noiVariance'];
 import { generateLeaseData, generateWorkOrderData, generateAgentData, generateFinancialData, generateRentRollData, generateHistoricalData, generatePriorYearData } from './data/mock-drilldown.js';
+import { generatePhysOccData, generateLeasedData, generateLeadToTourData, generateDelinquencyData, generateWOSLAData, generateClosingRatioData, generateRenewalRatioData, renderDrillTable, DRILL_COLUMNS } from './components/drill-tables.js';
 import { Charts } from './components/charts.js';
 import { DataTable } from './components/data-table.js';
 
@@ -556,6 +557,32 @@ class App {
       if (tab) {
         this.activeTab = tab.dataset.tab;
         this.render();
+      }
+    });
+
+    // View toggle for drill cards (Graph/Table/Drill In)
+    document.addEventListener('click', (e) => {
+      const viewBtn = e.target.closest('.view-toggle__btn');
+      if (viewBtn) {
+        const card = viewBtn.closest('.drill-card');
+        const view = viewBtn.dataset.view;
+        const metric = card.dataset.metric;
+        const propId = card.dataset.prop;
+        
+        // Update button states
+        card.querySelectorAll('.view-toggle__btn').forEach(btn => {
+          btn.classList.toggle('view-toggle__btn--active', btn.dataset.view === view);
+        });
+        
+        // Update view visibility
+        card.querySelectorAll('.drill-card__view').forEach(v => {
+          v.classList.toggle('drill-card__view--active', v.dataset.viewContent === view);
+        });
+        
+        // Load data for table/drill-in if not already loaded
+        if (view === 'table' || view === 'drillin') {
+          this.loadDrillData(metric, propId, view);
+        }
       }
     });
 
@@ -1311,82 +1338,142 @@ class App {
         </div>
 
         <div class="drill-grid drill-grid--3">
-          <!-- Occupancy with Sparkline -->
-          <div class="drill-card drill-card--chart ${isLeaseUp ? 'drill-card--excluded' : ''}">
+          <!-- Physical Occupancy -->
+          <div class="drill-card drill-card--chart ${isLeaseUp ? 'drill-card--excluded' : ''}" data-metric="physOcc" data-prop="${propId}">
             <div class="drill-card__header">
               <h4>Physical Occupancy ${isLeaseUp ? '<span class="excluded-badge">Not Scored</span>' : ''}</h4>
-              <div class="chart-period-btns">
-                <button class="cpb active">W</button><button class="cpb">M</button><button class="cpb">Q</button>
+              <div class="view-toggle">
+                <button class="view-toggle__btn view-toggle__btn--active" data-view="graph">Graph</button>
+                <button class="view-toggle__btn" data-view="table">Table</button>
+                <button class="view-toggle__btn" data-view="drillin">Drill In</button>
               </div>
             </div>
             <div class="drill-card__value ${isLeaseUp ? 'grayed' : this.getMetricColor(prop.physOcc, 'physOcc', prop.type)}">${prop.physOcc ? (prop.physOcc * 100).toFixed(1) + '%' : '—'}</div>
-            <div class="drill-card__chart ${isLeaseUp ? 'chart--grayed' : ''}" id="chart_physOcc_${propId}"></div>
-            <div class="drill-card__target">Target: ${prop.type === 'STU' ? '98%' : '93%'}</div>
+            <div class="drill-card__view drill-card__view--active" data-view-content="graph">
+              <div class="drill-card__chart ${isLeaseUp ? 'chart--grayed' : ''}" id="chart_physOcc_${propId}"></div>
+              <div class="drill-card__target">Target: ${prop.type === 'STU' ? '98%' : '93%'}</div>
+            </div>
+            <div class="drill-card__view" data-view-content="table">
+              <div class="drill-card__table-view" id="table_physOcc_${propId}"></div>
+            </div>
+            <div class="drill-card__view" data-view-content="drillin">
+              <div class="drill-card__drillin" id="drillin_physOcc_${propId}"></div>
+            </div>
           </div>
 
-          <!-- Leased % with Sparkline -->
-          <div class="drill-card drill-card--chart ${isLeaseUp ? 'drill-card--excluded' : ''}">
+          <!-- Leased % -->
+          <div class="drill-card drill-card--chart ${isLeaseUp ? 'drill-card--excluded' : ''}" data-metric="leased" data-prop="${propId}">
             <div class="drill-card__header">
               <h4>Leased % ${isLeaseUp ? '<span class="excluded-badge">Not Scored</span>' : ''}</h4>
-              <div class="chart-period-btns">
-                <button class="cpb active">W</button><button class="cpb">M</button><button class="cpb">Q</button>
+              <div class="view-toggle">
+                <button class="view-toggle__btn view-toggle__btn--active" data-view="graph">Graph</button>
+                <button class="view-toggle__btn" data-view="table">Table</button>
+                <button class="view-toggle__btn" data-view="drillin">Drill In</button>
               </div>
             </div>
             <div class="drill-card__value ${isLeaseUp ? 'grayed' : this.getMetricColor(prop.leased, 'leased', prop.type)}">${prop.leased ? (prop.leased * 100).toFixed(1) + '%' : '—'}</div>
-            <div class="drill-card__chart ${isLeaseUp ? 'chart--grayed' : ''}" id="chart_leased_${propId}"></div>
-            <div class="drill-card__target">Target: ${prop.type === 'STU' ? '98%' : '95%'}</div>
+            <div class="drill-card__view drill-card__view--active" data-view-content="graph">
+              <div class="drill-card__chart ${isLeaseUp ? 'chart--grayed' : ''}" id="chart_leased_${propId}"></div>
+              <div class="drill-card__target">Target: ${prop.type === 'STU' ? '98%' : '95%'}</div>
+            </div>
+            <div class="drill-card__view" data-view-content="table">
+              <div class="drill-card__table-view" id="table_leased_${propId}"></div>
+            </div>
+            <div class="drill-card__view" data-view-content="drillin">
+              <div class="drill-card__drillin" id="drillin_leased_${propId}"></div>
+            </div>
           </div>
 
-          <!-- Closing Ratio with Sparkline -->
-          <div class="drill-card drill-card--chart">
+          <!-- Closing Ratio -->
+          <div class="drill-card drill-card--chart" data-metric="closingRatio" data-prop="${propId}">
             <div class="drill-card__header">
               <h4>Closing Ratio</h4>
-              <div class="chart-period-btns">
-                <button class="cpb active">W</button><button class="cpb">M</button><button class="cpb">Q</button>
+              <div class="view-toggle">
+                <button class="view-toggle__btn view-toggle__btn--active" data-view="graph">Graph</button>
+                <button class="view-toggle__btn" data-view="table">Table</button>
+                <button class="view-toggle__btn" data-view="drillin">Drill In</button>
               </div>
             </div>
             <div class="drill-card__value ${this.getMetricColor(prop.mtdClosing, 'mtdClosing', prop.type)}">${prop.mtdClosing ? (Math.min(prop.mtdClosing, 1) * 100).toFixed(1) + '%' : '—'}</div>
-            <div class="drill-card__chart" id="chart_closing_${propId}"></div>
-            <div class="drill-card__target">Target: ${prop.type === 'STU' ? '60%' : prop.type === '55+' ? '30%' : '40%'}</div>
+            <div class="drill-card__view drill-card__view--active" data-view-content="graph">
+              <div class="drill-card__chart" id="chart_closing_${propId}"></div>
+              <div class="drill-card__target">Target: ${prop.type === 'STU' ? '60%' : prop.type === '55+' ? '30%' : '40%'}</div>
+            </div>
+            <div class="drill-card__view" data-view-content="table">
+              <div class="drill-card__table-view" id="table_closing_${propId}"></div>
+            </div>
+            <div class="drill-card__view" data-view-content="drillin">
+              <div class="drill-card__drillin" id="drillin_closing_${propId}"></div>
+            </div>
           </div>
 
           <!-- WO SLA -->
-          <div class="drill-card drill-card--chart">
+          <div class="drill-card drill-card--chart" data-metric="woSla" data-prop="${propId}">
             <div class="drill-card__header">
               <h4>Work Order SLA</h4>
-              <div class="chart-period-btns">
-                <button class="cpb active">W</button><button class="cpb">M</button><button class="cpb">Q</button>
+              <div class="view-toggle">
+                <button class="view-toggle__btn view-toggle__btn--active" data-view="graph">Graph</button>
+                <button class="view-toggle__btn" data-view="table">Table</button>
+                <button class="view-toggle__btn" data-view="drillin">Drill In</button>
               </div>
             </div>
             <div class="drill-card__value ${this.getMetricColor(prop.woSla, 'woSla', prop.type)}">${prop.woSla ? (prop.woSla * 100).toFixed(1) + '%' : '—'}</div>
-            <div class="drill-card__chart" id="chart_woSla_${propId}"></div>
-            <div class="drill-card__target">Target: 95%</div>
+            <div class="drill-card__view drill-card__view--active" data-view-content="graph">
+              <div class="drill-card__chart" id="chart_woSla_${propId}"></div>
+              <div class="drill-card__target">Target: 95%</div>
+            </div>
+            <div class="drill-card__view" data-view-content="table">
+              <div class="drill-card__table-view" id="table_woSla_${propId}"></div>
+            </div>
+            <div class="drill-card__view" data-view-content="drillin">
+              <div class="drill-card__drillin" id="drillin_woSla_${propId}"></div>
+            </div>
           </div>
 
           <!-- Delinquency -->
-          <div class="drill-card drill-card--chart ${isLeaseUp ? 'drill-card--excluded' : ''}">
+          <div class="drill-card drill-card--chart ${isLeaseUp ? 'drill-card--excluded' : ''}" data-metric="delinq" data-prop="${propId}">
             <div class="drill-card__header">
               <h4>Delinquency ${isLeaseUp ? '<span class="excluded-badge">Not Scored</span>' : ''}</h4>
-              <div class="chart-period-btns">
-                <button class="cpb active">W</button><button class="cpb">M</button><button class="cpb">Q</button>
+              <div class="view-toggle">
+                <button class="view-toggle__btn view-toggle__btn--active" data-view="graph">Graph</button>
+                <button class="view-toggle__btn" data-view="table">Table</button>
+                <button class="view-toggle__btn" data-view="drillin">Drill In</button>
               </div>
             </div>
             <div class="drill-card__value ${isLeaseUp ? 'grayed' : this.getMetricColor(prop.delinq, 'delinq', prop.type)}">${prop.delinq != null ? (prop.delinq * 100).toFixed(2) + '%' : '—'}</div>
-            <div class="drill-card__chart ${isLeaseUp ? 'chart--grayed' : ''}" id="chart_delinq_${propId}"></div>
-            <div class="drill-card__target">Target: ≤${prop.type === '55+' ? '0.025%' : prop.type === 'STU' ? '1%' : '0.5%'}</div>
+            <div class="drill-card__view drill-card__view--active" data-view-content="graph">
+              <div class="drill-card__chart ${isLeaseUp ? 'chart--grayed' : ''}" id="chart_delinq_${propId}"></div>
+              <div class="drill-card__target">Target: ≤${prop.type === '55+' ? '0.025%' : prop.type === 'STU' ? '1%' : '0.5%'}</div>
+            </div>
+            <div class="drill-card__view" data-view-content="table">
+              <div class="drill-card__table-view" id="table_delinq_${propId}"></div>
+            </div>
+            <div class="drill-card__view" data-view-content="drillin">
+              <div class="drill-card__drillin" id="drillin_delinq_${propId}"></div>
+            </div>
           </div>
 
           <!-- Renewal Ratio -->
-          <div class="drill-card drill-card--chart ${isLeaseUp ? 'drill-card--excluded' : ''}">
+          <div class="drill-card drill-card--chart ${isLeaseUp ? 'drill-card--excluded' : ''}" data-metric="renewalRatio" data-prop="${propId}">
             <div class="drill-card__header">
               <h4>Renewal Ratio ${isLeaseUp ? '<span class="excluded-badge">Not Scored</span>' : ''}</h4>
-              <div class="chart-period-btns">
-                <button class="cpb active">W</button><button class="cpb">M</button><button class="cpb">Q</button>
+              <div class="view-toggle">
+                <button class="view-toggle__btn view-toggle__btn--active" data-view="graph">Graph</button>
+                <button class="view-toggle__btn" data-view="table">Table</button>
+                <button class="view-toggle__btn" data-view="drillin">Drill In</button>
               </div>
             </div>
             <div class="drill-card__value ${isLeaseUp ? 'grayed' : this.getMetricColor(prop.renewalRatio, 'renewalRatio', prop.type)}">${prop.renewalRatio ? (prop.renewalRatio * 100).toFixed(1) + '%' : '—'}</div>
-            <div class="drill-card__chart ${isLeaseUp ? 'chart--grayed' : ''}" id="chart_renewal_${propId}"></div>
-            <div class="drill-card__target">Target: ${prop.type === '55+' ? '75%' : prop.type === 'STU' ? '45%' : '55%'}</div>
+            <div class="drill-card__view drill-card__view--active" data-view-content="graph">
+              <div class="drill-card__chart ${isLeaseUp ? 'chart--grayed' : ''}" id="chart_renewal_${propId}"></div>
+              <div class="drill-card__target">Target: ${prop.type === '55+' ? '75%' : prop.type === 'STU' ? '45%' : '55%'}</div>
+            </div>
+            <div class="drill-card__view" data-view-content="table">
+              <div class="drill-card__table-view" id="table_renewal_${propId}"></div>
+            </div>
+            <div class="drill-card__view" data-view-content="drillin">
+              <div class="drill-card__drillin" id="drillin_renewal_${propId}"></div>
+            </div>
           </div>
         </div>
 
@@ -1442,6 +1529,76 @@ class App {
         </div>
       </div>
     `;
+  }
+  
+  /**
+   * Load drill-in or table data for a metric
+   */
+  loadDrillData(metric, propId, viewType) {
+    // Track loaded data to avoid re-loading
+    this.loadedDrillData = this.loadedDrillData || {};
+    const key = `${metric}_${propId}_${viewType}`;
+    if (this.loadedDrillData[key]) return;
+    
+    const prop = riseProperties.find(p => p.name.replace(/[^a-zA-Z0-9]/g, '_') === propId);
+    if (!prop) return;
+    
+    // Metric to data generator mapping
+    const generators = {
+      physOcc: generatePhysOccData,
+      leased: generateLeasedData,
+      closingRatio: generateClosingRatioData,
+      woSla: generateWOSLAData,
+      delinq: generateDelinquencyData,
+      renewalRatio: generateRenewalRatioData
+    };
+    
+    // Metric to column mapping (for drill-in)
+    const columnMap = {
+      physOcc: DRILL_COLUMNS.physOcc,
+      leased: DRILL_COLUMNS.leased,
+      closingRatio: DRILL_COLUMNS.closingRatio,
+      woSla: DRILL_COLUMNS.woSla,
+      delinq: DRILL_COLUMNS.delinq,
+      renewalRatio: DRILL_COLUMNS.renewalRatio
+    };
+    
+    const generator = generators[metric];
+    const columns = columnMap[metric];
+    
+    if (!generator || !columns) return;
+    
+    const data = generator(prop);
+    
+    if (viewType === 'table') {
+      // Simple table view - show recent data summary
+      const containerId = `table_${metric}_${propId}`;
+      const container = document.getElementById(containerId);
+      if (container) {
+        const tableData = data.slice(0, 8); // Show first 8 rows
+        container.innerHTML = `
+          <table>
+            <thead>
+              <tr>${columns.slice(0, 4).map(c => `<th>${c.label}</th>`).join('')}</tr>
+            </thead>
+            <tbody>
+              ${tableData.map(row => `
+                <tr>${columns.slice(0, 4).map(c => `<td>${c.format ? c.format(row[c.key], row) : row[c.key]}</td>`).join('')}</tr>
+              `).join('')}
+            </tbody>
+          </table>
+          <div style="text-align:center;margin-top:8px;font-size:0.65rem;color:var(--text-muted);">
+            Showing ${tableData.length} of ${data.length} • Click "Drill In" for full details
+          </div>
+        `;
+      }
+    } else if (viewType === 'drillin') {
+      // Full drill-in table with filtering and sorting
+      const containerId = `drillin_${metric}_${propId}`;
+      renderDrillTable(containerId, columns, data);
+    }
+    
+    this.loadedDrillData[key] = true;
   }
   
   renderCharts() {

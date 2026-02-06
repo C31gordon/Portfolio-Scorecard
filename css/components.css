@@ -2263,3 +2263,161 @@
   height: 0;
   border-top: 2px dashed #6b7280;
 }
+
+/* ===== DRILL TABLES ===== */
+.drill-table-wrap {
+  margin-top: 12px;
+  max-height: 300px;
+  overflow: auto;
+  border-radius: 8px;
+  border: 1px solid var(--border-primary);
+}
+
+.drill-table-filters {
+  padding: 8px;
+  background: var(--bg-tertiary);
+  border-bottom: 1px solid var(--border-primary);
+  position: sticky;
+  top: 0;
+  z-index: 5;
+}
+
+.drill-table-search {
+  width: 100%;
+  padding: 6px 10px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-primary);
+  border-radius: 4px;
+  color: var(--text-primary);
+  font-size: 0.75rem;
+}
+.drill-table-search:focus {
+  outline: none;
+  border-color: var(--primary);
+}
+
+.drill-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.7rem;
+}
+
+.drill-table th {
+  text-align: left;
+  padding: 8px 10px;
+  background: var(--bg-tertiary);
+  color: var(--text-secondary);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-size: 0.65rem;
+  position: sticky;
+  top: 40px;
+  z-index: 4;
+  white-space: nowrap;
+  cursor: pointer;
+  user-select: none;
+  border-bottom: 1px solid var(--border-primary);
+}
+
+.drill-table th:hover {
+  background: var(--bg-hover);
+}
+
+.drill-table th .sort-icon {
+  margin-left: 4px;
+  opacity: 0.5;
+  font-size: 0.6rem;
+}
+
+.drill-table th.sorted-asc .sort-icon,
+.drill-table th.sorted-desc .sort-icon {
+  opacity: 1;
+  color: var(--primary);
+}
+
+.drill-table td {
+  padding: 6px 10px;
+  border-bottom: 1px solid var(--border-secondary);
+  color: var(--text-primary);
+  white-space: nowrap;
+}
+
+.drill-table tbody tr:hover {
+  background: var(--bg-hover);
+}
+
+.drill-table-empty {
+  text-align: center;
+  padding: 20px;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+/* View toggle for drill cards */
+.view-toggle {
+  display: flex;
+  gap: 2px;
+  background: var(--bg-tertiary);
+  border-radius: 4px;
+  padding: 2px;
+}
+
+.view-toggle__btn {
+  padding: 3px 8px;
+  font-size: 0.6rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  border: none;
+  background: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  border-radius: 3px;
+  transition: all 0.15s;
+}
+
+.view-toggle__btn:hover {
+  color: var(--text-secondary);
+}
+
+.view-toggle__btn--active {
+  background: var(--primary);
+  color: white;
+}
+
+/* Drill card views */
+.drill-card__view {
+  display: none;
+}
+.drill-card__view--active {
+  display: block;
+}
+
+.drill-card__table-view {
+  font-size: 0.7rem;
+  margin-top: 8px;
+}
+
+.drill-card__table-view table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.drill-card__table-view th,
+.drill-card__table-view td {
+  padding: 4px 8px;
+  text-align: left;
+  border-bottom: 1px solid var(--border-secondary);
+}
+
+.drill-card__table-view th {
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  font-size: 0.6rem;
+}
+
+/* Drill-in container */
+.drill-card__drillin {
+  margin-top: 8px;
+}
