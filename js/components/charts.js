@@ -190,14 +190,23 @@ export class Charts {
       
       if (closest) {
         const label = labels ? labels[closest.idx] : `Wk ${closest.idx + 1}`;
-        const valFormatted = metric.includes('Occ') || metric.includes('leased') || metric.includes('Ratio') || metric.includes('SLA') 
-          ? `${closest.val.toFixed(1)}%` 
-          : closest.val.toFixed(2);
+        
+        // Format value based on metric type
+        const formatValue = (val) => {
+          if (metric.includes('Rent') || metric.includes('rent')) {
+            return `$${Math.round(val).toLocaleString()}`;
+          } else if (metric.includes('Occ') || metric.includes('leased') || metric.includes('Ratio') || metric.includes('SLA') || metric.includes('Tour')) {
+            return `${(val * 100).toFixed(1)}%`;
+          } else if (metric.includes('delinq')) {
+            return `${(val * 100).toFixed(2)}%`;
+          }
+          return val.toFixed(2);
+        };
+        
+        const valFormatted = formatValue(closest.val);
         let html = `<div><strong>${label}</strong></div><div style="color:${color}">${valFormatted}</div>`;
         if (closest.priorVal !== null) {
-          const priorFormatted = metric.includes('Occ') || metric.includes('leased') || metric.includes('Ratio') || metric.includes('SLA')
-            ? `${closest.priorVal.toFixed(1)}%`
-            : closest.priorVal.toFixed(2);
+          const priorFormatted = formatValue(closest.priorVal);
           html += `<div style="color:${priorColor};font-size:10px">Prior: ${priorFormatted}</div>`;
         }
         self.showTooltip(e.clientX, e.clientY, html);
