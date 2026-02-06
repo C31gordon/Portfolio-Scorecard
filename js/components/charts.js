@@ -15,7 +15,10 @@ export class Charts {
   };
   
   /**
-   * Create a sparkline chart
+   * Create a sparkline chart (supports YoY comparison)
+   * @param {HTMLElement} container
+   * @param {number[]} data - Current period data
+   * @param {object} options - { color, height, fill, priorData, priorColor, showYoY }
    */
   static sparkline(container, data, options = {}) {
     const canvas = document.createElement('canvas');
@@ -25,6 +28,9 @@ export class Charts {
     const height = options.height || 40;
     const color = options.color || this.colors.primary;
     const fill = options.fill !== false;
+    const priorData = options.priorData || null;
+    const priorColor = options.priorColor || '#6b7280'; // Gray for prior year
+    const showYoY = options.showYoY && priorData && priorData.length > 0;
     
     canvas.width = width * 2; // Retina
     canvas.height = height * 2;
@@ -37,15 +43,44 @@ export class Charts {
       return canvas;
     }
     
-    const min = Math.min(...data);
-    const max = Math.max(...data);
+    // Calculate min/max across both datasets if YoY
+    let allData = [...data];
+    if (showYoY) allData = [...data, ...priorData];
+    
+    const min = Math.min(...allData);
+    const max = Math.max(...allData);
     const range = max - min || 1;
     const padding = 2;
     
     const xStep = (width - padding * 2) / (data.length - 1);
     const yScale = (height - padding * 2) / range;
     
-    // Draw fill
+    // Helper to draw a line
+    const drawLine = (lineData, lineColor, lineWidth = 2, dashed = false) => {
+      ctx.beginPath();
+      if (dashed) ctx.setLineDash([4, 2]);
+      else ctx.setLineDash([]);
+      
+      lineData.forEach((val, i) => {
+        const x = padding + i * xStep;
+        const y = height - padding - (val - min) * yScale;
+        if (i === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      });
+      
+      ctx.strokeStyle = lineColor;
+      ctx.lineWidth = lineWidth;
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+      ctx.stroke();
+    };
+    
+    // Draw prior year line first (behind current)
+    if (showYoY) {
+      drawLine(priorData, priorColor, 1.5, true);
+    }
+    
+    // Draw fill for current period
     if (fill) {
       ctx.beginPath();
       ctx.moveTo(padding, height - padding);
@@ -66,28 +101,26 @@ export class Charts {
       ctx.fill();
     }
     
-    // Draw line
-    ctx.beginPath();
-    data.forEach((val, i) => {
-      const x = padding + i * xStep;
-      const y = height - padding - (val - min) * yScale;
-      if (i === 0) ctx.moveTo(x, y);
-      else ctx.lineTo(x, y);
-    });
+    // Draw current period line
+    drawLine(data, color, 2, false);
     
-    ctx.strokeStyle = color;
-    ctx.lineWidth = 2;
-    ctx.lineCap = 'round';
-    ctx.lineJoin = 'round';
-    ctx.stroke();
-    
-    // Draw end dot
+    // Draw end dot for current period
     const lastX = padding + (data.length - 1) * xStep;
     const lastY = height - padding - (data[data.length - 1] - min) * yScale;
     ctx.beginPath();
     ctx.arc(lastX, lastY, 3, 0, Math.PI * 2);
     ctx.fillStyle = color;
     ctx.fill();
+    
+    // Draw end dot for prior year (smaller, hollow)
+    if (showYoY) {
+      const priorLastY = height - padding - (priorData[priorData.length - 1] - min) * yScale;
+      ctx.beginPath();
+      ctx.arc(lastX, priorLastY, 2, 0, Math.PI * 2);
+      ctx.strokeStyle = priorColor;
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+    }
     
     container.innerHTML = '';
     container.appendChild(canvas);

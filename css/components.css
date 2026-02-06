@@ -2208,3 +2208,23 @@
   padding: 4px 8px;
   font-size: 0.65rem;
 }
+
+/* YoY Legend */
+.yoy-legend {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.65rem;
+  color: var(--text-secondary);
+  margin-left: 12px;
+  padding: 3px 8px;
+  background: var(--bg-tertiary);
+  border-radius: 4px;
+}
+.yoy-legend__line {
+  display: inline-block;
+  width: 16px;
+  height: 2px;
+  background: #6b7280;
+  border-top: 1px dashed #6b7280;
+}

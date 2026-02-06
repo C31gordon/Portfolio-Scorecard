@@ -222,11 +222,74 @@ export function generateHistoricalData(weeks = 12) {
   return data;
 }
 
+/**
+ * Generate prior year data for YoY comparison
+ * Takes current data and creates a realistic prior year version
+ * @param {number[]} currentData - Current period data points
+ * @param {object} options - { variance: 0.08, trend: 'up'|'down'|'flat' }
+ */
+export function generatePriorYearData(currentData, options = {}) {
+  if (!currentData || currentData.length === 0) return [];
+  
+  const variance = options.variance || 0.08; // 8% average variance
+  const trend = options.trend || 'up'; // Assume current is usually better than prior
+  
+  return currentData.map((val, i) => {
+    // Add some randomness but generally make prior year a bit worse if trend is 'up'
+    let trendAdjust = 0;
+    if (trend === 'up') trendAdjust = -variance * 0.5;
+    else if (trend === 'down') trendAdjust = variance * 0.5;
+    
+    // Random variance plus trend adjustment
+    const randomVariance = (Math.random() - 0.5) * variance * 2;
+    const adjustment = 1 + randomVariance + trendAdjust;
+    
+    return parseFloat((val * adjustment).toFixed(2));
+  });
+}
+
+/**
+ * Generate mock sparkline history for a metric
+ * @param {number} currentValue - Current metric value
+ * @param {number} points - Number of data points (default 12 weeks)
+ * @param {string} metric - Metric type for realistic variance
+ */
+export function generateMetricHistory(currentValue, points = 12, metric = 'default') {
+  const data = [];
+  let value = currentValue;
+  
+  // Metric-specific variance ranges
+  const variances = {
+    physOcc: 0.02,      // Occupancy changes slowly
+    leased: 0.025,
+    mtdClosing: 0.08,   // Closing ratio more volatile
+    woSla: 0.03,
+    delinq: 0.15,       // Delinquency can swing
+    renewalRatio: 0.04,
+    default: 0.05
+  };
+  
+  const variance = variances[metric] || variances.default;
+  
+  // Work backwards from current value
+  for (let i = points - 1; i >= 0; i--) {
+    data.unshift(value);
+    // Add some random walk for historical values
+    value = value * (1 + (Math.random() - 0.5) * variance * 2);
+    // Keep within reasonable bounds
+    value = Math.max(0, Math.min(100, value));
+  }
+  
+  return data.map(v => parseFloat(v.toFixed(2)));
+}
+
 export default {
   generateLeaseData,
   generateWorkOrderData,
   generateAgentData,
   generateFinancialData,
   generateRentRollData,
-  generateHistoricalData
+  generateHistoricalData,
+  generatePriorYearData,
+  generateMetricHistory
 };

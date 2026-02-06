@@ -12,7 +12,7 @@ import { riseProperties, risePortfolio, propertyHistory, ON_CAMPUS_DEFAULT_METRI
 
 // Metrics that should be ON by default for On-Campus properties
 const OC_DEFAULT_ON = ['woSla', 'training', 'tali', 'noiVariance'];
-import { generateLeaseData, generateWorkOrderData, generateAgentData, generateFinancialData, generateRentRollData, generateHistoricalData } from './data/mock-drilldown.js';
+import { generateLeaseData, generateWorkOrderData, generateAgentData, generateFinancialData, generateRentRollData, generateHistoricalData, generatePriorYearData } from './data/mock-drilldown.js';
 import { Charts } from './components/charts.js';
 import { DataTable } from './components/data-table.js';
 
@@ -1274,6 +1274,7 @@ class App {
               <span class="toggle__switch"></span>
               <span class="toggle__label">YoY</span>
             </label>
+            ${State.get('showYoY') ? `<span class="yoy-legend"><span class="yoy-legend__line"></span> Prior Year</span>` : ''}
           </div>
         </div>
 
@@ -1445,22 +1446,40 @@ class App {
     // Render sparkline charts after DOM update
     if (!this.pendingCharts) return;
     
+    const showYoY = State.get('showYoY');
+    
     Object.keys(this.pendingCharts).forEach(propId => {
       const { prop, hist } = this.pendingCharts[propId];
       
+      // Generate prior year data for each metric (mock data with slight degradation)
+      const priorYear = {
+        physOcc: generatePriorYearData(hist.physOcc, { trend: 'up', variance: 0.03 }),
+        leased: generatePriorYearData(hist.leased, { trend: 'up', variance: 0.04 }),
+        mtdClosing: generatePriorYearData(hist.mtdClosing, { trend: 'up', variance: 0.10 }),
+        woSla: generatePriorYearData(hist.woSla, { trend: 'up', variance: 0.05 }),
+        delinq: generatePriorYearData(hist.delinq, { trend: 'down', variance: 0.15 }), // Higher delinq in prior year
+        renewalRatio: generatePriorYearData(hist.renewalRatio, { trend: 'up', variance: 0.06 })
+      };
+      
       const chartConfigs = [
-        { id: `chart_physOcc_${propId}`, data: hist.physOcc, color: this.getSparklineColor(prop.physOcc, 'physOcc', prop.type) },
-        { id: `chart_leased_${propId}`, data: hist.leased, color: this.getSparklineColor(prop.leased, 'leased', prop.type) },
-        { id: `chart_closing_${propId}`, data: hist.mtdClosing, color: this.getSparklineColor(prop.mtdClosing, 'mtdClosing', prop.type) },
-        { id: `chart_woSla_${propId}`, data: hist.woSla, color: this.getSparklineColor(prop.woSla, 'woSla', prop.type) },
-        { id: `chart_delinq_${propId}`, data: hist.delinq, color: '#ef4444' }, // Always red for delinquency
-        { id: `chart_renewal_${propId}`, data: hist.renewalRatio, color: this.getSparklineColor(prop.renewalRatio, 'renewalRatio', prop.type) }
+        { id: `chart_physOcc_${propId}`, data: hist.physOcc, prior: priorYear.physOcc, color: this.getSparklineColor(prop.physOcc, 'physOcc', prop.type) },
+        { id: `chart_leased_${propId}`, data: hist.leased, prior: priorYear.leased, color: this.getSparklineColor(prop.leased, 'leased', prop.type) },
+        { id: `chart_closing_${propId}`, data: hist.mtdClosing, prior: priorYear.mtdClosing, color: this.getSparklineColor(prop.mtdClosing, 'mtdClosing', prop.type) },
+        { id: `chart_woSla_${propId}`, data: hist.woSla, prior: priorYear.woSla, color: this.getSparklineColor(prop.woSla, 'woSla', prop.type) },
+        { id: `chart_delinq_${propId}`, data: hist.delinq, prior: priorYear.delinq, color: '#ef4444' }, // Always red for delinquency
+        { id: `chart_renewal_${propId}`, data: hist.renewalRatio, prior: priorYear.renewalRatio, color: this.getSparklineColor(prop.renewalRatio, 'renewalRatio', prop.type) }
       ];
       
-      chartConfigs.forEach(({ id, data, color }) => {
+      chartConfigs.forEach(({ id, data, prior, color }) => {
         const container = document.getElementById(id);
         if (container && data && data.length > 0) {
-          Charts.sparkline(container, data, { color, height: 50 });
+          Charts.sparkline(container, data, { 
+            color, 
+            height: 50,
+            showYoY,
+            priorData: prior,
+            priorColor: '#6b7280' // Gray dashed line for prior year
+          });
         }
       });
     });
