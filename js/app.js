@@ -1,84 +1,340 @@
 /**
- * Main Application - Portfolio Scorecard v2
+ * Portfolio Scorecard v2 - Phase 3
+ * Full metrics table, Lead-to-Tour, Charts, YoY, Lease-up flags
  */
 
 import State from './core/state.js';
 import Router from './core/router.js';
 import Events, { EVENT } from './core/events.js';
-import { loadThresholds, calculatePropertyScore, calculatePortfolioScore, getRedFlags, getPortfolioRedFlags, getScoreColorClass, getScoreColor } from './utils/scoring.js';
+import { loadThresholds } from './utils/scoring.js';
 import { formatPercent, formatCurrency, formatNumber, formatScore, getTrend, snakeToTitle } from './utils/formatting.js';
-import { mockPortfolio, mockProperties, mockSubmarkets } from './data/mock-data.js';
+import { riseProperties, risePortfolio, propertyHistory } from './data/rise-data.js';
 import { generateLeaseData, generateWorkOrderData, generateAgentData, generateFinancialData, generateRentRollData, generateHistoricalData } from './data/mock-drilldown.js';
 import { Charts } from './components/charts.js';
 import { DataTable } from './components/data-table.js';
+
+// Metric keys for leasing properties
+const L_KEYS = ['physOcc','leased','leadToTour','delinq','woSla','mtdClosing','renewalRatio','googleStars','training','tali','propIndex','noiVariance'];
+
+// Thresholds by asset type
+const THRESHOLDS = {
+  'CON': {
+    physOcc: { green: 0.93, yellow: 0.88 },
+    leased: { green: 0.95, yellow: 0.90 },
+    leadToTour: { green: 0.30, yellow: 0.20 },
+    delinq: { green: 0.005, yellow: 0.02, inverse: true },
+    woSla: { green: 0.95, yellow: 0.88 },
+    mtdClosing: { green: 0.40, yellow: 0.28 },
+    renewalRatio: { green: 0.55, yellow: 0.48 },
+    googleStars: { green: 4.5, yellow: 3.8 },
+    training: { green: 1.0, yellow: 0.90 },
+    noiVariance: { green: 1.0, yellow: 0.95 }
+  },
+  'BFR': {
+    physOcc: { green: 0.93, yellow: 0.88 },
+    leased: { green: 0.95, yellow: 0.90 },
+    leadToTour: { green: 0.30, yellow: 0.20 },
+    delinq: { green: 0.005, yellow: 0.02, inverse: true },
+    woSla: { green: 0.95, yellow: 0.88 },
+    mtdClosing: { green: 0.40, yellow: 0.28 },
+    renewalRatio: { green: 0.55, yellow: 0.48 },
+    googleStars: { green: 4.5, yellow: 3.8 },
+    training: { green: 1.0, yellow: 0.90 },
+    noiVariance: { green: 1.0, yellow: 0.95 }
+  },
+  '55+': {
+    physOcc: { green: 0.93, yellow: 0.88 },
+    leased: { green: 0.95, yellow: 0.90 },
+    leadToTour: { green: 0.30, yellow: 0.20 },
+    delinq: { green: 0.00025, yellow: 0.01, inverse: true },
+    woSla: { green: 0.95, yellow: 0.88 },
+    mtdClosing: { green: 0.30, yellow: 0.20 },
+    renewalRatio: { green: 0.75, yellow: 0.68 },
+    googleStars: { green: 4.5, yellow: 3.8 },
+    training: { green: 1.0, yellow: 0.90 },
+    noiVariance: { green: 1.0, yellow: 0.95 }
+  },
+  'STU': {
+    physOcc: { green: 0.98, yellow: 0.94 },
+    leased: { green: 0.98, yellow: 0.94 },
+    leadToTour: { green: 0.30, yellow: 0.20 },
+    delinq: { green: 0.01, yellow: 0.015, inverse: true },
+    woSla: { green: 0.95, yellow: 0.88 },
+    mtdClosing: { green: 0.60, yellow: 0.45 },
+    renewalRatio: { green: 0.45, yellow: 0.35 },
+    googleStars: { green: 4.5, yellow: 3.8 },
+    training: { green: 1.0, yellow: 0.90 },
+    noiVariance: { green: 1.0, yellow: 0.95 }
+  }
+};
+
+// Metric info for tooltips
+const METRIC_INFO = {
+  physOcc: { title: 'Physical Occupancy %', desc: 'Occupied units / total rentable units' },
+  leased: { title: 'Leased %', desc: 'Signed leases (current + future) / total units' },
+  leadToTour: { title: 'Lead→Tour Conversion', desc: 'Tours / online leads (clicks). Measures marketing effectiveness.' },
+  delinq: { title: 'Delinquency % (>30 Days)', desc: 'Outstanding balances >30 days / total potential rent' },
+  woSla: { title: 'Work Order SLA %', desc: 'Work orders completed within SLA timeframe' },
+  mtdClosing: { title: 'MTD Closing Ratio', desc: 'Leases signed / total tours. Capped at 100% display.' },
+  renewalRatio: { title: 'Renewal Ratio', desc: 'Renewals / expiring leases' },
+  googleStars: { title: 'Google Rating', desc: 'Average Google review rating' },
+  training: { title: 'Training Completion %', desc: 'Staff training modules completed' },
+  tali: { title: 'TALi Score', desc: 'J Turner resident satisfaction index' },
+  propIndex: { title: 'ORA Score', desc: 'Online Reputation Assessment (J Turner)' },
+  noiVariance: { title: 'NOI Variance', desc: 'Actual NOI / Budget NOI. 100% = on budget.' }
+};
+
+// Turner benchmarks
+const TURNER_TALI_AVG = 6.83;
+const RISE_TALI_AVG = 7.43;
+const TURNER_PI_AVG = 8.53;
+const RISE_PI_AVG = 8.63;
 
 class App {
   constructor() {
     this.config = null;
     this.initialized = false;
+    this.properties = [];
+    this.leaseUpState = {};
+    this.metricToggles = {};
+    this.expandedRegions = {};
+    this.expandedProperty = null;
   }
-  
-  /**
-   * Initialize the application
-   */
+
   async init() {
     if (this.initialized) return;
-    
+
     try {
-      // Load config
       await this.loadConfig();
+      this.loadState();
       
-      // Load thresholds
-      await loadThresholds();
+      // Load RISE property data
+      this.properties = riseProperties;
       
-      // Initialize state with mock data
       State.set({
-        portfolio: mockPortfolio,
-        properties: mockProperties,
-        submarkets: mockSubmarkets,
+        portfolio: risePortfolio,
+        properties: this.properties,
         isLoading: false
       });
-      
-      // Apply theme
+
       document.documentElement.setAttribute('data-theme', State.get('theme'));
-      
-      // Initialize router
       Router.init();
-      
-      // Setup event listeners
       this.setupEventListeners();
-      
-      // Subscribe to state changes
       this.setupStateSubscriptions();
-      
-      // Render initial view
       this.render();
       
       this.initialized = true;
-      console.log('Portfolio Scorecard v2 initialized');
-      
+      console.log('Portfolio Scorecard v2 Phase 3 initialized');
     } catch (error) {
-      console.error('Failed to initialize app:', error);
+      console.error('Failed to initialize:', error);
       State.set({ error: error.message });
     }
   }
-  
-  /**
-   * Load configuration
-   */
+
   async loadConfig() {
     try {
       const response = await fetch('./config/config.json');
       this.config = await response.json();
     } catch (error) {
       console.warn('Failed to load config, using defaults');
-      this.config = { company: { name: 'Portfolio Scorecard' } };
+      this.config = { company: { name: 'RISE Residential' } };
     }
   }
-  
-  /**
-   * Setup event listeners
-   */
+
+  loadState() {
+    try {
+      const saved = localStorage.getItem('scorecard_state');
+      if (saved) {
+        const state = JSON.parse(saved);
+        this.leaseUpState = state.leaseUp || {};
+        this.metricToggles = state.toggles || {};
+        this.expandedRegions = state.regions || {};
+      }
+    } catch (e) {
+      console.warn('Could not load saved state');
+    }
+  }
+
+  saveState() {
+    try {
+      localStorage.setItem('scorecard_state', JSON.stringify({
+        leaseUp: this.leaseUpState,
+        toggles: this.metricToggles,
+        regions: this.expandedRegions
+      }));
+    } catch (e) {
+      console.warn('Could not save state');
+    }
+  }
+
+  isLeaseUp(prop) {
+    const key = `lu_${prop.name}`;
+    if (key in this.leaseUpState) return this.leaseUpState[key];
+    // Auto-detect: < 30% occupancy = lease-up
+    if (prop.physOcc !== null && prop.physOcc < 0.30) return true;
+    return prop.defaultLeaseUp || false;
+  }
+
+  setLeaseUp(propName, value) {
+    this.leaseUpState[`lu_${propName}`] = value;
+    // When setting to lease-up, disable certain metrics
+    if (value) {
+      ['physOcc', 'leased', 'delinq', 'renewalRatio'].forEach(m => {
+        this.metricToggles[`${propName}_${m}`] = false;
+      });
+    } else {
+      // Re-enable when stabilized
+      ['physOcc', 'leased', 'delinq', 'renewalRatio'].forEach(m => {
+        delete this.metricToggles[`${propName}_${m}`];
+      });
+    }
+    this.saveState();
+    this.render();
+  }
+
+  isMetricActive(propName, metric) {
+    const key = `${propName}_${metric}`;
+    if (key in this.metricToggles) return this.metricToggles[key];
+    return true;
+  }
+
+  setMetricToggle(propName, metric, active) {
+    this.metricToggles[`${propName}_${metric}`] = active;
+    this.saveState();
+    this.render();
+  }
+
+  getMetricColor(value, metric, assetType) {
+    if (value === null || value === undefined) return 'na';
+    const t = THRESHOLDS[assetType]?.[metric];
+    if (!t) return 'na';
+    
+    if (t.inverse) {
+      if (value <= t.green) return 'green';
+      if (value <= t.yellow) return 'yellow';
+      return 'red';
+    } else {
+      if (value >= t.green) return 'green';
+      if (value >= t.yellow) return 'yellow';
+      return 'red';
+    }
+  }
+
+  getJTurnerColor(value, turnerAvg) {
+    if (value === null || value === undefined) return 'na';
+    const diff = ((value - turnerAvg) / turnerAvg) * 100;
+    if (diff >= 5) return 'green';
+    if (diff >= 0) return 'yellow';
+    return 'red';
+  }
+
+  evalMetric(prop, key) {
+    const type = prop.type;
+    let val, fmt, color;
+    const pct = v => v != null ? (v * 100).toFixed(1) + '%' : '—';
+    const pct2 = v => v != null ? (v * 100).toFixed(2) + '%' : '—';
+
+    switch (key) {
+      case 'physOcc':
+        val = prop.physOcc;
+        fmt = pct(val);
+        color = this.getMetricColor(val, 'physOcc', type);
+        break;
+      case 'leased':
+        val = prop.leased;
+        fmt = pct(val);
+        color = this.getMetricColor(val, 'leased', type);
+        break;
+      case 'leadToTour':
+        val = prop.leadToTour;
+        fmt = val != null ? pct(val) : '—';
+        color = val != null ? this.getMetricColor(val, 'leadToTour', type) : 'na';
+        break;
+      case 'delinq':
+        val = prop.delinq;
+        fmt = pct2(val);
+        color = this.getMetricColor(val, 'delinq', type);
+        break;
+      case 'woSla':
+        val = prop.woSla;
+        fmt = pct(val);
+        color = this.getMetricColor(val, 'woSla', type);
+        break;
+      case 'mtdClosing':
+        val = prop.mtdClosing;
+        fmt = val != null ? pct(Math.min(val, 1.0)) : '—';
+        color = val != null ? this.getMetricColor(val, 'mtdClosing', type) : 'na';
+        break;
+      case 'renewalRatio':
+        val = prop.renewalRatio;
+        fmt = val != null ? pct(val) : '—';
+        color = val != null ? this.getMetricColor(val, 'renewalRatio', type) : 'na';
+        break;
+      case 'googleStars':
+        val = prop.googleStars;
+        fmt = val != null ? val.toFixed(1) + (prop.googleReviews ? ` (${prop.googleReviews})` : '') : '—';
+        color = val != null ? this.getMetricColor(val, 'googleStars', type) : 'na';
+        break;
+      case 'training':
+        val = prop.training;
+        fmt = val != null ? pct(val) : '—';
+        color = val != null ? this.getMetricColor(val, 'training', type) : 'na';
+        break;
+      case 'tali':
+        val = prop.tali;
+        fmt = val != null ? val.toFixed(1) : '—';
+        color = this.getJTurnerColor(val, TURNER_TALI_AVG);
+        break;
+      case 'propIndex':
+        val = prop.propIndex;
+        fmt = val != null ? val.toFixed(1) : '—';
+        color = this.getJTurnerColor(val, TURNER_PI_AVG);
+        break;
+      case 'noiVariance':
+        val = prop.noiVariance;
+        fmt = val != null ? (val * 100).toFixed(1) + '%' : '—';
+        color = val != null ? this.getMetricColor(val, 'noiVariance', type) : 'na';
+        break;
+      default:
+        val = null;
+        fmt = '—';
+        color = 'na';
+    }
+
+    const active = this.isMetricActive(prop.name, key);
+    return { key, val, fmt, color: active ? color : 'excluded', active, rawColor: color };
+  }
+
+  calcPropertyScore(prop) {
+    let total = 0, count = 0;
+    const pts = { green: 5, yellow: 2, red: 0 };
+    
+    L_KEYS.forEach(key => {
+      const m = this.evalMetric(prop, key);
+      if (m.active && m.rawColor !== 'na') {
+        total += pts[m.rawColor] || 0;
+        count++;
+      }
+    });
+    
+    return count > 0 ? { score: total / count, count } : { score: null, count: 0 };
+  }
+
+  calcWeightedScore(properties) {
+    let totalWeight = 0, totalScore = 0;
+    
+    properties.forEach(prop => {
+      const result = this.calcPropertyScore(prop);
+      if (result.score !== null) {
+        const weight = prop.beds || prop.units || 1;
+        totalWeight += weight;
+        totalScore += result.score * weight;
+      }
+    });
+    
+    return totalWeight > 0 ? totalScore / totalWeight : null;
+  }
+
   setupEventListeners() {
     // Theme toggle
     document.addEventListener('click', (e) => {
@@ -87,117 +343,108 @@ class App {
         State.set({ theme: currentTheme === 'dark' ? 'light' : 'dark' });
       }
     });
-    
+
     // Period selector
     document.addEventListener('click', (e) => {
       const periodBtn = e.target.closest('[data-period]');
       if (periodBtn) {
         State.set({ dateRange: periodBtn.dataset.period });
-        Events.emit(EVENT.DATE_RANGE_CHANGED, periodBtn.dataset.period);
+        this.render();
       }
     });
-    
+
     // YoY toggle
     document.addEventListener('change', (e) => {
       if (e.target.matches('[data-action="toggle-yoy"]')) {
         State.set({ showYoY: e.target.checked });
+        this.render();
       }
     });
-    
+
     // Search
     document.addEventListener('input', (e) => {
       if (e.target.matches('[data-action="search"]')) {
         State.set({ filters: { ...State.get('filters'), search: e.target.value } });
-        Events.emit(EVENT.SEARCH_CHANGED, e.target.value);
+        this.render();
       }
     });
-    
-    // Property click
+
+    // Property drill-down toggle
     document.addEventListener('click', (e) => {
-      const propertyRow = e.target.closest('[data-property-id]');
-      if (propertyRow) {
-        Router.navigate(`/property/${propertyRow.dataset.propertyId}`);
+      const drillLink = e.target.closest('[data-drill-property]');
+      if (drillLink) {
+        const propName = drillLink.dataset.drillProperty;
+        this.expandedProperty = this.expandedProperty === propName ? null : propName;
+        this.render();
       }
     });
-    
-    // Back button
+
+    // Region collapse toggle
     document.addEventListener('click', (e) => {
-      if (e.target.closest('[data-action="back"]')) {
-        Router.back();
+      const regionHeader = e.target.closest('[data-toggle-region]');
+      if (regionHeader) {
+        const region = regionHeader.dataset.toggleRegion;
+        this.expandedRegions[region] = !this.expandedRegions[region];
+        this.saveState();
+        this.render();
       }
     });
-    
-    // Drill-down card click
-    document.addEventListener('click', (e) => {
-      const card = e.target.closest('[data-route]');
-      if (card && !card.dataset.propertyId) {
-        e.preventDefault();
-        Router.navigate(card.dataset.route);
+
+    // Lease-up toggle
+    document.addEventListener('change', (e) => {
+      if (e.target.matches('[data-leaseup-toggle]')) {
+        const propName = e.target.dataset.leaseupToggle;
+        this.setLeaseUp(propName, e.target.checked);
+      }
+    });
+
+    // Metric toggle
+    document.addEventListener('change', (e) => {
+      if (e.target.matches('[data-metric-toggle]')) {
+        const [propName, metric] = e.target.dataset.metricToggle.split('::');
+        this.setMetricToggle(propName, metric, e.target.checked);
       }
     });
   }
-  
-  /**
-   * Setup state subscriptions
-   */
+
   setupStateSubscriptions() {
     State.subscribe('theme', (theme) => {
       document.documentElement.setAttribute('data-theme', theme);
-      this.renderHeader(); // Re-render header to update toggle
-    });
-    
-    State.subscribe('currentView', () => {
-      this.render();
-    });
-    
-    State.subscribe('selectedProperty', () => {
-      this.render();
-    });
-    
-    State.subscribe('filters', () => {
-      if (State.get('currentView') === 'portfolio') {
-        this.renderPortfolio();
-      }
-    });
-    
-    State.subscribe('dateRange', () => {
-      this.render();
+      this.renderHeader();
     });
   }
-  
-  /**
-   * Main render function
-   */
-  render() {
-    const view = State.get('currentView');
-    const main = document.getElementById('main');
-    
-    switch (view) {
-      case 'portfolio':
-        this.renderPortfolio();
-        break;
-      case 'property':
-        this.renderProperty();
-        break;
-      case 'data':
-        this.renderDataView();
-        break;
-      default:
-        this.renderPortfolio();
+
+  getFilteredProperties() {
+    const filters = State.get('filters') || {};
+    let properties = this.properties;
+
+    if (filters.search) {
+      const search = filters.search.toLowerCase();
+      properties = properties.filter(p =>
+        p.name.toLowerCase().includes(search) ||
+        p.city?.toLowerCase().includes(search)
+      );
     }
-    
-    // Update header
-    this.renderHeader();
+
+    return properties;
   }
-  
-  /**
-   * Render header
-   */
+
+  render() {
+    const main = document.getElementById('main');
+    if (!main) return;
+
+    this.renderHeader();
+    this.renderDashboard();
+  }
+
   renderHeader() {
     const header = document.getElementById('header');
+    if (!header) return;
+
     const theme = State.get('theme');
     const dateRange = State.get('dateRange');
-    
+    const showYoY = State.get('showYoY');
+
     header.innerHTML = `
       <div class="header__logo">
         <span>${this.config?.company?.name || 'Portfolio Scorecard'}</span>
@@ -212,653 +459,293 @@ class App {
       </nav>
       <div class="header__actions">
         <label class="toggle">
-          <input type="checkbox" class="toggle__input" data-action="toggle-yoy" ${State.get('showYoY') ? 'checked' : ''}>
+          <input type="checkbox" class="toggle__input" data-action="toggle-yoy" ${showYoY ? 'checked' : ''}>
           <span class="toggle__switch"></span>
           <span class="toggle__label">YoY</span>
         </label>
-        <button class="btn btn--secondary" data-action="toggle-theme" title="Toggle theme" style="gap: var(--space-2);">
-          <span style="opacity: ${theme === 'dark' ? '0.4' : '1'}">☀️</span>
-          <span style="opacity: ${theme === 'dark' ? '1' : '0.4'}">🌙</span>
+        <button class="btn btn--secondary btn--icon" data-action="toggle-theme" title="Toggle theme">
+          ${theme === 'dark' ? '☀️' : '🌙'}
         </button>
       </div>
     `;
   }
-  
-  /**
-   * Render portfolio dashboard (Level 0)
-   */
-  renderPortfolio() {
+
+  renderDashboard() {
     const main = document.getElementById('main');
     const properties = this.getFilteredProperties();
-    const portfolio = State.get('portfolio');
-    const portfolioScore = calculatePortfolioScore(properties);
-    const redFlags = getPortfolioRedFlags(properties);
-    const criticalFlags = redFlags.filter(f => f.severity === 'critical');
-    
-    main.innerHTML = `
-      <div class="breadcrumbs">
-        <span class="breadcrumbs__current">Portfolio Dashboard</span>
-      </div>
-      
-      <div class="page-header">
-        <div>
-          <h1 class="page-header__title">Portfolio Overview</h1>
-          <p class="page-header__subtitle">${portfolio.totalProperties} properties • ${formatNumber(portfolio.totalUnits)} units</p>
-        </div>
-        <div class="page-header__actions">
-          <input type="text" class="input" placeholder="Search properties..." data-action="search" value="${State.get('filters').search || ''}">
-          <button class="btn btn--primary">Generate Report</button>
-        </div>
-      </div>
-      
-      <!-- Summary Cards -->
-      <div class="grid grid--4 section">
-        <div class="metric-card">
-          <div class="metric-card__header">
-            <span class="metric-card__label">Portfolio Score</span>
-            <span class="score-pill score-pill--${getScoreColorClass(portfolioScore)}">${formatScore(portfolioScore)}</span>
-          </div>
-          <div class="metric-card__value">${formatScore(portfolioScore)}</div>
-        </div>
-        
-        <div class="metric-card">
-          <div class="metric-card__header">
-            <span class="metric-card__label">Avg Occupancy</span>
-          </div>
-          <div class="metric-card__value">${formatPercent(this.getAvgMetric(properties, 'occupancy', 'physical'))}</div>
-        </div>
-        
-        <div class="metric-card">
-          <div class="metric-card__header">
-            <span class="metric-card__label">Avg Delinquency</span>
-          </div>
-          <div class="metric-card__value">${formatPercent(this.getAvgMetric(properties, 'delinquency', 'current'))}</div>
-        </div>
-        
-        <div class="metric-card ${criticalFlags.length > 0 ? 'metric-card--danger' : ''}">
-          <div class="metric-card__header">
-            <span class="metric-card__label">Red Flags</span>
-          </div>
-          <div class="metric-card__value">${criticalFlags.length}</div>
-          <div class="metric-card__trend metric-card__trend--${criticalFlags.length > 0 ? 'down' : 'up'}">
-            ${criticalFlags.length > 0 ? `${criticalFlags.length} critical issues` : 'All clear'}
-          </div>
-        </div>
-      </div>
-      
-      <!-- Red Flags Section -->
-      ${criticalFlags.length > 0 ? `
-        <div class="section">
-          <div class="section__header">
-            <h2 class="section__title">🚨 Critical Issues</h2>
-          </div>
-          <div class="grid grid--2">
-            ${criticalFlags.slice(0, 6).map(flag => `
-              <div class="alert alert--danger">
-                <div class="alert__content">
-                  <div class="alert__title">${flag.propertyName}</div>
-                  <div class="alert__message">${snakeToTitle(flag.metric)}: ${flag.value}${flag.unit === '%' ? '%' : ''} (threshold: ${flag.threshold}${flag.unit === '%' ? '%' : ''})</div>
-                </div>
-              </div>
-            `).join('')}
-          </div>
-        </div>
-      ` : ''}
-      
-      <!-- Properties List -->
-      <div class="section">
-        <div class="section__header">
-          <h2 class="section__title">Properties</h2>
-          <span class="badge badge--primary">${properties.length} properties</span>
-        </div>
-        
-        <div class="properties-list" style="display: flex; flex-direction: column; gap: var(--space-3);">
-          ${properties.map(property => {
-            const score = calculatePropertyScore(property);
-            const flags = getRedFlags(property);
-            return `
-              <div class="property-row" data-property-id="${property.id}">
-                <div>
-                  <div class="property-row__name">${property.name}</div>
-                  <div class="property-row__type">${property.type} • ${property.address.city}, ${property.address.state}</div>
-                </div>
-                <div class="property-row__metric">
-                  <div class="score-pill score-pill--${getScoreColorClass(score)}">${formatScore(score)}</div>
-                </div>
-                <div class="property-row__metric">
-                  <div class="property-row__metric-value">${formatPercent(property.metrics.occupancy.physical)}</div>
-                  <div class="property-row__metric-label">Occupancy</div>
-                </div>
-                <div class="property-row__metric">
-                  <div class="property-row__metric-value">${formatPercent(property.metrics.delinquency.current)}</div>
-                  <div class="property-row__metric-label">Delinquency</div>
-                </div>
-                <div class="property-row__metric">
-                  <div class="property-row__metric-value">${formatPercent(property.metrics.leasing.closing_ratio)}</div>
-                  <div class="property-row__metric-label">Closing</div>
-                </div>
-                <div class="property-row__metric">
-                  <div class="property-row__metric-value">${formatPercent(property.metrics.retention.renewal_ratio)}</div>
-                  <div class="property-row__metric-label">Renewal</div>
-                </div>
-                <div class="property-row__metric">
-                  ${flags.filter(f => f.severity === 'critical').length > 0 
-                    ? `<span class="badge badge--danger">${flags.filter(f => f.severity === 'critical').length} issues</span>`
-                    : flags.filter(f => f.severity === 'warning').length > 0
-                      ? `<span class="badge badge--warning">${flags.filter(f => f.severity === 'warning').length} warnings</span>`
-                      : `<span class="badge badge--success">OK</span>`
-                  }
-                </div>
-                <div>→</div>
-              </div>
-            `;
-          }).join('')}
-        </div>
-      </div>
-    `;
-  }
-  
-  /**
-   * Render property detail (Level 1)
-   */
-  renderProperty() {
-    const main = document.getElementById('main');
-    const propertyId = State.get('selectedProperty')?.id;
-    const property = mockProperties.find(p => p.id === propertyId);
-    
-    if (!property) {
-      main.innerHTML = '<div class="alert alert--danger">Property not found</div>';
-      return;
-    }
-    
-    const score = calculatePropertyScore(property);
-    const flags = getRedFlags(property);
-    const submarket = mockSubmarkets.find(s => s.id === property.submarket_id);
-    
-    main.innerHTML = `
-      <div class="breadcrumbs">
-        <span class="breadcrumbs__item">
-          <a href="/" class="breadcrumbs__link" data-route="/">Portfolio</a>
-          <span class="breadcrumbs__separator">›</span>
-        </span>
-        <span class="breadcrumbs__current">${property.name}</span>
-      </div>
-      
-      <div class="page-header">
-        <div>
-          <button class="btn btn--ghost" data-action="back">← Back</button>
-          <h1 class="page-header__title">${property.name}</h1>
-          <p class="page-header__subtitle">
-            <span class="badge badge--primary">${property.type}</span>
-            ${property.units} units • ${property.address.city}, ${property.address.state}
-          </p>
-        </div>
-        <div class="page-header__actions">
-          <span class="score-pill score-pill--lg score-pill--${getScoreColorClass(score)}">${formatScore(score)}</span>
-          <button class="btn btn--primary">Generate Report</button>
-        </div>
-      </div>
-      
-      <!-- Red Flags -->
-      ${flags.length > 0 ? `
-        <div class="section">
-          ${flags.filter(f => f.severity === 'critical').map(flag => `
-            <div class="alert alert--danger">
-              <div class="alert__content">
-                <div class="alert__title">${snakeToTitle(flag.metric)}: ${flag.value}${flag.unit === '%' ? '%' : ''}</div>
-                <div class="alert__message">Threshold: ${flag.threshold}${flag.unit === '%' ? '%' : ''}</div>
-              </div>
-            </div>
-          `).join('')}
-          ${flags.filter(f => f.severity === 'warning').map(flag => `
-            <div class="alert alert--warning">
-              <div class="alert__content">
-                <div class="alert__title">${snakeToTitle(flag.metric)}: ${flag.value}${flag.unit === '%' ? '%' : ''}</div>
-                <div class="alert__message">Target: ${flag.threshold}${flag.unit === '%' ? '%' : ''}</div>
-              </div>
-            </div>
-          `).join('')}
-        </div>
-      ` : ''}
-      
-      <!-- Submarket Context -->
-      ${submarket ? `
-        <div class="card section">
-          <div class="card__header">
-            <span class="card__title">📍 Submarket: ${submarket.name}</span>
-          </div>
-          <div class="card__body">
-            <div class="grid grid--4">
-              <div>
-                <div style="font-size: var(--text-sm); color: var(--text-secondary);">Market Occupancy</div>
-                <div style="font-size: var(--text-xl); font-weight: var(--font-bold);">${formatPercent(submarket.metrics.avg_occupancy)}</div>
-              </div>
-              <div>
-                <div style="font-size: var(--text-sm); color: var(--text-secondary);">Market Rent</div>
-                <div style="font-size: var(--text-xl); font-weight: var(--font-bold);">${formatCurrency(submarket.metrics.avg_rent)}</div>
-              </div>
-              <div>
-                <div style="font-size: var(--text-sm); color: var(--text-secondary);">YoY Rent Growth</div>
-                <div style="font-size: var(--text-xl); font-weight: var(--font-bold);">${formatPercent(submarket.metrics.rent_growth_yoy)}</div>
-              </div>
-              <div>
-                <div style="font-size: var(--text-sm); color: var(--text-secondary);">Absorption</div>
-                <div style="font-size: var(--text-xl); font-weight: var(--font-bold);">${formatPercent(submarket.metrics.absorption_rate)}</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      ` : ''}
-      
-      <!-- Metrics Sections -->
-      <div class="grid grid--3 section">
-        <!-- Occupancy -->
-        <div class="chart-tile">
-          <div class="chart-tile__header">
-            <span class="chart-tile__title">Occupancy</span>
-          </div>
-          <div class="card__body">
-            <div style="display: grid; gap: var(--space-3);">
-              <div style="display: flex; justify-content: space-between; align-items: center;">
-                <span>Physical</span>
-                <span class="score-pill score-pill--sm score-pill--${this.getMetricColor(property.metrics.occupancy.physical, 'physical_occupancy', property.type)}">${formatPercent(property.metrics.occupancy.physical)}</span>
-              </div>
-              <div style="display: flex; justify-content: space-between; align-items: center;">
-                <span>Economic</span>
-                <span>${formatPercent(property.metrics.occupancy.economic)}</span>
-              </div>
-              <div style="display: flex; justify-content: space-between; align-items: center;">
-                <span>Leased</span>
-                <span class="score-pill score-pill--sm score-pill--${this.getMetricColor(property.metrics.occupancy.leased, 'leased_percent', property.type)}">${formatPercent(property.metrics.occupancy.leased)}</span>
-              </div>
-            </div>
-          </div>
-        </div>
-        
-        <!-- Leasing Funnel -->
-        <div class="chart-tile">
-          <div class="chart-tile__header">
-            <span class="chart-tile__title">Leasing Funnel (MTD)</span>
-          </div>
-          <div class="card__body">
-            <div style="display: grid; gap: var(--space-3);">
-              <div style="display: flex; justify-content: space-between; align-items: center;">
-                <span>Leads</span>
-                <span>${formatNumber(property.metrics.leasing.mtd_leads)}</span>
-              </div>
-              <div style="display: flex; justify-content: space-between; align-items: center;">
-                <span>Tours</span>
-                <span>${formatNumber(property.metrics.leasing.mtd_tours)} (${formatPercent(property.metrics.leasing.lead_to_tour_pct)})</span>
-              </div>
-              <div style="display: flex; justify-content: space-between; align-items: center;">
-                <span>Leases</span>
-                <span>${formatNumber(property.metrics.leasing.mtd_leases)}</span>
-              </div>
-              <div style="display: flex; justify-content: space-between; align-items: center;">
-                <span>Closing Ratio</span>
-                <span class="score-pill score-pill--sm score-pill--${this.getMetricColor(property.metrics.leasing.closing_ratio, 'closing_ratio', property.type)}">${formatPercent(property.metrics.leasing.closing_ratio)}</span>
-              </div>
-            </div>
-          </div>
-        </div>
-        
-        <!-- Revenue -->
-        <div class="chart-tile">
-          <div class="chart-tile__header">
-            <span class="chart-tile__title">Revenue</span>
-          </div>
-          <div class="card__body">
-            <div style="display: grid; gap: var(--space-3);">
-              <div style="display: flex; justify-content: space-between; align-items: center;">
-                <span>Avg Rent</span>
-                <span>${formatCurrency(property.metrics.revenue.avg_rent)}</span>
-              </div>
-              <div style="display: flex; justify-content: space-between; align-items: center;">
-                <span>New Trade-Out</span>
-                <span style="color: ${property.metrics.revenue.new_lease_trade_out >= 0 ? 'var(--success)' : 'var(--danger)'}">
-                  ${property.metrics.revenue.new_lease_trade_out >= 0 ? '+' : ''}${formatPercent(property.metrics.revenue.new_lease_trade_out)}
-                </span>
-              </div>
-              <div style="display: flex; justify-content: space-between; align-items: center;">
-                <span>Concessions MTD</span>
-                <span>${formatCurrency(property.metrics.revenue.concessions_mtd)}</span>
-              </div>
-            </div>
-          </div>
-        </div>
-        
-        <!-- Delinquency -->
-        <div class="chart-tile">
-          <div class="chart-tile__header">
-            <span class="chart-tile__title">Delinquency</span>
-          </div>
-          <div class="card__body">
-            <div style="display: grid; gap: var(--space-3);">
-              <div style="display: flex; justify-content: space-between; align-items: center;">
-                <span>Current</span>
-                <span class="score-pill score-pill--sm score-pill--${this.getMetricColor(property.metrics.delinquency.current, 'delinquency', property.type, true)}">${formatPercent(property.metrics.delinquency.current)}</span>
-              </div>
-              <div style="display: flex; justify-content: space-between; align-items: center;">
-                <span>30-Day</span>
-                <span>${formatPercent(property.metrics.delinquency['30_day'])}</span>
-              </div>
-              <div style="display: flex; justify-content: space-between; align-items: center;">
-                <span>60-Day</span>
-                <span>${formatPercent(property.metrics.delinquency['60_day'])}</span>
-              </div>
-              <div style="display: flex; justify-content: space-between; align-items: center;">
-                <span>90+ Day</span>
-                <span>${formatPercent(property.metrics.delinquency['90_plus'])}</span>
-              </div>
-            </div>
-          </div>
-        </div>
-        
-        <!-- Retention -->
-        <div class="chart-tile">
-          <div class="chart-tile__header">
-            <span class="chart-tile__title">Retention</span>
-          </div>
-          <div class="card__body">
-            <div style="display: grid; gap: var(--space-3);">
-              <div style="display: flex; justify-content: space-between; align-items: center;">
-                <span>Renewal Ratio</span>
-                <span class="score-pill score-pill--sm score-pill--${this.getMetricColor(property.metrics.retention.renewal_ratio, 'renewal_ratio', property.type)}">${formatPercent(property.metrics.retention.renewal_ratio)}</span>
-              </div>
-              <div style="display: flex; justify-content: space-between; align-items: center;">
-                <span>Renewals MTD</span>
-                <span>${formatNumber(property.metrics.retention.mtd_renewals)}</span>
-              </div>
-              <div style="display: flex; justify-content: space-between; align-items: center;">
-                <span>Move-Outs MTD</span>
-                <span>${formatNumber(property.metrics.retention.mtd_move_outs)}</span>
-              </div>
-              <div style="display: flex; justify-content: space-between; align-items: center;">
-                <span>Avg Tenancy</span>
-                <span>${property.metrics.retention.avg_tenancy_months} mo</span>
-              </div>
-            </div>
-          </div>
-        </div>
-        
-        <!-- Reputation -->
-        <div class="chart-tile">
-          <div class="chart-tile__header">
-            <span class="chart-tile__title">Reputation</span>
-          </div>
-          <div class="card__body">
-            <div style="display: grid; gap: var(--space-3);">
-              <div style="display: flex; justify-content: space-between; align-items: center;">
-                <span>Google Rating</span>
-                <span class="score-pill score-pill--sm score-pill--${this.getMetricColor(property.metrics.reputation.google_rating, 'google_rating', property.type)}">${property.metrics.reputation.google_rating} ⭐</span>
-              </div>
-              <div style="display: flex; justify-content: space-between; align-items: center;">
-                <span>Reviews</span>
-                <span>${formatNumber(property.metrics.reputation.google_reviews)}</span>
-              </div>
-              <div style="display: flex; justify-content: space-between; align-items: center;">
-                <span>TALi Score</span>
-                <span>${property.metrics.reputation.tali_score}</span>
-              </div>
-              <div style="display: flex; justify-content: space-between; align-items: center;">
-                <span>ORA Score</span>
-                <span>${property.metrics.reputation.ora_score}</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      
-      ${this.getDrillDownLinks(property.id)}
-    `;
-    
-    // Render sparklines after DOM is ready
-    setTimeout(() => this.renderPropertyCharts(property), 0);
-  }
-  
-  /**
-   * Render charts in property view
-   */
-  renderPropertyCharts(property) {
-    const historical = generateHistoricalData(8);
-    
-    // Add sparklines to metric cards if containers exist
-    document.querySelectorAll('.metric-card__sparkline').forEach((container, i) => {
-      const dataKey = container.dataset.metric;
-      if (historical[dataKey]) {
-        Charts.sparkline(container, historical[dataKey].map(d => d.value), {
-          color: dataKey === 'delinquency' ? '#ef4444' : '#6366f1'
-        });
-      }
+    const portfolioScore = this.calcWeightedScore(properties);
+
+    // Group by RD
+    const byRD = {};
+    properties.forEach(p => {
+      if (!byRD[p.rd]) byRD[p.rd] = [];
+      byRD[p.rd].push(p);
     });
-  }
-  
-  /**
-   * Render data view (Level 2)
-   */
-  renderDataView() {
-    const main = document.getElementById('main');
-    const propertyId = State.get('selectedProperty')?.id;
-    const dataView = State.get('selectedDataView');
-    const property = mockProperties.find(p => p.id === propertyId);
-    
-    if (!property) {
-      main.innerHTML = '<div class="alert alert--danger">Property not found</div>';
-      return;
-    }
-    
-    const viewConfig = {
-      leases: {
-        title: 'Lease Activity',
-        icon: '📝',
-        getData: () => generateLeaseData(propertyId),
-        columns: [
-          { key: 'unit', label: 'Unit', width: '80px' },
-          { key: 'floorplan', label: 'Floorplan' },
-          { key: 'resident', label: 'Resident' },
-          { key: 'rent', label: 'Rent', render: (v) => `$${v.toLocaleString()}` },
-          { key: 'agent', label: 'Agent' },
-          { key: 'source', label: 'Source' },
-          { key: 'signDate', label: 'Signed' },
-          { key: 'status', label: 'Status', render: (v) => `<span class="badge badge--${v === 'Signed' ? 'success' : v === 'Pending' ? 'warning' : 'danger'}">${v}</span>` }
-        ]
-      },
-      workorders: {
-        title: 'Work Orders',
-        icon: '🔧',
-        getData: () => generateWorkOrderData(propertyId),
-        columns: [
-          { key: 'unit', label: 'Unit', width: '80px' },
-          { key: 'category', label: 'Category' },
-          { key: 'priority', label: 'Priority', render: (v) => `<span class="badge badge--${v === 'Emergency' ? 'danger' : v === 'Urgent' ? 'warning' : 'primary'}">${v}</span>` },
-          { key: 'tech', label: 'Technician' },
-          { key: 'createDate', label: 'Created' },
-          { key: 'completedDate', label: 'Completed', render: (v) => v || '—' },
-          { key: 'daysToComplete', label: 'Days', render: (v) => v != null ? v : '—' },
-          { key: 'status', label: 'Status', render: (v) => `<span class="badge badge--${v === 'Completed' ? 'success' : v === 'Open' ? 'danger' : 'warning'}">${v}</span>` }
-        ]
-      },
-      agents: {
-        title: 'Agent Performance',
-        icon: '👤',
-        getData: () => generateAgentData(propertyId),
-        columns: [
-          { key: 'name', label: 'Agent' },
-          { key: 'leads', label: 'Leads' },
-          { key: 'tours', label: 'Tours' },
-          { key: 'apps', label: 'Apps' },
-          { key: 'leases', label: 'Leases' },
-          { key: 'leadToTour', label: 'Lead→Tour', render: (v) => `${v}%` },
-          { key: 'closingRatio', label: 'Closing', render: (v) => `${v}%` },
-          { key: 'avgResponseMin', label: 'Avg Response', render: (v) => `${v} min` }
-        ]
-      },
-      financials: {
-        title: 'Financial Detail',
-        icon: '💰',
-        getData: () => generateFinancialData(propertyId),
-        columns: [
-          { key: 'code', label: 'GL Code', width: '80px' },
-          { key: 'name', label: 'Category' },
-          { key: 'actual', label: 'Actual', render: (v) => `$${v.toLocaleString()}` },
-          { key: 'budget', label: 'Budget', render: (v) => `$${v.toLocaleString()}` },
-          { key: 'variance', label: 'Variance', render: (v, row) => `<span style="color: ${(row.isExpense ? -v : v) >= 0 ? 'var(--success)' : 'var(--danger)'}">$${Math.abs(v).toLocaleString()}</span>` },
-          { key: 'variancePct', label: 'Var %', render: (v, row) => `<span style="color: ${(row.isExpense ? -parseFloat(v) : parseFloat(v)) >= 0 ? 'var(--success)' : 'var(--danger)'}">${v}%</span>` }
-        ]
-      },
-      rentroll: {
-        title: 'Rent Roll',
-        icon: '🏠',
-        getData: () => generateRentRollData(propertyId, property.units),
-        columns: [
-          { key: 'unit', label: 'Unit', width: '70px' },
-          { key: 'floorplan', label: 'Floorplan' },
-          { key: 'sqft', label: 'SqFt' },
-          { key: 'marketRent', label: 'Market', render: (v) => `$${v.toLocaleString()}` },
-          { key: 'effectiveRent', label: 'Effective', render: (v) => v ? `$${v.toLocaleString()}` : '—' },
-          { key: 'status', label: 'Status', render: (v) => `<span class="badge badge--${v === 'Occupied' ? 'success' : v === 'Notice' ? 'warning' : v === 'Vacant' ? 'danger' : 'primary'}">${v}</span>` },
-          { key: 'resident', label: 'Resident', render: (v) => v || '—' },
-          { key: 'leaseEnd', label: 'Lease End', render: (v) => v || '—' }
-        ]
-      }
-    };
-    
-    const config = viewConfig[dataView];
-    if (!config) {
-      main.innerHTML = '<div class="alert alert--danger">Unknown data view</div>';
-      return;
-    }
-    
+
+    // Calculate summary stats
+    const nonStudentUnits = properties.filter(p => p.type !== 'STU').reduce((s, p) => s + (p.units || 0), 0);
+    const studentBeds = properties.filter(p => p.type === 'STU').reduce((s, p) => s + (p.beds || 0), 0);
+    const totalManaged = nonStudentUnits + studentBeds;
+
+    // Red flags
+    const redFlags = [];
+    properties.forEach(p => {
+      L_KEYS.forEach(key => {
+        const m = this.evalMetric(p, key);
+        if (m.active && m.rawColor === 'red') {
+          redFlags.push({ property: p.name, metric: key, value: m.fmt });
+        }
+      });
+    });
+
     main.innerHTML = `
-      <div class="breadcrumbs">
-        <span class="breadcrumbs__item">
-          <a href="/" class="breadcrumbs__link" data-route="/">Portfolio</a>
-          <span class="breadcrumbs__separator">›</span>
-        </span>
-        <span class="breadcrumbs__item">
-          <a href="/property/${propertyId}" class="breadcrumbs__link" data-route="/property/${propertyId}">${property.name}</a>
-          <span class="breadcrumbs__separator">›</span>
-        </span>
-        <span class="breadcrumbs__current">${config.title}</span>
-      </div>
-      
-      <div class="page-header">
-        <div>
-          <button class="btn btn--ghost" data-action="back">← Back</button>
-          <h1 class="page-header__title">${config.icon} ${config.title}</h1>
-          <p class="page-header__subtitle">${property.name}</p>
+      <div class="dashboard">
+        <!-- Summary Tiles -->
+        <div class="summary-grid">
+          <div class="summary-card">
+            <div class="summary-card__label">Total Managed</div>
+            <div class="summary-card__value">${totalManaged.toLocaleString()}</div>
+            <div class="summary-card__detail">${nonStudentUnits.toLocaleString()} units + ${studentBeds.toLocaleString()} beds</div>
+          </div>
+          <div class="summary-card">
+            <div class="summary-card__label">Portfolio Score</div>
+            <div class="summary-card__value score-pill score-pill--${this.getScoreClass(portfolioScore)}">
+              ${portfolioScore !== null ? portfolioScore.toFixed(2) : '—'}<span class="max-score"> / 5.00</span>
+            </div>
+          </div>
+          <div class="summary-card">
+            <div class="summary-card__label">Properties</div>
+            <div class="summary-card__value">${properties.length}</div>
+            <div class="summary-card__detail">${properties.filter(p => this.isLeaseUp(p)).length} in lease-up</div>
+          </div>
+          <div class="summary-card ${redFlags.length > 0 ? 'summary-card--alert' : ''}">
+            <div class="summary-card__label">Red Flags</div>
+            <div class="summary-card__value">${redFlags.length}</div>
+            <div class="summary-card__detail">${redFlags.length > 0 ? 'Requires attention' : 'All clear'}</div>
+          </div>
+        </div>
+
+        <!-- Search -->
+        <div class="search-bar">
+          <input type="text" class="input" placeholder="Search properties..." data-action="search" value="${State.get('filters')?.search || ''}">
+        </div>
+
+        <!-- Regional Blocks -->
+        <div class="regional-blocks">
+          ${Object.keys(byRD).map(rd => this.renderRegionalBlock(rd, byRD[rd])).join('')}
         </div>
       </div>
-      
-      <div id="data-table-container"></div>
     `;
-    
-    // Initialize data table
-    const tableContainer = document.getElementById('data-table-container');
-    new DataTable(tableContainer, {
-      columns: config.columns,
-      data: config.getData(),
-      pageSize: 15
-    });
   }
-  
-  /**
-   * Add drill-down links to property view
-   */
-  getDrillDownLinks(propertyId) {
+
+  renderRegionalBlock(rd, properties) {
+    const rdScore = this.calcWeightedScore(properties);
+    const collapsed = this.expandedRegions[rd] === false;
+    const totalUnits = properties.reduce((s, p) => s + (p.beds || p.units || 0), 0);
+
     return `
-      <div class="section">
-        <div class="section__header">
-          <h2 class="section__title">📊 Drill-Down Data</h2>
+      <div class="regional-block ${collapsed ? 'regional-block--collapsed' : ''}">
+        <div class="regional-block__header" data-toggle-region="${rd}">
+          <div class="regional-block__info">
+            <span class="regional-block__name">${rd}</span>
+            <span class="regional-block__meta">${properties.length} properties • ${totalUnits.toLocaleString()} units/beds</span>
+          </div>
+          <div class="regional-block__score">
+            <span class="score-pill score-pill--${this.getScoreClass(rdScore)}">
+              ${rdScore !== null ? rdScore.toFixed(2) : '—'} <span class="max-score">/ 5.00</span>
+            </span>
+            <span class="regional-block__arrow">${collapsed ? '▶' : '▼'}</span>
+          </div>
         </div>
-        <div class="grid grid--3">
-          <div class="card card--clickable" data-route="/property/${propertyId}/leases">
-            <div class="card__body" style="text-align: center; padding: var(--space-6);">
-              <div style="font-size: 2rem; margin-bottom: var(--space-2);">📝</div>
-              <div style="font-weight: var(--font-semibold);">Lease Activity</div>
-              <div style="font-size: var(--text-sm); color: var(--text-muted);">View all leases</div>
+        ${!collapsed ? `
+          <div class="regional-block__body">
+            <div class="table-wrap">
+              <table class="metrics-table">
+                <thead>
+                  <tr>
+                    <th>Property</th>
+                    <th>Type</th>
+                    <th>Units</th>
+                    <th>Phys Occ%</th>
+                    <th>Leased%</th>
+                    <th>Lead→Tour</th>
+                    <th>Delinq%</th>
+                    <th>WO SLA%</th>
+                    <th>Closing%</th>
+                    <th>Renewal%</th>
+                    <th>Google</th>
+                    <th>Training</th>
+                    <th>TALi</th>
+                    <th>ORA</th>
+                    <th>NOI Var</th>
+                    <th>Score</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${properties.map(p => this.renderPropertyRow(p)).join('')}
+                </tbody>
+              </table>
             </div>
           </div>
-          <div class="card card--clickable" data-route="/property/${propertyId}/workorders">
-            <div class="card__body" style="text-align: center; padding: var(--space-6);">
-              <div style="font-size: 2rem; margin-bottom: var(--space-2);">🔧</div>
-              <div style="font-weight: var(--font-semibold);">Work Orders</div>
-              <div style="font-size: var(--text-sm); color: var(--text-muted);">Maintenance requests</div>
+        ` : ''}
+      </div>
+    `;
+  }
+
+  renderPropertyRow(prop) {
+    const metrics = L_KEYS.map(k => this.evalMetric(prop, k));
+    const score = this.calcPropertyScore(prop);
+    const isLeaseUp = this.isLeaseUp(prop);
+    const isExpanded = this.expandedProperty === prop.name;
+
+    let html = `
+      <tr class="${isExpanded ? 'property-row--expanded' : ''}">
+        <td>
+          <div class="property-cell">
+            <span class="property-name" data-drill-property="${prop.name}">${prop.name} <span class="drill-arrow">${isExpanded ? '▼' : '▶'}</span></span>
+            <span class="property-city">${prop.city || ''}</span>
+            <label class="leaseup-toggle">
+              <input type="checkbox" ${isLeaseUp ? 'checked' : ''} data-leaseup-toggle="${prop.name}">
+              <span class="leaseup-label ${isLeaseUp ? 'leaseup-label--active' : ''}">${isLeaseUp ? 'Lease-Up' : 'Stabilized'}</span>
+            </label>
+          </div>
+        </td>
+        <td class="type-cell">${prop.type}</td>
+        <td class="units-cell">${prop.beds || prop.units || '—'}</td>
+        ${metrics.map(m => `
+          <td>
+            <div class="metric-cell">
+              <span class="metric-value metric-value--${m.color}">${m.fmt}</span>
+              <label class="metric-toggle">
+                <input type="checkbox" ${m.active ? 'checked' : ''} data-metric-toggle="${prop.name}::${m.key}">
+                <span class="metric-toggle-label">${m.active ? 'scored' : 'off'}</span>
+              </label>
+            </div>
+          </td>
+        `).join('')}
+        <td>
+          <span class="score-pill score-pill--sm score-pill--${this.getScoreClass(score.score)}">
+            ${score.score !== null ? score.score.toFixed(2) : '—'}
+          </span>
+        </td>
+      </tr>
+    `;
+
+    // Expanded drill-down row
+    if (isExpanded) {
+      html += `
+        <tr class="drill-row">
+          <td colspan="16">
+            ${this.renderDrillPanel(prop)}
+          </td>
+        </tr>
+      `;
+    }
+
+    return html;
+  }
+
+  renderDrillPanel(prop) {
+    const hist = propertyHistory[prop.name] || {};
+    
+    return `
+      <div class="drill-panel">
+        <div class="drill-panel__header">
+          <h3>${prop.name} — Detailed View</h3>
+          <span class="drill-panel__meta">${prop.city} • ${prop.type} • ${prop.beds || prop.units} ${prop.beds ? 'beds' : 'units'}</span>
+        </div>
+
+        <div class="drill-grid">
+          <!-- Occupancy Section -->
+          <div class="drill-card">
+            <h4>Occupancy</h4>
+            <div class="drill-metrics">
+              <div class="drill-metric">
+                <span class="drill-metric__label">Physical</span>
+                <span class="drill-metric__value">${prop.physOcc ? (prop.physOcc * 100).toFixed(1) + '%' : '—'}</span>
+              </div>
+              <div class="drill-metric">
+                <span class="drill-metric__label">Leased</span>
+                <span class="drill-metric__value">${prop.leased ? (prop.leased * 100).toFixed(1) + '%' : '—'}</span>
+              </div>
             </div>
           </div>
-          <div class="card card--clickable" data-route="/property/${propertyId}/agents">
-            <div class="card__body" style="text-align: center; padding: var(--space-6);">
-              <div style="font-size: 2rem; margin-bottom: var(--space-2);">👤</div>
-              <div style="font-weight: var(--font-semibold);">Agent Performance</div>
-              <div style="font-size: var(--text-sm); color: var(--text-muted);">Leasing team stats</div>
+
+          <!-- Leasing Section -->
+          <div class="drill-card">
+            <h4>Leasing Funnel (MTD)</h4>
+            <div class="drill-metrics">
+              <div class="drill-metric">
+                <span class="drill-metric__label">Traffic</span>
+                <span class="drill-metric__value">${prop.mtdTraffic || '—'}</span>
+              </div>
+              <div class="drill-metric">
+                <span class="drill-metric__label">Leases</span>
+                <span class="drill-metric__value">${prop.mtdLeases || '—'}</span>
+              </div>
+              <div class="drill-metric">
+                <span class="drill-metric__label">Lead→Tour</span>
+                <span class="drill-metric__value">${prop.leadToTour ? (prop.leadToTour * 100).toFixed(1) + '%' : '—'}</span>
+              </div>
+              <div class="drill-metric">
+                <span class="drill-metric__label">Closing</span>
+                <span class="drill-metric__value">${prop.mtdClosing ? (Math.min(prop.mtdClosing, 1) * 100).toFixed(1) + '%' : '—'}</span>
+              </div>
             </div>
           </div>
-          <div class="card card--clickable" data-route="/property/${propertyId}/financials">
-            <div class="card__body" style="text-align: center; padding: var(--space-6);">
-              <div style="font-size: 2rem; margin-bottom: var(--space-2);">💰</div>
-              <div style="font-weight: var(--font-semibold);">Financials</div>
-              <div style="font-size: var(--text-sm); color: var(--text-muted);">Budget vs Actual</div>
+
+          <!-- Revenue Section -->
+          <div class="drill-card">
+            <h4>Revenue</h4>
+            <div class="drill-metrics">
+              <div class="drill-metric">
+                <span class="drill-metric__label">Avg Rent</span>
+                <span class="drill-metric__value">${prop.avgRent ? '$' + prop.avgRent.toLocaleString() : '—'}</span>
+              </div>
+              <div class="drill-metric">
+                <span class="drill-metric__label">New Trade-Out</span>
+                <span class="drill-metric__value">${prop.newTradeOut != null ? (prop.newTradeOut >= 0 ? '+' : '') + (prop.newTradeOut * 100).toFixed(1) + '%' : '—'}</span>
+              </div>
             </div>
           </div>
-          <div class="card card--clickable" data-route="/property/${propertyId}/rentroll">
-            <div class="card__body" style="text-align: center; padding: var(--space-6);">
-              <div style="font-size: 2rem; margin-bottom: var(--space-2);">🏠</div>
-              <div style="font-weight: var(--font-semibold);">Rent Roll</div>
-              <div style="font-size: var(--text-sm); color: var(--text-muted);">Unit-by-unit detail</div>
+
+          <!-- Reputation Section -->
+          <div class="drill-card">
+            <h4>Reputation</h4>
+            <div class="drill-metrics">
+              <div class="drill-metric">
+                <span class="drill-metric__label">Google</span>
+                <span class="drill-metric__value">${prop.googleStars ? prop.googleStars.toFixed(1) + ' ⭐' : '—'}</span>
+              </div>
+              <div class="drill-metric">
+                <span class="drill-metric__label">TALi</span>
+                <span class="drill-metric__value">${prop.tali ? prop.tali.toFixed(1) : '—'}</span>
+              </div>
+              <div class="drill-metric">
+                <span class="drill-metric__label">ORA</span>
+                <span class="drill-metric__value">${prop.propIndex ? prop.propIndex.toFixed(1) : '—'}</span>
+              </div>
             </div>
           </div>
+        </div>
+
+        <div class="drill-actions">
+          <button class="btn btn--primary btn--sm">Generate Report</button>
+          <button class="btn btn--secondary btn--sm">View Details</button>
         </div>
       </div>
     `;
   }
-  
-  /**
-   * Get filtered properties based on current filters
-   */
-  getFilteredProperties() {
-    const filters = State.get('filters');
-    let properties = mockProperties;
-    
-    if (filters.search) {
-      const search = filters.search.toLowerCase();
-      properties = properties.filter(p => 
-        p.name.toLowerCase().includes(search) ||
-        p.address.city.toLowerCase().includes(search)
-      );
-    }
-    
-    if (filters.region) {
-      properties = properties.filter(p => p.region === filters.region);
-    }
-    
-    if (filters.assetType) {
-      properties = properties.filter(p => p.type === filters.assetType);
-    }
-    
-    return properties;
-  }
-  
-  /**
-   * Get average metric across properties
-   */
-  getAvgMetric(properties, category, metric) {
-    const values = properties
-      .map(p => p.metrics?.[category]?.[metric])
-      .filter(v => v != null);
-    
-    if (values.length === 0) return null;
-    return values.reduce((sum, v) => sum + v, 0) / values.length;
-  }
-  
-  /**
-   * Get metric color class
-   */
-  getMetricColor(value, metric, assetType, inverse = false) {
-    return getScoreColor(value, metric, assetType);
+
+  getScoreClass(score) {
+    if (score === null) return 'na';
+    if (score >= 4) return 'green';
+    if (score >= 2) return 'yellow';
+    return 'red';
   }
 }
 
-// Initialize app on DOM ready
+// Initialize app
 const app = new App();
 document.addEventListener('DOMContentLoaded', () => app.init());
 
