@@ -553,16 +553,35 @@ class App {
       }
     });
 
-    // Tab switching - preserve scroll position
+    // Tab switching - preserve scroll position without visual jump
     document.addEventListener('click', (e) => {
       const tab = e.target.closest('[data-tab]');
-      if (tab) {
+      if (tab && tab.dataset.tab !== this.activeTab) {
         const scrollY = window.scrollY;
+        const html = document.documentElement;
+        const main = document.getElementById('main');
+        
+        // Lock viewport to prevent visual jump
+        html.style.scrollBehavior = 'auto';
+        if (main) {
+          main.style.minHeight = main.offsetHeight + 'px';
+        }
+        
         this.activeTab = tab.dataset.tab;
         this.render();
-        // Restore scroll position after render
+        
+        // Restore scroll position immediately then clean up
+        window.scrollTo(0, scrollY);
+        
+        // Double rAF ensures DOM has fully settled before cleanup
         requestAnimationFrame(() => {
-          window.scrollTo(0, scrollY);
+          requestAnimationFrame(() => {
+            window.scrollTo(0, scrollY);
+            if (main) {
+              main.style.minHeight = '';
+            }
+            html.style.scrollBehavior = '';
+          });
         });
       }
     });
