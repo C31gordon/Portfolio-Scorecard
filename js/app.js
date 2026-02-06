@@ -13,7 +13,7 @@ import { riseProperties, risePortfolio, propertyHistory, ON_CAMPUS_DEFAULT_METRI
 // Metrics that should be ON by default for On-Campus properties
 const OC_DEFAULT_ON = ['woSla', 'training', 'tali', 'noiVariance'];
 import { generateLeaseData, generateWorkOrderData, generateAgentData, generateFinancialData, generateRentRollData, generateHistoricalData, generatePriorYearData } from './data/mock-drilldown.js';
-import { generatePhysOccData, generateLeasedData, generateLeadToTourData, generateDelinquencyData, generateWOSLAData, generateClosingRatioData, generateRenewalRatioData, generateAvgRentData, renderDrillTable, DRILL_COLUMNS } from './components/drill-tables.js';
+import { generatePhysOccData, generateLeasedData, generateLeadToTourData, generateDelinquencyData, generateWOSLAData, generateClosingRatioData, generateRenewalRatioData, generateAvgRentData, generateTrainingTableData, generateTrainingDrillInData, generateWOTechnicianData, renderDrillTable, DRILL_COLUMNS } from './components/drill-tables.js';
 import { Charts } from './components/charts.js';
 import { DataTable } from './components/data-table.js';
 
@@ -710,7 +710,7 @@ class App {
                 .drill-card__value.green { color: #16a34a; }
                 .drill-card__value.yellow { color: #ca8a04; }
                 .drill-card__value.red { color: #dc2626; }
-                .drill-card__chart { display: none; }
+                .drill-card__chart { display: block; }
                 .drill-card__target { font-size: 10px; color: #888; margin-top: 5px; }
                 .drill-metrics { display: flex; flex-direction: column; gap: 8px; }
                 .drill-metric { display: flex; justify-content: space-between; }
@@ -733,6 +733,108 @@ class App {
           printWindow.document.close();
           printWindow.print();
         }
+      }
+    });
+
+    // Export to XLS
+    document.addEventListener('click', (e) => {
+      const exportBtn = e.target.closest('[data-action="export-xls"]');
+      if (exportBtn) {
+        const propName = exportBtn.dataset.property;
+        const propId = exportBtn.dataset.propid;
+        const prop = riseProperties.find(p => p.name.replace(/[^a-zA-Z0-9]/g, '_').toLowerCase() === propId) || riseProperties.find(p => p.name === propName);
+        
+        if (!prop) return;
+        
+        // Generate all data for this property
+        const physOccData = generatePhysOccData(prop);
+        const leasedData = generateLeasedData(prop);
+        const leadData = generateLeadToTourData(prop);
+        const delinqData = generateDelinquencyData(prop);
+        const woData = generateWOSLAData(prop);
+        const closingData = generateClosingRatioData(prop);
+        const renewalData = generateRenewalRatioData(prop);
+        const rentData = generateAvgRentData(prop);
+        const trainingData = generateTrainingTableData(prop);
+        
+        // Build CSV (Excel-compatible)
+        let csv = '';
+        
+        // Property Header
+        csv += `"${propName}"\n`;
+        csv += `"Generated: ${new Date().toLocaleString()}"\n\n`;
+        
+        // Physical Occupancy
+        csv += '"Physical Occupancy - Vacant Units"\n';
+        csv += '"Bldg-Unit","Floorplan","Days Vacant","Make Ready Status","Move-Out Date","Market Rent"\n';
+        physOccData.forEach(r => {
+          csv += `"${r.unit}","${r.floorplan}","${r.daysVacant}","${r.makeReadyStatus}","${r.lastMoveOut}","$${r.marketRent}"\n`;
+        });
+        csv += '\n';
+        
+        // Leased
+        csv += '"Leased Activity"\n';
+        csv += '"Bldg-Unit","Floorplan","Type","Date","Resident","Rent"\n';
+        leasedData.forEach(r => {
+          csv += `"${r.unit}","${r.floorplan}","${r.unitType}","${r.date}","${r.resident}","$${r.rent}"\n`;
+        });
+        csv += '\n';
+        
+        // Delinquency
+        csv += '"Delinquency"\n';
+        csv += '"Bldg-Unit","Floorplan","Resident","Balance","Aging","Last Payment","Payment Plan"\n';
+        delinqData.forEach(r => {
+          csv += `"${r.unit}","${r.floorplan}","${r.resident}","$${r.balance}","${r.agingBucket}","${r.lastPayment}","${r.paymentPlan}"\n`;
+        });
+        csv += '\n';
+        
+        // Work Orders
+        csv += '"Work Orders"\n';
+        csv += '"Category","Bldg-Unit","Ticket#","Type","Technician","Open Date","Close Date","Business Days","Status"\n';
+        woData.forEach(r => {
+          csv += `"${r.category}","${r.unit}","${r.ticketId}","${r.ticketType}","${r.technician}","${r.openDate}","${r.closeDate}","${r.timeToComplete}","${r.status}"\n`;
+        });
+        csv += '\n';
+        
+        // Closing Ratio by Agent
+        csv += '"Closing Ratio by Agent"\n';
+        csv += '"Agent","Tours","Leases","Closing %","Avg Response","Top Source"\n';
+        closingData.forEach(r => {
+          csv += `"${r.agent}","${r.tours}","${r.leases}","${r.closingRatio}","${r.avgResponseTime}","${r.topSource}"\n`;
+        });
+        csv += '\n';
+        
+        // Renewals
+        csv += '"Renewals"\n';
+        csv += '"Bldg-Unit","Floorplan","Resident","Lease End","Current Rent","12-Mo Offer","Status","Days Left"\n';
+        renewalData.forEach(r => {
+          csv += `"${r.unit}","${r.floorplan}","${r.resident}","${r.leaseEnd}","${r.currentRent}","${r.offer12Month}","${r.status}","${r.daysUntilExpiry}"\n`;
+        });
+        csv += '\n';
+        
+        // Rent Roll
+        csv += '"Rent Roll"\n';
+        csv += '"Bldg-Unit","Floorplan","Status","Market Rent","Effective Rent","Variance","Lease End"\n';
+        rentData.forEach(r => {
+          csv += `"${r.unit}","${r.floorplan}","${r.status}","${r.marketRent}","${r.effectiveRent}","${r.variance}","${r.leaseEnd}"\n`;
+        });
+        csv += '\n';
+        
+        // Training
+        csv += '"Training Completion"\n';
+        csv += '"Employee","Completed","Total","Completion %","Past Due","Status"\n';
+        trainingData.forEach(r => {
+          csv += `"${r.employee}","${r.completed}","${r.total}","${r.completionPct}","${r.pastDue}","${r.status}"\n`;
+        });
+        
+        // Download
+        const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement('a');
+        const filename = propName.replace(/[^a-zA-Z0-9]/g, '_') + '_Report.csv';
+        link.href = URL.createObjectURL(blob);
+        link.download = filename;
+        link.click();
+        URL.revokeObjectURL(link.href);
       }
     });
 
@@ -1670,6 +1772,7 @@ class App {
           <button class="btn btn--primary btn--sm" data-action="generate-report" data-property="${prop.name}">📋 Generate Report</button>
           <button class="btn btn--secondary btn--sm btn--disabled" disabled title="Coming Soon">📊 Full Analytics <span class="badge badge--sm">Soon</span></button>
           <button class="btn btn--secondary btn--sm" data-action="print-drill" data-property="${prop.name}">🖨️ Print</button>
+            <button class="btn btn--secondary btn--sm" data-action="export-xls" data-property="${prop.name}" data-propid="${propId}">📊 Export XLS</button>
         </div>
       </div>
     `;
@@ -1765,32 +1868,54 @@ class App {
           break;
           
         case 'delinq':
-          // Summary by aging bucket
-          const ageSummary = {};
+          // Summary by aging bucket - ordered: 1-30, 31-60, 61-90, >90, Total
+          const bucketOrder = ['1-30', '31-60', '61-90', '90+'];
+          const ageSummary = { '1-30': { count: 0, total: 0 }, '31-60': { count: 0, total: 0 }, '61-90': { count: 0, total: 0 }, '90+': { count: 0, total: 0 } };
           let totalBal = 0;
           data.forEach(d => {
-            if (!ageSummary[d.agingBucket]) ageSummary[d.agingBucket] = { count: 0, total: 0 };
-            ageSummary[d.agingBucket].count++;
-            ageSummary[d.agingBucket].total += d.balance;
+            const bucket = d.agingBucket;
+            if (ageSummary[bucket]) {
+              ageSummary[bucket].count++;
+              ageSummary[bucket].total += d.balance;
+            }
             totalBal += d.balance;
           });
           summaryHTML = `<table><thead><tr><th>Aging</th><th>Accounts</th><th>Balance</th></tr></thead><tbody>
-            ${Object.entries(ageSummary).map(([a, s]) => `<tr><td>${a} days</td><td>${s.count}</td><td>$${s.total.toLocaleString()}</td></tr>`).join('')}
+            ${bucketOrder.map(bucket => `<tr><td>${bucket} days</td><td>${ageSummary[bucket].count}</td><td>$${ageSummary[bucket].total.toLocaleString()}</td></tr>`).join('')}
             <tr style="font-weight:600;border-top:1px solid var(--border-primary)"><td>Total</td><td>${data.length}</td><td>$${totalBal.toLocaleString()}</td></tr>
           </tbody></table>`;
           break;
           
         case 'woSla':
-          // Summary by category
+          // Summary by category with % of total
           const catSummary = {};
+          let totalWOs = data.length;
           data.forEach(d => {
             if (!catSummary[d.category]) catSummary[d.category] = { open: 0, complete: 0 };
             if (d.status === 'Complete') catSummary[d.category].complete++;
             else catSummary[d.category].open++;
           });
-          summaryHTML = `<table><thead><tr><th>Category</th><th>Open</th><th>Complete</th></tr></thead><tbody>
-            ${Object.entries(catSummary).map(([c, s]) => `<tr><td>${c}</td><td>${s.open}</td><td>${s.complete}</td></tr>`).join('')}
-          </tbody></table>`;
+          
+          // Technician summary
+          const techData = generateWOTechnicianData(prop);
+          
+          summaryHTML = `
+            <div style="margin-bottom:12px;">
+              <div style="font-weight:600;font-size:0.7rem;margin-bottom:4px;">By Category</div>
+              <table><thead><tr><th>Category</th><th>Open</th><th>Complete</th><th>% of Total</th></tr></thead><tbody>
+                ${Object.entries(catSummary).map(([c, s]) => {
+                  const catTotal = s.open + s.complete;
+                  const pctTotal = ((catTotal / totalWOs) * 100).toFixed(0);
+                  return `<tr><td>${c}</td><td>${s.open}</td><td>${s.complete}</td><td>${pctTotal}%</td></tr>`;
+                }).join('')}
+              </tbody></table>
+            </div>
+            <div>
+              <div style="font-weight:600;font-size:0.7rem;margin-bottom:4px;">By Technician</div>
+              <table><thead><tr><th>Technician</th><th>Open</th><th>Completed</th><th>SLA %</th></tr></thead><tbody>
+                ${techData.map(t => `<tr><td>${t.technician}</td><td>${t.open}</td><td>${t.completed}</td><td>${t.slaPct}</td></tr>`).join('')}
+              </tbody></table>
+            </div>`;
           break;
           
         case 'closingRatio':
@@ -1812,6 +1937,14 @@ class App {
             ${Object.entries(statusSummary).map(([s, c]) => `<tr><td>${s}</td><td>${c}</td></tr>`).join('')}
           </tbody></table>`;
           break;
+        
+        case 'training':
+          // Training: completion % by person
+          const trainingData = generateTrainingTableData(prop);
+          summaryHTML = `<table><thead><tr><th>Employee</th><th>Completed</th><th>Past Due</th><th>Completion %</th><th>Status</th></tr></thead><tbody>
+            ${trainingData.map(t => `<tr><td>${t.employee}</td><td>${t.completed}/${t.total}</td><td>${t.pastDue}</td><td>${t.completionPct}</td><td><span style="color:${t.status === 'Complete' ? '#16a34a' : t.status === 'In Progress' ? '#ca8a04' : '#dc2626'}">${t.status}</span></td></tr>`).join('')}
+          </tbody></table>`;
+          break;
           
         default:
           // Generic summary: first 5 rows, 3 columns
@@ -1826,7 +1959,21 @@ class App {
     } else if (viewType === 'drillin') {
       // Drill In = FULL DETAIL (all rows, all columns, filterable)
       const containerId = `drillin_${metric}_${propId}`;
-      renderDrillTable(containerId, columns, data);
+      
+      // Special handling for training drill-in (shows past-due classes per person)
+      if (metric === 'training') {
+        const trainingDrillData = generateTrainingDrillInData(prop);
+        const trainingColumns = [
+          { key: 'employee', label: 'Employee' },
+          { key: 'course', label: 'Course' },
+          { key: 'dueDate', label: 'Due Date' },
+          { key: 'daysPastDue', label: 'Days Past Due' },
+          { key: 'status', label: 'Status' }
+        ];
+        renderDrillTable(containerId, trainingColumns, trainingDrillData);
+      } else {
+        renderDrillTable(containerId, columns, data);
+      }
     }
     
     this.loadedDrillData[key] = true;

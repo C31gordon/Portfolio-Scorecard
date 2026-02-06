@@ -382,6 +382,87 @@ export const DRILL_COLUMNS = {
   ]
 };
 
+// Training-related constants
+const EMPLOYEES = ['Sarah Johnson', 'Mike Chen', 'Lisa Brown', 'James Wilson', 'Maria Garcia', 'David Kim', 'Emily Davis', 'Chris Thompson'];
+const TRAINING_COURSES = [
+  'Fair Housing Fundamentals',
+  'Leasing 101',
+  'Emergency Response',
+  'Safety & OSHA Compliance',
+  'Customer Service Excellence',
+  'Rent Collection Best Practices',
+  'Property Maintenance Basics',
+  'Sexual Harassment Prevention',
+  'Lead-Based Paint Disclosure',
+  'ADA Compliance',
+  'Fire Safety & Evacuation',
+  'Conflict Resolution'
+];
+
+/**
+ * Generate Training Table data (completion % by person)
+ */
+export function generateTrainingTableData(prop) {
+  return EMPLOYEES.map(name => {
+    const totalCourses = TRAINING_COURSES.length;
+    const completed = Math.floor(Math.random() * 4) + (totalCourses - 4); // Most are high
+    const pastDue = totalCourses - completed;
+    return {
+      employee: name,
+      completed,
+      total: totalCourses,
+      completionPct: ((completed / totalCourses) * 100).toFixed(0) + '%',
+      pastDue,
+      status: pastDue === 0 ? 'Complete' : pastDue <= 2 ? 'In Progress' : 'Behind'
+    };
+  });
+}
+
+/**
+ * Generate Training Drill-In data (past-due classes by person)
+ */
+export function generateTrainingDrillInData(prop) {
+  const data = [];
+  EMPLOYEES.forEach(employee => {
+    // Random subset of courses that are past due
+    const pastDueCount = Math.floor(Math.random() * 4);
+    const shuffled = [...TRAINING_COURSES].sort(() => Math.random() - 0.5);
+    const pastDueCourses = shuffled.slice(0, pastDueCount);
+    
+    pastDueCourses.forEach(course => {
+      const dueDate = new Date(Date.now() - Math.floor(Math.random() * 60) * 86400000);
+      data.push({
+        employee,
+        course,
+        dueDate: dueDate.toISOString().split('T')[0],
+        daysPastDue: Math.floor((Date.now() - dueDate.getTime()) / 86400000),
+        status: 'Past Due'
+      });
+    });
+  });
+  return data.sort((a, b) => a.employee.localeCompare(b.employee) || b.daysPastDue - a.daysPastDue);
+}
+
+/**
+ * Generate WO SLA summary by technician
+ */
+export function generateWOTechnicianData(prop) {
+  const TECHNICIANS = ['John Smith', 'Carlos Rodriguez', 'Marcus Taylor', 'Robert Lee', 'Kevin Brown'];
+  return TECHNICIANS.map(tech => {
+    const total = Math.floor(Math.random() * 30) + 10;
+    const open = Math.floor(Math.random() * 5);
+    const completed = total - open;
+    const slaCompliant = Math.floor(completed * (0.75 + Math.random() * 0.25));
+    return {
+      technician: tech,
+      open,
+      completed,
+      total,
+      slaPct: ((slaCompliant / completed) * 100).toFixed(0) + '%'
+    };
+  });
+}
+
 export default {
   generatePhysOccData,
   generateLeasedData,
@@ -391,6 +472,9 @@ export default {
   generateClosingRatioData,
   generateRenewalRatioData,
   generateAvgRentData,
+  generateTrainingTableData,
+  generateTrainingDrillInData,
+  generateWOTechnicianData,
   renderDrillTable,
   DRILL_COLUMNS
 };

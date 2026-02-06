@@ -1113,6 +1113,8 @@
   border: 1px solid var(--border-primary);
   border-radius: var(--radius-md);
   padding: var(--space-3);
+  overflow: hidden;
+  min-width: 0;
 }
 
 .drill-card h4 {
@@ -1364,6 +1366,9 @@
   font-weight: var(--font-bold);
   font-family: 'JetBrains Mono', monospace;
   margin-bottom: var(--space-2);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .drill-card__value.green { color: var(--success); }
