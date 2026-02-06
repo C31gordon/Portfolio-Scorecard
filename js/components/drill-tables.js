@@ -281,6 +281,30 @@ export function renderDrillTable(containerId, columns, data, options = {}) {
   render();
 }
 
+/**
+ * Generate Avg Rent drill-in data (rent roll)
+ */
+export function generateAvgRentData(prop, count = 20) {
+  const data = [];
+  const statuses = ['Occupied', 'Occupied', 'Occupied', 'Occupied', 'Notice', 'Vacant']; // Weighted towards occupied
+  for (let i = 0; i < count; i++) {
+    const status = statuses[Math.floor(Math.random() * statuses.length)];
+    const isOccupied = status !== 'Vacant';
+    const marketRent = 1200 + Math.floor(Math.random() * 800);
+    const effectiveRent = isOccupied ? marketRent - Math.floor(Math.random() * 100) : 0;
+    data.push({
+      unit: randomUnit(),
+      floorplan: FLOORPLANS[Math.floor(Math.random() * FLOORPLANS.length)],
+      status,
+      marketRent: `$${marketRent.toLocaleString()}`,
+      effectiveRent: isOccupied ? `$${effectiveRent.toLocaleString()}` : '—',
+      variance: isOccupied ? `$${(effectiveRent - marketRent).toLocaleString()}` : '—',
+      leaseEnd: isOccupied ? new Date(Date.now() + Math.floor(Math.random() * 180) * 86400000).toISOString().split('T')[0] : '—'
+    });
+  }
+  return data.sort((a, b) => a.unit.localeCompare(b.unit));
+}
+
 // Column definitions for each metric
 export const DRILL_COLUMNS = {
   physOcc: [
@@ -307,6 +331,15 @@ export const DRILL_COLUMNS = {
     { key: 'responseTime', label: 'Response Time' },
     { key: 'status', label: 'Status' },
     { key: 'floorplanInterest', label: 'Floorplan Interest' }
+  ],
+  avgRent: [
+    { key: 'unit', label: 'Bldg-Unit' },
+    { key: 'floorplan', label: 'Floorplan' },
+    { key: 'status', label: 'Status' },
+    { key: 'marketRent', label: 'Market Rent' },
+    { key: 'effectiveRent', label: 'Effective Rent' },
+    { key: 'variance', label: 'Variance' },
+    { key: 'leaseEnd', label: 'Lease End' }
   ],
   delinq: [
     { key: 'unit', label: 'Bldg-Unit' },
@@ -357,6 +390,7 @@ export default {
   generateWOSLAData,
   generateClosingRatioData,
   generateRenewalRatioData,
+  generateAvgRentData,
   renderDrillTable,
   DRILL_COLUMNS
 };

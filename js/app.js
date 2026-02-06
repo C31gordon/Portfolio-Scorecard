@@ -13,7 +13,7 @@ import { riseProperties, risePortfolio, propertyHistory, ON_CAMPUS_DEFAULT_METRI
 // Metrics that should be ON by default for On-Campus properties
 const OC_DEFAULT_ON = ['woSla', 'training', 'tali', 'noiVariance'];
 import { generateLeaseData, generateWorkOrderData, generateAgentData, generateFinancialData, generateRentRollData, generateHistoricalData, generatePriorYearData } from './data/mock-drilldown.js';
-import { generatePhysOccData, generateLeasedData, generateLeadToTourData, generateDelinquencyData, generateWOSLAData, generateClosingRatioData, generateRenewalRatioData, renderDrillTable, DRILL_COLUMNS } from './components/drill-tables.js';
+import { generatePhysOccData, generateLeasedData, generateLeadToTourData, generateDelinquencyData, generateWOSLAData, generateClosingRatioData, generateRenewalRatioData, generateAvgRentData, renderDrillTable, DRILL_COLUMNS } from './components/drill-tables.js';
 import { Charts } from './components/charts.js';
 import { DataTable } from './components/data-table.js';
 
@@ -1598,7 +1598,7 @@ class App {
       delinq: generateDelinquencyData,
       renewalRatio: generateRenewalRatioData,
       leadToTour: generateLeadToTourData,
-      avgRent: (p) => generateLeasedData(p, 15) // Reuse leased data format for rent roll
+      avgRent: generateAvgRentData
     };
     
     // Metric to column mapping (for drill-in)
@@ -1610,7 +1610,7 @@ class App {
       delinq: DRILL_COLUMNS.delinq,
       renewalRatio: DRILL_COLUMNS.renewalRatio,
       leadToTour: DRILL_COLUMNS.leadToTour,
-      avgRent: DRILL_COLUMNS.leased // Reuse leased columns for rent drill-in
+      avgRent: DRILL_COLUMNS.avgRent
     };
     
     const generator = generators[metric];
