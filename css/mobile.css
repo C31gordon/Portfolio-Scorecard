@@ -1,0 +1,606 @@
+/* Mobile Responsiveness - Portfolio Scorecard v2 */
+
+/* ===== BREAKPOINTS =====
+ * Mobile: < 576px
+ * Mobile-Landscape: 576px - 767px
+ * Tablet: 768px - 991px
+ * Desktop: 992px+
+ * Large Desktop: 1200px+
+ */
+
+/* ===== BASE MOBILE ADJUSTMENTS ===== */
+
+/* Touch-friendly tap targets - minimum 44px */
+@media (max-width: 991px) {
+  .btn {
+    min-height: 44px;
+    min-width: 44px;
+    padding: var(--space-2) var(--space-4);
+  }
+  
+  .btn--sm {
+    min-height: 40px;
+    padding: var(--space-2) var(--space-3);
+  }
+  
+  /* Clickable rows */
+  .regional-block__header {
+    min-height: 56px;
+    padding: var(--space-3) var(--space-4);
+  }
+  
+  /* Toggle switches */
+  .toggle-btn {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}
+
+/* ===== TABLET (768px - 991px) ===== */
+@media (max-width: 991px) {
+  /* Header adjustments */
+  .header {
+    padding: var(--space-2) var(--space-4);
+  }
+  
+  .header__actions {
+    gap: var(--space-2);
+  }
+  
+  /* Main content */
+  .main {
+    padding: var(--space-4);
+  }
+  
+  /* Period selector - more compact */
+  .period-selector {
+    gap: 2px;
+  }
+  
+  .period-selector__btn {
+    padding: var(--space-2) var(--space-3);
+    font-size: var(--text-xs);
+  }
+  
+  /* Summary grid - 2 columns */
+  .summary-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-3);
+  }
+  
+  /* Drill grid - 2 columns */
+  .drill-grid,
+  .drill-grid--4,
+  .drill-grid--3 {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-3);
+  }
+  
+  /* Smaller summary cards */
+  .summary-card {
+    padding: var(--space-3);
+  }
+  
+  .summary-card__value {
+    font-size: var(--text-2xl);
+  }
+  
+  /* Regional block header */
+  .regional-block__info {
+    gap: var(--space-1);
+  }
+  
+  .regional-block__name {
+    font-size: var(--text-base);
+  }
+  
+  .regional-block__meta {
+    font-size: var(--text-xs);
+  }
+}
+
+/* ===== MOBILE LANDSCAPE (576px - 767px) ===== */
+@media (max-width: 767px) {
+  /* Header - stack on mobile */
+  .header {
+    flex-direction: column;
+    align-items: stretch;
+    padding: var(--space-3);
+    gap: var(--space-3);
+  }
+  
+  .header__logo {
+    font-size: var(--text-lg);
+  }
+  
+  .header__subtitle {
+    font-size: var(--text-xs);
+  }
+  
+  .header__nav {
+    width: 100%;
+    justify-content: space-between;
+    margin-left: 0;
+  }
+  
+  .header__center {
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+  
+  .header__actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+  
+  /* Column visibility toggle - hide labels, icon only */
+  .column-toggle-label {
+    display: none;
+  }
+  
+  /* Period selector - full width */
+  .period-selector {
+    width: 100%;
+    justify-content: space-between;
+  }
+  
+  .period-selector__btn {
+    flex: 1;
+    text-align: center;
+  }
+  
+  /* Main content - less padding */
+  .main {
+    padding: var(--space-3);
+  }
+  
+  /* Summary grid - 2 columns maintained */
+  .summary-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-2);
+  }
+  
+  .summary-grid--6 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  /* Drill panel - full width */
+  .drill-panel {
+    margin: 0 calc(-1 * var(--space-3));
+    border-radius: 0;
+    padding: var(--space-3);
+  }
+  
+  .drill-panel__header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-3);
+  }
+  
+  .drill-panel__controls {
+    width: 100%;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+  
+  /* Drill grid - single column */
+  .drill-grid,
+  .drill-grid--4,
+  .drill-grid--3,
+  .drill-grid--2 {
+    grid-template-columns: 1fr;
+    gap: var(--space-3);
+  }
+  
+  /* Funnel bar - wrap */
+  .funnel-bar {
+    flex-wrap: wrap;
+    padding: var(--space-3);
+  }
+  
+  .funnel-step {
+    flex: 1 1 45%;
+    min-width: 80px;
+  }
+  
+  .funnel-step__value {
+    font-size: var(--text-xl);
+  }
+  
+  .funnel-arrow {
+    display: none;
+  }
+  
+  /* Regional blocks */
+  .regional-block__header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-2);
+  }
+  
+  .regional-block__score {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+  }
+  
+  /* Property table - horizontal scroll */
+  .property-table-wrapper {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin: 0 calc(-1 * var(--space-3));
+    padding: 0 var(--space-3);
+  }
+  
+  .property-table {
+    min-width: 800px;
+  }
+  
+  /* Data table - horizontal scroll */
+  .drill-table-wrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  .drill-table {
+    min-width: 600px;
+  }
+  
+  /* Page title */
+  .page-header__title {
+    font-size: var(--text-xl);
+  }
+  
+  /* Buttons row */
+  .drill-actions {
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+  
+  .drill-actions .btn {
+    flex: 1 1 auto;
+    justify-content: center;
+  }
+}
+
+/* ===== MOBILE PORTRAIT (< 576px) ===== */
+@media (max-width: 575px) {
+  /* Even smaller padding */
+  .main {
+    padding: var(--space-2);
+  }
+  
+  .header {
+    padding: var(--space-2);
+  }
+  
+  /* Summary grid - single column on smallest screens */
+  .summary-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .summary-grid--6 {
+    grid-template-columns: 1fr;
+  }
+  
+  /* Smaller card values */
+  .summary-card__value {
+    font-size: var(--text-xl);
+  }
+  
+  .summary-card__label {
+    font-size: 10px;
+  }
+  
+  /* Drill card values */
+  .drill-card__value {
+    font-size: var(--text-xl);
+  }
+  
+  /* Score pill - smaller */
+  .score-pill {
+    font-size: var(--text-sm);
+    padding: var(--space-1) var(--space-2);
+  }
+  
+  .score-pill .max-score {
+    font-size: 10px;
+  }
+  
+  /* Regional block */
+  .regional-block {
+    margin-bottom: var(--space-3);
+  }
+  
+  .regional-block__score .score-pill {
+    font-size: var(--text-base);
+    padding: var(--space-1) var(--space-3);
+  }
+  
+  /* Property row - compact */
+  .property-row td {
+    padding: var(--space-2);
+    font-size: var(--text-xs);
+  }
+  
+  .property-row th {
+    padding: var(--space-2);
+    font-size: 10px;
+  }
+  
+  /* Drill panel controls - stack */
+  .drill-panel__controls {
+    flex-direction: column;
+  }
+  
+  .drill-period,
+  .drill-yoy-toggle,
+  .leaseup-toggle-switch {
+    width: 100%;
+  }
+  
+  .drill-period {
+    justify-content: stretch;
+  }
+  
+  .drill-period .period-selector {
+    width: 100%;
+  }
+  
+  /* View toggle buttons - smaller */
+  .view-toggle {
+    flex-wrap: wrap;
+  }
+  
+  .view-toggle button {
+    flex: 1;
+    padding: var(--space-1) var(--space-2);
+    font-size: 10px;
+  }
+  
+  /* Drill table - smaller font */
+  .drill-table th,
+  .drill-table td {
+    padding: var(--space-2);
+    font-size: var(--text-xs);
+  }
+  
+  /* Charts - maintain aspect ratio */
+  .drill-card__chart {
+    min-height: 40px;
+  }
+  
+  /* Hide less important columns on smallest screens */
+  .hide-on-mobile {
+    display: none !important;
+  }
+  
+  /* Stack buttons */
+  .btn-group--mobile-stack {
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  .btn-group--mobile-stack .btn {
+    width: 100%;
+  }
+}
+
+/* ===== PROPERTY TABLE MOBILE CARD VIEW ===== */
+@media (max-width: 575px) {
+  /* Option: Card-based layout instead of table */
+  .property-table--mobile-cards thead {
+    display: none;
+  }
+  
+  .property-table--mobile-cards tbody tr {
+    display: block;
+    margin-bottom: var(--space-3);
+    padding: var(--space-3);
+    background: var(--bg-secondary);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-primary);
+  }
+  
+  .property-table--mobile-cards tbody td {
+    display: flex;
+    justify-content: space-between;
+    padding: var(--space-1) 0;
+    border: none;
+  }
+  
+  .property-table--mobile-cards tbody td::before {
+    content: attr(data-label);
+    font-weight: var(--font-semibold);
+    color: var(--text-secondary);
+    font-size: var(--text-xs);
+  }
+}
+
+/* ===== DRILL PANEL MOBILE OVERLAY ===== */
+@media (max-width: 767px) {
+  .drill-panel--mobile-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: var(--z-modal);
+    overflow-y: auto;
+    background: var(--bg-primary);
+  }
+  
+  .drill-panel--mobile-overlay .drill-panel__close {
+    position: sticky;
+    top: 0;
+    background: var(--bg-primary);
+    padding: var(--space-3);
+    border-bottom: 1px solid var(--border-primary);
+    display: flex;
+    justify-content: flex-end;
+  }
+}
+
+/* ===== TOUCH INTERACTIONS ===== */
+@media (hover: none) and (pointer: coarse) {
+  /* Remove hover effects on touch devices */
+  .data-table tbody tr:hover,
+  .property-row:hover {
+    background: transparent;
+  }
+  
+  /* Add active states instead */
+  .data-table tbody tr:active,
+  .property-row:active {
+    background: var(--bg-hover);
+  }
+  
+  .btn:active {
+    transform: scale(0.98);
+  }
+  
+  /* Larger checkboxes */
+  input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+  }
+  
+  /* Disable text selection on interactive elements */
+  .btn,
+  .regional-block__header,
+  .toggle-btn {
+    -webkit-user-select: none;
+    user-select: none;
+  }
+}
+
+/* ===== LANDSCAPE ORIENTATION ===== */
+@media (max-width: 991px) and (orientation: landscape) {
+  /* Reduce header height in landscape */
+  .header {
+    padding: var(--space-1) var(--space-4);
+    min-height: auto;
+  }
+  
+  /* More columns in landscape */
+  .summary-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  
+  .drill-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* ===== SAFE AREA INSETS (Notched phones) ===== */
+@supports (padding: env(safe-area-inset-bottom)) {
+  .app {
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+  }
+  
+  .header {
+    padding-top: max(var(--space-2), env(safe-area-inset-top));
+  }
+  
+  .drill-panel--mobile-overlay {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+}
+
+/* ===== PRINT ADJUSTMENTS FOR MOBILE ===== */
+@media print {
+  /* Reset mobile styles for print */
+  .header {
+    flex-direction: row;
+    padding: var(--space-2) var(--space-4);
+  }
+  
+  .summary-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  
+  .drill-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  
+  .drill-panel {
+    margin: 0;
+    border-radius: var(--radius-lg);
+  }
+}
+
+/* ===== UTILITY CLASSES ===== */
+.mobile-only {
+  display: none;
+}
+
+.desktop-only {
+  display: block;
+}
+
+@media (max-width: 767px) {
+  .mobile-only {
+    display: block;
+  }
+  
+  .desktop-only {
+    display: none;
+  }
+}
+
+/* Scroll hint for tables */
+.scroll-hint {
+  display: none;
+  text-align: center;
+  padding: var(--space-2);
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+}
+
+.scroll-hint::before {
+  content: '← Scroll →';
+}
+
+@media (max-width: 767px) {
+  .scroll-hint {
+    display: block;
+  }
+  
+  /* Metrics table - ensure minimum width for scroll */
+  .table-wrap {
+    margin: 0 calc(-1 * var(--space-3));
+    padding: 0 var(--space-3);
+  }
+  
+  .metrics-table {
+    min-width: 900px;
+  }
+  
+  /* Sticky first column on mobile */
+  .metrics-table th:first-child,
+  .metrics-table td:first-child {
+    position: sticky;
+    left: 0;
+    background: var(--bg-secondary);
+    z-index: 2;
+    box-shadow: 2px 0 4px rgba(0,0,0,0.1);
+  }
+  
+  .metrics-table thead th:first-child {
+    background: var(--table-header-bg);
+    z-index: 3;
+  }
+}
+
+@media (max-width: 575px) {
+  .metrics-table {
+    min-width: 700px;
+    font-size: 10px;
+  }
+  
+  .metrics-table th,
+  .metrics-table td {
+    padding: var(--space-1) var(--space-2);
+  }
+}
