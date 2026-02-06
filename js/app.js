@@ -948,8 +948,9 @@ class App {
   }
 }
 
-// Initialize app
+// Initialize app and expose to window for onclick handlers
 const app = new App();
+window.app = app;
 document.addEventListener('DOMContentLoaded', () => app.init());
 
 export default app;
