@@ -1229,3 +1229,163 @@
     gap: var(--space-2);
   }
 }
+
+/* ===== ENHANCED DRILL PANEL ===== */
+.drill-panel__badges {
+  display: flex;
+  gap: var(--space-2);
+}
+
+.badge {
+  font-size: 9px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-weight: var(--font-semibold);
+  text-transform: uppercase;
+}
+
+.badge--info {
+  background: rgba(59, 130, 246, 0.1);
+  color: var(--info);
+  border: 1px solid rgba(59, 130, 246, 0.3);
+}
+
+.badge--success {
+  background: rgba(34, 197, 94, 0.1);
+  color: var(--success);
+  border: 1px solid rgba(34, 197, 94, 0.3);
+}
+
+/* ===== FUNNEL SECTION ===== */
+.funnel-section {
+  margin-bottom: var(--space-4);
+}
+
+.funnel-section h4 {
+  font-size: var(--text-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-muted);
+  margin-bottom: var(--space-2);
+}
+
+.funnel-bar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-md);
+  padding: var(--space-3);
+}
+
+.funnel-step {
+  flex: 1;
+  text-align: center;
+  padding: var(--space-2);
+  background: var(--bg-tertiary);
+  border-radius: var(--radius-md);
+}
+
+.funnel-step__label {
+  font-size: 9px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  letter-spacing: 0.3px;
+}
+
+.funnel-step__value {
+  font-size: var(--text-xl);
+  font-weight: var(--font-bold);
+  font-family: 'JetBrains Mono', monospace;
+  margin: var(--space-1) 0;
+}
+
+.funnel-step__pct {
+  font-size: var(--text-xs);
+  color: var(--text-secondary);
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.funnel-arrow {
+  color: var(--text-muted);
+  font-size: var(--text-lg);
+}
+
+/* ===== DRILL GRID VARIANTS ===== */
+.drill-grid--3 {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.drill-grid--2 {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+@media (max-width: 1200px) {
+  .drill-grid--3 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .drill-grid--3,
+  .drill-grid--2 {
+    grid-template-columns: 1fr;
+  }
+  .funnel-bar {
+    flex-wrap: wrap;
+  }
+  .funnel-step {
+    flex: 1 1 40%;
+  }
+  .funnel-arrow {
+    display: none;
+  }
+}
+
+/* ===== DRILL CARD WITH CHART ===== */
+.drill-card--chart {
+  display: flex;
+  flex-direction: column;
+}
+
+.drill-card__value {
+  font-size: var(--text-2xl);
+  font-weight: var(--font-bold);
+  font-family: 'JetBrains Mono', monospace;
+  margin-bottom: var(--space-2);
+}
+
+.drill-card__value.green { color: var(--success); }
+.drill-card__value.yellow { color: var(--warning); }
+.drill-card__value.red { color: var(--danger); }
+.drill-card__value.na { color: var(--text-muted); }
+
+.drill-card__chart {
+  flex: 1;
+  min-height: 50px;
+  margin: var(--space-2) 0;
+}
+
+.drill-card__target {
+  font-size: 9px;
+  color: var(--text-muted);
+  text-align: right;
+}
+
+/* ===== HEADER IMPROVEMENTS ===== */
+.header__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.btn--icon {
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--text-lg);
+}

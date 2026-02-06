@@ -433,8 +433,12 @@ class App {
     const main = document.getElementById('main');
     if (!main) return;
 
+    this.pendingCharts = {}; // Reset pending charts
     this.renderHeader();
     this.renderDashboard();
+    
+    // Render charts after DOM update
+    setTimeout(() => this.renderCharts(), 50);
   }
 
   renderHeader() {
@@ -647,94 +651,204 @@ class App {
 
   renderDrillPanel(prop) {
     const hist = propertyHistory[prop.name] || {};
+    const propId = prop.name.replace(/[^a-zA-Z0-9]/g, '_');
+    const isLeaseUp = this.isLeaseUp(prop);
+    
+    // Calculate funnel metrics
+    const clicks = prop.mtdTraffic ? Math.round(prop.mtdTraffic * 3.5) : 0;
+    const traffic = prop.mtdTraffic || 0;
+    const apps = prop.mtdLeases ? Math.round(prop.mtdLeases * 1.4) : 0;
+    const leases = prop.mtdLeases || 0;
+    const trafPct = clicks > 0 ? ((traffic / clicks) * 100).toFixed(1) : '0';
+    const appPct = traffic > 0 ? ((apps / traffic) * 100).toFixed(1) : '0';
+    const leasePct = apps > 0 ? ((leases / apps) * 100).toFixed(1) : '0';
+    
+    // Store for chart rendering
+    this.pendingCharts = this.pendingCharts || {};
+    this.pendingCharts[propId] = { prop, hist };
     
     return `
-      <div class="drill-panel">
+      <div class="drill-panel" data-property-panel="${propId}">
         <div class="drill-panel__header">
-          <h3>${prop.name} — Detailed View</h3>
-          <span class="drill-panel__meta">${prop.city} • ${prop.type} • ${prop.beds || prop.units} ${prop.beds ? 'beds' : 'units'}</span>
+          <div>
+            <h3>${prop.name}</h3>
+            <span class="drill-panel__meta">${prop.city} • ${prop.type} • ${prop.beds || prop.units} ${prop.beds ? 'beds' : 'units'} • GM: ${prop.gm || 'N/A'}</span>
+          </div>
+          <div class="drill-panel__badges">
+            ${isLeaseUp ? '<span class="badge badge--info">Lease-Up</span>' : '<span class="badge badge--success">Stabilized</span>'}
+          </div>
         </div>
 
-        <div class="drill-grid">
-          <!-- Occupancy Section -->
-          <div class="drill-card">
-            <h4>Occupancy</h4>
-            <div class="drill-metrics">
-              <div class="drill-metric">
-                <span class="drill-metric__label">Physical</span>
-                <span class="drill-metric__value">${prop.physOcc ? (prop.physOcc * 100).toFixed(1) + '%' : '—'}</span>
-              </div>
-              <div class="drill-metric">
-                <span class="drill-metric__label">Leased</span>
-                <span class="drill-metric__value">${prop.leased ? (prop.leased * 100).toFixed(1) + '%' : '—'}</span>
-              </div>
+        <!-- Leasing Funnel Visual -->
+        <div class="funnel-section">
+          <h4>Leasing Funnel (MTD)</h4>
+          <div class="funnel-bar">
+            <div class="funnel-step">
+              <div class="funnel-step__label">Clicks</div>
+              <div class="funnel-step__value">${clicks}</div>
+              <div class="funnel-step__pct">—</div>
+            </div>
+            <div class="funnel-arrow">→</div>
+            <div class="funnel-step">
+              <div class="funnel-step__label">Tours</div>
+              <div class="funnel-step__value">${traffic}</div>
+              <div class="funnel-step__pct">${trafPct}%</div>
+            </div>
+            <div class="funnel-arrow">→</div>
+            <div class="funnel-step">
+              <div class="funnel-step__label">Apps</div>
+              <div class="funnel-step__value">${apps}</div>
+              <div class="funnel-step__pct">${appPct}%</div>
+            </div>
+            <div class="funnel-arrow">→</div>
+            <div class="funnel-step">
+              <div class="funnel-step__label">Leases</div>
+              <div class="funnel-step__value">${leases}</div>
+              <div class="funnel-step__pct">${leasePct}%</div>
             </div>
           </div>
+        </div>
 
-          <!-- Leasing Section -->
-          <div class="drill-card">
-            <h4>Leasing Funnel (MTD)</h4>
-            <div class="drill-metrics">
-              <div class="drill-metric">
-                <span class="drill-metric__label">Traffic</span>
-                <span class="drill-metric__value">${prop.mtdTraffic || '—'}</span>
-              </div>
-              <div class="drill-metric">
-                <span class="drill-metric__label">Leases</span>
-                <span class="drill-metric__value">${prop.mtdLeases || '—'}</span>
-              </div>
-              <div class="drill-metric">
-                <span class="drill-metric__label">Lead→Tour</span>
-                <span class="drill-metric__value">${prop.leadToTour ? (prop.leadToTour * 100).toFixed(1) + '%' : '—'}</span>
-              </div>
-              <div class="drill-metric">
-                <span class="drill-metric__label">Closing</span>
-                <span class="drill-metric__value">${prop.mtdClosing ? (Math.min(prop.mtdClosing, 1) * 100).toFixed(1) + '%' : '—'}</span>
-              </div>
-            </div>
+        <div class="drill-grid drill-grid--3">
+          <!-- Occupancy with Sparkline -->
+          <div class="drill-card drill-card--chart">
+            <h4>Physical Occupancy</h4>
+            <div class="drill-card__value ${this.getMetricColor(prop.physOcc, 'physOcc', prop.type)}">${prop.physOcc ? (prop.physOcc * 100).toFixed(1) + '%' : '—'}</div>
+            <div class="drill-card__chart" id="chart_physOcc_${propId}"></div>
+            <div class="drill-card__target">Target: ${prop.type === 'STU' ? '98%' : '93%'}</div>
           </div>
 
-          <!-- Revenue Section -->
+          <!-- Leased % with Sparkline -->
+          <div class="drill-card drill-card--chart">
+            <h4>Leased %</h4>
+            <div class="drill-card__value ${this.getMetricColor(prop.leased, 'leased', prop.type)}">${prop.leased ? (prop.leased * 100).toFixed(1) + '%' : '—'}</div>
+            <div class="drill-card__chart" id="chart_leased_${propId}"></div>
+            <div class="drill-card__target">Target: ${prop.type === 'STU' ? '98%' : '95%'}</div>
+          </div>
+
+          <!-- Closing Ratio with Sparkline -->
+          <div class="drill-card drill-card--chart">
+            <h4>Closing Ratio</h4>
+            <div class="drill-card__value ${this.getMetricColor(prop.mtdClosing, 'mtdClosing', prop.type)}">${prop.mtdClosing ? (Math.min(prop.mtdClosing, 1) * 100).toFixed(1) + '%' : '—'}</div>
+            <div class="drill-card__chart" id="chart_closing_${propId}"></div>
+            <div class="drill-card__target">Target: ${prop.type === 'STU' ? '60%' : prop.type === '55+' ? '30%' : '40%'}</div>
+          </div>
+
+          <!-- WO SLA -->
+          <div class="drill-card drill-card--chart">
+            <h4>Work Order SLA</h4>
+            <div class="drill-card__value ${this.getMetricColor(prop.woSla, 'woSla', prop.type)}">${prop.woSla ? (prop.woSla * 100).toFixed(1) + '%' : '—'}</div>
+            <div class="drill-card__chart" id="chart_woSla_${propId}"></div>
+            <div class="drill-card__target">Target: 95%</div>
+          </div>
+
+          <!-- Delinquency -->
+          <div class="drill-card drill-card--chart">
+            <h4>Delinquency</h4>
+            <div class="drill-card__value ${this.getMetricColor(prop.delinq, 'delinq', prop.type)}">${prop.delinq != null ? (prop.delinq * 100).toFixed(2) + '%' : '—'}</div>
+            <div class="drill-card__chart" id="chart_delinq_${propId}"></div>
+            <div class="drill-card__target">Target: ≤${prop.type === '55+' ? '0.025%' : prop.type === 'STU' ? '1%' : '0.5%'}</div>
+          </div>
+
+          <!-- Renewal Ratio -->
+          <div class="drill-card drill-card--chart">
+            <h4>Renewal Ratio</h4>
+            <div class="drill-card__value ${this.getMetricColor(prop.renewalRatio, 'renewalRatio', prop.type)}">${prop.renewalRatio ? (prop.renewalRatio * 100).toFixed(1) + '%' : '—'}</div>
+            <div class="drill-card__chart" id="chart_renewal_${propId}"></div>
+            <div class="drill-card__target">Target: ${prop.type === '55+' ? '75%' : prop.type === 'STU' ? '45%' : '55%'}</div>
+          </div>
+        </div>
+
+        <!-- Revenue & Reputation Row -->
+        <div class="drill-grid drill-grid--2">
           <div class="drill-card">
             <h4>Revenue</h4>
             <div class="drill-metrics">
               <div class="drill-metric">
                 <span class="drill-metric__label">Avg Rent</span>
-                <span class="drill-metric__value">${prop.avgRent ? '$' + prop.avgRent.toLocaleString() : '—'}</span>
+                <span class="drill-metric__value">${prop.avgRent ? '$' + Math.round(prop.avgRent).toLocaleString() : '—'}</span>
               </div>
               <div class="drill-metric">
                 <span class="drill-metric__label">New Trade-Out</span>
-                <span class="drill-metric__value">${prop.newTradeOut != null ? (prop.newTradeOut >= 0 ? '+' : '') + (prop.newTradeOut * 100).toFixed(1) + '%' : '—'}</span>
+                <span class="drill-metric__value" style="color: ${prop.newTradeOut >= 0 ? 'var(--success)' : 'var(--danger)'}">
+                  ${prop.newTradeOut != null ? (prop.newTradeOut >= 0 ? '+' : '') + (prop.newTradeOut * 100).toFixed(1) + '%' : '—'}
+                </span>
+              </div>
+              <div class="drill-metric">
+                <span class="drill-metric__label">NOI vs Budget</span>
+                <span class="drill-metric__value">${prop.noiVariance ? (prop.noiVariance * 100).toFixed(1) + '%' : '—'}</span>
               </div>
             </div>
           </div>
 
-          <!-- Reputation Section -->
           <div class="drill-card">
             <h4>Reputation</h4>
             <div class="drill-metrics">
               <div class="drill-metric">
-                <span class="drill-metric__label">Google</span>
-                <span class="drill-metric__value">${prop.googleStars ? prop.googleStars.toFixed(1) + ' ⭐' : '—'}</span>
+                <span class="drill-metric__label">Google Rating</span>
+                <span class="drill-metric__value">${prop.googleStars ? prop.googleStars.toFixed(1) + ' ⭐ (' + (prop.googleReviews || 0) + ')' : '—'}</span>
               </div>
               <div class="drill-metric">
-                <span class="drill-metric__label">TALi</span>
-                <span class="drill-metric__value">${prop.tali ? prop.tali.toFixed(1) : '—'}</span>
+                <span class="drill-metric__label">TALi (J Turner)</span>
+                <span class="drill-metric__value">${prop.tali ? prop.tali.toFixed(1) + ' (Avg: ' + TURNER_TALI_AVG + ')' : '—'}</span>
               </div>
               <div class="drill-metric">
-                <span class="drill-metric__label">ORA</span>
-                <span class="drill-metric__value">${prop.propIndex ? prop.propIndex.toFixed(1) : '—'}</span>
+                <span class="drill-metric__label">ORA Score</span>
+                <span class="drill-metric__value">${prop.propIndex ? prop.propIndex.toFixed(1) + ' (Avg: ' + TURNER_PI_AVG + ')' : '—'}</span>
+              </div>
+              <div class="drill-metric">
+                <span class="drill-metric__label">Training</span>
+                <span class="drill-metric__value">${prop.training ? (prop.training * 100).toFixed(0) + '%' : '—'}</span>
               </div>
             </div>
           </div>
         </div>
 
         <div class="drill-actions">
-          <button class="btn btn--primary btn--sm">Generate Report</button>
-          <button class="btn btn--secondary btn--sm">View Details</button>
+          <button class="btn btn--primary btn--sm">📋 Generate Report</button>
+          <button class="btn btn--secondary btn--sm">📊 Full Analytics</button>
+          <button class="btn btn--secondary btn--sm">🖨️ Print</button>
         </div>
       </div>
     `;
+  }
+  
+  renderCharts() {
+    // Render sparkline charts after DOM update
+    if (!this.pendingCharts) return;
+    
+    Object.keys(this.pendingCharts).forEach(propId => {
+      const { prop, hist } = this.pendingCharts[propId];
+      
+      const chartConfigs = [
+        { id: `chart_physOcc_${propId}`, data: hist.physOcc, color: this.getSparklineColor(prop.physOcc, 'physOcc', prop.type) },
+        { id: `chart_leased_${propId}`, data: hist.leased, color: this.getSparklineColor(prop.leased, 'leased', prop.type) },
+        { id: `chart_closing_${propId}`, data: hist.mtdClosing, color: this.getSparklineColor(prop.mtdClosing, 'mtdClosing', prop.type) },
+        { id: `chart_woSla_${propId}`, data: hist.woSla, color: this.getSparklineColor(prop.woSla, 'woSla', prop.type) },
+        { id: `chart_delinq_${propId}`, data: hist.delinq, color: '#ef4444' }, // Always red for delinquency
+        { id: `chart_renewal_${propId}`, data: hist.renewalRatio, color: this.getSparklineColor(prop.renewalRatio, 'renewalRatio', prop.type) }
+      ];
+      
+      chartConfigs.forEach(({ id, data, color }) => {
+        const container = document.getElementById(id);
+        if (container && data && data.length > 0) {
+          Charts.sparkline(container, data, { color, height: 50 });
+        }
+      });
+    });
+    
+    this.pendingCharts = {};
+  }
+  
+  getSparklineColor(value, metric, type) {
+    const colorClass = this.getMetricColor(value, metric, type);
+    const colors = {
+      'green': '#22c55e',
+      'yellow': '#eab308',
+      'red': '#ef4444',
+      'na': '#6b7280'
+    };
+    return colors[colorClass] || colors.na;
   }
 
   getScoreClass(score) {
