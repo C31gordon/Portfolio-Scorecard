@@ -342,6 +342,53 @@ class App {
     return 'red';
   }
 
+  /**
+   * Calculate 4-week trend direction for a metric
+   * @returns {string} 'up' | 'down' | 'flat'
+   */
+  calcTrend(propName, metricKey) {
+    const history = propertyHistory[propName];
+    if (!history || !history[metricKey]) return 'flat';
+    
+    const data = history[metricKey];
+    if (!data || data.length < 4) return 'flat';
+    
+    // Compare last 4 weeks - use last 4 data points
+    const recent = data.slice(-4);
+    const first = recent[0];
+    const last = recent[recent.length - 1];
+    
+    if (first === 0 || first === null || first === undefined) return 'flat';
+    
+    const change = (last - first) / first;
+    
+    // For inverse metrics (delinquency), flip the logic
+    const isInverse = metricKey === 'delinq';
+    
+    if (Math.abs(change) < 0.02) return 'flat'; // Less than 2% change = flat
+    
+    if (isInverse) {
+      return change > 0 ? 'down' : 'up'; // Higher delinquency is bad
+    }
+    return change > 0 ? 'up' : 'down';
+  }
+
+  /**
+   * Get trend arrow HTML
+   */
+  getTrendArrow(trend, metricKey) {
+    const isInverse = metricKey === 'delinq';
+    
+    if (trend === 'up') {
+      const color = isInverse ? 'var(--danger)' : 'var(--success)';
+      return `<span class="trend-arrow trend-arrow--up" style="color: ${color}">↑</span>`;
+    } else if (trend === 'down') {
+      const color = isInverse ? 'var(--success)' : 'var(--danger)';
+      return `<span class="trend-arrow trend-arrow--down" style="color: ${color}">↓</span>`;
+    }
+    return `<span class="trend-arrow trend-arrow--flat">→</span>`;
+  }
+
   evalMetric(prop, key) {
     const type = prop.type;
     let val, fmt, color;
@@ -1637,17 +1684,21 @@ class App {
         </td>
         <td class="type-cell">${prop.type === 'OC' ? 'On-Camp' : prop.type}</td>
         <td class="units-cell">${(prop.type === 'OC' || prop.type === 'STU') ? (prop.beds || '—') : (prop.units || '—')}</td>
-        ${metrics.map(m => `
+        ${metrics.map(m => {
+          const trend = this.calcTrend(prop.name, m.key);
+          const trendArrow = this.getTrendArrow(trend, m.key);
+          return `
           <td>
             <div class="metric-cell">
               <span class="metric-value metric-value--${m.color}">${m.fmt}</span>
+              ${trendArrow}
               <label class="metric-toggle-switch">
                 <input type="checkbox" ${m.active ? 'checked' : ''} data-metric-toggle="${prop.name}::${m.key}">
                 <span class="slider"></span>
               </label>
             </div>
           </td>
-        `).join('')}
+        `}).join('')}
         <td>
           <span class="score-pill score-pill--sm score-pill--${this.getScoreClass(score.score)}">
             ${score.score !== null ? score.score.toFixed(2) : '—'}

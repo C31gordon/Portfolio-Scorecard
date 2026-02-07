@@ -3452,3 +3452,30 @@
     background: rgba(99, 102, 241, 0.15);
   }
 }
+
+/* ===== TREND ARROWS ===== */
+.trend-arrow {
+  font-size: 10px;
+  font-weight: 600;
+  margin-left: 2px;
+  opacity: 0.9;
+}
+
+.trend-arrow--up {
+  color: var(--success);
+}
+
+.trend-arrow--down {
+  color: var(--danger);
+}
+
+.trend-arrow--flat {
+  color: var(--text-muted);
+  opacity: 0.5;
+}
+
+.metric-cell {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
