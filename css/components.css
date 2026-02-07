@@ -3194,3 +3194,130 @@
     margin: var(--space-2);
   }
 }
+
+/* ===== EXEC REPORT ADDITIONS ===== */
+.report-breakdown {
+  margin-bottom: var(--space-4);
+}
+
+.breakdown-row {
+  display: flex;
+  gap: var(--space-3);
+}
+
+.breakdown-item {
+  flex: 1;
+  text-align: center;
+  padding: var(--space-4);
+  background: #f9fafb;
+  border-radius: var(--radius-md);
+}
+
+.breakdown-item--highlight {
+  background: #eef2ff;
+  border: 1px solid #c7d2fe;
+}
+
+.breakdown-value {
+  font-size: var(--text-2xl);
+  font-weight: var(--font-bold);
+  color: #1f2937;
+  display: block;
+}
+
+.breakdown-label {
+  font-size: var(--text-xs);
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.report-subsection__title {
+  font-size: var(--text-sm);
+  font-weight: var(--font-semibold);
+  margin: var(--space-4) 0 var(--space-3);
+  color: #374151;
+}
+
+.industry-outlook {
+  font-size: var(--text-sm);
+  line-height: 1.7;
+}
+
+.outlook-intro {
+  margin-bottom: var(--space-4);
+  color: #374151;
+}
+
+.outlook-section {
+  margin-bottom: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  background: #f9fafb;
+  border-radius: var(--radius-md);
+}
+
+.outlook-section h4 {
+  font-size: var(--text-sm);
+  font-weight: var(--font-semibold);
+  margin-bottom: var(--space-2);
+  color: #1f2937;
+}
+
+.outlook-section p {
+  color: #4b5563;
+}
+
+.team-performers {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-3);
+}
+
+.team-card {
+  background: #fef3c7;
+  border: 1px solid #fcd34d;
+  border-radius: var(--radius-md);
+  padding: var(--space-3);
+  text-align: center;
+}
+
+.team-card__badge {
+  font-size: var(--text-xs);
+  color: #92400e;
+  margin-bottom: var(--space-2);
+}
+
+.team-card__name {
+  font-weight: var(--font-semibold);
+  font-size: var(--text-sm);
+  color: #1f2937;
+}
+
+.team-card__detail {
+  font-size: var(--text-xs);
+  color: #6b7280;
+  margin-top: var(--space-1);
+}
+
+.text-muted {
+  color: #9ca3af;
+  font-size: var(--text-xs);
+}
+
+@media (max-width: 767px) {
+  .breakdown-row {
+    flex-wrap: wrap;
+  }
+  
+  .breakdown-item {
+    flex: 1 1 45%;
+  }
+  
+  .team-performers {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .report-kpi-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

@@ -630,21 +630,21 @@ class App {
       }
     });
 
-    // Board Report - show modal
+    // Exec. Report - show modal
     document.addEventListener('click', (e) => {
       if (e.target.closest('[data-action="show-board-report"]')) {
         this.showBoardReportModal();
       }
     });
 
-    // Board Report - print/export
+    // Exec. Report - print/export
     document.addEventListener('click', (e) => {
       if (e.target.closest('[data-action="print-board-report"]')) {
         printBoardReport();
       }
     });
 
-    // Board Report - close modal
+    // Exec. Report - close modal
     document.addEventListener('click', (e) => {
       if (e.target.closest('[data-action="close-board-report"]') ||
           (e.target.closest('.report-modal-overlay') && !e.target.closest('.report-modal'))) {
@@ -1157,8 +1157,8 @@ class App {
           <input type="date" class="date-input" data-action="custom-date-end" value="${this.customDateEnd || ''}" title="End Date">
           <button class="btn btn--primary btn--sm" data-action="apply-custom-date" title="Apply custom date range">Apply</button>
         </div>
-        <button class="btn btn--primary btn--sm" data-action="show-board-report" title="Generate Board Report">
-          📊 Board Report
+        <button class="btn btn--primary btn--sm" data-action="show-board-report" title="Generate Exec. Report">
+          📊 Exec. Report
         </button>
         <button class="btn btn--ghost btn--sm" data-action="show-scoring-guide" title="How scores are calculated">
           ❓ Legend
@@ -2186,7 +2186,7 @@ class App {
   }
   
   /**
-   * Show Board Report Modal
+   * Show Exec. Report Modal
    */
   showBoardReportModal() {
     const reportHtml = generateBoardReport();
@@ -2196,7 +2196,7 @@ class App {
     modal.innerHTML = `
       <div class="report-modal">
         <div class="report-modal__header">
-          <h2>Board Report Preview</h2>
+          <h2>Exec. Report Preview</h2>
           <div class="report-modal__actions">
             <button class="btn btn--primary btn--sm" data-action="print-board-report">
               🖨️ Print / Save PDF
