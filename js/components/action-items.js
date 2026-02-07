@@ -269,8 +269,8 @@ export function renderActionItemsList(propertyId, actionItems, options = {}) {
         <button class="btn btn--sm btn--primary" data-action="add-action" data-property="${propertyId}">+ Add</button>
       </div>
       <div class="action-items-filters">
-        <button class="filter-btn ${!options.openOnly ? 'filter-btn--active' : ''}" data-filter="all">All</button>
-        <button class="filter-btn ${options.openOnly ? 'filter-btn--active' : ''}" data-filter="open">Open</button>
+        <button class="filter-btn ${!options.openOnly ? 'filter-btn--active' : ''}" data-filter="all" data-property="${propertyId}">All</button>
+        <button class="filter-btn ${options.openOnly ? 'filter-btn--active' : ''}" data-filter="open" data-property="${propertyId}">Open</button>
       </div>
       <div class="action-items-body">
         ${items.map(item => renderActionItem(item, options)).join('')}

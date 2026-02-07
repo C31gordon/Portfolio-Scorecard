@@ -977,8 +977,7 @@ class App {
     document.addEventListener('click', (e) => {
       const filterBtn = e.target.closest('.action-items-filters .filter-btn');
       if (filterBtn) {
-        const container = filterBtn.closest('.action-items-list');
-        const propertyId = container?.closest('.action-items-container')?.id.replace('action-items-', '');
+        const propertyId = filterBtn.dataset.property;
         const filter = filterBtn.dataset.filter;
         
         if (propertyId) {
