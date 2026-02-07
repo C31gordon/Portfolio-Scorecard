@@ -603,7 +603,62 @@ class App {
             searchInput.focus();
             searchInput.setSelectionRange(value.length, value.length);
           }
+          // Show search suggestions
+          this.showSearchSuggestions(value);
         }, 150);
+      }
+    });
+
+    // Keyboard shortcut: Cmd+K / Ctrl+K to focus search
+    document.addEventListener('keydown', (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        const searchInput = document.getElementById('searchInput');
+        if (searchInput) {
+          searchInput.focus();
+          searchInput.select();
+        }
+      }
+      // Escape to clear search and close suggestions
+      if (e.key === 'Escape') {
+        const searchInput = document.getElementById('searchInput');
+        if (searchInput && document.activeElement === searchInput) {
+          searchInput.value = '';
+          State.set({ filters: { ...State.get('filters'), search: '' } });
+          this.hideSearchSuggestions();
+          searchInput.blur();
+          this.render();
+        }
+      }
+    });
+
+    // Click on search suggestion
+    document.addEventListener('click', (e) => {
+      const suggestion = e.target.closest('.search-suggestion');
+      if (suggestion) {
+        const propName = suggestion.dataset.property;
+        this.hideSearchSuggestions();
+        document.getElementById('searchInput').value = '';
+        State.set({ filters: { ...State.get('filters'), search: '' } });
+        
+        // Expand and scroll to property
+        this.expandedProperty = propName;
+        this.render();
+        setTimeout(() => {
+          const row = document.querySelector(`[data-drill-property="${propName}"]`);
+          if (row) {
+            row.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            row.closest('tr')?.classList.add('highlight-flash');
+            setTimeout(() => row.closest('tr')?.classList.remove('highlight-flash'), 2000);
+          }
+        }, 100);
+      }
+    });
+
+    // Close suggestions when clicking outside
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('.search-wrapper')) {
+        this.hideSearchSuggestions();
       }
     });
 
@@ -1563,7 +1618,9 @@ class App {
 
         <!-- Controls Bar -->
         <div class="controls-bar">
-          <input type="text" class="input" placeholder="Search properties..." data-action="search" value="${State.get('filters')?.search || ''}" id="searchInput">
+          <div class="search-wrapper">
+            <input type="text" class="input search-input" placeholder="Search properties... (⌘K)" data-action="search" value="${State.get('filters')?.search || ''}" id="searchInput">
+          </div>
           <div class="controls-bar__actions">
             <button class="btn btn--ghost btn--sm scoring-ref" data-action="show-scoring-guide">
               <span class="g">●</span> ≥4 <span class="y">●</span> ≥2 <span class="r">●</span> &lt;2
@@ -2358,6 +2415,54 @@ class App {
     this.loadedDrillData[key] = true;
   }
   
+  /**
+   * Show search suggestions dropdown
+   */
+  showSearchSuggestions(query) {
+    if (!query || query.length < 2) {
+      this.hideSearchSuggestions();
+      return;
+    }
+    
+    const q = query.toLowerCase();
+    const matches = this.properties.filter(p => 
+      p.name.toLowerCase().includes(q) ||
+      (p.city && p.city.toLowerCase().includes(q)) ||
+      (p.rd && p.rd.toLowerCase().includes(q)) ||
+      (p.gm && p.gm.toLowerCase().includes(q)) ||
+      (p.state && p.state.toLowerCase().includes(q))
+    ).slice(0, 8);
+    
+    let dropdown = document.getElementById('searchSuggestions');
+    if (!dropdown) {
+      dropdown = document.createElement('div');
+      dropdown.id = 'searchSuggestions';
+      dropdown.className = 'search-suggestions';
+      const wrapper = document.querySelector('.search-wrapper');
+      if (wrapper) wrapper.appendChild(dropdown);
+    }
+    
+    if (matches.length === 0) {
+      dropdown.innerHTML = `<div class="search-suggestion search-suggestion--empty">No matches found</div>`;
+    } else {
+      dropdown.innerHTML = matches.map(p => `
+        <div class="search-suggestion" data-property="${p.name}">
+          <span class="search-suggestion__name">${p.name}</span>
+          <span class="search-suggestion__meta">${p.city}, ${p.state} • ${p.rd}</span>
+        </div>
+      `).join('');
+    }
+    dropdown.style.display = 'block';
+  }
+
+  /**
+   * Hide search suggestions dropdown
+   */
+  hideSearchSuggestions() {
+    const dropdown = document.getElementById('searchSuggestions');
+    if (dropdown) dropdown.style.display = 'none';
+  }
+
   /**
    * Show Exec. Report Modal
    */
