@@ -918,22 +918,41 @@ class App {
     document.addEventListener('click', (e) => {
       const toggleBtn = e.target.closest('[data-action="toggle-status"]');
       if (toggleBtn) {
+        e.preventDefault();
+        e.stopPropagation();
+        
         const card = toggleBtn.closest('.action-item');
+        if (!card) {
+          console.error('Status toggle: Could not find parent .action-item');
+          return;
+        }
+        
         const actionId = card.dataset.actionId;
+        if (!actionId) {
+          console.error('Status toggle: No actionId found on card');
+          return;
+        }
+        
         const actions = getActionItems();
         const item = actions.items.find(i => i.id === actionId);
         
-        if (item) {
-          // Cycle: open -> in_progress -> complete -> open
-          const statusOrder = ['open', 'in_progress', 'complete'];
-          const currentIndex = statusOrder.indexOf(item.status);
-          const nextStatus = statusOrder[(currentIndex + 1) % statusOrder.length];
-          actions.update(actionId, { status: nextStatus });
-          
-          // Refresh
-          const propertyId = item.propertyId;
-          this.refreshActionItems(propertyId);
+        if (!item) {
+          console.error('Status toggle: Item not found for id:', actionId);
+          return;
         }
+        
+        // Cycle: open -> in_progress -> complete -> open
+        const statusOrder = ['open', 'in_progress', 'complete'];
+        const currentIndex = statusOrder.indexOf(item.status);
+        const nextStatus = statusOrder[(currentIndex + 1) % statusOrder.length];
+        
+        actions.update(actionId, { status: nextStatus });
+        
+        // Refresh the list
+        this.refreshActionItems(item.propertyId);
+        
+        // Also re-render to update badge count
+        this.render();
       }
     });
 
