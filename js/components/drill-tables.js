@@ -106,7 +106,7 @@ export function generateDelinquencyData(prop, count = 12) {
 }
 
 /**
- * Generate WO SLA drill-in data
+ * Generate Maintenance drill-in data
  */
 export function generateWOSLAData(prop, count = 25) {
   const data = [];
@@ -444,7 +444,7 @@ export function generateTrainingDrillInData(prop) {
 }
 
 /**
- * Generate WO SLA summary by technician
+ * Generate Maintenance summary by technician
  */
 export function generateWOTechnicianData(prop) {
   const TECHNICIANS = ['John Smith', 'Carlos Rodriguez', 'Marcus Taylor', 'Robert Lee', 'Kevin Brown'];

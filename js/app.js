@@ -79,7 +79,7 @@ const METRIC_INFO = {
   leased: { title: 'Leased %', desc: 'Signed leases (current + future) / total units' },
   leadToTour: { title: 'Lead→Tour Conversion', desc: 'Tours / online leads (clicks). Measures marketing effectiveness.' },
   delinq: { title: 'Delinquency % (>30 Days)', desc: 'Outstanding balances >30 days / total potential rent' },
-  woSla: { title: 'Work Order SLA %', desc: 'Work orders completed within SLA timeframe' },
+  woSla: { title: 'Maintenance On-Time %', desc: 'Work orders completed within target timeframe' },
   mtdClosing: { title: 'MTD Closing Ratio', desc: 'Leases signed / total tours. Capped at 100% display.' },
   renewalRatio: { title: 'Renewal Ratio', desc: 'Renewals / expiring leases' },
   googleStars: { title: 'Google Rating', desc: 'Average Google review rating' },
@@ -101,7 +101,7 @@ const COLUMN_DEFS = {
   leased: { label: 'Leased%', default: true },
   leadToTour: { label: 'Lead→Tour', default: true },
   delinq: { label: 'Delinq%', default: true },
-  woSla: { label: 'WO SLA%', default: true },
+  woSla: { label: 'Maint %', default: true },
   mtdClosing: { label: 'Closing%', default: true },
   renewalRatio: { label: 'Renewal%', default: true },
   googleStars: { label: 'Google', default: true },
@@ -303,7 +303,7 @@ class App {
     // Check if this is an on-campus property
     const prop = this.properties.find(p => p.name === propName);
     if (prop && prop.type === 'OC') {
-      // On-campus properties: only WO SLA, Training, Satisfaction, NOI are ON by default
+      // On-campus properties: only Maintenance, Training, Satisfaction, NOI are ON by default
       return OC_DEFAULT_ON.includes(metric);
     }
     
@@ -1917,10 +1917,10 @@ class App {
             </div>
           </div>
 
-          <!-- WO SLA -->
+          <!-- Maintenance On-Time -->
           <div class="drill-card drill-card--chart" data-metric="woSla" data-prop="${propId}">
             <div class="drill-card__header">
-              <h4>Work Order SLA</h4>
+              <h4>Maintenance On-Time</h4>
               <div class="view-toggle">
                 <button class="view-toggle__btn view-toggle__btn--active" data-view="graph">Graph</button>
                 <button class="view-toggle__btn" data-view="table">Table</button>
@@ -2294,7 +2294,7 @@ class App {
                 <tr><td>Physical Occupancy</td><td>≥ 93%</td><td>88-92.99%</td><td>&lt; 88%</td></tr>
                 <tr><td>Leased %</td><td>≥ 95%</td><td>90-94.99%</td><td>&lt; 90%</td></tr>
                 <tr><td>Delinquency</td><td>≤ 0.5%</td><td>0.51-2%</td><td>&gt; 2%</td></tr>
-                <tr><td>WO SLA %</td><td>≥ 95%</td><td>88-94.99%</td><td>&lt; 88%</td></tr>
+                <tr><td>Maintenance On-Time</td><td>≥ 95%</td><td>88-94.99%</td><td>&lt; 88%</td></tr>
                 <tr><td>Closing Ratio</td><td>≥ 40%</td><td>28-39.99%</td><td>&lt; 28%</td></tr>
                 <tr><td>Renewal Ratio</td><td>≥ 55%</td><td>48-54.99%</td><td>&lt; 48%</td></tr>
               </tbody>
