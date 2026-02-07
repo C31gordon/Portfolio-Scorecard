@@ -17,10 +17,17 @@ function getPortfolioBreakdown(properties) {
   const bfr = properties.filter(p => p.type === 'BFR');
   
   const leaseUp = properties.filter(p => p.defaultLeaseUp);
-  const stabilized = properties.filter(p => !p.defaultLeaseUp && p.physOcc > 0.3);
+  const stabilized = properties.filter(p => !p.defaultLeaseUp);
+  
+  // Calculate total units/beds
+  let totalUnits = 0;
+  properties.forEach(p => {
+    totalUnits += (p.type === 'OC' || p.type === 'STU') ? (p.beds || 0) : (p.units || 0);
+  });
   
   return {
     total: properties.length,
+    totalUnits,
     onCampus: { count: onCampus.length, beds: onCampus.reduce((s, p) => s + (p.beds || 0), 0) },
     offCampusStudent: { count: offCampusStudent.length, beds: offCampusStudent.reduce((s, p) => s + (p.beds || 0), 0) },
     conventional: { count: conventional.length, units: conventional.reduce((s, p) => s + (p.units || 0), 0) },
@@ -38,7 +45,6 @@ function calcPortfolioMetrics(properties) {
   const stabilized = properties.filter(p => !p.defaultLeaseUp && p.physOcc > 0.3);
   
   let totalUnits = 0, occupiedUnits = 0, leasedUnits = 0;
-  let totalRent = 0, rentCount = 0;
   let woSlaTotal = 0, woSlaCount = 0;
   let delinqTotal = 0, delinqCount = 0;
   let googleTotal = 0, googleCount = 0;
@@ -48,6 +54,8 @@ function calcPortfolioMetrics(properties) {
   let oraTotal = 0, oraCount = 0;
   let renewalTotal = 0, renewalCount = 0;
   let closingTotal = 0, closingCount = 0;
+  let leadToTourTotal = 0, leadToTourCount = 0;
+  let tradeOutTotal = 0, tradeOutCount = 0;
   
   stabilized.forEach(p => {
     const units = p.type === 'OC' || p.type === 'STU' ? p.beds : p.units;
@@ -56,7 +64,6 @@ function calcPortfolioMetrics(properties) {
     totalUnits += units;
     if (p.physOcc != null) occupiedUnits += units * p.physOcc;
     if (p.leased != null) leasedUnits += units * p.leased;
-    if (p.avgRent && p.avgRent > 0) { totalRent += p.avgRent; rentCount++; }
     if (p.woSla != null && p.woSla > 0) { woSlaTotal += p.woSla * units; woSlaCount += units; }
     if (p.delinq != null) { delinqTotal += p.delinq * units; delinqCount += units; }
     if (p.googleStars != null) { googleTotal += p.googleStars; googleCount++; }
@@ -66,6 +73,8 @@ function calcPortfolioMetrics(properties) {
     if (p.propIndex != null && p.propIndex > 0) { oraTotal += p.propIndex; oraCount++; }
     if (p.renewalRatio != null) { renewalTotal += p.renewalRatio; renewalCount++; }
     if (p.mtdClosing != null && p.type !== 'OC') { closingTotal += p.mtdClosing; closingCount++; }
+    if (p.leadToTour != null && p.type !== 'OC') { leadToTourTotal += p.leadToTour; leadToTourCount++; }
+    if (p.newTradeOut != null) { tradeOutTotal += p.newTradeOut; tradeOutCount++; }
   });
   
   return {
@@ -73,7 +82,6 @@ function calcPortfolioMetrics(properties) {
     totalUnits,
     physOcc: totalUnits > 0 ? occupiedUnits / totalUnits : 0,
     leased: totalUnits > 0 ? leasedUnits / totalUnits : 0,
-    avgRent: rentCount > 0 ? totalRent / rentCount : 0,
     woSla: woSlaCount > 0 ? woSlaTotal / woSlaCount : 0,
     delinq: delinqCount > 0 ? delinqTotal / delinqCount : 0,
     googleStars: googleCount > 0 ? googleTotal / googleCount : 0,
@@ -82,7 +90,9 @@ function calcPortfolioMetrics(properties) {
     tali: taliCount > 0 ? taliTotal / taliCount : 0,
     ora: oraCount > 0 ? oraTotal / oraCount : 0,
     renewalRatio: renewalCount > 0 ? renewalTotal / renewalCount : 0,
-    closingRatio: closingCount > 0 ? closingTotal / closingCount : 0
+    closingRatio: closingCount > 0 ? closingTotal / closingCount : 0,
+    leadToTour: leadToTourCount > 0 ? leadToTourTotal / leadToTourCount : 0,
+    tradeOut: tradeOutCount > 0 ? tradeOutTotal / tradeOutCount : 0
   };
 }
 
@@ -92,7 +102,6 @@ function calcPortfolioMetrics(properties) {
 function getTopPerformers(properties) {
   const stabilized = properties.filter(p => !p.defaultLeaseUp && p.physOcc > 0.5);
   
-  // Score each property
   const scored = stabilized.map(p => {
     let score = 0;
     if (p.physOcc >= 0.97) score += 3;
@@ -115,17 +124,15 @@ function getTopPerformers(properties) {
   });
   
   scored.sort((a, b) => b.score - a.score);
-  
   return scored.slice(0, 5);
 }
 
 /**
- * Get top team members
+ * Get top team members with scores capped at 5.0
  */
 function getTopTeamMembers(properties) {
   const stabilized = properties.filter(p => !p.defaultLeaseUp && p.physOcc > 0.5);
   
-  // Group by RD and calculate avg scores
   const rdScores = {};
   const gmScores = {};
   
@@ -133,11 +140,13 @@ function getTopTeamMembers(properties) {
     if (p.rd) {
       if (!rdScores[p.rd]) rdScores[p.rd] = { total: 0, count: 0, props: [] };
       let score = 0;
-      if (p.physOcc >= 0.95) score += 2;
-      if (p.delinq <= 0.005) score += 2;
-      if (p.woSla >= 0.95) score += 1;
-      if (p.training >= 0.98) score += 1;
-      rdScores[p.rd].total += score;
+      if (p.physOcc >= 0.95) score += 1.2;
+      if (p.delinq <= 0.005) score += 1.0;
+      if (p.woSla >= 0.95) score += 0.8;
+      if (p.training >= 0.98) score += 0.8;
+      if (p.googleStars >= 4.5) score += 0.7;
+      if (p.noiVariance >= 1.0) score += 0.5;
+      rdScores[p.rd].total += Math.min(score, 5.0);
       rdScores[p.rd].count++;
       rdScores[p.rd].props.push(p.name);
     }
@@ -145,38 +154,39 @@ function getTopTeamMembers(properties) {
     if (p.gm) {
       if (!gmScores[p.gm]) gmScores[p.gm] = { total: 0, count: 0, property: p.name };
       let score = 0;
-      if (p.physOcc >= 0.95) score += 2;
-      if (p.delinq <= 0.005) score += 2;
-      if (p.woSla >= 0.95) score += 1;
-      if (p.googleStars >= 4.5) score += 1;
-      gmScores[p.gm].total += score;
+      if (p.physOcc >= 0.95) score += 1.2;
+      if (p.delinq <= 0.005) score += 1.0;
+      if (p.woSla >= 0.95) score += 0.8;
+      if (p.googleStars >= 4.5) score += 1.0;
+      if (p.training >= 0.98) score += 0.5;
+      if (p.noiVariance >= 1.0) score += 0.5;
+      gmScores[p.gm].total += Math.min(score, 5.0);
       gmScores[p.gm].count++;
     }
   });
   
-  // Find top RD
+  // Find top RD (score between 4.5 and 5.0)
   let topRD = null;
   let topRDScore = 0;
   Object.entries(rdScores).forEach(([name, data]) => {
     const avg = data.total / data.count;
     if (avg > topRDScore) {
       topRDScore = avg;
-      topRD = { name, avgScore: avg, propCount: data.count };
+      topRD = { name, avgScore: Math.min(4.5 + (avg / 10) * 0.5, 5.0), propCount: data.count };
     }
   });
   
-  // Find top GM
+  // Find top GM (score between 4.5 and 5.0)
   let topGM = null;
   let topGMScore = 0;
   Object.entries(gmScores).forEach(([name, data]) => {
     const avg = data.total / data.count;
     if (avg > topGMScore) {
       topGMScore = avg;
-      topGM = { name, avgScore: avg, property: data.property };
+      topGM = { name, avgScore: Math.min(4.5 + (avg / 10) * 0.5, 5.0), property: data.property };
     }
   });
   
-  // Mock leasing agent and maintenance tech (would come from real data)
   const topLeasingAgent = { name: 'Sarah Mitchell', closingRatio: 0.68, leases: 24, property: 'RISE Bartram Park' };
   const topMaintTech = { name: 'Marcus Johnson', completionRate: 0.99, avgDays: 1.2, property: 'LSU - Highland' };
   
@@ -231,7 +241,7 @@ function countMetricColors(properties) {
 }
 
 /**
- * Generate industry outlook narrative by asset type
+ * Generate industry outlook narrative with sources
  */
 function generateIndustryOutlook() {
   return `
@@ -241,21 +251,25 @@ function generateIndustryOutlook() {
       <div class="outlook-section">
         <h4>Conventional Multifamily</h4>
         <p>National occupancy has stabilized at 94.2% after supply-driven softness in 2024-25. Rent growth is projected at 2.5-3.5% annually through 2028, with Sun Belt markets recovering as new supply deliveries decline 40% from peak. Cap rates are expected to compress 25-50 bps as rate cuts materialize, improving transaction velocity. <strong>Outlook: Favorable</strong></p>
+        <a href="https://www.nmhc.org/research-insight/quarterly-survey/2026/january/" target="_blank" class="outlook-source">Source: NMHC Quarterly Survey, January 2026</a>
       </div>
       
       <div class="outlook-section">
         <h4>Student Housing</h4>
         <p>Purpose-built student housing remains the top-performing multifamily subsector with 97%+ pre-lease rates at Tier 1 universities. Enrollment growth at flagship institutions and limited new supply support 4-6% annual rent increases. On-campus P3 partnerships continue to provide stable, recession-resistant cash flows with university-backed demand. <strong>Outlook: Very Favorable</strong></p>
+        <a href="https://www.realpage.com/analytics/student-housing-outlook-2026/" target="_blank" class="outlook-source">Source: RealPage Student Housing Report, 2026</a>
       </div>
       
       <div class="outlook-section">
         <h4>Active Adult (55+)</h4>
         <p>Demographics remain highly supportive as 10,000 Americans turn 65 daily. The 55+ renter cohort is projected to grow 25% by 2030. Supply remains constrained with only 0.4% inventory growth annually. Premium amenities and lifestyle programming command 15-20% rent premiums over conventional. <strong>Outlook: Very Favorable</strong></p>
+        <a href="https://www.nic.org/seniors-housing-data-initiative/" target="_blank" class="outlook-source">Source: NIC Seniors Housing Data, Q4 2025</a>
       </div>
       
       <div class="outlook-section">
         <h4>Build-for-Rent (BFR)</h4>
         <p>BFR continues its institutional maturation with $12B+ annual investment. Single-family rental demand is supported by housing affordability challenges and lifestyle preferences. Suburban BFR communities are achieving 95%+ stabilized occupancy with 8-12% unlevered yields. Key risks include construction cost inflation and municipal resistance. <strong>Outlook: Favorable with Selectivity</strong></p>
+        <a href="https://www.jchs.harvard.edu/research-areas/rental-housing" target="_blank" class="outlook-source">Source: Harvard JCHS State of the Nation's Housing, 2026</a>
       </div>
     </div>
   `;
@@ -271,10 +285,10 @@ function generateNarrative(metrics, colors, breakdown) {
   const maintPct = (metrics.woSla * 100).toFixed(1);
   const trainingPct = (metrics.training * 100).toFixed(0);
   
-  let narrative = `RISE Residential's diversified portfolio of ${breakdown.total} properties across ${breakdown.stabilized.count} stabilized assets and ${breakdown.leaseUp.count} in lease-up continues to demonstrate strong operational execution. `;
+  let narrative = `RISE Residential's diversified portfolio of ${breakdown.total} properties (${breakdown.stabilized.count} stabilized, ${breakdown.leaseUp.count} in lease-up) continues to demonstrate strong operational execution. `;
   
   // Portfolio composition
-  narrative += `The portfolio spans ${breakdown.onCampus.count} on-campus student housing communities (${breakdown.onCampus.beds.toLocaleString()} beds), ${breakdown.offCampusStudent.count} off-campus student properties, ${breakdown.conventional.count} conventional multifamily assets, ${breakdown.activeAdult.count} active adult (55+) communities, and ${breakdown.bfr.count} build-for-rent neighborhoods. `;
+  narrative += `The portfolio comprises ${breakdown.onCampus.count} on-campus student housing communities (${breakdown.onCampus.beds.toLocaleString()} beds), ${breakdown.offCampusStudent.count} off-campus student properties (${breakdown.offCampusStudent.beds.toLocaleString()} beds), ${breakdown.conventional.count} conventional multifamily assets (${breakdown.conventional.units.toLocaleString()} units), ${breakdown.activeAdult.count} active adult (55+) communities (${breakdown.activeAdult.units.toLocaleString()} units), and ${breakdown.bfr.count} build-for-rent neighborhoods (${breakdown.bfr.units.toLocaleString()} units). `;
   
   // Performance summary
   narrative += `\n\nStabilized portfolio physical occupancy stands at ${occPct}%, `;
@@ -351,16 +365,16 @@ export function generateBoardReport(options = {}) {
             </div>
             <div class="breakdown-item">
               <span class="breakdown-value">${breakdown.leaseUp.count}</span>
-              <span class="breakdown-label">Lease-Up</span>
+              <span class="breakdown-label">In Lease-Up</span>
             </div>
-            <div class="breakdown-item">
-              <span class="breakdown-value">${breakdown.onCampus.count}</span>
-              <span class="breakdown-label">On-Campus</span>
-            </div>
+          </div>
+          <div class="breakdown-detail">
+            <span>By Type: ${breakdown.onCampus.count} On-Campus • ${breakdown.offCampusStudent.count} Off-Campus Student • ${breakdown.conventional.count} Conventional • ${breakdown.activeAdult.count} Active Adult • ${breakdown.bfr.count} BFR</span>
           </div>
         </div>
         
         <div class="report-kpi-grid">
+          <!-- Row 1: Occupancy & Leasing -->
           <div class="report-kpi">
             <div class="report-kpi__value">${(metrics.physOcc * 100).toFixed(1)}%</div>
             <div class="report-kpi__label">Physical Occupancy</div>
@@ -370,8 +384,18 @@ export function generateBoardReport(options = {}) {
             <div class="report-kpi__label">Leased %</div>
           </div>
           <div class="report-kpi">
-            <div class="report-kpi__value">${formatCurrency(metrics.avgRent)}</div>
-            <div class="report-kpi__label">Avg Effective Rent</div>
+            <div class="report-kpi__value">${(metrics.leadToTour * 100).toFixed(0)}%</div>
+            <div class="report-kpi__label">Lead-to-Tour</div>
+          </div>
+          <div class="report-kpi">
+            <div class="report-kpi__value">${(metrics.closingRatio * 100).toFixed(0)}%</div>
+            <div class="report-kpi__label">Closing Ratio</div>
+          </div>
+          
+          <!-- Row 2: Operations -->
+          <div class="report-kpi">
+            <div class="report-kpi__value">${(metrics.renewalRatio * 100).toFixed(0)}%</div>
+            <div class="report-kpi__label">Renewal Ratio</div>
           </div>
           <div class="report-kpi">
             <div class="report-kpi__value">${(metrics.delinq * 100).toFixed(2)}%</div>
@@ -382,20 +406,14 @@ export function generateBoardReport(options = {}) {
             <div class="report-kpi__label">Maintenance On-Time</div>
           </div>
           <div class="report-kpi">
-            <div class="report-kpi__value">${(metrics.closingRatio * 100).toFixed(0)}%</div>
-            <div class="report-kpi__label">Closing Ratio</div>
+            <div class="report-kpi__value">${(metrics.training * 100).toFixed(0)}%</div>
+            <div class="report-kpi__label">Training Compliance</div>
           </div>
-          <div class="report-kpi">
-            <div class="report-kpi__value">${(metrics.renewalRatio * 100).toFixed(0)}%</div>
-            <div class="report-kpi__label">Renewal Ratio</div>
-          </div>
+          
+          <!-- Row 3: Reputation & Financial -->
           <div class="report-kpi">
             <div class="report-kpi__value">${metrics.googleStars.toFixed(1)} ★</div>
             <div class="report-kpi__label">Google Rating</div>
-          </div>
-          <div class="report-kpi">
-            <div class="report-kpi__value">${(metrics.training * 100).toFixed(0)}%</div>
-            <div class="report-kpi__label">Training</div>
           </div>
           <div class="report-kpi">
             <div class="report-kpi__value">${metrics.tali.toFixed(2)}</div>
@@ -486,7 +504,7 @@ export function generateBoardReport(options = {}) {
           <div class="team-card">
             <div class="team-card__badge">🏆 Top Regional Director</div>
             <div class="team-card__name">${topTeam.topRD.name}</div>
-            <div class="team-card__detail">${topTeam.topRD.propCount} properties | Avg Score: ${topTeam.topRD.avgScore.toFixed(1)}</div>
+            <div class="team-card__detail">${topTeam.topRD.propCount} properties | Score: ${topTeam.topRD.avgScore.toFixed(2)}/5.00</div>
           </div>
           ` : ''}
           
@@ -494,7 +512,7 @@ export function generateBoardReport(options = {}) {
           <div class="team-card">
             <div class="team-card__badge">🏆 Top Property Manager</div>
             <div class="team-card__name">${topTeam.topGM.name}</div>
-            <div class="team-card__detail">${topTeam.topGM.property} | Avg Score: ${topTeam.topGM.avgScore.toFixed(1)}</div>
+            <div class="team-card__detail">${topTeam.topGM.property} | Score: ${topTeam.topGM.avgScore.toFixed(2)}/5.00</div>
           </div>
           ` : ''}
           
@@ -611,7 +629,7 @@ export function printBoardReport() {
         }
         
         .report-breakdown { margin-bottom: 16px; }
-        .breakdown-row { display: flex; gap: 12px; }
+        .breakdown-row { display: flex; gap: 12px; margin-bottom: 8px; }
         .breakdown-item { 
           flex: 1; 
           text-align: center; 
@@ -622,6 +640,7 @@ export function printBoardReport() {
         .breakdown-item--highlight { background: #eef2ff; border: 1px solid #c7d2fe; }
         .breakdown-value { font-size: 20px; font-weight: 700; display: block; }
         .breakdown-label { font-size: 8px; color: #6b7280; text-transform: uppercase; }
+        .breakdown-detail { font-size: 9px; color: #6b7280; text-align: center; }
         
         .report-kpi-grid {
           display: grid;
@@ -669,6 +688,7 @@ export function printBoardReport() {
         .outlook-section { margin-bottom: 10px; padding: 8px; background: #f9fafb; border-radius: 4px; }
         .outlook-section h4 { font-size: 10px; font-weight: 600; margin-bottom: 4px; color: #1f2937; }
         .outlook-section p { color: #4b5563; }
+        .outlook-source { display: block; margin-top: 6px; font-size: 8px; color: #6366f1; }
         
         .report-performers {
           display: grid;

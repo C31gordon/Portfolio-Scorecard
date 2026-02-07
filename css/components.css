@@ -2827,6 +2827,12 @@
   display: flex;
   flex-direction: column;
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  transition: max-width 0.3s ease, max-height 0.3s ease;
+}
+
+.report-modal--expanded {
+  max-width: 95vw;
+  max-height: 95vh;
 }
 
 .report-modal__header {
@@ -3320,4 +3326,24 @@
   .report-kpi-grid {
     grid-template-columns: repeat(2, 1fr);
   }
+}
+
+/* ===== EXEC REPORT FIXES ===== */
+.breakdown-detail {
+  font-size: var(--text-xs);
+  color: #6b7280;
+  text-align: center;
+  margin-top: var(--space-2);
+}
+
+.outlook-source {
+  display: block;
+  margin-top: var(--space-2);
+  font-size: var(--text-xs);
+  color: var(--primary);
+  text-decoration: none;
+}
+
+.outlook-source:hover {
+  text-decoration: underline;
 }

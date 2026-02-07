@@ -652,6 +652,18 @@ class App {
       }
     });
 
+    // Exec. Report - expand/collapse modal
+    document.addEventListener('click', (e) => {
+      const expandBtn = e.target.closest('[data-action="expand-report"]');
+      if (expandBtn) {
+        const modal = document.querySelector('.report-modal');
+        if (modal) {
+          modal.classList.toggle('report-modal--expanded');
+          expandBtn.textContent = modal.classList.contains('report-modal--expanded') ? '⛶ Collapse' : '⛶ Expand';
+        }
+      }
+    });
+
     // Print global
     document.addEventListener('click', (e) => {
       if (e.target.closest('[data-action="print"]')) {
@@ -2198,6 +2210,9 @@ class App {
         <div class="report-modal__header">
           <h2>Exec. Report Preview</h2>
           <div class="report-modal__actions">
+            <button class="btn btn--secondary btn--sm" data-action="expand-report" title="Expand/Collapse">
+              ⛶ Expand
+            </button>
             <button class="btn btn--primary btn--sm" data-action="print-board-report">
               🖨️ Print / Save PDF
             </button>
