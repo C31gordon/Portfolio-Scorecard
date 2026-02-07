@@ -17,6 +17,7 @@ import { generatePhysOccData, generateLeasedData, generateLeadToTourData, genera
 import { Charts } from './components/charts.js';
 import { DataTable } from './components/data-table.js';
 import { getActionItems, renderActionItemsList, renderActionForm } from './components/action-items.js';
+import { generateBoardReport, printBoardReport } from './components/board-report.js';
 
 // Metric keys for leasing properties
 const L_KEYS = ['physOcc','leased','leadToTour','delinq','woSla','mtdClosing','renewalRatio','googleStars','training','tali','propIndex','noiVariance'];
@@ -629,6 +630,28 @@ class App {
       }
     });
 
+    // Board Report - show modal
+    document.addEventListener('click', (e) => {
+      if (e.target.closest('[data-action="show-board-report"]')) {
+        this.showBoardReportModal();
+      }
+    });
+
+    // Board Report - print/export
+    document.addEventListener('click', (e) => {
+      if (e.target.closest('[data-action="print-board-report"]')) {
+        printBoardReport();
+      }
+    });
+
+    // Board Report - close modal
+    document.addEventListener('click', (e) => {
+      if (e.target.closest('[data-action="close-board-report"]') ||
+          (e.target.closest('.report-modal-overlay') && !e.target.closest('.report-modal'))) {
+        document.querySelector('.report-modal-overlay')?.remove();
+      }
+    });
+
     // Print global
     document.addEventListener('click', (e) => {
       if (e.target.closest('[data-action="print"]')) {
@@ -1134,6 +1157,9 @@ class App {
           <input type="date" class="date-input" data-action="custom-date-end" value="${this.customDateEnd || ''}" title="End Date">
           <button class="btn btn--primary btn--sm" data-action="apply-custom-date" title="Apply custom date range">Apply</button>
         </div>
+        <button class="btn btn--primary btn--sm" data-action="show-board-report" title="Generate Board Report">
+          📊 Board Report
+        </button>
         <button class="btn btn--ghost btn--sm" data-action="show-scoring-guide" title="How scores are calculated">
           ❓ Legend
         </button>
@@ -2159,6 +2185,36 @@ class App {
     this.loadedDrillData[key] = true;
   }
   
+  /**
+   * Show Board Report Modal
+   */
+  showBoardReportModal() {
+    const reportHtml = generateBoardReport();
+    
+    const modal = document.createElement('div');
+    modal.className = 'report-modal-overlay';
+    modal.innerHTML = `
+      <div class="report-modal">
+        <div class="report-modal__header">
+          <h2>Board Report Preview</h2>
+          <div class="report-modal__actions">
+            <button class="btn btn--primary btn--sm" data-action="print-board-report">
+              🖨️ Print / Save PDF
+            </button>
+            <button class="btn btn--ghost btn--sm" data-action="close-board-report">
+              ✕ Close
+            </button>
+          </div>
+        </div>
+        <div class="report-modal__body">
+          ${reportHtml}
+        </div>
+      </div>
+    `;
+    
+    document.body.appendChild(modal);
+  }
+
   /**
    * Refresh action items list for a property
    */
