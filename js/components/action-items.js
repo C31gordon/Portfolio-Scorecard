@@ -212,11 +212,20 @@ export function renderActionItem(item, options = {}) {
   const statusClass = `status--${item.status}`;
   const isOverdue = item.dueDate && new Date(item.dueDate) < new Date() && item.status !== 'complete';
   
+  // Status display with icon and text
+  const statusDisplay = {
+    'open': { icon: '○', text: 'Open', class: 'status--open' },
+    'in_progress': { icon: '◐', text: 'In Progress', class: 'status--in-progress' },
+    'complete': { icon: '✓', text: 'Completed', class: 'status--complete' }
+  };
+  const status = statusDisplay[item.status] || statusDisplay['open'];
+  
   return `
     <div class="action-item ${statusClass} ${priorityClass} ${isOverdue ? 'action-item--overdue' : ''}" data-action-id="${item.id}">
       <div class="action-item__header">
-        <button class="action-item__status-toggle" data-action="toggle-status" title="Toggle status">
-          ${item.status === 'complete' ? '✓' : item.status === 'in_progress' ? '◐' : '○'}
+        <button class="action-item__status-toggle ${status.class}" data-action="toggle-status" title="Click to change status">
+          <span class="status-icon">${status.icon}</span>
+          <span class="status-text">${status.text}</span>
         </button>
         <span class="action-item__title">${item.title}</span>
         <span class="action-item__priority" title="${item.priority} priority">${item.priority === 'high' ? '🔴' : item.priority === 'medium' ? '🟡' : '🟢'}</span>
