@@ -450,6 +450,72 @@ class App {
     return totalWeight > 0 ? totalScore / totalWeight : null;
   }
 
+  /**
+   * Get properties with 2+ red metrics (Red Flags)
+   */
+  getRedFlagProperties(properties) {
+    const redFlags = [];
+    
+    properties.forEach(prop => {
+      if (prop.defaultLeaseUp) return; // Skip lease-up properties
+      
+      let redCount = 0;
+      const redMetrics = [];
+      
+      // Check each metric against thresholds
+      const type = prop.type === 'OC' ? 'STU' : prop.type;
+      const thresholds = THRESHOLDS[type] || THRESHOLDS['CON'];
+      
+      // Physical Occupancy
+      if (prop.physOcc != null && prop.physOcc < (thresholds.physOcc?.yellow || 0.88)) {
+        redCount++;
+        redMetrics.push({ metric: 'Physical Occ', value: `${(prop.physOcc * 100).toFixed(1)}%` });
+      }
+      
+      // Delinquency (inverse - higher is worse)
+      if (prop.delinq != null && prop.delinq > (thresholds.delinq?.yellow || 0.02)) {
+        redCount++;
+        redMetrics.push({ metric: 'Delinquency', value: `${(prop.delinq * 100).toFixed(2)}%` });
+      }
+      
+      // Maintenance On-Time
+      if (prop.woSla != null && prop.woSla > 0 && prop.woSla < (thresholds.woSla?.yellow || 0.88)) {
+        redCount++;
+        redMetrics.push({ metric: 'Maintenance', value: `${(prop.woSla * 100).toFixed(1)}%` });
+      }
+      
+      // Training
+      if (prop.training != null && prop.training < 0.90) {
+        redCount++;
+        redMetrics.push({ metric: 'Training', value: `${(prop.training * 100).toFixed(0)}%` });
+      }
+      
+      // Google Rating
+      if (prop.googleStars != null && prop.googleStars < 3.8) {
+        redCount++;
+        redMetrics.push({ metric: 'Google Rating', value: `${prop.googleStars.toFixed(1)}★` });
+      }
+      
+      // NOI Variance
+      if (prop.noiVariance != null && prop.noiVariance < 0.90) {
+        redCount++;
+        redMetrics.push({ metric: 'NOI Variance', value: `${(prop.noiVariance * 100).toFixed(1)}%` });
+      }
+      
+      if (redCount >= 2) {
+        redFlags.push({
+          property: prop,
+          redCount,
+          redMetrics
+        });
+      }
+    });
+    
+    // Sort by red count descending
+    redFlags.sort((a, b) => b.redCount - a.redCount);
+    return redFlags;
+  }
+
   setupEventListeners() {
     // Theme toggle
     document.addEventListener('click', (e) => {
@@ -661,6 +727,33 @@ class App {
           modal.classList.toggle('report-modal--expanded');
           expandBtn.textContent = modal.classList.contains('report-modal--expanded') ? '⛶ Collapse' : '⛶ Expand';
         }
+      }
+    });
+
+    // Red Flag Alert - Jump to property
+    document.addEventListener('click', (e) => {
+      const tag = e.target.closest('[data-jump-to]');
+      if (tag) {
+        const propName = tag.dataset.jumpTo;
+        // Expand the property drill-down
+        this.expandedProperty = propName;
+        this.render();
+        // Scroll to property row
+        setTimeout(() => {
+          const row = document.querySelector(`[data-drill-property="${propName}"]`);
+          if (row) {
+            row.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            row.closest('tr')?.classList.add('highlight-flash');
+            setTimeout(() => row.closest('tr')?.classList.remove('highlight-flash'), 2000);
+          }
+        }, 100);
+      }
+    });
+
+    // Red Flag Alert - Dismiss
+    document.addEventListener('click', (e) => {
+      if (e.target.closest('[data-action="dismiss-red-flag"]')) {
+        document.querySelector('.red-flag-alert')?.remove();
       }
     });
 
@@ -1390,8 +1483,25 @@ class App {
       `;
     }
 
+    // Get red flag properties
+    const redFlagProps = this.getRedFlagProperties(this.properties.filter(p => !p.defaultLeaseUp));
+    const redFlagAlertHTML = redFlagProps.length > 0 ? `
+      <div class="red-flag-alert">
+        <div class="red-flag-alert__icon">⚠️</div>
+        <div class="red-flag-alert__content">
+          <strong>${redFlagProps.length} ${redFlagProps.length === 1 ? 'property needs' : 'properties need'} attention</strong>
+          <span class="red-flag-alert__list">
+            ${redFlagProps.slice(0, 3).map(rf => `<span class="red-flag-tag" data-jump-to="${rf.property.name}">${rf.property.name} (${rf.redCount} issues)</span>`).join('')}
+            ${redFlagProps.length > 3 ? `<span class="red-flag-more">+${redFlagProps.length - 3} more</span>` : ''}
+          </span>
+        </div>
+        <button class="red-flag-alert__close" data-action="dismiss-red-flag" title="Dismiss">×</button>
+      </div>
+    ` : '';
+
     main.innerHTML = `
       <div class="dashboard">
+        ${redFlagAlertHTML}
         ${summaryHTML}
 
         <!-- Tabs -->
