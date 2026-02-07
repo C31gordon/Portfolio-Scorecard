@@ -18,6 +18,7 @@ import { Charts } from './components/charts.js';
 import { DataTable } from './components/data-table.js';
 import { getActionItems, renderActionItemsList, renderActionForm } from './components/action-items.js';
 import { generateBoardReport, printBoardReport } from './components/board-report.js';
+import { renderInsightsPanel } from './components/ai-insights.js';
 
 // Metric keys for leasing properties
 const L_KEYS = ['physOcc','leased','leadToTour','delinq','woSla','mtdClosing','renewalRatio','googleStars','training','tali','propIndex','noiVariance'];
@@ -2284,6 +2285,11 @@ class App {
               <div class="drill-card__drillin" id="drillin_woSla_${propId}"></div>
             </div>
           </div>
+        </div>
+
+        <!-- AI Insights Section -->
+        <div class="drill-section drill-section--insights">
+          ${renderInsightsPanel(prop)}
         </div>
 
         <!-- Action Items Section -->
