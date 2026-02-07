@@ -171,11 +171,55 @@ class App {
     this.searchDebounce = null;
     this.customDateStart = null;
     this.customDateEnd = null;
+    this.favorites = this.loadFavorites(); // Load favorites from localStorage
     
     // Initialize default column visibility
     Object.keys(COLUMN_DEFS).forEach(key => {
       this.visibleColumns[key] = COLUMN_DEFS[key].default;
     });
+  }
+
+  /**
+   * Load favorites from localStorage
+   */
+  loadFavorites() {
+    try {
+      const saved = localStorage.getItem('scorecard_favorites');
+      return saved ? JSON.parse(saved) : [];
+    } catch (e) {
+      return [];
+    }
+  }
+
+  /**
+   * Save favorites to localStorage
+   */
+  saveFavorites() {
+    try {
+      localStorage.setItem('scorecard_favorites', JSON.stringify(this.favorites));
+    } catch (e) {
+      console.error('Failed to save favorites:', e);
+    }
+  }
+
+  /**
+   * Toggle favorite status for a property
+   */
+  toggleFavorite(propName) {
+    const idx = this.favorites.indexOf(propName);
+    if (idx >= 0) {
+      this.favorites.splice(idx, 1);
+    } else {
+      this.favorites.push(propName);
+    }
+    this.saveFavorites();
+  }
+
+  /**
+   * Check if property is a favorite
+   */
+  isFavorite(propName) {
+    return this.favorites.includes(propName);
   }
 
   async init() {
@@ -659,6 +703,17 @@ class App {
     document.addEventListener('click', (e) => {
       if (!e.target.closest('.search-wrapper')) {
         this.hideSearchSuggestions();
+      }
+    });
+
+    // Toggle favorite
+    document.addEventListener('click', (e) => {
+      const favBtn = e.target.closest('[data-toggle-favorite]');
+      if (favBtn) {
+        e.stopPropagation();
+        const propName = favBtn.dataset.toggleFavorite;
+        this.toggleFavorite(propName);
+        this.render();
       }
     });
 
@@ -1650,6 +1705,35 @@ class App {
           </div>
         </div>
 
+        <!-- Favorites Section -->
+        ${this.favorites.length > 0 ? `
+        <div class="favorites-section">
+          <div class="favorites-header">
+            <span class="favorites-title">⭐ Favorites (${this.favorites.length})</span>
+          </div>
+          <div class="favorites-grid">
+            ${this.favorites.map(favName => {
+              const prop = tabProps.find(p => p.name === favName);
+              if (!prop) return '';
+              const score = this.calcPropertyScore(prop);
+              return `
+                <div class="favorite-card" data-drill-property="${prop.name}">
+                  <div class="favorite-card__header">
+                    <span class="favorite-card__name">${prop.name}</span>
+                    <button class="favorite-btn favorite-btn--active favorite-btn--sm" data-toggle-favorite="${prop.name}" title="Remove from favorites">★</button>
+                  </div>
+                  <div class="favorite-card__meta">${prop.city}, ${prop.state} • ${prop.rd}</div>
+                  <div class="favorite-card__metrics">
+                    <span class="fav-metric">Occ: ${prop.physOcc ? (prop.physOcc * 100).toFixed(1) + '%' : '—'}</span>
+                    <span class="fav-metric">Score: <span class="score-pill score-pill--xs score-pill--${this.getScoreClass(score.score)}">${score.score?.toFixed(2) || '—'}</span></span>
+                  </div>
+                </div>
+              `;
+            }).join('')}
+          </div>
+        </div>
+        ` : ''}
+
         <!-- Regional Blocks -->
         <div class="regional-blocks">
           ${Object.keys(byRD).length > 0 
@@ -1726,10 +1810,15 @@ class App {
       ? `<span class="action-count-badge" title="${actionCount} open action${actionCount > 1 ? 's' : ''}">${actionCount}</span>` 
       : '';
 
+    const isFav = this.isFavorite(prop.name);
+    
     let html = `
-      <tr class="${isExpanded ? 'property-row--expanded' : ''}">
+      <tr class="${isExpanded ? 'property-row--expanded' : ''} ${isFav ? 'property-row--favorite' : ''}">
         <td>
           <div class="property-cell">
+            <button class="favorite-btn ${isFav ? 'favorite-btn--active' : ''}" data-toggle-favorite="${prop.name}" title="${isFav ? 'Remove from favorites' : 'Add to favorites'}">
+              ${isFav ? '★' : '☆'}
+            </button>
             <span class="property-name" data-drill-property="${prop.name}">${prop.name} ${actionBadge}<span class="drill-arrow">${isExpanded ? '▼' : '▶'}</span></span>
             <span class="property-city">${prop.city || ''}</span>
             <label class="leaseup-toggle-switch">
