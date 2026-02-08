@@ -183,11 +183,70 @@ class App {
     this.customDateStart = null;
     this.customDateEnd = null;
     this.favorites = this.loadFavorites(); // Load favorites from localStorage
+    this.deferredPrompt = null; // PWA install prompt
+    this.isAppInstalled = false;
     
     // Initialize default column visibility
     Object.keys(COLUMN_DEFS).forEach(key => {
       this.visibleColumns[key] = COLUMN_DEFS[key].default;
     });
+    
+    // PWA: Listen for install prompt
+    this.setupPWAInstall();
+  }
+  
+  /**
+   * Setup PWA install prompt handling
+   */
+  setupPWAInstall() {
+    // Check if already installed
+    if (window.matchMedia('(display-mode: standalone)').matches) {
+      this.isAppInstalled = true;
+    }
+    
+    // Capture the install prompt
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      this.deferredPrompt = e;
+      this.updateInstallButton();
+    });
+    
+    // Handle successful install
+    window.addEventListener('appinstalled', () => {
+      this.isAppInstalled = true;
+      this.deferredPrompt = null;
+      this.updateInstallButton();
+    });
+  }
+  
+  /**
+   * Update install button visibility
+   */
+  updateInstallButton() {
+    const btn = document.querySelector('[data-action="install-pwa"]');
+    if (btn) {
+      if (this.deferredPrompt && !this.isAppInstalled) {
+        btn.style.display = '';
+        btn.classList.add('pwa-install-ready');
+      } else {
+        btn.style.display = 'none';
+      }
+    }
+  }
+  
+  /**
+   * Trigger PWA install prompt
+   */
+  async installPWA() {
+    if (!this.deferredPrompt) return;
+    
+    this.deferredPrompt.prompt();
+    const { outcome } = await this.deferredPrompt.userChoice;
+    
+    if (outcome === 'accepted') {
+      this.deferredPrompt = null;
+    }
+    this.updateInstallButton();
   }
 
   /**
@@ -624,6 +683,13 @@ class App {
       if (e.target.closest('[data-action="toggle-theme"]')) {
         const currentTheme = State.get('theme');
         State.set({ theme: currentTheme === 'dark' ? 'light' : 'dark' });
+      }
+    });
+
+    // PWA Install
+    document.addEventListener('click', (e) => {
+      if (e.target.closest('[data-action="install-pwa"]')) {
+        this.installPWA();
       }
     });
 
@@ -1491,6 +1557,9 @@ class App {
     const modalContainer = document.getElementById('modal-container') || this.createModalContainer();
     modalContainer.innerHTML = this.renderScoringGuide();
     
+    // Update PWA install button visibility
+    this.updateInstallButton();
+    
     // Render charts after DOM update
     setTimeout(() => this.renderCharts(), 50);
   }
@@ -1542,6 +1611,9 @@ class App {
         </button>
         <button class="btn btn--ghost btn--sm" data-action="show-scoring-guide" title="How scores are calculated">
           ❓ Legend
+        </button>
+        <button class="btn btn--secondary btn--sm pwa-install-btn" data-action="install-pwa" title="Install App" style="${this.deferredPrompt && !this.isAppInstalled ? '' : 'display: none'}">
+          📲 Install
         </button>
         <button class="btn btn--secondary btn--icon" data-action="toggle-theme" title="Toggle theme">
           ${theme === 'dark' ? '☀️' : '🌙'}
