@@ -778,16 +778,23 @@ class App {
       }
     });
 
-    // Tab switching - preserve scroll position without visual jump
+    // Tab switching - lock viewport during transition to prevent visual jump
     document.addEventListener('click', (e) => {
       const tab = e.target.closest('[data-tab]');
       if (tab && tab.dataset.tab !== this.activeTab) {
         const scrollY = window.scrollY;
-        const html = document.documentElement;
+        const body = document.body;
         const main = document.getElementById('main');
         
-        // Lock viewport to prevent visual jump
-        html.style.scrollBehavior = 'auto';
+        // Lock the viewport by fixing body position
+        // This completely prevents scroll during re-render
+        body.style.position = 'fixed';
+        body.style.top = `-${scrollY}px`;
+        body.style.left = '0';
+        body.style.right = '0';
+        body.style.overflow = 'hidden';
+        
+        // Also lock main height to prevent content shift
         if (main) {
           main.style.minHeight = main.offsetHeight + 'px';
         }
@@ -795,17 +802,25 @@ class App {
         this.activeTab = tab.dataset.tab;
         this.render();
         
-        // Restore scroll position immediately then clean up
-        window.scrollTo(0, scrollY);
-        
-        // Double rAF ensures DOM has fully settled before cleanup
+        // Unlock viewport after render settles
         requestAnimationFrame(() => {
           requestAnimationFrame(() => {
+            // Remove position lock
+            body.style.position = '';
+            body.style.top = '';
+            body.style.left = '';
+            body.style.right = '';
+            body.style.overflow = '';
+            
+            // Restore scroll position
             window.scrollTo(0, scrollY);
-            if (main) {
-              main.style.minHeight = '';
-            }
-            html.style.scrollBehavior = '';
+            
+            // Clean up min-height after a brief delay
+            setTimeout(() => {
+              if (main) {
+                main.style.minHeight = '';
+              }
+            }, 50);
           });
         });
       }
