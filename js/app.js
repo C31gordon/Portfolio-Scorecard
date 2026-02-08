@@ -18,6 +18,16 @@ import { Charts } from './components/charts.js';
 import { DataTable } from './components/data-table.js';
 import { getActionItems, renderActionItemsList, renderActionForm } from './components/action-items.js';
 import { generateBoardReport, printBoardReport } from './components/board-report.js';
+import { 
+  renderReportsHub, 
+  renderPropertySelector, 
+  generateDailyReport, 
+  generateWeeklyReport, 
+  generateExecutiveReport, 
+  generateInvestorReport,
+  printReport,
+  REPORT_TYPES 
+} from './components/reports-hub.js';
 import { renderInsightsPanel } from './components/ai-insights.js';
 
 // Metric keys for leasing properties
@@ -869,21 +879,113 @@ class App {
       }
     });
 
-    // Exec. Report - show modal
+    // Reports Hub - show modal
+    document.addEventListener('click', (e) => {
+      if (e.target.closest('[data-action="show-reports-hub"]')) {
+        this.showReportsHub();
+      }
+    });
+
+    // Reports Hub - select report type
+    document.addEventListener('click', (e) => {
+      const reportCard = e.target.closest('[data-report-type]');
+      if (reportCard) {
+        const reportType = reportCard.dataset.reportType;
+        this.showPropertySelector(reportType);
+      }
+    });
+
+    // Reports Hub - back to hub
+    document.addEventListener('click', (e) => {
+      if (e.target.closest('[data-action="back-to-hub"]')) {
+        this.showReportsHub();
+      }
+    });
+
+    // Reports Hub - generate report
+    document.addEventListener('click', (e) => {
+      const btn = e.target.closest('[data-generate-report]');
+      if (btn) {
+        const reportType = btn.dataset.generateReport;
+        const propertyId = btn.dataset.property;
+        this.generateAndShowReport(reportType, propertyId);
+      }
+    });
+
+    // Reports Hub - filter properties
+    document.addEventListener('input', (e) => {
+      if (e.target.closest('[data-action="filter-properties"]')) {
+        const query = e.target.value.toLowerCase();
+        const list = document.querySelector('[data-property-list]');
+        if (list) {
+          list.querySelectorAll('.property-option').forEach(opt => {
+            const name = opt.querySelector('.property-option__name')?.textContent.toLowerCase() || '';
+            opt.style.display = name.includes(query) ? '' : 'none';
+          });
+          list.querySelectorAll('.property-group').forEach(group => {
+            const visibleOptions = group.querySelectorAll('.property-option:not([style*="display: none"])');
+            group.style.display = visibleOptions.length > 0 ? '' : 'none';
+          });
+        }
+      }
+    });
+
+    // Reports Hub - close modal
+    document.addEventListener('click', (e) => {
+      if (e.target.closest('[data-action="close-reports-hub"]') ||
+          (e.target.closest('.reports-hub-overlay') && !e.target.closest('.reports-hub-modal') && !e.target.closest('.report-preview-modal'))) {
+        document.querySelector('.reports-hub-overlay')?.remove();
+      }
+    });
+
+    // Report Preview - print/export
+    document.addEventListener('click', (e) => {
+      if (e.target.closest('[data-action="print-report"]')) {
+        const reportBody = document.querySelector('.report-preview-modal__body');
+        const title = document.querySelector('.report-preview-modal__title h3')?.textContent || 'Report';
+        if (reportBody) {
+          printReport(reportBody.innerHTML, title);
+        }
+      }
+    });
+
+    // Report Preview - back to property selector
+    document.addEventListener('click', (e) => {
+      if (e.target.closest('[data-action="back-to-selector"]')) {
+        const reportType = e.target.closest('[data-action="back-to-selector"]').dataset.reportType;
+        if (reportType) {
+          this.showPropertySelector(reportType);
+        }
+      }
+    });
+
+    // Report Preview - expand/collapse modal
+    document.addEventListener('click', (e) => {
+      const expandBtn = e.target.closest('[data-action="expand-report"]');
+      if (expandBtn) {
+        const modal = document.querySelector('.report-preview-modal');
+        if (modal) {
+          modal.classList.toggle('report-preview-modal--expanded');
+          expandBtn.textContent = modal.classList.contains('report-preview-modal--expanded') ? '⛶ Collapse' : '⛶ Expand';
+        }
+      }
+    });
+
+    // Legacy: Exec. Report - show modal (keep for compatibility)
     document.addEventListener('click', (e) => {
       if (e.target.closest('[data-action="show-board-report"]')) {
         this.showBoardReportModal();
       }
     });
 
-    // Exec. Report - print/export
+    // Legacy: Exec. Report - print/export
     document.addEventListener('click', (e) => {
       if (e.target.closest('[data-action="print-board-report"]')) {
         printBoardReport();
       }
     });
 
-    // Exec. Report - close modal
+    // Legacy: Exec. Report - close modal
     document.addEventListener('click', (e) => {
       if (e.target.closest('[data-action="close-board-report"]') ||
           (e.target.closest('.report-modal-overlay') && !e.target.closest('.report-modal'))) {
@@ -891,7 +993,7 @@ class App {
       }
     });
 
-    // Exec. Report - expand/collapse modal
+    // Legacy: Exec. Report - expand/collapse modal
     document.addEventListener('click', (e) => {
       const expandBtn = e.target.closest('[data-action="expand-report"]');
       if (expandBtn) {
@@ -1435,8 +1537,8 @@ class App {
           <input type="date" class="date-input" data-action="custom-date-end" value="${this.customDateEnd || ''}" title="End Date">
           <button class="btn btn--primary btn--sm" data-action="apply-custom-date" title="Apply custom date range">Apply</button>
         </div>
-        <button class="btn btn--primary btn--sm" data-action="show-board-report" title="Generate Exec. Report">
-          📊 Exec. Report
+        <button class="btn btn--primary btn--sm" data-action="show-reports-hub" title="Open Reports Hub">
+          📋 Reports Hub
         </button>
         <button class="btn btn--ghost btn--sm" data-action="show-scoring-guide" title="How scores are calculated">
           ❓ Legend
@@ -2574,7 +2676,114 @@ class App {
   }
 
   /**
-   * Show Exec. Report Modal
+   * Show Reports Hub Modal
+   */
+  showReportsHub() {
+    // Remove any existing modal
+    document.querySelector('.reports-hub-overlay')?.remove();
+    
+    const modal = document.createElement('div');
+    modal.className = 'reports-hub-overlay';
+    modal.innerHTML = `
+      <div class="reports-hub-modal">
+        <div class="reports-hub-modal__header">
+          <h2>📋 Reports Hub</h2>
+          <button class="btn btn--ghost btn--sm" data-action="close-reports-hub">✕</button>
+        </div>
+        <div class="reports-hub-modal__body">
+          ${renderReportsHub()}
+        </div>
+      </div>
+    `;
+    
+    document.body.appendChild(modal);
+  }
+
+  /**
+   * Show Property Selector for a report type
+   */
+  showPropertySelector(reportType) {
+    const modalBody = document.querySelector('.reports-hub-modal__body');
+    if (modalBody) {
+      modalBody.innerHTML = renderPropertySelector(reportType);
+    }
+  }
+
+  /**
+   * Generate and show a report
+   */
+  generateAndShowReport(reportType, propertyId) {
+    let reportHtml = '';
+    let reportTitle = '';
+    
+    const reportInfo = REPORT_TYPES[reportType];
+    const propName = propertyId === 'portfolio' ? 'Portfolio' : 
+      (riseProperties.find(p => p.id === propertyId)?.name || propertyId);
+    
+    switch (reportType) {
+      case 'daily':
+        reportHtml = generateDailyReport(propertyId);
+        reportTitle = `📅 Daily Report - ${propName}`;
+        break;
+      case 'weekly':
+        reportHtml = generateWeeklyReport(propertyId);
+        reportTitle = `📆 Weekly Report - ${propName}`;
+        break;
+      case 'executive':
+        if (propertyId === 'portfolio') {
+          reportHtml = generateBoardReport();
+        } else {
+          reportHtml = generateExecutiveReport(propertyId);
+        }
+        reportTitle = `📊 Executive Report - ${propName}`;
+        break;
+      case 'investor':
+        if (propertyId === 'portfolio') {
+          reportHtml = generateBoardReport();
+        } else {
+          reportHtml = generateInvestorReport(propertyId);
+        }
+        reportTitle = `💼 Investor Report - ${propName}`;
+        break;
+      default:
+        reportHtml = '<p>Report type not found.</p>';
+        reportTitle = 'Report';
+    }
+    
+    // Show report preview
+    const overlay = document.querySelector('.reports-hub-overlay');
+    if (overlay) {
+      overlay.innerHTML = `
+        <div class="report-preview-modal">
+          <div class="report-preview-modal__header">
+            <div class="report-preview-modal__title">
+              <h3>${reportTitle}</h3>
+            </div>
+            <div class="report-preview-modal__actions">
+              <button class="btn btn--ghost btn--sm" data-action="back-to-selector" data-report-type="${reportType}">
+                ← Back
+              </button>
+              <button class="btn btn--secondary btn--sm" data-action="expand-report" title="Expand/Collapse">
+                ⛶ Expand
+              </button>
+              <button class="btn btn--primary btn--sm" data-action="print-report">
+                🖨️ Print / PDF
+              </button>
+              <button class="btn btn--ghost btn--sm" data-action="close-reports-hub">
+                ✕
+              </button>
+            </div>
+          </div>
+          <div class="report-preview-modal__body">
+            ${reportHtml}
+          </div>
+        </div>
+      `;
+    }
+  }
+
+  /**
+   * Show Exec. Report Modal (Legacy - kept for compatibility)
    */
   showBoardReportModal() {
     const reportHtml = generateBoardReport();
