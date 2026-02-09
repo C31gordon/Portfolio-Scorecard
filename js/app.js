@@ -13,7 +13,7 @@ import { riseProperties, risePortfolio, propertyHistory, ON_CAMPUS_DEFAULT_METRI
 // Metrics that should be ON by default for On-Campus properties
 const OC_DEFAULT_ON = ['woSla', 'training', 'tali', 'noiVariance'];
 import { generateLeaseData, generateWorkOrderData, generateAgentData, generateFinancialData, generateRentRollData, generateHistoricalData, generatePriorYearData } from './data/mock-drilldown.js';
-import { generatePhysOccData, generateLeasedData, generateLeadToTourData, generateDelinquencyData, generateWOSLAData, generateClosingRatioData, generateRenewalRatioData, generateAvgRentData, generateTrainingTableData, generateTrainingDrillInData, generateWOTechnicianData, renderDrillTable, DRILL_COLUMNS } from './components/drill-tables.js';
+import { generatePhysOccData, generateLeasedData, generateLeadToTourData, generateDelinquencyData, generateWOSLAData, generateClosingRatioData, generateRenewalRatioData, generateAvgRentData, generateTrainingTableData, generateTrainingDrillInData, generateWOTechnicianData, generateMoveActivityData, generateMoveOutReasonsData, renderDrillTable, DRILL_COLUMNS } from './components/drill-tables.js';
 import { Charts } from './components/charts.js';
 import { DataTable } from './components/data-table.js';
 import { getActionItems, renderActionItemsList, renderActionForm } from './components/action-items.js';
@@ -2476,6 +2476,28 @@ class App {
           </div>
         </div>
 
+        <!-- ROW 6: Move Activity -->
+        <div class="drill-section drill-section--move-activity">
+          <h4 class="drill-section__title">Move Activity</h4>
+          <div class="drill-grid drill-grid--2">
+            <!-- New Lease vs Move-out Comparison -->
+            <div class="drill-card drill-card--chart" data-metric="moveActivity" data-prop="${propId}">
+              <div class="drill-card__header">
+                <h4>New Lease vs Move-out (6 Mo)</h4>
+              </div>
+              <div class="drill-card__chart" id="chart_moveActivity_${propId}" style="min-height: 180px;"></div>
+            </div>
+
+            <!-- Move-out Reasons (Pareto) -->
+            <div class="drill-card drill-card--chart" data-metric="moveOutReasons" data-prop="${propId}">
+              <div class="drill-card__header">
+                <h4>Top Move-out Reasons</h4>
+              </div>
+              <div class="drill-card__chart" id="chart_moveOutReasons_${propId}" style="min-height: 180px;"></div>
+            </div>
+          </div>
+        </div>
+
         <!-- AI Insights Section -->
         <div class="drill-section drill-section--insights">
           ${renderInsightsPanel(prop)}
@@ -2954,6 +2976,31 @@ class App {
           });
         }
       });
+      
+      // Render Move Activity charts
+      const moveActivityContainer = document.getElementById(`chart_moveActivity_${propId}`);
+      if (moveActivityContainer) {
+        const moveData = generateMoveActivityData(prop, 6);
+        Charts.groupedBarChart(moveActivityContainer, moveData, {
+          colors: ['#22c55e', '#ef4444'],
+          series1Key: 'newLeases',
+          series2Key: 'moveOuts',
+          series1Label: 'New Leases',
+          series2Label: 'Move-outs',
+          height: 170
+        });
+      }
+      
+      // Render Move-out Reasons Pareto chart
+      const moveOutReasonsContainer = document.getElementById(`chart_moveOutReasons_${propId}`);
+      if (moveOutReasonsContainer) {
+        const reasonsData = generateMoveOutReasonsData(prop);
+        Charts.paretoBarChart(moveOutReasonsContainer, reasonsData, {
+          topN: 5,
+          color: '#6366f1',
+          cumulativeColor: '#f59e0b'
+        });
+      }
     });
     
     this.pendingCharts = {};

@@ -394,6 +394,178 @@ export class Charts {
   }
   
   /**
+   * Create a grouped bar chart (for comparisons like New Lease vs Move-out)
+   */
+  static groupedBarChart(container, data, options = {}) {
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    
+    const width = options.width || container.offsetWidth || 300;
+    const height = options.height || 180;
+    const colors = options.colors || [this.colors.success, this.colors.danger];
+    const labels = options.labels || data.map(d => d.label);
+    const series1Key = options.series1Key || 'value1';
+    const series2Key = options.series2Key || 'value2';
+    const series1Label = options.series1Label || 'Series 1';
+    const series2Label = options.series2Label || 'Series 2';
+    
+    canvas.width = width * 2;
+    canvas.height = height * 2;
+    canvas.style.width = `${width}px`;
+    canvas.style.height = `${height}px`;
+    ctx.scale(2, 2);
+    
+    const padding = { top: 30, right: 20, bottom: 45, left: 45 };
+    const chartWidth = width - padding.left - padding.right;
+    const chartHeight = height - padding.top - padding.bottom;
+    
+    const allValues = data.flatMap(d => [d[series1Key], d[series2Key]]);
+    const max = Math.max(...allValues) || 1;
+    
+    const groupWidth = chartWidth / data.length;
+    const barWidth = (groupWidth * 0.7) / 2;
+    const groupGap = groupWidth * 0.3;
+    
+    // Draw grid lines
+    ctx.strokeStyle = this.colors.grid;
+    ctx.lineWidth = 1;
+    for (let i = 0; i <= 4; i++) {
+      const y = padding.top + (chartHeight / 4) * i;
+      ctx.beginPath();
+      ctx.moveTo(padding.left, y);
+      ctx.lineTo(width - padding.right, y);
+      ctx.stroke();
+      
+      // Y-axis labels
+      const value = max - (max / 4) * i;
+      ctx.fillStyle = this.colors.gray;
+      ctx.font = '10px Inter, sans-serif';
+      ctx.textAlign = 'right';
+      ctx.fillText(Math.round(value), padding.left - 8, y + 4);
+    }
+    
+    // Draw bars
+    data.forEach((item, i) => {
+      const groupX = padding.left + i * groupWidth + groupGap / 2;
+      
+      // Bar 1 (e.g., New Leases)
+      const bar1Height = (item[series1Key] / max) * chartHeight;
+      const bar1Y = padding.top + chartHeight - bar1Height;
+      ctx.fillStyle = colors[0];
+      ctx.beginPath();
+      ctx.roundRect(groupX, bar1Y, barWidth, bar1Height, 3);
+      ctx.fill();
+      
+      // Bar 2 (e.g., Move-outs)
+      const bar2Height = (item[series2Key] / max) * chartHeight;
+      const bar2Y = padding.top + chartHeight - bar2Height;
+      ctx.fillStyle = colors[1];
+      ctx.beginPath();
+      ctx.roundRect(groupX + barWidth + 2, bar2Y, barWidth, bar2Height, 3);
+      ctx.fill();
+      
+      // X-axis label
+      ctx.fillStyle = this.colors.gray;
+      ctx.font = '10px Inter, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText(item.month || labels[i], groupX + barWidth, height - padding.bottom + 15);
+    });
+    
+    // Legend
+    ctx.font = '10px Inter, sans-serif';
+    ctx.fillStyle = colors[0];
+    ctx.fillRect(padding.left, 8, 12, 12);
+    ctx.fillStyle = '#e8eaf0';
+    ctx.textAlign = 'left';
+    ctx.fillText(series1Label, padding.left + 16, 17);
+    
+    ctx.fillStyle = colors[1];
+    ctx.fillRect(padding.left + 90, 8, 12, 12);
+    ctx.fillStyle = '#e8eaf0';
+    ctx.fillText(series2Label, padding.left + 106, 17);
+    
+    container.innerHTML = '';
+    container.appendChild(canvas);
+    return canvas;
+  }
+  
+  /**
+   * Create a horizontal Pareto bar chart (for top reasons)
+   */
+  static paretoBarChart(container, data, options = {}) {
+    const wrapper = document.createElement('div');
+    wrapper.style.cssText = 'display: flex; flex-direction: column; gap: 6px; width: 100%;';
+    
+    const topN = options.topN || 5;
+    const topData = data.slice(0, topN);
+    const maxValue = Math.max(...topData.map(d => d.count)) || 1;
+    const barColor = options.color || this.colors.primary;
+    const cumulativeColor = options.cumulativeColor || this.colors.warning;
+    
+    topData.forEach((item, i) => {
+      const row = document.createElement('div');
+      row.style.cssText = 'display: flex; align-items: center; gap: 8px;';
+      
+      // Rank number
+      const rank = document.createElement('div');
+      rank.style.cssText = 'width: 18px; font-size: 11px; color: var(--text-secondary); text-align: right;';
+      rank.textContent = `${i + 1}.`;
+      
+      // Label
+      const label = document.createElement('div');
+      label.style.cssText = 'width: 100px; font-size: 11px; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;';
+      label.textContent = item.reason;
+      label.title = item.reason;
+      
+      // Bar container
+      const barContainer = document.createElement('div');
+      barContainer.style.cssText = 'flex: 1; height: 20px; background: var(--bg-tertiary); border-radius: 3px; overflow: hidden; position: relative;';
+      
+      // Main bar
+      const bar = document.createElement('div');
+      const barWidth = (item.count / maxValue) * 100;
+      bar.style.cssText = `width: ${barWidth}%; height: 100%; background: ${barColor}; border-radius: 3px; transition: width 0.3s ease;`;
+      
+      // Cumulative line marker (Pareto)
+      const cumLine = document.createElement('div');
+      cumLine.style.cssText = `position: absolute; left: ${item.cumulative}%; top: 0; bottom: 0; width: 2px; background: ${cumulativeColor}; opacity: 0.8;`;
+      
+      barContainer.appendChild(bar);
+      barContainer.appendChild(cumLine);
+      
+      // Count value
+      const value = document.createElement('div');
+      value.style.cssText = 'width: 35px; text-align: right; font-weight: 600; font-size: 11px;';
+      value.textContent = item.count;
+      
+      // Percentage
+      const pct = document.createElement('div');
+      pct.style.cssText = 'width: 40px; text-align: right; font-size: 10px; color: var(--text-secondary);';
+      pct.textContent = `${item.percentage}%`;
+      
+      row.appendChild(rank);
+      row.appendChild(label);
+      row.appendChild(barContainer);
+      row.appendChild(value);
+      row.appendChild(pct);
+      wrapper.appendChild(row);
+    });
+    
+    // Pareto legend
+    const legend = document.createElement('div');
+    legend.style.cssText = 'display: flex; gap: 16px; margin-top: 6px; padding-top: 6px; border-top: 1px solid var(--border-primary); font-size: 10px; color: var(--text-secondary);';
+    legend.innerHTML = `
+      <span><span style="display:inline-block;width:10px;height:10px;background:${barColor};border-radius:2px;margin-right:4px;"></span>Count</span>
+      <span><span style="display:inline-block;width:10px;height:2px;background:${cumulativeColor};margin-right:4px;vertical-align:middle;"></span>Cumulative %</span>
+    `;
+    wrapper.appendChild(legend);
+    
+    container.innerHTML = '';
+    container.appendChild(wrapper);
+    return wrapper;
+  }
+  
+  /**
    * Create a gauge chart
    */
   static gaugeChart(container, value, options = {}) {

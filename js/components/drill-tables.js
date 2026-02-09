@@ -463,6 +463,74 @@ export function generateWOTechnicianData(prop) {
   });
 }
 
+/**
+ * Generate Move Activity data (New Leases vs Move-outs by month)
+ */
+export function generateMoveActivityData(prop, months = 6) {
+  const data = [];
+  const now = new Date();
+  
+  for (let i = months - 1; i >= 0; i--) {
+    const date = new Date(now.getFullYear(), now.getMonth() - i, 1);
+    const monthLabel = date.toLocaleDateString('en-US', { month: 'short' });
+    
+    // Generate realistic move activity numbers
+    const baseUnits = prop?.units || 200;
+    const newLeases = Math.floor(Math.random() * (baseUnits * 0.08)) + Math.floor(baseUnits * 0.02);
+    const moveOuts = Math.floor(Math.random() * (baseUnits * 0.06)) + Math.floor(baseUnits * 0.015);
+    
+    data.push({
+      month: monthLabel,
+      newLeases,
+      moveOuts,
+      net: newLeases - moveOuts
+    });
+  }
+  return data;
+}
+
+/**
+ * Generate Move-out Reasons data (Pareto style - top reasons)
+ */
+export function generateMoveOutReasonsData(prop) {
+  const reasons = [
+    { reason: 'Rent Increase', count: Math.floor(Math.random() * 25) + 15 },
+    { reason: 'Job Relocation', count: Math.floor(Math.random() * 20) + 10 },
+    { reason: 'Home Purchase', count: Math.floor(Math.random() * 18) + 8 },
+    { reason: 'Lease Violation', count: Math.floor(Math.random() * 12) + 5 },
+    { reason: 'Roommate Issues', count: Math.floor(Math.random() * 10) + 4 },
+    { reason: 'Maintenance Issues', count: Math.floor(Math.random() * 8) + 3 },
+    { reason: 'Noise/Neighbors', count: Math.floor(Math.random() * 7) + 2 },
+    { reason: 'Downsizing', count: Math.floor(Math.random() * 6) + 2 },
+    { reason: 'Upgrading', count: Math.floor(Math.random() * 5) + 1 },
+    { reason: 'Other', count: Math.floor(Math.random() * 8) + 3 }
+  ];
+  
+  // Sort by count descending
+  reasons.sort((a, b) => b.count - a.count);
+  
+  // Calculate percentages and cumulative
+  const total = reasons.reduce((sum, r) => sum + r.count, 0);
+  let cumulative = 0;
+  
+  return reasons.map(r => {
+    cumulative += r.count;
+    return {
+      ...r,
+      percentage: ((r.count / total) * 100).toFixed(1),
+      cumulative: ((cumulative / total) * 100).toFixed(1)
+    };
+  });
+}
+
+// Column definitions for move-out reasons drill-in
+DRILL_COLUMNS.moveOutReasons = [
+  { key: 'reason', label: 'Reason' },
+  { key: 'count', label: 'Count' },
+  { key: 'percentage', label: '% of Total', format: (v) => `${v}%` },
+  { key: 'cumulative', label: 'Cumulative %', format: (v) => `${v}%` }
+];
+
 export default {
   generatePhysOccData,
   generateLeasedData,
@@ -475,6 +543,8 @@ export default {
   generateTrainingTableData,
   generateTrainingDrillInData,
   generateWOTechnicianData,
+  generateMoveActivityData,
+  generateMoveOutReasonsData,
   renderDrillTable,
   DRILL_COLUMNS
 };

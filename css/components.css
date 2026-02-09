@@ -3785,6 +3785,21 @@
   margin-bottom: var(--space-6);
 }
 
+/* Move Activity Section */
+.drill-section--move-activity {
+  margin-top: var(--space-6);
+  margin-bottom: var(--space-6);
+}
+
+.drill-section__title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: var(--space-4);
+  padding-bottom: var(--space-2);
+  border-bottom: 1px solid var(--border-primary);
+}
+
 /* PWA Install Button */
 .pwa-install-btn {
   background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
