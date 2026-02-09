@@ -29,6 +29,7 @@ import {
   REPORT_TYPES 
 } from './components/reports-hub.js';
 import { renderInsightsPanel } from './components/ai-insights.js';
+import { getDashboardConfig, renderChartLibrary, renderCustomizeToolbar, initDragDrop, AVAILABLE_CHARTS } from './components/dashboard-config.js';
 
 // Metric keys for leasing properties
 const L_KEYS = ['physOcc','leased','leadToTour','delinq','woSla','mtdClosing','renewalRatio','googleStars','training','tali','propIndex','noiVariance'];
@@ -185,6 +186,8 @@ class App {
     this.favorites = this.loadFavorites(); // Load favorites from localStorage
     this.deferredPrompt = null; // PWA install prompt
     this.isAppInstalled = false;
+    this.dashboardConfig = getDashboardConfig(); // Dashboard customization
+    this.isEditMode = false; // Dashboard edit mode
     
     // Initialize default column visibility
     Object.keys(COLUMN_DEFS).forEach(key => {
@@ -1474,6 +1477,53 @@ class App {
       }
     });
 
+    // Dashboard Customization: Toggle edit mode
+    document.addEventListener('click', (e) => {
+      if (e.target.closest('[data-action="toggle-edit-mode"]')) {
+        this.isEditMode = !this.isEditMode;
+        this.render();
+      }
+    });
+
+    // Dashboard Customization: Change role preset
+    document.addEventListener('change', (e) => {
+      if (e.target.closest('[data-action="change-role"]')) {
+        const role = e.target.value;
+        this.dashboardConfig.applyRole(role);
+        this.render();
+      }
+    });
+
+    // Dashboard Customization: Reset layout
+    document.addEventListener('click', (e) => {
+      if (e.target.closest('[data-action="reset-layout"]')) {
+        if (confirm('Reset dashboard to default layout?')) {
+          this.dashboardConfig.reset();
+          this.render();
+        }
+      }
+    });
+
+    // Dashboard Customization: Hide chart
+    document.addEventListener('click', (e) => {
+      const hideBtn = e.target.closest('[data-action="hide-chart"]');
+      if (hideBtn) {
+        const chartId = hideBtn.dataset.chart;
+        this.dashboardConfig.hideChart(chartId);
+        this.render();
+      }
+    });
+
+    // Dashboard Customization: Show chart from library
+    document.addEventListener('click', (e) => {
+      const showBtn = e.target.closest('[data-action="show-chart"]');
+      if (showBtn) {
+        const chartId = showBtn.dataset.chart;
+        this.dashboardConfig.showChart(chartId);
+        this.render();
+      }
+    });
+
     // Info tip hover (JavaScript fallback for tooltip)
     document.addEventListener('mouseover', (e) => {
       const tip = e.target.closest('.info-tip');
@@ -2123,6 +2173,12 @@ class App {
             </div>
           </div>
         </div>
+
+        <!-- Customize Toolbar -->
+        ${renderCustomizeToolbar(this.dashboardConfig, this.isEditMode)}
+        
+        <!-- Chart Library (if edit mode and hidden charts exist) -->
+        ${this.isEditMode ? renderChartLibrary(this.dashboardConfig) : ''}
 
         <!-- ROW 1: Occupancy & Rent -->
         <div class="drill-grid drill-grid--4">
@@ -3004,6 +3060,41 @@ class App {
     });
     
     this.pendingCharts = {};
+    
+    // Enhance cards with edit mode features
+    if (this.isEditMode) {
+      this.enhanceCardsForEditMode();
+    }
+  }
+  
+  /**
+   * Add drag-drop and hide buttons to cards when in edit mode
+   */
+  enhanceCardsForEditMode() {
+    document.querySelectorAll('.drill-card').forEach(card => {
+      const metric = card.dataset.metric;
+      if (!metric) return;
+      
+      // Make draggable
+      card.setAttribute('draggable', 'true');
+      card.classList.add('drill-card--edit-mode');
+      
+      // Add hide button if not already present
+      if (!card.querySelector('.drill-card__hide-btn')) {
+        const hideBtn = document.createElement('button');
+        hideBtn.className = 'drill-card__hide-btn';
+        hideBtn.setAttribute('data-action', 'hide-chart');
+        hideBtn.setAttribute('data-chart', metric);
+        hideBtn.setAttribute('title', 'Hide this chart');
+        hideBtn.textContent = '✕';
+        card.appendChild(hideBtn);
+      }
+    });
+    
+    // Initialize drag-drop for each drill grid
+    document.querySelectorAll('.drill-grid').forEach(grid => {
+      initDragDrop(grid, this.dashboardConfig, () => this.render());
+    });
   }
   
   getSparklineColor(value, metric, type) {
