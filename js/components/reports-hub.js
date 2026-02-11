@@ -48,16 +48,30 @@ export const REPORT_TYPES = {
 };
 
 /**
+ * Generate a slug ID from property name
+ */
+function slugify(name) {
+  return name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+}
+
+/**
  * Get all properties for selection
  */
 function getPropertyList() {
   return riseProperties.map(p => ({
-    id: p.id,
+    id: slugify(p.name),
     name: p.name,
     type: p.type,
     rd: p.rd,
     units: p.type === 'OC' || p.type === 'STU' ? p.beds : p.units
   })).sort((a, b) => a.name.localeCompare(b.name));
+}
+
+/**
+ * Find property by slug ID
+ */
+function findPropertyById(propertyId) {
+  return riseProperties.find(p => slugify(p.name) === propertyId);
 }
 
 /**
@@ -362,12 +376,10 @@ export function generateLeasingReport(propertyId) {
     return generatePortfolioLeasingReport();
   }
   
-  const properties = riseProperties.filter(p => p.id === propertyId);
-  if (properties.length === 0) {
+  const prop = findPropertyById(propertyId);
+  if (!prop) {
     return '<div class="leasing-report"><p>Property not found.</p></div>';
   }
-  
-  const prop = properties[0];
   const today = new Date();
   const dateStr = today.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
   
@@ -930,8 +942,11 @@ function generatePortfolioLeasingReport() {
  */
 export function generateDailyReport(propertyId) {
   const isPortfolio = propertyId === 'portfolio';
-  const properties = isPortfolio ? riseProperties : riseProperties.filter(p => p.id === propertyId);
-  const prop = properties[0];
+  const prop = isPortfolio ? riseProperties[0] : findPropertyById(propertyId);
+  
+  if (!prop && !isPortfolio) {
+    return '<div class="daily-report"><p>Property not found.</p></div>';
+  }
   
   const today = new Date();
   const dateStr = today.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
@@ -1136,8 +1151,11 @@ function generatePortfolioDailyReport(properties, dateStr) {
  */
 export function generateWeeklyReport(propertyId) {
   const isPortfolio = propertyId === 'portfolio';
-  const properties = isPortfolio ? riseProperties : riseProperties.filter(p => p.id === propertyId);
-  const prop = properties[0];
+  const prop = isPortfolio ? riseProperties[0] : findPropertyById(propertyId);
+  
+  if (!prop && !isPortfolio) {
+    return '<div class="weekly-report"><p>Property not found.</p></div>';
+  }
   
   const today = new Date();
   const weekStart = new Date(today);
@@ -1437,8 +1455,11 @@ function generatePortfolioWeeklyReport(properties, dateRangeStr) {
  */
 export function generateExecutiveReport(propertyId) {
   const isPortfolio = propertyId === 'portfolio';
-  const properties = isPortfolio ? riseProperties : riseProperties.filter(p => p.id === propertyId);
-  const prop = properties[0];
+  const prop = isPortfolio ? riseProperties[0] : findPropertyById(propertyId);
+  
+  if (!prop && !isPortfolio) {
+    return '<div class="executive-report"><p>Property not found.</p></div>';
+  }
   
   const today = new Date();
   const dateStr = today.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
@@ -1601,8 +1622,11 @@ export function generateExecutiveReport(propertyId) {
  */
 export function generateInvestorReport(propertyId) {
   const isPortfolio = propertyId === 'portfolio';
-  const properties = isPortfolio ? riseProperties : riseProperties.filter(p => p.id === propertyId);
-  const prop = properties[0];
+  const prop = isPortfolio ? riseProperties[0] : findPropertyById(propertyId);
+  
+  if (!prop && !isPortfolio) {
+    return '<div class="investor-report"><p>Property not found.</p></div>';
+  }
   
   const today = new Date();
   const dateStr = today.toLocaleDateString('en-US', { year: 'numeric', month: 'long' });
