@@ -10,6 +10,13 @@ import { formatPercent, formatCurrency, formatNumber } from '../utils/formatting
  * Report type definitions
  */
 export const REPORT_TYPES = {
+  leasing: {
+    id: 'leasing',
+    title: 'Daily Leasing Report',
+    icon: '🏠',
+    description: 'DORO-style daily leasing activity, pipeline, and trending occupancy',
+    color: '#f97316'
+  },
   executive: {
     id: 'executive',
     title: 'Executive Report',
@@ -26,7 +33,7 @@ export const REPORT_TYPES = {
   },
   daily: {
     id: 'daily',
-    title: 'Daily Report',
+    title: 'Daily Snapshot',
     icon: '📅',
     description: 'Quick daily snapshot of critical metrics and urgent items',
     color: '#22c55e'
@@ -151,6 +158,773 @@ export function renderPropertySelector(reportType) {
   `;
 }
 
+// ============================================================================
+// DAILY LEASING REPORT (DORO-STYLE)
+// ============================================================================
+
+/**
+ * Generate mock leasing activity data for a property
+ * In production, this would come from Entrata API
+ */
+function getLeasingActivityData(prop) {
+  const isLeaseUp = prop.defaultLeaseUp || prop.physOcc < 0.5;
+  const totalUnits = prop.units || prop.beds || 100;
+  
+  // Generate realistic-ish mock data
+  const baseTraffic = isLeaseUp ? Math.round(totalUnits * 0.02) : Math.round(totalUnits * 0.005);
+  
+  return {
+    daily: {
+      tours: Math.floor(Math.random() * 3) + (isLeaseUp ? 2 : 0),
+      walkIns: Math.floor(Math.random() * 2),
+      offSiteEvents: 0,
+      phoneCalls: Math.floor(Math.random() * 5) + 1,
+      emailsOnline: Math.floor(Math.random() * 3),
+      textChat: Math.floor(Math.random() * 4),
+      grossApps: Math.floor(Math.random() * 3),
+      denied: 0,
+      cancelled: 0,
+      moveIns: Math.floor(Math.random() * 2),
+      moveOuts: Math.floor(Math.random() * 2),
+      renewals: Math.floor(Math.random() * 2),
+      noticesReceived: Math.floor(Math.random() * 2)
+    },
+    wtd: {
+      tours: baseTraffic + Math.floor(Math.random() * 5),
+      walkIns: Math.floor(Math.random() * 3) + 1,
+      offSiteEvents: Math.floor(Math.random() * 2),
+      phoneCalls: Math.floor(Math.random() * 15) + 5,
+      emailsOnline: Math.floor(Math.random() * 8) + 2,
+      textChat: Math.floor(Math.random() * 10) + 3,
+      grossApps: Math.floor(Math.random() * 5) + (isLeaseUp ? 3 : 1),
+      denied: Math.floor(Math.random() * 2),
+      cancelled: Math.floor(Math.random() * 2),
+      moveIns: Math.floor(Math.random() * 4),
+      moveOuts: Math.floor(Math.random() * 3),
+      renewals: Math.floor(Math.random() * 3),
+      noticesReceived: Math.floor(Math.random() * 3)
+    },
+    mtd: {
+      tours: baseTraffic * 2 + Math.floor(Math.random() * 10),
+      walkIns: Math.floor(Math.random() * 6) + 2,
+      offSiteEvents: Math.floor(Math.random() * 3),
+      phoneCalls: Math.floor(Math.random() * 30) + 10,
+      emailsOnline: Math.floor(Math.random() * 15) + 5,
+      textChat: Math.floor(Math.random() * 20) + 8,
+      grossApps: Math.floor(Math.random() * 8) + (isLeaseUp ? 5 : 2),
+      denied: Math.floor(Math.random() * 3),
+      cancelled: Math.floor(Math.random() * 4),
+      moveIns: Math.floor(Math.random() * 6) + 1,
+      moveOuts: Math.floor(Math.random() * 5),
+      renewals: Math.floor(Math.random() * 5),
+      noticesReceived: Math.floor(Math.random() * 5)
+    },
+    moveInGoalPerWeek: isLeaseUp ? Math.round(totalUnits * 0.07) : Math.round(totalUnits * 0.02)
+  };
+}
+
+/**
+ * Generate trending occupancy data (12-month projection)
+ */
+function getTrendingOccupancyData(prop) {
+  const months = [];
+  const now = new Date();
+  const currentOcc = prop.physOcc || 0.90;
+  const isLeaseUp = prop.defaultLeaseUp || currentOcc < 0.5;
+  
+  for (let i = 0; i < 12; i++) {
+    const d = new Date(now.getFullYear(), now.getMonth() + i, 1);
+    const monthLabel = d.toLocaleDateString('en-US', { month: 'short', year: '2-digit' });
+    
+    // Generate realistic projections
+    let budgeted, projected, moveInsNeeded;
+    
+    if (isLeaseUp) {
+      // Lease-up trajectory
+      budgeted = Math.min(0.95, 0.10 + (i * 0.07));
+      projected = Math.min(0.95, currentOcc + (i * 0.05));
+    } else {
+      // Stabilized property
+      budgeted = 0.93 + (Math.random() * 0.02);
+      projected = currentOcc + ((Math.random() - 0.5) * 0.02);
+    }
+    
+    const totalUnits = prop.units || prop.beds || 100;
+    moveInsNeeded = Math.round((budgeted - projected) * totalUnits);
+    if (moveInsNeeded < 0) moveInsNeeded = 0;
+    
+    months.push({
+      label: monthLabel,
+      leaseExpirations: Math.floor(Math.random() * (totalUnits * 0.05)),
+      mtm: Math.floor(Math.random() * 3),
+      pendingMoveOuts: Math.floor(Math.random() * (totalUnits * 0.02)),
+      pendingMoveIns: Math.floor(Math.random() * (totalUnits * 0.03)) + (isLeaseUp ? 5 : 0),
+      budgetedOcc: budgeted,
+      projectedOcc: projected,
+      moveInsNeeded
+    });
+  }
+  
+  return months;
+}
+
+/**
+ * Generate unit mix data
+ */
+function getUnitMixData(prop) {
+  const totalUnits = prop.units || prop.beds || 100;
+  const avgRent = prop.avgRent || 1500;
+  
+  // Common floor plan types
+  const floorPlans = [
+    { name: 'Studio', type: 'S1', sqft: 550, pct: 0.10 },
+    { name: '1BR / 1BA', type: 'A1', sqft: 700, pct: 0.30 },
+    { name: '1BR / 1BA Premium', type: 'A2', sqft: 780, pct: 0.15 },
+    { name: '2BR / 2BA', type: 'B1', sqft: 1000, pct: 0.25 },
+    { name: '2BR / 2BA Premium', type: 'B2', sqft: 1100, pct: 0.12 },
+    { name: '3BR / 2BA', type: 'C1', sqft: 1300, pct: 0.08 }
+  ];
+  
+  const occ = prop.physOcc || 0.92;
+  const leased = prop.leased || 0.95;
+  
+  return floorPlans.map(fp => {
+    const units = Math.round(totalUnits * fp.pct);
+    const leasedUnits = Math.round(units * (leased + (Math.random() - 0.5) * 0.1));
+    const occupiedUnits = Math.round(units * (occ + (Math.random() - 0.5) * 0.1));
+    const budgetRent = avgRent * (fp.sqft / 800);
+    
+    return {
+      name: fp.name,
+      type: fp.type,
+      unitMix: units,
+      sqft: fp.sqft,
+      leased: Math.min(units, leasedUnits),
+      leasedPct: Math.min(1, leasedUnits / units),
+      occupied: Math.min(units, occupiedUnits),
+      occupiedPct: Math.min(1, occupiedUnits / units),
+      budgetRent: Math.round(budgetRent),
+      budgetRentSqft: budgetRent / fp.sqft,
+      inPlaceRent: Math.round(budgetRent * (0.95 + Math.random() * 0.1)),
+      wtdApps: Math.floor(Math.random() * 3)
+    };
+  });
+}
+
+/**
+ * Generate recent applications data
+ */
+function getRecentApplicationsData(prop) {
+  const unitTypes = ['A1', 'A2', 'B1', 'B2', 'C1', 'S1'];
+  const names = ['Johnson', 'Smith', 'Williams', 'Brown', 'Davis', 'Miller', 'Wilson', 'Moore', 'Taylor', 'Anderson'];
+  const avgRent = prop.avgRent || 1500;
+  
+  const numApps = Math.floor(Math.random() * 4) + 1;
+  const apps = [];
+  
+  for (let i = 0; i < numApps; i++) {
+    const unitType = unitTypes[Math.floor(Math.random() * unitTypes.length)];
+    const unitNum = Math.floor(Math.random() * 400) + 100;
+    const applicant = names[Math.floor(Math.random() * names.length)];
+    const leaseTerm = Math.floor(Math.random() * 6) + 10; // 10-15 months
+    const askingRent = Math.round(avgRent * (0.9 + Math.random() * 0.3));
+    const monthlyConc = Math.random() > 0.7 ? Math.round(askingRent * 0.1) : 0;
+    const oneTimeConc = Math.random() > 0.5 ? Math.round(askingRent * (0.5 + Math.random())) : 0;
+    const netEffective = askingRent - monthlyConc - (oneTimeConc / leaseTerm);
+    
+    // Move-in date 2-6 weeks out
+    const moveIn = new Date();
+    moveIn.setDate(moveIn.getDate() + Math.floor(Math.random() * 30) + 14);
+    
+    apps.push({
+      unit: `${unitNum}`,
+      applicant,
+      unitType,
+      leaseTerm,
+      askingRent,
+      monthlyConc,
+      oneTimeConc,
+      netEffective: Math.round(netEffective),
+      moveInDate: moveIn.toLocaleDateString('en-US', { month: 'numeric', day: 'numeric', year: 'numeric' })
+    });
+  }
+  
+  return apps;
+}
+
+/**
+ * Generate Daily Leasing Report (DORO-style)
+ */
+export function generateLeasingReport(propertyId) {
+  const isPortfolio = propertyId === 'portfolio';
+  
+  if (isPortfolio) {
+    return generatePortfolioLeasingReport();
+  }
+  
+  const properties = riseProperties.filter(p => p.id === propertyId);
+  if (properties.length === 0) {
+    return '<div class="leasing-report"><p>Property not found.</p></div>';
+  }
+  
+  const prop = properties[0];
+  const today = new Date();
+  const dateStr = today.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+  
+  const totalUnits = prop.units || prop.beds || 100;
+  const isLeaseUp = prop.defaultLeaseUp || prop.physOcc < 0.5;
+  const status = isLeaseUp ? 'Pre-Leasing' : 'Stabilized';
+  
+  // Get all the data
+  const activity = getLeasingActivityData(prop);
+  const trending = getTrendingOccupancyData(prop);
+  const unitMix = getUnitMixData(prop);
+  const recentApps = getRecentApplicationsData(prop);
+  
+  // Calculate KPIs
+  const leasedPct = prop.leased || 0.95;
+  const occPct = prop.physOcc || 0.92;
+  const trendingOcc90 = trending[2]?.projectedOcc || occPct;
+  
+  // Calculate net apps
+  const netAppsDaily = activity.daily.grossApps - activity.daily.denied - activity.daily.cancelled;
+  const netAppsWtd = activity.wtd.grossApps - activity.wtd.denied - activity.wtd.cancelled;
+  const netAppsMtd = activity.mtd.grossApps - activity.mtd.denied - activity.mtd.cancelled;
+  
+  // Conversion ratios
+  const conversionWtd = activity.wtd.tours > 0 ? activity.wtd.grossApps / activity.wtd.tours : 0;
+  const conversionMtd = activity.mtd.tours > 0 ? activity.mtd.grossApps / activity.mtd.tours : 0;
+  
+  return `
+    <div class="leasing-report">
+      <!-- HEADER -->
+      <div class="report-header report-header--leasing">
+        <div class="report-header__title">
+          <h1>🏠 Daily Leasing Report</h1>
+          <h2>${prop.name}</h2>
+        </div>
+        <div class="report-header__meta">
+          <div class="report-date">${dateStr}</div>
+          <span class="report-status-badge report-status-badge--${isLeaseUp ? 'leaseup' : 'stabilized'}">${status}</span>
+        </div>
+      </div>
+      
+      <!-- KPI BANNER -->
+      <div class="leasing-report__kpi-banner">
+        <div class="kpi-item">
+          <div class="kpi-item__value">${formatPercent(leasedPct)}</div>
+          <div class="kpi-item__label">Leased %</div>
+        </div>
+        <div class="kpi-item">
+          <div class="kpi-item__value">${formatPercent(occPct)}</div>
+          <div class="kpi-item__label">Occupancy %</div>
+        </div>
+        <div class="kpi-item">
+          <div class="kpi-item__value">${formatPercent(trendingOcc90)}</div>
+          <div class="kpi-item__label">Trending (90 Days)</div>
+        </div>
+        <div class="kpi-item kpi-item--highlight">
+          <div class="kpi-item__value">${activity.moveInGoalPerWeek}</div>
+          <div class="kpi-item__label">Move-In Goal/Wk</div>
+        </div>
+      </div>
+      
+      <!-- ACTIVITY TABLE -->
+      <div class="leasing-report__section">
+        <h3>📊 Activity</h3>
+        <div class="activity-table-wrapper">
+          <table class="activity-table">
+            <thead>
+              <tr>
+                <th>Metric</th>
+                <th>Daily</th>
+                <th>WTD</th>
+                <th>MTD</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Tours</td>
+                <td>${activity.daily.tours}</td>
+                <td>${activity.wtd.tours}</td>
+                <td>${activity.mtd.tours}</td>
+              </tr>
+              <tr>
+                <td>Walk-Ins</td>
+                <td>${activity.daily.walkIns}</td>
+                <td>${activity.wtd.walkIns}</td>
+                <td>${activity.mtd.walkIns}</td>
+              </tr>
+              <tr>
+                <td>Phone Calls</td>
+                <td>${activity.daily.phoneCalls}</td>
+                <td>${activity.wtd.phoneCalls}</td>
+                <td>${activity.mtd.phoneCalls}</td>
+              </tr>
+              <tr>
+                <td>Emails/Online</td>
+                <td>${activity.daily.emailsOnline}</td>
+                <td>${activity.wtd.emailsOnline}</td>
+                <td>${activity.mtd.emailsOnline}</td>
+              </tr>
+              <tr>
+                <td>Text/Chat</td>
+                <td>${activity.daily.textChat}</td>
+                <td>${activity.wtd.textChat}</td>
+                <td>${activity.mtd.textChat}</td>
+              </tr>
+              <tr class="activity-table__divider"><td colspan="4"></td></tr>
+              <tr class="activity-table__highlight">
+                <td>Gross New Applications</td>
+                <td>${activity.daily.grossApps}</td>
+                <td>${activity.wtd.grossApps}</td>
+                <td>${activity.mtd.grossApps}</td>
+              </tr>
+              <tr>
+                <td>Denied</td>
+                <td>${activity.daily.denied}</td>
+                <td>${activity.wtd.denied}</td>
+                <td>${activity.mtd.denied}</td>
+              </tr>
+              <tr>
+                <td>Cancelled</td>
+                <td>${activity.daily.cancelled}</td>
+                <td>${activity.wtd.cancelled}</td>
+                <td>${activity.mtd.cancelled}</td>
+              </tr>
+              <tr class="activity-table__highlight activity-table__net">
+                <td>Net New Applications</td>
+                <td class="${netAppsDaily >= 0 ? 'positive' : 'negative'}">${netAppsDaily}</td>
+                <td class="${netAppsWtd >= 0 ? 'positive' : 'negative'}">${netAppsWtd}</td>
+                <td class="${netAppsMtd >= 0 ? 'positive' : 'negative'}">${netAppsMtd}</td>
+              </tr>
+              <tr>
+                <td>Conversion Ratio</td>
+                <td>—</td>
+                <td>${formatPercent(conversionWtd)}</td>
+                <td>${formatPercent(conversionMtd)}</td>
+              </tr>
+              <tr class="activity-table__divider"><td colspan="4"></td></tr>
+              <tr>
+                <td>Move-Ins</td>
+                <td>${activity.daily.moveIns}</td>
+                <td>${activity.wtd.moveIns}</td>
+                <td>${activity.mtd.moveIns}</td>
+              </tr>
+              <tr>
+                <td>Move-Outs</td>
+                <td>${activity.daily.moveOuts}</td>
+                <td>${activity.wtd.moveOuts}</td>
+                <td>${activity.mtd.moveOuts}</td>
+              </tr>
+              <tr>
+                <td>Notices Received</td>
+                <td>${activity.daily.noticesReceived}</td>
+                <td>${activity.wtd.noticesReceived}</td>
+                <td>${activity.mtd.noticesReceived}</td>
+              </tr>
+              <tr>
+                <td>Renewals</td>
+                <td>${activity.daily.renewals}</td>
+                <td>${activity.wtd.renewals}</td>
+                <td>${activity.mtd.renewals}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      
+      <!-- TRENDING OCCUPANCY CHART -->
+      <div class="leasing-report__section">
+        <h3>📈 Trending Occupancy</h3>
+        <div class="trending-chart-container">
+          <div class="trending-chart" data-chart="trending-occupancy">
+            ${renderTrendingChart(trending)}
+          </div>
+          <div class="trending-legend">
+            <span class="legend-item"><span class="legend-dot legend-dot--budget"></span> Budget</span>
+            <span class="legend-item"><span class="legend-dot legend-dot--projected"></span> Projected</span>
+          </div>
+        </div>
+        <div class="trending-table-mini">
+          <table>
+            <thead>
+              <tr>
+                <th></th>
+                ${trending.slice(0, 6).map(m => `<th>${m.label}</th>`).join('')}
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Budgeted Occ</td>
+                ${trending.slice(0, 6).map(m => `<td>${formatPercent(m.budgetedOcc)}</td>`).join('')}
+              </tr>
+              <tr>
+                <td>Projected Occ</td>
+                ${trending.slice(0, 6).map(m => `<td class="${m.projectedOcc >= m.budgetedOcc ? 'positive' : 'negative'}">${formatPercent(m.projectedOcc)}</td>`).join('')}
+              </tr>
+              <tr>
+                <td>Move-Ins Needed</td>
+                ${trending.slice(0, 6).map(m => `<td>${m.moveInsNeeded}</td>`).join('')}
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      
+      <!-- RECENT APPLICATIONS -->
+      <div class="leasing-report__section">
+        <h3>📝 Week-to-Date Applications</h3>
+        ${recentApps.length > 0 ? `
+          <div class="applications-table-wrapper">
+            <table class="applications-table">
+              <thead>
+                <tr>
+                  <th>Unit</th>
+                  <th>Applicant</th>
+                  <th>Type</th>
+                  <th>Term</th>
+                  <th>Asking Rent</th>
+                  <th>Monthly Conc</th>
+                  <th>One-Time Conc</th>
+                  <th>Net Effective</th>
+                  <th>Move-In</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${recentApps.map(app => `
+                  <tr>
+                    <td>${app.unit}</td>
+                    <td>${app.applicant}</td>
+                    <td>${app.unitType}</td>
+                    <td>${app.leaseTerm}mo</td>
+                    <td>${formatCurrency(app.askingRent)}</td>
+                    <td>${app.monthlyConc > 0 ? formatCurrency(app.monthlyConc) : '—'}</td>
+                    <td>${app.oneTimeConc > 0 ? formatCurrency(app.oneTimeConc) : '—'}</td>
+                    <td class="net-effective">${formatCurrency(app.netEffective)}</td>
+                    <td>${app.moveInDate}</td>
+                  </tr>
+                `).join('')}
+              </tbody>
+            </table>
+          </div>
+        ` : `
+          <p class="no-data">No applications this week.</p>
+        `}
+      </div>
+      
+      <!-- UNIT MIX SUMMARY -->
+      <div class="leasing-report__section">
+        <h3>🏢 Unit Mix Summary</h3>
+        <div class="unit-mix-table-wrapper">
+          <table class="unit-mix-table">
+            <thead>
+              <tr>
+                <th>Floor Plan</th>
+                <th>Type</th>
+                <th>Units</th>
+                <th>Sq.Ft.</th>
+                <th>Leased</th>
+                <th>% Leased</th>
+                <th>Occupied</th>
+                <th>% Occ</th>
+                <th>Budget Rent</th>
+                <th>In-Place Rent</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${unitMix.map(fp => `
+                <tr>
+                  <td>${fp.name}</td>
+                  <td>${fp.type}</td>
+                  <td>${fp.unitMix}</td>
+                  <td>${fp.sqft}</td>
+                  <td>${fp.leased}</td>
+                  <td class="${fp.leasedPct >= 0.95 ? 'positive' : fp.leasedPct >= 0.90 ? '' : 'negative'}">${formatPercent(fp.leasedPct)}</td>
+                  <td>${fp.occupied}</td>
+                  <td class="${fp.occupiedPct >= 0.93 ? 'positive' : fp.occupiedPct >= 0.88 ? '' : 'negative'}">${formatPercent(fp.occupiedPct)}</td>
+                  <td>${formatCurrency(fp.budgetRent)}</td>
+                  <td>${formatCurrency(fp.inPlaceRent)}</td>
+                </tr>
+              `).join('')}
+            </tbody>
+            <tfoot>
+              <tr>
+                <td colspan="2"><strong>Totals / Averages</strong></td>
+                <td><strong>${totalUnits}</strong></td>
+                <td>—</td>
+                <td><strong>${Math.round(leasedPct * totalUnits)}</strong></td>
+                <td><strong>${formatPercent(leasedPct)}</strong></td>
+                <td><strong>${Math.round(occPct * totalUnits)}</strong></td>
+                <td><strong>${formatPercent(occPct)}</strong></td>
+                <td><strong>${formatCurrency(prop.avgRent || 1500)}</strong></td>
+                <td>—</td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+      
+      <!-- FOOTER -->
+      <div class="report-footer">
+        <p>Generated ${new Date().toLocaleString()} | RISE Portfolio Scorecard</p>
+      </div>
+    </div>
+  `;
+}
+
+/**
+ * Render a simple SVG trending chart
+ */
+function renderTrendingChart(data) {
+  const width = 600;
+  const height = 180;
+  const padding = { top: 20, right: 30, bottom: 30, left: 50 };
+  const chartWidth = width - padding.left - padding.right;
+  const chartHeight = height - padding.top - padding.bottom;
+  
+  // Scale functions
+  const xStep = chartWidth / (data.length - 1);
+  const maxOcc = Math.max(...data.map(d => Math.max(d.budgetedOcc, d.projectedOcc)));
+  const minOcc = Math.min(...data.map(d => Math.min(d.budgetedOcc, d.projectedOcc))) * 0.9;
+  const yScale = (val) => chartHeight - ((val - minOcc) / (maxOcc - minOcc)) * chartHeight;
+  
+  // Generate paths
+  const budgetPoints = data.map((d, i) => `${padding.left + i * xStep},${padding.top + yScale(d.budgetedOcc)}`).join(' ');
+  const projectedPoints = data.map((d, i) => `${padding.left + i * xStep},${padding.top + yScale(d.projectedOcc)}`).join(' ');
+  
+  // Y-axis ticks
+  const yTicks = [minOcc, (minOcc + maxOcc) / 2, maxOcc];
+  
+  return `
+    <svg viewBox="0 0 ${width} ${height}" class="trending-svg">
+      <!-- Grid lines -->
+      ${yTicks.map(tick => `
+        <line x1="${padding.left}" y1="${padding.top + yScale(tick)}" x2="${width - padding.right}" y2="${padding.top + yScale(tick)}" stroke="#e5e7eb" stroke-dasharray="4,4"/>
+        <text x="${padding.left - 8}" y="${padding.top + yScale(tick) + 4}" text-anchor="end" fill="#6b7280" font-size="10">${(tick * 100).toFixed(0)}%</text>
+      `).join('')}
+      
+      <!-- X-axis labels -->
+      ${data.map((d, i) => `
+        <text x="${padding.left + i * xStep}" y="${height - 8}" text-anchor="middle" fill="#6b7280" font-size="9">${d.label}</text>
+      `).join('')}
+      
+      <!-- Budget line -->
+      <polyline points="${budgetPoints}" fill="none" stroke="#94a3b8" stroke-width="2" stroke-dasharray="6,3"/>
+      
+      <!-- Projected line -->
+      <polyline points="${projectedPoints}" fill="none" stroke="#f97316" stroke-width="2.5"/>
+      
+      <!-- Projected dots -->
+      ${data.map((d, i) => `
+        <circle cx="${padding.left + i * xStep}" cy="${padding.top + yScale(d.projectedOcc)}" r="4" fill="#f97316"/>
+      `).join('')}
+    </svg>
+  `;
+}
+
+/**
+ * Generate Portfolio-level Daily Leasing Report
+ */
+function generatePortfolioLeasingReport() {
+  const today = new Date();
+  const dateStr = today.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+  
+  // Separate lease-up vs stabilized
+  const leaseUp = riseProperties.filter(p => p.defaultLeaseUp || p.physOcc < 0.5);
+  const stabilized = riseProperties.filter(p => !p.defaultLeaseUp && p.physOcc >= 0.5);
+  
+  // Calculate portfolio metrics
+  let totalUnits = 0, occupiedUnits = 0, leasedUnits = 0;
+  riseProperties.forEach(p => {
+    const units = p.type === 'OC' || p.type === 'STU' ? p.beds : p.units;
+    if (!units) return;
+    totalUnits += units;
+    occupiedUnits += units * (p.physOcc || 0);
+    leasedUnits += units * (p.leased || 0);
+  });
+  
+  const portfolioOcc = totalUnits > 0 ? occupiedUnits / totalUnits : 0;
+  const portfolioLeased = totalUnits > 0 ? leasedUnits / totalUnits : 0;
+  
+  // Aggregate activity (mock)
+  let totalTours = 0, totalApps = 0, totalMoveIns = 0;
+  riseProperties.forEach(p => {
+    const activity = getLeasingActivityData(p);
+    totalTours += activity.wtd.tours;
+    totalApps += activity.wtd.grossApps;
+    totalMoveIns += activity.wtd.moveIns;
+  });
+  
+  // Find properties needing attention
+  const needsAttention = stabilized
+    .filter(p => p.physOcc < 0.90 || (p.leased - p.physOcc) > 0.05)
+    .sort((a, b) => a.physOcc - b.physOcc)
+    .slice(0, 5);
+  
+  return `
+    <div class="leasing-report leasing-report--portfolio">
+      <div class="report-header report-header--leasing">
+        <div class="report-header__title">
+          <h1>🏠 Daily Leasing Report</h1>
+          <h2>RISE Portfolio</h2>
+        </div>
+        <div class="report-header__meta">
+          <div class="report-date">${dateStr}</div>
+          <span class="report-status-badge report-status-badge--portfolio">Portfolio</span>
+        </div>
+      </div>
+      
+      <!-- PORTFOLIO KPIs -->
+      <div class="leasing-report__kpi-banner">
+        <div class="kpi-item">
+          <div class="kpi-item__value">${formatPercent(portfolioLeased)}</div>
+          <div class="kpi-item__label">Portfolio Leased</div>
+        </div>
+        <div class="kpi-item">
+          <div class="kpi-item__value">${formatPercent(portfolioOcc)}</div>
+          <div class="kpi-item__label">Portfolio Occupancy</div>
+        </div>
+        <div class="kpi-item">
+          <div class="kpi-item__value">${formatNumber(totalUnits)}</div>
+          <div class="kpi-item__label">Total Units</div>
+        </div>
+        <div class="kpi-item kpi-item--highlight">
+          <div class="kpi-item__value">${riseProperties.length}</div>
+          <div class="kpi-item__label">Properties</div>
+        </div>
+      </div>
+      
+      <!-- WTD ACTIVITY SUMMARY -->
+      <div class="leasing-report__section">
+        <h3>📊 Week-to-Date Activity (Portfolio)</h3>
+        <div class="portfolio-activity-grid">
+          <div class="activity-card">
+            <div class="activity-card__value">${totalTours}</div>
+            <div class="activity-card__label">Tours</div>
+          </div>
+          <div class="activity-card">
+            <div class="activity-card__value">${totalApps}</div>
+            <div class="activity-card__label">Applications</div>
+          </div>
+          <div class="activity-card">
+            <div class="activity-card__value">${totalMoveIns}</div>
+            <div class="activity-card__label">Move-Ins</div>
+          </div>
+          <div class="activity-card">
+            <div class="activity-card__value">${totalTours > 0 ? formatPercent(totalApps / totalTours) : '—'}</div>
+            <div class="activity-card__label">Conversion</div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- LEASE-UP PROPERTIES -->
+      ${leaseUp.length > 0 ? `
+        <div class="leasing-report__section">
+          <h3>🚀 Lease-Up Properties (${leaseUp.length})</h3>
+          <div class="property-leasing-table-wrapper">
+            <table class="property-leasing-table">
+              <thead>
+                <tr>
+                  <th>Property</th>
+                  <th>Units</th>
+                  <th>Leased %</th>
+                  <th>Occ %</th>
+                  <th>WTD Tours</th>
+                  <th>WTD Apps</th>
+                  <th>Goal/Wk</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${leaseUp.map(p => {
+                  const activity = getLeasingActivityData(p);
+                  const units = p.type === 'OC' || p.type === 'STU' ? p.beds : p.units;
+                  return `
+                    <tr>
+                      <td>${p.name}</td>
+                      <td>${units}</td>
+                      <td>${formatPercent(p.leased || 0)}</td>
+                      <td>${formatPercent(p.physOcc || 0)}</td>
+                      <td>${activity.wtd.tours}</td>
+                      <td>${activity.wtd.grossApps}</td>
+                      <td>${activity.moveInGoalPerWeek}</td>
+                    </tr>
+                  `;
+                }).join('')}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      ` : ''}
+      
+      <!-- NEEDS ATTENTION -->
+      ${needsAttention.length > 0 ? `
+        <div class="leasing-report__section">
+          <h3>⚠️ Needs Attention</h3>
+          <div class="attention-list">
+            ${needsAttention.map(p => `
+              <div class="attention-item">
+                <span class="attention-item__name">${p.name}</span>
+                <span class="attention-item__stats">
+                  Occ: <span class="${p.physOcc < 0.90 ? 'negative' : ''}">${formatPercent(p.physOcc)}</span> |
+                  Leased: ${formatPercent(p.leased)} |
+                  Gap: ${formatPercent(p.leased - p.physOcc)}
+                </span>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      ` : `
+        <div class="leasing-report__section">
+          <h3>✅ All Properties On Track</h3>
+          <p class="success-message">No stabilized properties below 90% occupancy.</p>
+        </div>
+      `}
+      
+      <!-- TOP PERFORMERS -->
+      <div class="leasing-report__section">
+        <h3>🏆 Top Leasing Activity (WTD)</h3>
+        <div class="property-leasing-table-wrapper">
+          <table class="property-leasing-table">
+            <thead>
+              <tr>
+                <th>Property</th>
+                <th>Tours</th>
+                <th>Apps</th>
+                <th>Conversion</th>
+                <th>Occ %</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${stabilized
+                .map(p => ({ ...p, activity: getLeasingActivityData(p) }))
+                .sort((a, b) => b.activity.wtd.grossApps - a.activity.wtd.grossApps)
+                .slice(0, 5)
+                .map(p => `
+                  <tr>
+                    <td>${p.name}</td>
+                    <td>${p.activity.wtd.tours}</td>
+                    <td>${p.activity.wtd.grossApps}</td>
+                    <td>${p.activity.wtd.tours > 0 ? formatPercent(p.activity.wtd.grossApps / p.activity.wtd.tours) : '—'}</td>
+                    <td>${formatPercent(p.physOcc)}</td>
+                  </tr>
+                `).join('')}
+            </tbody>
+          </table>
+        </div>
+      </div>
+      
+      <div class="report-footer">
+        <p>Generated ${new Date().toLocaleString()} | RISE Portfolio Scorecard</p>
+      </div>
+    </div>
+  `;
+}
+
+// ============================================================================
+// EXISTING REPORTS (Daily Snapshot, Weekly, Executive, Investor)
+// ============================================================================
+
 /**
  * Generate Daily Report for a property
  */
@@ -182,7 +956,7 @@ export function generateDailyReport(propertyId) {
     <div class="daily-report">
       <div class="report-header">
         <div class="report-header__title">
-          <h1>📅 Daily Report</h1>
+          <h1>📅 Daily Snapshot</h1>
           <h2>${prop.name}</h2>
         </div>
         <div class="report-header__meta">
@@ -299,7 +1073,7 @@ function generatePortfolioDailyReport(properties, dateStr) {
     <div class="daily-report daily-report--portfolio">
       <div class="report-header">
         <div class="report-header__title">
-          <h1>📅 Daily Portfolio Report</h1>
+          <h1>📅 Daily Portfolio Snapshot</h1>
           <h2>RISE Residential</h2>
         </div>
         <div class="report-header__meta">
@@ -1056,7 +1830,7 @@ export function printReport(reportHtml, title) {
         .report-header h1 { font-size: 18px; font-weight: 700; color: #111827; }
         .report-header h2 { font-size: 14px; font-weight: 500; color: #6b7280; margin-top: 4px; }
         .report-date { font-size: 10px; color: #9ca3af; }
-        .report-type-badge { 
+        .report-type-badge, .report-status-badge { 
           display: inline-block; 
           padding: 2px 8px; 
           background: #f3f4f6; 
@@ -1066,8 +1840,225 @@ export function printReport(reportHtml, title) {
           color: #6b7280;
           margin-top: 4px;
         }
+        .report-status-badge--leaseup { background: #fef3c7; color: #92400e; }
+        .report-status-badge--stabilized { background: #d1fae5; color: #065f46; }
+        .report-status-badge--portfolio { background: #dbeafe; color: #1e40af; }
         
         h3 { font-size: 12px; font-weight: 600; margin: 16px 0 8px; color: #374151; }
+        
+        /* KPI Banner */
+        .leasing-report__kpi-banner {
+          display: flex;
+          gap: 16px;
+          margin-bottom: 20px;
+          padding: 16px;
+          background: linear-gradient(135deg, #1f2937 0%, #374151 100%);
+          border-radius: 8px;
+        }
+        .kpi-item {
+          flex: 1;
+          text-align: center;
+          padding: 8px;
+        }
+        .kpi-item__value {
+          font-size: 24px;
+          font-weight: 700;
+          color: white;
+        }
+        .kpi-item__label {
+          font-size: 9px;
+          color: #9ca3af;
+          margin-top: 2px;
+        }
+        .kpi-item--highlight {
+          background: rgba(249, 115, 22, 0.2);
+          border-radius: 6px;
+        }
+        .kpi-item--highlight .kpi-item__value { color: #fb923c; }
+        
+        /* Activity Table */
+        .activity-table {
+          width: 100%;
+          border-collapse: collapse;
+          font-size: 10px;
+        }
+        .activity-table th {
+          text-align: left;
+          padding: 8px;
+          background: #f3f4f6;
+          font-weight: 600;
+          border-bottom: 1px solid #e5e7eb;
+        }
+        .activity-table td {
+          padding: 6px 8px;
+          border-bottom: 1px solid #f3f4f6;
+        }
+        .activity-table__divider td {
+          padding: 2px;
+          background: #e5e7eb;
+        }
+        .activity-table__highlight {
+          background: #fef3c7;
+        }
+        .activity-table__net td {
+          font-weight: 600;
+        }
+        
+        /* Trending Chart */
+        .trending-chart-container {
+          margin: 12px 0;
+        }
+        .trending-svg {
+          width: 100%;
+          height: auto;
+        }
+        .trending-legend {
+          display: flex;
+          gap: 16px;
+          justify-content: center;
+          margin-top: 8px;
+          font-size: 9px;
+          color: #6b7280;
+        }
+        .legend-dot {
+          display: inline-block;
+          width: 12px;
+          height: 3px;
+          margin-right: 4px;
+          vertical-align: middle;
+        }
+        .legend-dot--budget { background: #94a3b8; }
+        .legend-dot--projected { background: #f97316; }
+        
+        .trending-table-mini {
+          margin-top: 12px;
+          overflow-x: auto;
+        }
+        .trending-table-mini table {
+          width: 100%;
+          font-size: 9px;
+        }
+        .trending-table-mini th, .trending-table-mini td {
+          padding: 4px 6px;
+          text-align: center;
+        }
+        .trending-table-mini th { background: #f9fafb; }
+        
+        /* Applications Table */
+        .applications-table {
+          width: 100%;
+          border-collapse: collapse;
+          font-size: 9px;
+        }
+        .applications-table th {
+          background: #1f2937;
+          color: white;
+          padding: 6px;
+          text-align: left;
+          font-weight: 500;
+        }
+        .applications-table td {
+          padding: 6px;
+          border-bottom: 1px solid #e5e7eb;
+        }
+        .applications-table .net-effective {
+          font-weight: 600;
+          color: #059669;
+        }
+        
+        /* Unit Mix Table */
+        .unit-mix-table {
+          width: 100%;
+          border-collapse: collapse;
+          font-size: 9px;
+        }
+        .unit-mix-table th {
+          background: #f3f4f6;
+          padding: 6px;
+          text-align: left;
+          font-weight: 600;
+        }
+        .unit-mix-table td {
+          padding: 5px 6px;
+          border-bottom: 1px solid #f3f4f6;
+        }
+        .unit-mix-table tfoot td {
+          background: #f9fafb;
+          font-weight: 600;
+        }
+        
+        /* Portfolio Styles */
+        .portfolio-activity-grid {
+          display: grid;
+          grid-template-columns: repeat(4, 1fr);
+          gap: 12px;
+          margin: 12px 0;
+        }
+        .activity-card {
+          text-align: center;
+          padding: 16px;
+          background: #f9fafb;
+          border-radius: 8px;
+        }
+        .activity-card__value {
+          font-size: 28px;
+          font-weight: 700;
+          color: #111827;
+        }
+        .activity-card__label {
+          font-size: 10px;
+          color: #6b7280;
+          margin-top: 4px;
+        }
+        
+        .property-leasing-table {
+          width: 100%;
+          border-collapse: collapse;
+          font-size: 10px;
+        }
+        .property-leasing-table th {
+          background: #f3f4f6;
+          padding: 8px;
+          text-align: left;
+          font-weight: 600;
+        }
+        .property-leasing-table td {
+          padding: 6px 8px;
+          border-bottom: 1px solid #f3f4f6;
+        }
+        
+        .attention-list {
+          margin: 8px 0;
+        }
+        .attention-item {
+          display: flex;
+          justify-content: space-between;
+          padding: 8px 12px;
+          background: #fef3c7;
+          border-left: 3px solid #f59e0b;
+          border-radius: 4px;
+          margin: 4px 0;
+          font-size: 10px;
+        }
+        .attention-item__name { font-weight: 600; }
+        .attention-item__stats { color: #6b7280; }
+        
+        .success-message {
+          padding: 16px;
+          background: #d1fae5;
+          border-radius: 6px;
+          color: #065f46;
+          font-size: 11px;
+        }
+        
+        .no-data {
+          padding: 16px;
+          background: #f9fafb;
+          border-radius: 6px;
+          color: #6b7280;
+          font-style: italic;
+          text-align: center;
+        }
         
         .snapshot-grid, .kpi-grid, .leasing-grid, .reputation-grid { 
           display: grid; 
@@ -1097,6 +2088,9 @@ export function printReport(reportHtml, title) {
         .kpi-card--yellow { border-left: 3px solid #eab308; }
         .kpi-card--red { border-left: 3px solid #ef4444; }
         
+        .positive { color: #22c55e; }
+        .negative { color: #ef4444; }
+        
         .urgent-list { list-style: none; padding: 0; }
         .urgent-item { padding: 8px 12px; margin: 4px 0; border-radius: 4px; font-size: 10px; }
         .urgent-item--critical { background: #fef2f2; border-left: 3px solid #ef4444; color: #991b1b; }
@@ -1109,8 +2103,6 @@ export function printReport(reportHtml, title) {
         table { width: 100%; border-collapse: collapse; font-size: 10px; }
         th { text-align: left; padding: 8px; background: #f3f4f6; font-weight: 600; border-bottom: 1px solid #e5e7eb; }
         td { padding: 8px; border-bottom: 1px solid #f3f4f6; }
-        .positive { color: #22c55e; }
-        .negative { color: #ef4444; }
         
         .status-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; }
         .status-dot--green { background: #22c55e; }
@@ -1200,6 +2192,7 @@ export default {
   REPORT_TYPES,
   renderReportsHub,
   renderPropertySelector,
+  generateLeasingReport,
   generateDailyReport,
   generateWeeklyReport,
   generateExecutiveReport,

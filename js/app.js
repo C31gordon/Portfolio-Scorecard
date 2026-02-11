@@ -21,6 +21,7 @@ import { generateBoardReport, printBoardReport } from './components/board-report
 import { 
   renderReportsHub, 
   renderPropertySelector, 
+  generateLeasingReport,
   generateDailyReport, 
   generateWeeklyReport, 
   generateExecutiveReport, 
@@ -2865,9 +2866,13 @@ class App {
       (riseProperties.find(p => p.id === propertyId)?.name || propertyId);
     
     switch (reportType) {
+      case 'leasing':
+        reportHtml = generateLeasingReport(propertyId);
+        reportTitle = `🏠 Daily Leasing Report - ${propName}`;
+        break;
       case 'daily':
         reportHtml = generateDailyReport(propertyId);
-        reportTitle = `📅 Daily Report - ${propName}`;
+        reportTitle = `📅 Daily Snapshot - ${propName}`;
         break;
       case 'weekly':
         reportHtml = generateWeeklyReport(propertyId);

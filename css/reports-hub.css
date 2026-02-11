@@ -912,3 +912,405 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* ============================================================================
+   DAILY LEASING REPORT (DORO-STYLE)
+   ============================================================================ */
+
+.leasing-report {
+  padding: var(--space-4);
+}
+
+.report-header--leasing {
+  margin-bottom: var(--space-4);
+}
+
+.report-status-badge {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: var(--radius-full);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  margin-top: var(--space-1);
+}
+
+.report-status-badge--leaseup {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.report-status-badge--stabilized {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.report-status-badge--portfolio {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+/* KPI Banner */
+.leasing-report__kpi-banner {
+  display: flex;
+  gap: var(--space-4);
+  margin-bottom: var(--space-6);
+  padding: var(--space-4);
+  background: linear-gradient(135deg, #1f2937 0%, #374151 100%);
+  border-radius: var(--radius-lg);
+}
+
+.kpi-item {
+  flex: 1;
+  text-align: center;
+  padding: var(--space-2);
+}
+
+.kpi-item__value {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: white;
+}
+
+.kpi-item__label {
+  font-size: var(--text-xs);
+  color: #9ca3af;
+  margin-top: var(--space-1);
+}
+
+.kpi-item--highlight {
+  background: rgba(249, 115, 22, 0.2);
+  border-radius: var(--radius-md);
+}
+
+.kpi-item--highlight .kpi-item__value {
+  color: #fb923c;
+}
+
+/* Section Styles */
+.leasing-report__section {
+  margin-bottom: var(--space-6);
+}
+
+.leasing-report__section h3 {
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: var(--space-3);
+  padding-bottom: var(--space-2);
+  border-bottom: 1px solid var(--border-secondary);
+}
+
+/* Activity Table */
+.activity-table-wrapper {
+  overflow-x: auto;
+}
+
+.activity-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--text-sm);
+}
+
+.activity-table th {
+  text-align: left;
+  padding: var(--space-2) var(--space-3);
+  background: var(--bg-tertiary);
+  font-weight: 600;
+  color: var(--text-primary);
+  border-bottom: 1px solid var(--border-primary);
+}
+
+.activity-table td {
+  padding: var(--space-2) var(--space-3);
+  border-bottom: 1px solid var(--border-secondary);
+  color: var(--text-primary);
+}
+
+.activity-table__divider td {
+  padding: 2px;
+  background: var(--border-secondary);
+}
+
+.activity-table__highlight {
+  background: #fef9c3;
+}
+
+.activity-table__net td {
+  font-weight: 600;
+}
+
+.activity-table .positive {
+  color: #16a34a;
+}
+
+.activity-table .negative {
+  color: #dc2626;
+}
+
+/* Trending Chart */
+.trending-chart-container {
+  margin: var(--space-3) 0;
+}
+
+.trending-chart {
+  background: var(--bg-secondary);
+  border-radius: var(--radius-md);
+  padding: var(--space-3);
+}
+
+.trending-svg {
+  width: 100%;
+  height: auto;
+  max-height: 200px;
+}
+
+.trending-legend {
+  display: flex;
+  gap: var(--space-6);
+  justify-content: center;
+  margin-top: var(--space-3);
+  font-size: var(--text-xs);
+  color: var(--text-secondary);
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.legend-dot {
+  display: inline-block;
+  width: 16px;
+  height: 3px;
+  border-radius: 2px;
+}
+
+.legend-dot--budget {
+  background: #94a3b8;
+}
+
+.legend-dot--projected {
+  background: #f97316;
+}
+
+/* Trending Mini Table */
+.trending-table-mini {
+  margin-top: var(--space-4);
+  overflow-x: auto;
+}
+
+.trending-table-mini table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--text-xs);
+}
+
+.trending-table-mini th,
+.trending-table-mini td {
+  padding: var(--space-1) var(--space-2);
+  text-align: center;
+}
+
+.trending-table-mini th {
+  background: var(--bg-tertiary);
+  font-weight: 500;
+}
+
+.trending-table-mini .positive {
+  color: #16a34a;
+}
+
+.trending-table-mini .negative {
+  color: #dc2626;
+}
+
+/* Applications Table */
+.applications-table-wrapper {
+  overflow-x: auto;
+}
+
+.applications-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--text-xs);
+}
+
+.applications-table th {
+  background: #1f2937;
+  color: white;
+  padding: var(--space-2);
+  text-align: left;
+  font-weight: 500;
+}
+
+.applications-table td {
+  padding: var(--space-2);
+  border-bottom: 1px solid var(--border-secondary);
+}
+
+.applications-table .net-effective {
+  font-weight: 600;
+  color: #059669;
+}
+
+.no-data {
+  padding: var(--space-4);
+  background: var(--bg-secondary);
+  border-radius: var(--radius-md);
+  color: var(--text-muted);
+  font-style: italic;
+  text-align: center;
+}
+
+/* Unit Mix Table */
+.unit-mix-table-wrapper {
+  overflow-x: auto;
+}
+
+.unit-mix-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--text-xs);
+}
+
+.unit-mix-table th {
+  background: var(--bg-tertiary);
+  padding: var(--space-2);
+  text-align: left;
+  font-weight: 600;
+}
+
+.unit-mix-table td {
+  padding: var(--space-1) var(--space-2);
+  border-bottom: 1px solid var(--border-secondary);
+}
+
+.unit-mix-table tfoot td {
+  background: var(--bg-tertiary);
+  font-weight: 600;
+}
+
+.unit-mix-table .positive {
+  color: #16a34a;
+}
+
+.unit-mix-table .negative {
+  color: #dc2626;
+}
+
+/* Portfolio Leasing Report */
+.leasing-report--portfolio {
+  /* Inherits base styles */
+}
+
+.portfolio-activity-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-4);
+  margin: var(--space-4) 0;
+}
+
+.activity-card {
+  text-align: center;
+  padding: var(--space-4);
+  background: var(--bg-secondary);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-secondary);
+}
+
+.activity-card__value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.activity-card__label {
+  font-size: var(--text-xs);
+  color: var(--text-secondary);
+  margin-top: var(--space-1);
+}
+
+/* Property Leasing Table */
+.property-leasing-table-wrapper {
+  overflow-x: auto;
+}
+
+.property-leasing-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--text-sm);
+}
+
+.property-leasing-table th {
+  background: var(--bg-tertiary);
+  padding: var(--space-2) var(--space-3);
+  text-align: left;
+  font-weight: 600;
+}
+
+.property-leasing-table td {
+  padding: var(--space-2) var(--space-3);
+  border-bottom: 1px solid var(--border-secondary);
+}
+
+/* Attention List */
+.attention-list {
+  margin: var(--space-3) 0;
+}
+
+.attention-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-3);
+  background: #fef3c7;
+  border-left: 3px solid #f59e0b;
+  border-radius: var(--radius-sm);
+  margin-bottom: var(--space-2);
+}
+
+.attention-item__name {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.attention-item__stats {
+  font-size: var(--text-xs);
+  color: var(--text-secondary);
+}
+
+.attention-item__stats .negative {
+  color: #dc2626;
+  font-weight: 600;
+}
+
+.success-message {
+  padding: var(--space-4);
+  background: #d1fae5;
+  border-radius: var(--radius-md);
+  color: #065f46;
+  text-align: center;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .leasing-report__kpi-banner {
+    flex-wrap: wrap;
+  }
+  
+  .kpi-item {
+    flex: 1 1 45%;
+  }
+  
+  .portfolio-activity-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .activity-table,
+  .applications-table,
+  .unit-mix-table,
+  .property-leasing-table {
+    font-size: var(--text-xs);
+  }
+}
