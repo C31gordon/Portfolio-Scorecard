@@ -2483,10 +2483,10 @@ class App {
           </div>
         </div>
 
-        <!-- ROW 5: Operations -->
-        <div class="drill-grid drill-grid--2">
+        <!-- ROW 5: Operations & Move Activity (4 charts) -->
+        <div class="drill-grid drill-grid--4">
           <!-- NOI vs Budget -->
-          <div class="drill-card drill-card--chart" data-metric="noiVariance" data-prop="${propId}">
+          <div class="drill-card drill-card--chart drill-card--compact" data-metric="noiVariance" data-prop="${propId}">
             <div class="drill-card__header">
               <h4>NOI vs Budget</h4>
               <div class="view-toggle">
@@ -2509,7 +2509,7 @@ class App {
           </div>
 
           <!-- Maintenance On-Time -->
-          <div class="drill-card drill-card--chart" data-metric="woSla" data-prop="${propId}">
+          <div class="drill-card drill-card--chart drill-card--compact" data-metric="woSla" data-prop="${propId}">
             <div class="drill-card__header">
               <h4>Maintenance On-Time</h4>
               <div class="view-toggle">
@@ -2530,27 +2530,21 @@ class App {
               <div class="drill-card__drillin" id="drillin_woSla_${propId}"></div>
             </div>
           </div>
-        </div>
 
-        <!-- ROW 6: Move Activity -->
-        <div class="drill-section drill-section--move-activity">
-          <h4 class="drill-section__title">Move Activity</h4>
-          <div class="drill-grid drill-grid--2">
-            <!-- New Lease vs Move-out Comparison -->
-            <div class="drill-card drill-card--chart" data-metric="moveActivity" data-prop="${propId}">
-              <div class="drill-card__header">
-                <h4>New Lease vs Move-out (6 Mo)</h4>
-              </div>
-              <div class="drill-card__chart" id="chart_moveActivity_${propId}" style="min-height: 180px;"></div>
+          <!-- New Lease vs Move-out Comparison -->
+          <div class="drill-card drill-card--chart drill-card--compact" data-metric="moveActivity" data-prop="${propId}">
+            <div class="drill-card__header">
+              <h4>New Lease vs Move-out (6 Mo)</h4>
             </div>
+            <div class="drill-card__chart" id="chart_moveActivity_${propId}" style="min-height: 120px;"></div>
+          </div>
 
-            <!-- Move-out Reasons (Pareto) -->
-            <div class="drill-card drill-card--chart" data-metric="moveOutReasons" data-prop="${propId}">
-              <div class="drill-card__header">
-                <h4>Top Move-out Reasons</h4>
-              </div>
-              <div class="drill-card__chart" id="chart_moveOutReasons_${propId}" style="min-height: 180px;"></div>
+          <!-- Move-out Reasons (Pareto) -->
+          <div class="drill-card drill-card--chart drill-card--compact" data-metric="moveOutReasons" data-prop="${propId}">
+            <div class="drill-card__header">
+              <h4>Top Move-out Reasons</h4>
             </div>
+            <div class="drill-card__chart" id="chart_moveOutReasons_${propId}" style="min-height: 120px;"></div>
           </div>
         </div>
 

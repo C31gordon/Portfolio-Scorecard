@@ -3785,27 +3785,31 @@
   margin-bottom: var(--space-6);
 }
 
-/* Move Activity Section */
-.drill-section--move-activity {
-  margin-top: var(--space-6);
-  margin-bottom: var(--space-6);
+/* Compact Chart Cards (4-column layout) */
+.drill-card--compact {
+  padding: var(--space-2);
 }
 
-.drill-section--move-activity .drill-grid--2 {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: var(--space-3);
+.drill-card--compact .drill-card__header h4 {
+  font-size: 10px;
 }
 
-.drill-section--move-activity .drill-card--chart {
-  min-width: 0;
-  overflow: hidden;
+.drill-card--compact .drill-card__value {
+  font-size: var(--text-xl);
+  margin-bottom: var(--space-1);
 }
 
-@media (max-width: 900px) {
-  .drill-section--move-activity .drill-grid--2 {
-    grid-template-columns: 1fr;
-  }
+.drill-card--compact .drill-card__chart {
+  min-height: 80px;
+}
+
+.drill-card--compact .view-toggle {
+  gap: 2px;
+}
+
+.drill-card--compact .view-toggle__btn {
+  padding: 2px 6px;
+  font-size: 9px;
 }
 
 .drill-section__title {
