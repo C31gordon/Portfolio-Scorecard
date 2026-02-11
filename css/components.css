@@ -3791,6 +3791,23 @@
   margin-bottom: var(--space-6);
 }
 
+.drill-section--move-activity .drill-grid--2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-3);
+}
+
+.drill-section--move-activity .drill-card--chart {
+  min-width: 0;
+  overflow: hidden;
+}
+
+@media (max-width: 900px) {
+  .drill-section--move-activity .drill-grid--2 {
+    grid-template-columns: 1fr;
+  }
+}
+
 .drill-section__title {
   font-size: 14px;
   font-weight: 600;
