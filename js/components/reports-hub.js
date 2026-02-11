@@ -320,9 +320,48 @@ function getUnitMixData(prop) {
       budgetRent: Math.round(budgetRent),
       budgetRentSqft: budgetRent / fp.sqft,
       inPlaceRent: Math.round(budgetRent * (0.95 + Math.random() * 0.1)),
+      inPlaceRentSqft: (budgetRent * (0.95 + Math.random() * 0.1)) / fp.sqft,
       wtdApps: Math.floor(Math.random() * 3)
     };
   });
+}
+
+/**
+ * Calculate weighted averages for unit mix
+ */
+function calculateUnitMixWeightedAverages(unitMix) {
+  let totalUnits = 0;
+  let weightedSqft = 0;
+  let weightedBudgetRent = 0;
+  let weightedInPlaceRent = 0;
+  let occupiedUnits = 0;
+  let weightedInPlaceRentOccupied = 0;
+  
+  unitMix.forEach(fp => {
+    totalUnits += fp.unitMix;
+    weightedSqft += fp.sqft * fp.unitMix;
+    weightedBudgetRent += fp.budgetRent * fp.unitMix;
+    // In-place rent weighted by occupied units (only occupied units have in-place rent)
+    if (fp.occupied > 0) {
+      occupiedUnits += fp.occupied;
+      weightedInPlaceRent += fp.inPlaceRent * fp.occupied;
+    }
+  });
+  
+  const avgSqft = totalUnits > 0 ? weightedSqft / totalUnits : 0;
+  const avgBudgetRent = totalUnits > 0 ? weightedBudgetRent / totalUnits : 0;
+  const avgBudgetRentSqft = avgSqft > 0 ? avgBudgetRent / avgSqft : 0;
+  const avgInPlaceRent = occupiedUnits > 0 ? weightedInPlaceRent / occupiedUnits : 0;
+  const avgInPlaceRentSqft = avgSqft > 0 && occupiedUnits > 0 ? avgInPlaceRent / avgSqft : 0;
+  
+  return {
+    totalUnits,
+    avgSqft: Math.round(avgSqft),
+    avgBudgetRent: Math.round(avgBudgetRent),
+    avgBudgetRentSqft,
+    avgInPlaceRent: Math.round(avgInPlaceRent),
+    avgInPlaceRentSqft
+  };
 }
 
 /**
@@ -434,6 +473,10 @@ export function generateLeasingReport(propertyId) {
         <div class="kpi-item">
           <div class="kpi-item__value">${formatPercent(trendingOcc90)}</div>
           <div class="kpi-item__label">Trending (90 Days)</div>
+        </div>
+        <div class="kpi-item">
+          <div class="kpi-item__value">${formatPercent(prop.renewalRatio || 0)}</div>
+          <div class="kpi-item__label">Renewal Ratio</div>
         </div>
         <div class="kpi-item kpi-item--highlight">
           <div class="kpi-item__value">${activity.moveInGoalPerWeek}</div>
@@ -628,6 +671,9 @@ export function generateLeasingReport(propertyId) {
       <!-- UNIT MIX SUMMARY -->
       <div class="leasing-report__section">
         <h3>🏢 Unit Mix Summary</h3>
+        ${(() => {
+          const wtdAvg = calculateUnitMixWeightedAverages(unitMix);
+          return `
         <div class="unit-mix-table-wrapper">
           <table class="unit-mix-table">
             <thead>
@@ -641,7 +687,9 @@ export function generateLeasingReport(propertyId) {
                 <th>Occupied</th>
                 <th>% Occ</th>
                 <th>Budget Rent</th>
+                <th>Budget $/SF</th>
                 <th>In-Place Rent</th>
+                <th>In-Place $/SF</th>
               </tr>
             </thead>
             <tbody>
@@ -656,25 +704,31 @@ export function generateLeasingReport(propertyId) {
                   <td>${fp.occupied}</td>
                   <td class="${fp.occupiedPct >= 0.93 ? 'positive' : fp.occupiedPct >= 0.88 ? '' : 'negative'}">${formatPercent(fp.occupiedPct)}</td>
                   <td>${formatCurrency(fp.budgetRent)}</td>
-                  <td>${formatCurrency(fp.inPlaceRent)}</td>
+                  <td>$${fp.budgetRentSqft.toFixed(2)}</td>
+                  <td>${fp.occupied > 0 ? formatCurrency(fp.inPlaceRent) : '—'}</td>
+                  <td>${fp.occupied > 0 ? '$' + fp.inPlaceRentSqft.toFixed(2) : '—'}</td>
                 </tr>
               `).join('')}
             </tbody>
             <tfoot>
               <tr>
-                <td colspan="2"><strong>Totals / Averages</strong></td>
-                <td><strong>${totalUnits}</strong></td>
-                <td>—</td>
+                <td colspan="2"><strong>Wtd. Avg / Totals</strong></td>
+                <td><strong>${wtdAvg.totalUnits}</strong></td>
+                <td><strong>${wtdAvg.avgSqft}</strong></td>
                 <td><strong>${Math.round(leasedPct * totalUnits)}</strong></td>
                 <td><strong>${formatPercent(leasedPct)}</strong></td>
                 <td><strong>${Math.round(occPct * totalUnits)}</strong></td>
                 <td><strong>${formatPercent(occPct)}</strong></td>
-                <td><strong>${formatCurrency(prop.avgRent || 1500)}</strong></td>
-                <td>—</td>
+                <td><strong>${formatCurrency(wtdAvg.avgBudgetRent)}</strong></td>
+                <td><strong>$${wtdAvg.avgBudgetRentSqft.toFixed(2)}</strong></td>
+                <td><strong>${formatCurrency(wtdAvg.avgInPlaceRent)}</strong></td>
+                <td><strong>$${wtdAvg.avgInPlaceRentSqft.toFixed(2)}</strong></td>
               </tr>
             </tfoot>
           </table>
         </div>
+          `;
+        })()}
       </div>
       
       <!-- FOOTER -->
