@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>RISE Bartram Park — Daily Leasing Report</title>
+<title>RISE Daily Leasing Report — Bartram Park</title>
 <style>
 :root{--navy:#1B2A4A;--blue:#2E86AB;--light:#F4F6F9;--white:#fff;--green:#28a745;--red:#dc3545;--amber:#ffc107;--gray:#6C7A89;--border:#E0E4EA;--shadow:0 2px 8px rgba(27,42,74,.08)}
 *{margin:0;padding:0;box-sizing:border-box}
@@ -19,7 +19,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 .prop-select option{color:#333;background:#fff}
 .badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.5px}
 .badge-blue{background:var(--blue);color:#fff}
-.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin-bottom:20px}
+.kpi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:20px}
 .kpi-card{background:#fff;border-radius:10px;padding:16px;box-shadow:var(--shadow);text-align:center;border-top:3px solid var(--blue)}
 .kpi-label{font-size:10px;text-transform:uppercase;letter-spacing:.8px;color:var(--gray);font-weight:600;margin-bottom:4px}
 .kpi-value{font-size:26px;font-weight:800;color:var(--navy)}
@@ -37,27 +37,40 @@ tbody tr:nth-child(even){background:#FAFBFC}
 tbody tr:hover{background:#EDF2F7}
 .text-right{text-align:right}.text-center{text-align:center}
 .totals td{font-weight:700;background:#EDF2F7!important;border-top:2px solid var(--navy)}
-.occ-bar{display:inline-block;height:14px;border-radius:3px;min-width:4px;vertical-align:middle}
-.card-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
-.info-card{background:#fff;border-radius:10px;box-shadow:var(--shadow);padding:16px;border-left:4px solid var(--blue)}
-.info-card h4{font-size:12px;text-transform:uppercase;letter-spacing:.5px;color:var(--navy);margin-bottom:8px}
-.info-card .big{font-size:28px;font-weight:800;color:var(--navy)}
-.donut-wrap{display:flex;align-items:center;gap:20px;flex-wrap:wrap;justify-content:center}
+.chart-row{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:20px}
+.mini-card{background:#fff;border-radius:10px;box-shadow:var(--shadow);padding:20px}
+.mini-card h3{font-size:14px;color:var(--navy);margin-bottom:12px;font-weight:600}
+.donut-wrap{display:flex;align-items:center;gap:16px;flex-wrap:wrap;justify-content:center}
 .donut-legend{font-size:12px}
-.donut-legend div{margin-bottom:6px;display:flex;align-items:center;gap:6px}
-.donut-legend .swatch{width:12px;height:12px;border-radius:3px;flex-shrink:0}
+.donut-legend div{margin-bottom:5px;display:flex;align-items:center;gap:6px}
+.donut-legend .sw{width:12px;height:12px;border-radius:3px;flex-shrink:0}
+.funnel-stage{padding:10px 14px;border-radius:6px;color:#fff;font-weight:600;font-size:13px;margin-bottom:2px;display:flex;justify-content:space-between;align-items:center}
+.funnel-stage .num{font-size:20px;font-weight:800}
+.funnel-arrow{text-align:center;color:var(--gray);font-size:11px;margin:1px 0}
+.bar-group{margin-bottom:10px}
+.bar-group label{font-size:12px;color:var(--navy);font-weight:600;display:block;margin-bottom:3px}
+.bar-pair{display:flex;flex-direction:column;gap:3px}
+.bar-track{height:20px;background:#EDF2F7;border-radius:3px;position:relative;overflow:hidden}
+.bar-fill{height:100%;border-radius:3px;display:flex;align-items:center;padding-left:6px;color:#fff;font-size:10px;font-weight:700}
+.highlights-card{background:linear-gradient(135deg,#F8FAFC,#EDF2F7);border-left:4px solid var(--blue);padding:18px;border-radius:0 8px 8px 0;line-height:1.8;font-size:13px;color:#444}
+.highlights-card strong{color:var(--navy)}
+.highlights-card .hl-section{margin-bottom:8px}
+.highlights-card .hl-label{font-size:11px;text-transform:uppercase;letter-spacing:.5px;color:var(--blue);font-weight:700}
+.leased-bar{display:inline-block;height:14px;border-radius:3px;min-width:4px;vertical-align:middle}
+.toggle-row{display:flex;align-items:center;gap:8px;margin-bottom:12px;font-size:13px}
+.toggle-row input{cursor:pointer}
+.curr-month{background:#E8F4FD!important;font-weight:600}
 .formula-table td{padding:6px 10px;vertical-align:top;font-size:12px}
 .formula-table .metric{font-weight:600;color:var(--navy);white-space:nowrap}
 .formula-table .formula{color:var(--gray);font-family:monospace;font-size:11px}
-.chart-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;margin-bottom:16px}
-@media print{body{background:#fff;font-size:11px}.container{padding:0}.section{break-inside:avoid;box-shadow:none;border:1px solid #ddd}.header{background:var(--navy)!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}.kpi-card{box-shadow:none;border:1px solid #ddd}.section.collapsed .section-body{display:block}}
+@media print{body{background:#fff;font-size:11px}.container{padding:0}.section{break-inside:avoid;box-shadow:none;border:1px solid #ddd}.header{background:var(--navy)!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}.kpi-card,.mini-card{box-shadow:none;border:1px solid #ddd}.section.collapsed .section-body{display:block}}
 @media(max-width:768px){.header{flex-direction:column;text-align:center}.header-right{text-align:center}.kpi-grid{grid-template-columns:repeat(2,1fr)}.chart-row{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
 <div class="container">
 
-<!-- HEADER -->
+<!-- 1. HEADER -->
 <div class="header">
 <div class="header-left">
 <h1><span>RISE</span> Daily Leasing Report</h1>
@@ -73,155 +86,291 @@ tbody tr:hover{background:#EDF2F7}
 </div>
 </div>
 
-<!-- KPI CARDS -->
+<!-- 2. KPI CARDS -->
 <div class="kpi-grid">
 <div class="kpi-card"><div class="kpi-label">Physical Occupancy</div><div class="kpi-value">89.9%</div><div class="kpi-sub">267 / 297 units</div></div>
 <div class="kpi-card"><div class="kpi-label">Leased %</div><div class="kpi-value">93.3%</div><div class="kpi-sub">277 / 297 units</div></div>
-<div class="kpi-card"><div class="kpi-label">Exposure</div><div class="kpi-value" style="color:var(--amber)">11.4%</div><div class="kpi-sub">34 units exposed</div></div>
+<div class="kpi-card"><div class="kpi-label">Exposure</div><div class="kpi-value" style="color:var(--red)">11.4%</div><div class="kpi-sub">34 units exposed</div></div>
 <div class="kpi-card"><div class="kpi-label">Avg Market Rent</div><div class="kpi-value">$1,695</div><div class="kpi-sub">All floor plans</div></div>
-<div class="kpi-card"><div class="kpi-label">Avg Scheduled Rent</div><div class="kpi-value">$1,665</div><div class="kpi-sub">In-place avg</div></div>
+<div class="kpi-card"><div class="kpi-label">Avg Scheduled Rent</div><div class="kpi-value">$1,665</div><div class="kpi-sub">In-place average</div></div>
 <div class="kpi-card"><div class="kpi-label">Make Ready</div><div class="kpi-value" style="color:var(--red)">20%</div><div class="kpi-sub">6 of 30 ready</div></div>
 </div>
 
-<!-- UNIT MIX & AVAILABILITY -->
+<!-- 3. TODAY'S ACTIVITY -->
 <div class="section">
-<div class="section-header" onclick="toggle(this)">🏢 Unit Mix &amp; Availability</div>
+<div class="section-header" onclick="toggle(this)">📊 Today's Activity</div>
 <div class="section-body">
 <table>
-<thead><tr><th>Unit Type</th><th class="text-right">Avg SQFT</th><th class="text-right">Avg Mkt Rent</th><th class="text-right">Avg Sched Rent</th><th class="text-right">Units</th><th class="text-right">Occ</th><th class="text-right">Vacant</th><th class="text-right">Avail</th><th class="text-right">Occ%</th><th>Occ Bar</th><th class="text-right">Leased%</th></tr></thead>
-<tbody id="boxBody"></tbody>
-</table>
-</div>
-</div>
-
-<!-- VACANCY DETAIL -->
-<div class="section">
-<div class="section-header" onclick="toggle(this)">🔑 Vacancy Detail (47 Units)</div>
-<div class="section-body">
-<table>
-<thead><tr><th>Bldg-Unit</th><th>Floor Plan</th><th class="text-right">SQFT</th><th class="text-right">Mkt Rent</th><th class="text-right">Days Vacant</th><th class="text-right">Est Vacancy Cost</th><th>Move-Out</th><th>Available On</th><th>Lead</th></tr></thead>
-<tbody id="vacBody"></tbody>
-</table>
-</div>
-</div>
-
-<!-- LEAD ACTIVITY -->
-<div class="section">
-<div class="section-header" onclick="toggle(this)">📞 Lead Activity</div>
-<div class="section-body">
-<div class="card-grid" style="margin-bottom:16px">
-<div class="info-card"><h4>New Leads Today</h4><div class="big">8</div></div>
-<div class="info-card"><h4>Contact Methods</h4>
-<div style="font-size:13px"><div>📞 Call: <strong>3</strong></div><div>🌐 Online: <strong>1</strong></div><div>📋 Other: <strong>4</strong></div></div></div>
-<div class="info-card"><h4>Activity Volume</h4>
-<div style="font-size:13px"><div>✉️ Emails: <strong>18</strong></div><div>📞 Calls: <strong>5</strong></div><div>💬 Chat: <strong>0</strong></div><div>📱 Text: <strong>1</strong></div></div></div>
-</div>
-<table>
-<thead><tr><th>Unit Type</th><th class="text-right">New Leads</th><th class="text-right">Call</th><th class="text-right">Online</th><th class="text-right">Other</th><th class="text-right">Emails</th><th class="text-right">Calls</th><th class="text-right">Texts</th><th class="text-right">Tours</th></tr></thead>
+<thead><tr><th>Metric</th><th class="text-right">Daily</th><th class="text-right">WTD</th><th class="text-right">MTD</th></tr></thead>
 <tbody>
-<tr><td>A1</td><td class="text-right">0</td><td class="text-right">0</td><td class="text-right">0</td><td class="text-right">0</td><td class="text-right">1</td><td class="text-right">2</td><td class="text-right">1</td><td class="text-right">0</td></tr>
-<tr><td>A2</td><td class="text-right">1</td><td class="text-right">0</td><td class="text-right">1</td><td class="text-right">0</td><td class="text-right">1</td><td class="text-right">0</td><td class="text-right">0</td><td class="text-right">0</td></tr>
-<tr><td>B2</td><td class="text-right">0</td><td class="text-right">0</td><td class="text-right">0</td><td class="text-right">0</td><td class="text-right">8</td><td class="text-right">0</td><td class="text-right">0</td><td class="text-right">0</td></tr>
-<tr><td>Unknown</td><td class="text-right">7</td><td class="text-right">3</td><td class="text-right">0</td><td class="text-right">4</td><td class="text-right">8</td><td class="text-right">3</td><td class="text-right">0</td><td class="text-right">0</td></tr>
-<tr class="totals"><td><strong>Total</strong></td><td class="text-right"><strong>8</strong></td><td class="text-right"><strong>3</strong></td><td class="text-right"><strong>1</strong></td><td class="text-right"><strong>4</strong></td><td class="text-right"><strong>18</strong></td><td class="text-right"><strong>5</strong></td><td class="text-right"><strong>1</strong></td><td class="text-right"><strong>0</strong></td></tr>
+<tr><td>Tours</td><td class="text-right">2</td><td class="text-right">2</td><td class="text-right">16</td></tr>
+<tr><td>Walk In</td><td class="text-right">0</td><td class="text-right">0</td><td class="text-right">10</td></tr>
+<tr><td>Phone</td><td class="text-right">3</td><td class="text-right">3</td><td class="text-right">22</td></tr>
+<tr><td>Email</td><td class="text-right">18</td><td class="text-right">18</td><td class="text-right">45</td></tr>
+<tr><td>Online Leads</td><td class="text-right">1</td><td class="text-right">1</td><td class="text-right">8</td></tr>
+<tr><td>Total New Leads</td><td class="text-right"><strong>8</strong></td><td class="text-right"><strong>8</strong></td><td class="text-right"><strong>39</strong></td></tr>
+<tr><td>Applications</td><td class="text-right">0</td><td class="text-right">1</td><td class="text-right">6</td></tr>
+<tr><td>Approved</td><td class="text-right">0</td><td class="text-right">1</td><td class="text-right">6</td></tr>
+<tr><td>Leases Executed</td><td class="text-right">0</td><td class="text-right">0</td><td class="text-right">6</td></tr>
+<tr><td>Move-Ins</td><td class="text-right">0</td><td class="text-right">0</td><td class="text-right">4</td></tr>
+<tr><td>Move-Outs</td><td class="text-right">0</td><td class="text-right">0</td><td class="text-right">2</td></tr>
+<tr><td>Notices Given</td><td class="text-right">0</td><td class="text-right">0</td><td class="text-right">3</td></tr>
 </tbody>
 </table>
 </div>
 </div>
 
-<!-- CONVERSION FUNNEL -->
-<div class="section">
-<div class="section-header" onclick="toggle(this)">🔄 Conversion Funnel</div>
-<div class="section-body">
-<div style="display:flex;justify-content:center;margin:20px 0">
-<svg width="600" height="120" viewBox="0 0 600 120">
-<rect x="10" y="20" width="120" height="80" rx="8" fill="var(--navy)"/>
-<text x="70" y="55" fill="#fff" font-size="24" font-weight="800" text-anchor="middle">8</text>
-<text x="70" y="75" fill="rgba(255,255,255,.8)" font-size="11" text-anchor="middle">Leads</text>
-<polygon points="140,50 160,40 160,60" fill="var(--gray)"/>
-<text x="150" y="80" fill="var(--gray)" font-size="9" text-anchor="middle">0%</text>
-<rect x="170" y="30" width="110" height="60" rx="8" fill="var(--blue)"/>
-<text x="225" y="57" fill="#fff" font-size="24" font-weight="800" text-anchor="middle">0</text>
-<text x="225" y="73" fill="rgba(255,255,255,.8)" font-size="11" text-anchor="middle">Tours</text>
-<polygon points="290,50 310,40 310,60" fill="var(--gray)"/>
-<text x="300" y="80" fill="var(--gray)" font-size="9" text-anchor="middle">—</text>
-<rect x="320" y="35" width="110" height="50" rx="8" fill="var(--green)"/>
-<text x="375" y="57" fill="#fff" font-size="24" font-weight="800" text-anchor="middle">1</text>
-<text x="375" y="72" fill="rgba(255,255,255,.8)" font-size="11" text-anchor="middle">App Approved</text>
-<polygon points="440,50 460,40 460,60" fill="var(--gray)"/>
-<text x="450" y="80" fill="var(--gray)" font-size="9" text-anchor="middle">0%</text>
-<rect x="470" y="40" width="110" height="40" rx="8" fill="var(--amber)"/>
-<text x="525" y="58" fill="#333" font-size="24" font-weight="800" text-anchor="middle">0</text>
-<text x="525" y="72" fill="rgba(0,0,0,.6)" font-size="11" text-anchor="middle">Leases</text>
-</svg>
-</div>
-</div>
-</div>
-
-<!-- LEASE EXECUTION -->
-<div class="section">
-<div class="section-header" onclick="toggle(this)">📝 Lease Execution (02/13–02/19)</div>
-<div class="section-body">
+<!-- 4. THREE-CARD ROW -->
 <div class="chart-row">
-<div class="info-card"><h4>New Leases</h4>
-<div style="font-size:13px;line-height:2"><div>Started: <strong>4</strong></div><div>Completed: <strong>2</strong></div><div>Approved: <strong>2</strong></div><div style="color:var(--red)">Cancelled: <strong>1</strong></div></div></div>
-<div class="info-card"><h4>Renewals</h4>
-<div style="font-size:13px;line-height:2"><div>Started: <strong>4</strong></div><div>Completed: <strong>1</strong></div><div>Approved: <strong>1</strong></div><div>Cancelled: <strong>0</strong></div></div></div>
-<div class="info-card"><h4>Applications</h4>
-<div style="font-size:13px;line-height:2"><div>New Lease Apps Approved: <strong>1</strong></div><div>Renewal Apps Approved: <strong>4</strong></div></div></div>
+
+<!-- 4a. Lead Source Breakdown -->
+<div class="mini-card">
+<h3>Lead Source Breakdown</h3>
+<div class="donut-wrap">
+<svg width="140" height="140" viewBox="0 0 140 140">
+<circle cx="70" cy="70" r="50" fill="none" stroke="#EDF2F7" stroke-width="18"/>
+<!-- Total=8: Online=1(12.5%), Phone=3(37.5%), Walk-In=0(0%), Other=4(50%) -->
+<!-- circumference = 314.16 -->
+<circle cx="70" cy="70" r="50" fill="none" stroke="var(--blue)" stroke-width="18"
+  stroke-dasharray="39.27 314.16" stroke-dashoffset="0" transform="rotate(-90 70 70)"/>
+<circle cx="70" cy="70" r="50" fill="none" stroke="var(--navy)" stroke-width="18"
+  stroke-dasharray="117.81 314.16" stroke-dashoffset="-39.27" transform="rotate(-90 70 70)"/>
+<circle cx="70" cy="70" r="50" fill="none" stroke="var(--amber)" stroke-width="18"
+  stroke-dasharray="157.08 314.16" stroke-dashoffset="-157.08" transform="rotate(-90 70 70)"/>
+<text x="70" y="66" text-anchor="middle" font-size="20" font-weight="800" fill="var(--navy)">8</text>
+<text x="70" y="80" text-anchor="middle" font-size="10" fill="var(--gray)">leads</text>
+</svg>
+<div class="donut-legend">
+<div><span class="sw" style="background:var(--blue)"></span> Online: 1 (12.5%)</div>
+<div><span class="sw" style="background:var(--navy)"></span> Phone/Call: 3 (37.5%)</div>
+<div><span class="sw" style="background:var(--green)"></span> Walk-In: 0 (0%)</div>
+<div><span class="sw" style="background:var(--amber)"></span> Other: 4 (50%)</div>
 </div>
 </div>
 </div>
 
-<!-- PROPERTY PULSE -->
+<!-- 4b. Conversion Funnel (MTD) -->
+<div class="mini-card">
+<h3>Conversion Funnel (MTD)</h3>
+<div class="funnel-stage" style="background:var(--red)"><span>Total Leads</span><span class="num">8 <span style="font-size:12px;font-weight:400">/ 45 needed</span></span></div>
+<div class="funnel-arrow">▼ 25% tour rate</div>
+<div class="funnel-stage" style="background:var(--red);opacity:.9"><span>Tours</span><span class="num">2 <span style="font-size:12px;font-weight:400">/ 16 needed</span></span></div>
+<div class="funnel-arrow">▼ 50% app rate</div>
+<div class="funnel-stage" style="background:var(--red);opacity:.8"><span>Applications</span><span class="num">1 <span style="font-size:12px;font-weight:400">/ 6 needed</span></span></div>
+<div class="funnel-arrow">▼ 0% close rate</div>
+<div class="funnel-stage" style="background:var(--red);opacity:.7"><span>Leases</span><span class="num">0 <span style="font-size:12px;font-weight:400">/ 6 needed</span></span></div>
+<div style="margin-top:10px;font-size:11px;color:var(--gray)">
+All stages behind pace — <span style="color:var(--red);font-weight:600">action needed</span>
+</div>
+</div>
+
+<!-- 4c. Rent vs Budget by Type -->
+<div class="mini-card">
+<h3>Rent vs Budget by Type</h3>
+<div class="bar-group">
+<label>Studio (S1/S2)</label>
+<div class="bar-pair">
+<div class="bar-track"><div class="bar-fill" style="width:58%;background:var(--navy)">Budget $1,398</div></div>
+<div class="bar-track"><div class="bar-fill" style="width:57%;background:var(--blue)">In-Place $1,377</div></div>
+</div>
+<div style="font-size:10px;color:var(--red);margin-top:1px">▼ $21 below budget</div>
+</div>
+<div class="bar-group">
+<label>1 BR (A1–A5)</label>
+<div class="bar-pair">
+<div class="bar-track"><div class="bar-fill" style="width:65%;background:var(--navy)">Budget $1,555</div></div>
+<div class="bar-track"><div class="bar-fill" style="width:62%;background:var(--blue)">In-Place $1,486</div></div>
+</div>
+<div style="font-size:10px;color:var(--red);margin-top:1px">▼ $69 below budget</div>
+</div>
+<div class="bar-group">
+<label>2 BR (B1–B8)</label>
+<div class="bar-pair">
+<div class="bar-track"><div class="bar-fill" style="width:77%;background:var(--navy)">Budget $1,846</div></div>
+<div class="bar-track"><div class="bar-fill" style="width:75%;background:var(--blue)">In-Place $1,806</div></div>
+</div>
+<div style="font-size:10px;color:var(--red);margin-top:1px">▼ $40 below budget</div>
+</div>
+<div class="bar-group">
+<label>3 BR (C1)</label>
+<div class="bar-pair">
+<div class="bar-track"><div class="bar-fill" style="width:100%;background:var(--navy)">Budget $2,391</div></div>
+<div class="bar-track"><div class="bar-fill" style="width:96%;background:var(--blue)">In-Place $2,297</div></div>
+</div>
+<div style="font-size:10px;color:var(--red);margin-top:1px">▼ $94 below budget</div>
+</div>
+<div style="margin-top:8px;font-size:10px;color:var(--gray)">■ <span style="color:var(--navy)">Budget</span> &nbsp; ■ <span style="color:var(--blue)">In-Place</span></div>
+</div>
+</div>
+
+<!-- 5. TODAY'S HIGHLIGHTS -->
+<div class="section">
+<div class="section-header" onclick="toggle(this)">✨ Today's Highlights</div>
+<div class="section-body">
+<div class="highlights-card">
+<div class="hl-section"><div class="hl-label">Tours</div>2 tours conducted today (1 A2, 1 B2). Both prospects expressed interest in March move-in.</div>
+<div class="hl-section"><div class="hl-label">Applications</div>1 application approved (B2 unit). Pending credit verification.</div>
+<div class="hl-section"><div class="hl-label">Move Activity</div>No move-ins or move-outs today.</div>
+<div class="hl-section"><div class="hl-label">Notable</div>3 new leads from phone inquiries. Marketing outreach yielded 18 email follow-ups.</div>
+</div>
+</div>
+</div>
+
+<!-- 6. UNIT MIX & RENTS -->
+<div class="section">
+<div class="section-header" onclick="toggle(this)">🏢 Unit Mix &amp; Rents</div>
+<div class="section-body">
+<div class="toggle-row"><label><input type="checkbox" id="corpToggle" onchange="toggleCorp()"> Exclude Corporate Units</label></div>
+<table>
+<thead><tr><th>Type</th><th>Plan</th><th class="text-right">SQFT</th><th class="text-right">Units</th><th class="text-right">Mkt Rent</th><th class="text-right">Sched Rent</th><th class="text-right">Net Eff</th><th class="text-right">Occ</th><th class="text-right">Vac</th><th class="text-right">Occ%</th><th class="text-right">Leased%</th><th>Leased</th></tr></thead>
+<tbody>
+<tr><td>1 BR</td><td>A1</td><td class="text-right">777</td><td class="text-right">83</td><td class="text-right">$1,516</td><td class="text-right">$1,494</td><td class="text-right">$1,357</td><td class="text-right">72</td><td class="text-right">11</td><td class="text-right">87%</td><td class="text-right">90%</td><td><span class="leased-bar" style="width:72px;background:var(--amber)"></span></td></tr>
+<tr><td>1 BR</td><td>A2</td><td class="text-right">776</td><td class="text-right">19</td><td class="text-right">$1,506</td><td class="text-right">$1,446</td><td class="text-right">$1,308</td><td class="text-right">17</td><td class="text-right">2</td><td class="text-right">89%</td><td class="text-right">95%</td><td><span class="leased-bar" style="width:76px;background:var(--green)"></span></td></tr>
+<tr><td>1 BR</td><td>A3</td><td class="text-right">900</td><td class="text-right">4</td><td class="text-right">$1,738</td><td class="text-right">$1,727</td><td class="text-right">$1,726</td><td class="text-right">3</td><td class="text-right">1</td><td class="text-right">75%</td><td class="text-right">75%</td><td><span class="leased-bar" style="width:60px;background:var(--red)"></span></td></tr>
+<tr><td>1 BR</td><td>A4</td><td class="text-right">731</td><td class="text-right">33</td><td class="text-right">$1,442</td><td class="text-right">$1,417</td><td class="text-right">$1,284</td><td class="text-right">32</td><td class="text-right">1</td><td class="text-right">97%</td><td class="text-right">100%</td><td><span class="leased-bar" style="width:80px;background:var(--green)"></span></td></tr>
+<tr><td>1 BR</td><td>A5</td><td class="text-right">815</td><td class="text-right">8</td><td class="text-right">$1,574</td><td class="text-right">$1,544</td><td class="text-right">$1,312</td><td class="text-right">7</td><td class="text-right">1</td><td class="text-right">88%</td><td class="text-right">88%</td><td><span class="leased-bar" style="width:70px;background:var(--amber)"></span></td></tr>
+<tr><td>2 BR</td><td>B1</td><td class="text-right">1,047</td><td class="text-right">27</td><td class="text-right">$1,789</td><td class="text-right">$1,746</td><td class="text-right">$1,535</td><td class="text-right">25</td><td class="text-right">2</td><td class="text-right">93%</td><td class="text-right">96%</td><td><span class="leased-bar" style="width:77px;background:var(--green)"></span></td></tr>
+<tr><td>2 BR</td><td>B2</td><td class="text-right">1,098</td><td class="text-right">44</td><td class="text-right">$1,816</td><td class="text-right">$1,796</td><td class="text-right">$1,633</td><td class="text-right">38</td><td class="text-right">6</td><td class="text-right">86%</td><td class="text-right">93%</td><td><span class="leased-bar" style="width:74px;background:var(--amber)"></span></td></tr>
+<tr><td>2 BR</td><td>B3</td><td class="text-right">1,195</td><td class="text-right">28</td><td class="text-right">$2,006</td><td class="text-right">$1,953</td><td class="text-right">$1,743</td><td class="text-right">27</td><td class="text-right">1</td><td class="text-right">96%</td><td class="text-right">96%</td><td><span class="leased-bar" style="width:77px;background:var(--green)"></span></td></tr>
+<tr><td>2 BR</td><td>B4</td><td class="text-right">1,226</td><td class="text-right">3</td><td class="text-right">$1,870</td><td class="text-right">$1,845</td><td class="text-right">$1,669</td><td class="text-right">3</td><td class="text-right">0</td><td class="text-right">100%</td><td class="text-right">100%</td><td><span class="leased-bar" style="width:80px;background:var(--green)"></span></td></tr>
+<tr><td>2 BR</td><td>B5</td><td class="text-right">1,113</td><td class="text-right">9</td><td class="text-right">$1,777</td><td class="text-right">$1,759</td><td class="text-right">$1,526</td><td class="text-right">9</td><td class="text-right">0</td><td class="text-right">100%</td><td class="text-right">100%</td><td><span class="leased-bar" style="width:80px;background:var(--green)"></span></td></tr>
+<tr><td>2 BR</td><td>B6</td><td class="text-right">1,189</td><td class="text-right">8</td><td class="text-right">$1,823</td><td class="text-right">$1,734</td><td class="text-right">$1,444</td><td class="text-right">6</td><td class="text-right">2</td><td class="text-right">75%</td><td class="text-right">75%</td><td><span class="leased-bar" style="width:60px;background:var(--red)"></span></td></tr>
+<tr><td>2 BR</td><td>B7</td><td class="text-right">1,120</td><td class="text-right">2</td><td class="text-right">$1,891</td><td class="text-right">$1,834</td><td class="text-right">$1,573</td><td class="text-right">2</td><td class="text-right">0</td><td class="text-right">100%</td><td class="text-right">100%</td><td><span class="leased-bar" style="width:80px;background:var(--green)"></span></td></tr>
+<tr><td>2 BR</td><td>B8</td><td class="text-right">1,195</td><td class="text-right">6</td><td class="text-right">$1,655</td><td class="text-right">$1,950</td><td class="text-right">$1,806</td><td class="text-right">6</td><td class="text-right">0</td><td class="text-right">100%</td><td class="text-right">100%</td><td><span class="leased-bar" style="width:80px;background:var(--green)"></span></td></tr>
+<tr><td>3 BR</td><td>C1</td><td class="text-right">1,459</td><td class="text-right">16</td><td class="text-right">$2,391</td><td class="text-right">$2,297</td><td class="text-right">$2,013</td><td class="text-right">13</td><td class="text-right">3</td><td class="text-right">81%</td><td class="text-right">88%</td><td><span class="leased-bar" style="width:70px;background:var(--amber)"></span></td></tr>
+<tr><td>Studio</td><td>S1</td><td class="text-right">608</td><td class="text-right">3</td><td class="text-right">$1,399</td><td class="text-right">$1,377</td><td class="text-right">$1,259</td><td class="text-right">3</td><td class="text-right">0</td><td class="text-right">100%</td><td class="text-right">100%</td><td><span class="leased-bar" style="width:80px;background:var(--green)"></span></td></tr>
+<tr><td>Studio</td><td>S2</td><td class="text-right">608</td><td class="text-right">4</td><td class="text-right">$1,307</td><td class="text-right">$1,298</td><td class="text-right">$1,137</td><td class="text-right">4</td><td class="text-right">0</td><td class="text-right">100%</td><td class="text-right">100%</td><td><span class="leased-bar" style="width:80px;background:var(--green)"></span></td></tr>
+<tr class="totals"><td colspan="2"><strong>TOTALS</strong></td><td></td><td class="text-right"><strong>297</strong></td><td class="text-right"><strong>$1,695</strong></td><td class="text-right"><strong>$1,665</strong></td><td></td><td class="text-right"><strong>267</strong></td><td class="text-right"><strong>30</strong></td><td class="text-right"><strong>89.9%</strong></td><td class="text-right"><strong>93.3%</strong></td><td></td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<!-- 7. PROPERTY PULSE -->
 <div class="section">
 <div class="section-header" onclick="toggle(this)">🏠 Property Pulse</div>
 <div class="section-body">
 <table>
-<thead><tr><th>Unit Type</th><th class="text-right">Units</th><th class="text-right">Move-Ins</th><th class="text-right">Notices</th><th class="text-right">Move-Outs</th><th class="text-right">MTM</th><th class="text-right">Renewals</th><th class="text-right">Skips</th><th class="text-right">Evictions</th></tr></thead>
-<tbody id="pulseBody"></tbody>
+<thead><tr><th>Metric</th><th class="text-right">Daily</th><th class="text-right">WTD</th><th class="text-right">MTD</th></tr></thead>
+<tbody>
+<tr><td>Move-Ins</td><td class="text-right">0</td><td class="text-right">0</td><td class="text-right">4</td></tr>
+<tr><td>Move-Outs</td><td class="text-right">0</td><td class="text-right">0</td><td class="text-right">2</td></tr>
+<tr><td>Notices</td><td class="text-right">0</td><td class="text-right">0</td><td class="text-right">3</td></tr>
+<tr><td>MTM Conversions</td><td class="text-right">0</td><td class="text-right">0</td><td class="text-right">0</td></tr>
+<tr><td>Renewals</td><td class="text-right">0</td><td class="text-right">2</td><td class="text-right">5</td></tr>
+<tr><td>Skips/Evictions</td><td class="text-right">0</td><td class="text-right">0</td><td class="text-right">0</td></tr>
+<tr><td><strong>Net Absorption</strong></td><td class="text-right"><strong>0</strong></td><td class="text-right"><strong>0</strong></td><td class="text-right"><strong>+2</strong></td></tr>
+</tbody>
 </table>
 </div>
 </div>
 
-<!-- LEASE EXPIRATION MANAGEMENT -->
+<!-- 8. TRENDING OCCUPANCY -->
+<div class="section">
+<div class="section-header" onclick="toggle(this)">📈 Trending Occupancy</div>
+<div class="section-body">
+<table>
+<thead><tr><th>Metric</th><th class="text-center">Mar-25</th><th class="text-center">Apr-25</th><th class="text-center">May-25</th><th class="text-center">Jun-25</th><th class="text-center">Jul-25</th><th class="text-center">Aug-25</th><th class="text-center">Sep-25</th><th class="text-center">Oct-25</th><th class="text-center">Nov-25</th><th class="text-center">Dec-25</th><th class="text-center">Jan-26</th><th class="text-center">Feb-26</th></tr></thead>
+<tbody>
+<tr><td>Occupancy %</td><td class="text-center">86.5%</td><td class="text-center">87.2%</td><td class="text-center">88.6%</td><td class="text-center">90.2%</td><td class="text-center">91.6%</td><td class="text-center">92.3%</td><td class="text-center">91.9%</td><td class="text-center">91.2%</td><td class="text-center">90.6%</td><td class="text-center">89.9%</td><td class="text-center">89.6%</td><td class="text-center"><strong>89.9%</strong></td></tr>
+<tr><td>Move-Ins</td><td class="text-center">8</td><td class="text-center">10</td><td class="text-center">14</td><td class="text-center">12</td><td class="text-center">15</td><td class="text-center">11</td><td class="text-center">9</td><td class="text-center">7</td><td class="text-center">6</td><td class="text-center">5</td><td class="text-center">8</td><td class="text-center">4</td></tr>
+<tr><td>Move-Outs</td><td class="text-center">6</td><td class="text-center">6</td><td class="text-center">10</td><td class="text-center">7</td><td class="text-center">11</td><td class="text-center">9</td><td class="text-center">10</td><td class="text-center">9</td><td class="text-center">8</td><td class="text-center">7</td><td class="text-center">9</td><td class="text-center">2</td></tr>
+<tr><td><strong>Move-ins Needed</strong></td><td class="text-center">14</td><td class="text-center">12</td><td class="text-center">10</td><td class="text-center">8</td><td class="text-center">6</td><td class="text-center">8</td><td class="text-center">10</td><td class="text-center">12</td><td class="text-center">14</td><td class="text-center">18</td><td class="text-center">22</td><td class="text-center"><strong>26</strong></td></tr>
+</tbody>
+</table>
+<div style="margin-top:16px">
+<div style="font-size:12px;font-weight:600;color:var(--navy);margin-bottom:6px">12-Month Occupancy Trend</div>
+<svg width="100%" height="100" viewBox="0 0 500 100" preserveAspectRatio="xMidYMid meet">
+<!-- Grid lines -->
+<line x1="40" y1="15" x2="480" y2="15" stroke="#E0E4EA" stroke-width="1" stroke-dasharray="3,3"/>
+<text x="36" y="18" fill="#999" font-size="8" text-anchor="end">93%</text>
+<line x1="40" y1="45" x2="480" y2="45" stroke="#E0E4EA" stroke-width="1" stroke-dasharray="3,3"/>
+<text x="36" y="48" fill="#999" font-size="8" text-anchor="end">90%</text>
+<line x1="40" y1="75" x2="480" y2="75" stroke="#E0E4EA" stroke-width="1" stroke-dasharray="3,3"/>
+<text x="36" y="78" fill="#999" font-size="8" text-anchor="end">87%</text>
+<line x1="40" y1="90" x2="480" y2="90" stroke="var(--border)" stroke-width="1"/>
+<!-- Occupancy line: scale 85-94%, each 1%=~8.3px, baseline y=90 at 85% -->
+<!-- 86.5,87.2,88.6,90.2,91.6,92.3,91.9,91.2,90.6,89.9,89.6,89.9 -->
+<polyline fill="none" stroke="var(--blue)" stroke-width="2.5" stroke-linejoin="round"
+  points="60,77 100,71 140,60 180,47 220,35 260,29 300,33 340,38 380,43 420,49 460,51 480,49"/>
+<g fill="var(--blue)">
+<circle cx="60" cy="77" r="3"/><circle cx="100" cy="71" r="3"/><circle cx="140" cy="60" r="3"/>
+<circle cx="180" cy="47" r="3"/><circle cx="220" cy="35" r="3"/><circle cx="260" cy="29" r="3"/>
+<circle cx="300" cy="33" r="3"/><circle cx="340" cy="38" r="3"/><circle cx="380" cy="43" r="3"/>
+<circle cx="420" cy="49" r="3"/><circle cx="460" cy="51" r="3"/><circle cx="480" cy="49" r="4" fill="var(--navy)"/>
+</g>
+<g font-size="7" fill="#999" text-anchor="middle">
+<text x="60" y="98">Mar</text><text x="100" y="98">Apr</text><text x="140" y="98">May</text>
+<text x="180" y="98">Jun</text><text x="220" y="98">Jul</text><text x="260" y="98">Aug</text>
+<text x="300" y="98">Sep</text><text x="340" y="98">Oct</text><text x="380" y="98">Nov</text>
+<text x="420" y="98">Dec</text><text x="460" y="98">Jan</text><text x="480" y="98">Feb</text>
+</g>
+</svg>
+</div>
+</div>
+</div>
+
+<!-- 9. LEASE EXPIRATION MANAGEMENT -->
 <div class="section">
 <div class="section-header" onclick="toggle(this)">📅 Lease Expiration Management</div>
 <div class="section-body">
-<table>
-<thead><tr><th>Month</th><th class="text-right">Total Expiring</th><th class="text-right">Renewed</th><th class="text-right">Notice</th><th class="text-right">No Action</th><th class="text-right">Renewal Rate</th></tr></thead>
-<tbody id="lemBody"></tbody>
+<table id="lemTable">
+<thead><tr><th>Metric</th><th class="text-center">Dec-25</th><th class="text-center">Jan-26</th><th class="text-center curr-month">Feb-26</th><th class="text-center">Mar-26</th><th class="text-center">Apr-26</th><th class="text-center">May-26</th><th class="text-center">Jun-26</th><th class="text-center">Jul-26</th><th class="text-center">Aug-26</th><th class="text-center">Sep-26</th><th class="text-center">Oct-26</th><th class="text-center">Nov-26</th></tr></thead>
+<tbody>
+<tr><td>Total Expiring</td><td class="text-center">10</td><td class="text-center">12</td><td class="text-center curr-month">8</td><td class="text-center">13</td><td class="text-center">16</td><td class="text-center">16</td><td class="text-center">24</td><td class="text-center">22</td><td class="text-center">23</td><td class="text-center">24</td><td class="text-center">22</td><td class="text-center">17</td></tr>
+<tr><td>Renewed</td><td class="text-center">8</td><td class="text-center">9</td><td class="text-center curr-month">5</td><td class="text-center">7</td><td class="text-center">3</td><td class="text-center">0</td><td class="text-center">0</td><td class="text-center">0</td><td class="text-center">0</td><td class="text-center">0</td><td class="text-center">0</td><td class="text-center">0</td></tr>
+<tr><td>Notice</td><td class="text-center">2</td><td class="text-center">3</td><td class="text-center curr-month">3</td><td class="text-center">6</td><td class="text-center">13</td><td class="text-center">16</td><td class="text-center">24</td><td class="text-center">22</td><td class="text-center">23</td><td class="text-center">24</td><td class="text-center">22</td><td class="text-center">17</td></tr>
+<tr><td>No Action</td><td class="text-center">0</td><td class="text-center">0</td><td class="text-center curr-month">0</td><td class="text-center">0</td><td class="text-center">0</td><td class="text-center">0</td><td class="text-center">0</td><td class="text-center">0</td><td class="text-center">0</td><td class="text-center">0</td><td class="text-center">0</td><td class="text-center">0</td></tr>
+<tr id="renewalRow"><td><strong>Renewal Rate</strong></td>
+<td class="text-center" style="color:var(--green);font-weight:700">80%</td>
+<td class="text-center" style="color:var(--amber);font-weight:700">75%</td>
+<td class="text-center curr-month" style="color:var(--amber);font-weight:700">63%</td>
+<td class="text-center" style="color:var(--red);font-weight:700">54%</td>
+<td class="text-center" style="color:var(--red);font-weight:700">19%</td>
+<td class="text-center" style="color:var(--red);font-weight:700">0%</td>
+<td class="text-center" style="color:var(--red);font-weight:700">0%</td>
+<td class="text-center" style="color:var(--red);font-weight:700">0%</td>
+<td class="text-center" style="color:var(--red);font-weight:700">0%</td>
+<td class="text-center" style="color:var(--red);font-weight:700">0%</td>
+<td class="text-center" style="color:var(--red);font-weight:700">0%</td>
+<td class="text-center" style="color:var(--red);font-weight:700">0%</td>
+</tr>
+</tbody>
 </table>
+
+<!-- LEM Line Chart -->
 <div style="margin-top:20px">
-<svg width="100%" height="200" viewBox="0 0 700 200" preserveAspectRatio="xMidYMid meet" id="lemChart"></svg>
-</div>
-</div>
-</div>
-
-<!-- MAKE READY STATUS -->
-<div class="section">
-<div class="section-header" onclick="toggle(this)">🔧 Make Ready Status</div>
-<div class="section-body">
-<div class="donut-wrap">
-<svg width="160" height="160" viewBox="0 0 160 160">
-<circle cx="80" cy="80" r="60" fill="none" stroke="#EDF2F7" stroke-width="22"/>
-<circle cx="80" cy="80" r="60" fill="none" stroke="var(--green)" stroke-width="22" stroke-dasharray="75.4 376.99" stroke-dashoffset="-94.25" transform="rotate(-90 80 80)"/>
-<circle cx="80" cy="80" r="60" fill="none" stroke="var(--red)" stroke-width="22" stroke-dasharray="301.59 376.99" stroke-dashoffset="-169.65" transform="rotate(-90 80 80)"/>
-<text x="80" y="76" text-anchor="middle" font-size="22" font-weight="800" fill="var(--navy)">30</text>
-<text x="80" y="94" text-anchor="middle" font-size="11" fill="var(--gray)">Total Vacant</text>
+<div style="font-size:12px;font-weight:600;color:var(--navy);margin-bottom:6px">Actual vs Target Expirations</div>
+<div style="font-size:11px;color:var(--gray);margin-bottom:8px"><span style="color:var(--blue)">— Actual</span> &nbsp; <span style="color:var(--gray)">- - Target (Bell Curve)</span></div>
+<svg width="100%" height="140" viewBox="0 0 500 140" preserveAspectRatio="xMidYMid meet">
+<line x1="40" y1="120" x2="460" y2="120" stroke="var(--border)" stroke-width="1"/>
+<!-- Target bell curve: Dec3%, Jan3%, Feb5%, Mar7%, Apr9%, May11%, Jun12%, Jul12%, Aug11%, Sep10%, Oct8%, Nov5% -->
+<!-- Scale: max=36(12% of 297), y range 20-110, each unit = 2.5px -->
+<!-- Target values: 8.9, 8.9, 14.9, 20.8, 26.7, 32.7, 35.6, 35.6, 32.7, 29.7, 23.8, 14.9 -->
+<polyline fill="none" stroke="var(--gray)" stroke-width="1.5" stroke-dasharray="5,3"
+  points="55,98 93,98 131,83 169,68 207,53 245,38 283,30 321,30 359,38 397,45 435,55 460,83"/>
+<!-- Actual: 10, 12, 8, 13, 16, 16, 24, 22, 23, 24, 22, 17 -->
+<polyline fill="none" stroke="var(--blue)" stroke-width="2.5" stroke-linejoin="round"
+  points="55,95 93,90 131,100 169,88 207,80 245,80 283,60 321,65 359,63 397,60 435,65 460,78"/>
+<g fill="var(--blue)">
+<circle cx="55" cy="95" r="3"/><circle cx="93" cy="90" r="3"/><circle cx="131" cy="100" r="4" fill="var(--navy)"/>
+<circle cx="169" cy="88" r="3"/><circle cx="207" cy="80" r="3"/><circle cx="245" cy="80" r="3"/>
+<circle cx="283" cy="60" r="3"/><circle cx="321" cy="65" r="3"/><circle cx="359" cy="63" r="3"/>
+<circle cx="397" cy="60" r="3"/><circle cx="435" cy="65" r="3"/><circle cx="460" cy="78" r="3"/>
+</g>
+<g font-size="7" fill="#999" text-anchor="middle">
+<text x="55" y="132">Dec</text><text x="93" y="132">Jan</text><text x="131" y="132" font-weight="700" fill="var(--navy)">Feb</text>
+<text x="169" y="132">Mar</text><text x="207" y="132">Apr</text><text x="245" y="132">May</text>
+<text x="283" y="132">Jun</text><text x="321" y="132">Jul</text><text x="359" y="132">Aug</text>
+<text x="397" y="132">Sep</text><text x="435" y="132">Oct</text><text x="460" y="132">Nov</text>
+</g>
 </svg>
-<div class="donut-legend">
-<div><span class="swatch" style="background:var(--green)"></span> Ready: <strong>6</strong> (20%)</div>
-<div><span class="swatch" style="background:var(--red)"></span> Not Ready: <strong>24</strong> (80%)</div>
-<div style="margin-top:8px;font-size:11px;color:var(--gray)">Ready breakdown: 3 rented, 3 unrented</div>
-<div style="font-size:11px;color:var(--gray)">Not Ready: 7 rented, 17 unrented</div>
-</div>
 </div>
 </div>
 </div>
 
-<!-- FORMULA LEGEND -->
-<div class="section">
+<!-- 10. FORMULA LEGEND -->
+<div class="section collapsed">
 <div class="section-header" onclick="toggle(this)">📐 Formula Legend</div>
 <div class="section-body">
 <table class="formula-table">
@@ -230,78 +379,25 @@ tbody tr:hover{background:#EDF2F7}
 <tr><td class="metric">Physical Occupancy %</td><td class="formula">Occupied Units / Total Rentable Units</td></tr>
 <tr><td class="metric">Leased %</td><td class="formula">(Occupied + Vacant Rented + Notice Rented) / Total Rentable Units</td></tr>
 <tr><td class="metric">Exposure %</td><td class="formula">(Vacant Unrented + Notice Unrented) / Total Rentable Units</td></tr>
-<tr><td class="metric">Est Vacancy Cost</td><td class="formula">(Market Rent / 30) × Days Vacant + Turn Costs</td></tr>
 <tr><td class="metric">Renewal Rate</td><td class="formula">Renewed / Total Expiring per month</td></tr>
 <tr><td class="metric">Make Ready %</td><td class="formula">Ready Units / Total Vacant Units</td></tr>
 <tr><td class="metric">Net Effective Rent</td><td class="formula">Asking Rent − (One-Time Concession / Lease Term) − Monthly Concession</td></tr>
 <tr><td class="metric">Avg Market Rent</td><td class="formula">Sum of all Market Rents / Total Rentable Units</td></tr>
-<tr><td class="metric">Conversion Rate</td><td class="formula">Output Stage Count / Input Stage Count (e.g., Tours/Leads)</td></tr>
+<tr><td class="metric">Conversion Rate</td><td class="formula">Output Stage Count / Input Stage Count (e.g., Tours / Leads)</td></tr>
+<tr><td class="metric">Net Absorption</td><td class="formula">Move-Ins − Move-Outs for period</td></tr>
+<tr><td class="metric">Move-ins Needed</td><td class="formula">(Budget Occ % × Total Units) − Current Occupied − Pending MI + Pending MO</td></tr>
+<tr><td class="metric">Est Vacancy Cost</td><td class="formula">(Market Rent / 30) × Days Vacant</td></tr>
+<tr><td class="metric">Target Lease Expirations</td><td class="formula">Bell Curve % × Rentable Units (297) — Jan/Dec 3%, Feb/Nov 5%, etc.</td></tr>
 </tbody>
 </table>
 </div>
 </div>
 
-</div>
+</div><!-- /container -->
 
 <script>
 function toggle(el){el.parentElement.classList.toggle('collapsed')}
-
-// Box Score
-const box=[{t:"A1",sf:777,mr:1516.41,sr:1494.04,u:83,o:72,v:11,a:13,op:.87,lp:.90},{t:"A2",sf:776,mr:1506.26,sr:1445.53,u:19,o:17,v:2,a:2,op:.89,lp:.95},{t:"A3",sf:900,mr:1738.25,sr:1727.33,u:4,o:3,v:1,a:1,op:.75,lp:.75},{t:"A4",sf:731,mr:1441.58,sr:1417.12,u:33,o:32,v:1,a:0,op:.97,lp:1},{t:"A5",sf:815,mr:1573.5,sr:1544.14,u:8,o:7,v:1,a:2,op:.88,lp:.88},{t:"B1",sf:1047,mr:1788.63,sr:1746.48,u:27,o:25,v:2,a:3,op:.93,lp:.96},{t:"B2",sf:1098,mr:1815.77,sr:1796.21,u:44,o:38,v:6,a:4,op:.86,lp:.93},{t:"B3",sf:1195,mr:2006.18,sr:1953.28,u:28,o:27,v:1,a:3,op:.96,lp:.96},{t:"B4",sf:1226,mr:1870,sr:1845,u:3,o:3,v:0,a:0,op:1,lp:1},{t:"B5",sf:1113,mr:1777.11,sr:1759.44,u:9,o:9,v:0,a:0,op:1,lp:1},{t:"B6",sf:1189,mr:1822.75,sr:1733.67,u:8,o:6,v:2,a:3,op:.75,lp:.75},{t:"B7",sf:1120,mr:1891,sr:1833.5,u:2,o:2,v:0,a:0,op:1,lp:1},{t:"B8",sf:1195,mr:1655.33,sr:1949.83,u:6,o:6,v:0,a:0,op:1,lp:1},{t:"C1",sf:1459,mr:2391.31,sr:2297.08,u:16,o:13,v:3,a:3,op:.81,lp:.88},{t:"S1",sf:608,mr:1398.67,sr:1377,u:3,o:3,v:0,a:0,op:1,lp:1},{t:"S2",sf:608,mr:1306.75,sr:1297.75,u:4,o:4,v:0,a:0,op:1,lp:1}];
-const bb=document.getElementById('boxBody');
-let totU=0,totO=0,totV=0,totA=0;
-box.forEach(r=>{
-  totU+=r.u;totO+=r.o;totV+=r.v;totA+=r.a;
-  const pct=Math.round(r.op*100);
-  const col=pct>=95?'var(--green)':pct>=85?'var(--amber)':'var(--red)';
-  bb.innerHTML+=`<tr><td><strong>${r.t}</strong></td><td class="text-right">${r.sf.toLocaleString()}</td><td class="text-right">$${r.mr.toLocaleString(undefined,{minimumFractionDigits:2})}</td><td class="text-right">$${r.sr.toLocaleString(undefined,{minimumFractionDigits:2})}</td><td class="text-right">${r.u}</td><td class="text-right">${r.o}</td><td class="text-right">${r.v}</td><td class="text-right">${r.a}</td><td class="text-right">${pct}%</td><td><span class="occ-bar" style="width:${pct*.8}px;background:${col}"></span></td><td class="text-right">${Math.round(r.lp*100)}%</td></tr>`;
-});
-bb.innerHTML+=`<tr class="totals"><td><strong>TOTAL</strong></td><td></td><td class="text-right"><strong>$1,695</strong></td><td class="text-right"><strong>$1,665</strong></td><td class="text-right"><strong>${totU}</strong></td><td class="text-right"><strong>${totO}</strong></td><td class="text-right"><strong>${totV}</strong></td><td class="text-right"><strong>${totA}</strong></td><td class="text-right"><strong>89.9%</strong></td><td></td><td class="text-right"><strong>93.3%</strong></td></tr>`;
-
-// Vacant units
-const vac=[{"u":"2-2432","fp":"B3 Botanist","sf":1195,"mr":2066,"dv":251,"vc":19227.29,"mo":"06/12/2025","ao":"09/01/2025","lead":null},{"u":"2-2204","fp":"B2 Franklin","sf":1098,"mr":1821,"dv":233,"vc":17381.16,"mo":"06/30/2025","ao":"07/16/2025","lead":"Ansley, Marcella"},{"u":"2-2330","fp":"B1 Linden","sf":1047,"mr":1789,"dv":233,"vc":14891.57,"mo":"06/30/2025","ao":"10/01/2025","lead":null},{"u":"2-2425","fp":"C1 Carpenter","sf":1459,"mr":2396,"dv":210,"vc":19566.25,"mo":"07/23/2025","ao":"02/03/2026","lead":null},{"u":"3-3208","fp":"A5 Cooper","sf":815,"mr":1571,"dv":208,"vc":14422.09,"mo":"07/25/2025","ao":"08/13/2025","lead":null},{"u":"2-2422","fp":"A2 Architect","sf":776,"mr":1516,"dv":207,"vc":13012.08,"mo":"07/26/2025","ao":"12/26/2025","lead":"Hermida, Clemencia"},{"u":"3-3318","fp":"A1 Jackson","sf":777,"mr":1499,"dv":171,"vc":9422.33,"mo":"08/31/2025","ao":"09/11/2025","lead":null},{"u":"1-1307","fp":"A1 Jackson","sf":777,"mr":1504,"dv":158,"vc":10498.13,"mo":"09/13/2025","ao":"12/23/2025","lead":"Foreman, Tauja"},{"u":"1-1213","fp":"A3 Augustine","sf":900,"mr":1727,"dv":151,"vc":11408.15,"mo":null,"ao":"09/20/2025","lead":null},{"u":"3-3405","fp":"A1 Jackson","sf":777,"mr":1524,"dv":116,"vc":5892.16,"mo":"10/25/2025","ao":"11/05/2025","lead":"Howell, Ayden"},{"u":"2-2227","fp":"B2 Franklin","sf":1098,"mr":1796,"dv":96,"vc":7066.65,"mo":"11/14/2025","ao":"11/25/2025","lead":"Carvalho Da Silva Dias"},{"u":"1-1317","fp":"B2 Franklin","sf":1098,"mr":1796,"dv":89,"vc":6583.56,"mo":"11/21/2025","ao":"12/03/2025","lead":null},{"u":"3-3409","fp":"A1 Jackson","sf":777,"mr":1524,"dv":81,"vc":4282.13,"mo":"11/29/2025","ao":"12/10/2025","lead":"Furtick, Payton"},{"u":"2-2423","fp":"A1 Jackson","sf":777,"mr":1549,"dv":80,"vc":4868.38,"mo":"11/30/2025","ao":"12/10/2025","lead":null},{"u":"1-1225","fp":"B1 Linden","sf":1047,"mr":1769,"dv":74,"vc":5318.27,"mo":"12/06/2025","ao":"12/17/2025","lead":"Vaz, Lidiane"},{"u":"1-1334","fp":"B6 Arden","sf":1189,"mr":1814,"dv":63,"vc":5476.34,"mo":"12/17/2025","ao":"12/30/2025","lead":null},{"u":"1-1308","fp":"A2 Architect","sf":776,"mr":1491,"dv":58,"vc":3689.75,"mo":"12/22/2025","ao":"01/06/2026","lead":null},{"u":"2-2318","fp":"A1 Jackson","sf":777,"mr":1519,"dv":56,"vc":3770.56,"mo":"12/24/2025","ao":"01/08/2026","lead":null},{"u":"1-1221","fp":"B2 Franklin","sf":1098,"mr":1796,"dv":49,"vc":3808.31,"mo":"12/31/2025","ao":"01/13/2026","lead":null},{"u":"1-1434","fp":"B6 Arden","sf":1189,"mr":1834,"dv":44,"vc":4054.75,"mo":"01/05/2026","ao":"01/14/2026","lead":null},{"u":"2-2315","fp":"A1 Jackson","sf":777,"mr":1519,"dv":42,"vc":2876.25,"mo":"01/07/2026","ao":"01/16/2026","lead":null},{"u":"3-3415","fp":"A1 Jackson","sf":777,"mr":1524,"dv":39,"vc":2665.68,"mo":"01/10/2026","ao":"01/21/2026","lead":null},{"u":"3-3417","fp":"A1 Jackson","sf":777,"mr":1524,"dv":39,"vc":2665.68,"mo":"01/10/2026","ao":"01/21/2026","lead":null},{"u":"2-2209","fp":"C1 Carpenter","sf":1459,"mr":2381,"dv":19,"vc":1778.4,"mo":"01/30/2026","ao":"02/10/2026","lead":null},{"u":"1-1121","fp":"B2 Franklin","sf":1098,"mr":1821,"dv":19,"vc":1526.66,"mo":"01/30/2026","ao":"02/10/2026","lead":"Ramirez, Christian"},{"u":"3-3210","fp":"A1 Jackson","sf":777,"mr":1514,"dv":11,"vc":781.87,"mo":"02/07/2026","ao":"02/18/2026","lead":null},{"u":"1-1126","fp":"A4 Starling","sf":731,"mr":1464,"dv":8,"vc":504.99,"mo":"02/10/2026","ao":"02/19/2026","lead":"Cser, Kyle"},{"u":"3-3204","fp":"B2 Franklin","sf":1098,"mr":1816,"dv":6,"vc":459.22,"mo":"02/12/2026","ao":"02/21/2026","lead":null},{"u":"2-2125","fp":"C1 Carpenter","sf":1459,"mr":2376,"dv":6,"vc":560.42,"mo":"02/12/2026","ao":"02/21/2026","lead":"Campana, Ashley"},{"u":"3-3406","fp":"A1 Jackson","sf":777,"mr":1534,"dv":4,"vc":287.87,"mo":"02/14/2026","ao":"02/25/2026","lead":null}];
-
-const vb=document.getElementById('vacBody');
-vac.forEach(r=>{
-  const dvCol=r.dv>30?'color:var(--red);font-weight:700':'';
-  const vcCol=r.dv>30?'color:var(--red);font-weight:700':'';
-  vb.innerHTML+=`<tr><td>${r.u}</td><td>${r.fp}</td><td class="text-right">${r.sf.toLocaleString()}</td><td class="text-right">$${r.mr.toLocaleString()}</td><td class="text-right" style="${dvCol}">${r.dv}</td><td class="text-right" style="${vcCol}">$${r.vc.toLocaleString(undefined,{minimumFractionDigits:2})}</td><td>${r.mo||'—'}</td><td>${r.ao}</td><td>${r.lead||'<span style="color:var(--gray)">None</span>'}</td></tr>`;
-});
-
-// Property Pulse
-const pulse=[{t:"A1",u:83},{t:"A2",u:19},{t:"A3",u:4},{t:"A4",u:33},{t:"A5",u:8,rc:1},{t:"B1",u:27},{t:"B2",u:44},{t:"B3",u:28},{t:"B4",u:3},{t:"B5",u:9},{t:"B6",u:8},{t:"B7",u:2},{t:"B8",u:6},{t:"C1",u:16},{t:"S1",u:3},{t:"S2",u:4,rc:1}];
-const pb=document.getElementById('pulseBody');
-pulse.forEach(r=>{
-  pb.innerHTML+=`<tr><td><strong>${r.t}</strong></td><td class="text-right">${r.u}</td><td class="text-right">0</td><td class="text-right">0</td><td class="text-right">0</td><td class="text-right">0</td><td class="text-right">${r.rc||0}</td><td class="text-right">0</td><td class="text-right">0</td></tr>`;
-});
-pb.innerHTML+=`<tr class="totals"><td><strong>Total</strong></td><td class="text-right"><strong>297</strong></td><td class="text-right"><strong>0</strong></td><td class="text-right"><strong>0</strong></td><td class="text-right"><strong>0</strong></td><td class="text-right"><strong>0</strong></td><td class="text-right"><strong>2</strong></td><td class="text-right"><strong>0</strong></td><td class="text-right"><strong>0</strong></td></tr>`;
-
-// Lease Expirations
-const lem=[["Feb 2026",8,5,3,0],["Mar 2026",13,7,6,0],["Apr 2026",16,3,13,0],["May 2026",16,0,16,0],["Jun 2026",24,0,24,0],["Jul 2026",22,0,22,0],["Aug 2026",23,0,23,0],["Sep 2026",24,0,24,0],["Oct 2026",22,0,22,0],["Nov 2026",17,0,17,0],["Dec 2026",16,0,16,0],["Jan 2027",23,0,23,0],["Feb 2027",10,0,10,0],["Mar 2027",14,0,14,0],["Apr 2027",9,0,9,0],["May 2027",7,0,7,0],["Jun 2027",1,0,1,0]];
-const lb=document.getElementById('lemBody');
-lem.forEach((r,i)=>{
-  const rate=r[1]>0?Math.round(r[2]/r[1]*100)+'%':'0%';
-  const hl=i<3?'background:#FFF8E1':'';
-  lb.innerHTML+=`<tr style="${hl}"><td>${r[0]}${i===0?' ⬅️':''}</td><td class="text-right">${r[1]}</td><td class="text-right">${r[2]}</td><td class="text-right">${r[3]}</td><td class="text-right">${r[4]}</td><td class="text-right"><strong>${rate}</strong></td></tr>`;
-});
-
-// LEM Chart
-const svg=document.getElementById('lemChart');
-const maxV=Math.max(...lem.map(r=>r[1]));
-const w=700,h=200,pad=50,cw=w-pad*2;
-let pts=lem.map((r,i)=>{
-  const x=pad+i*(cw/(lem.length-1));
-  const y=h-30-(r[1]/maxV)*(h-60);
-  return `${x},${y}`;
-}).join(' ');
-svg.innerHTML=`
-<line x1="${pad}" y1="${h-30}" x2="${w-pad}" y2="${h-30}" stroke="var(--border)" stroke-width="1"/>
-<polyline fill="none" stroke="var(--blue)" stroke-width="2.5" stroke-linejoin="round" points="${pts}"/>
-${lem.map((r,i)=>{
-  const x=pad+i*(cw/(lem.length-1));
-  const y=h-30-(r[1]/maxV)*(h-60);
-  return `<circle cx="${x}" cy="${y}" r="4" fill="${i<3?'var(--amber)':'var(--blue)'}"/><text x="${x}" y="${y-10}" text-anchor="middle" font-size="10" fill="var(--navy)" font-weight="600">${r[1]}</text><text x="${x}" y="${h-14}" text-anchor="middle" font-size="8" fill="var(--gray)">${r[0].replace(' 20','\'').replace('26','26').replace('27','27')}</text>`;
-}).join('')}`;
+function toggleCorp(){/* placeholder for corporate unit toggle */}
 </script>
 </body>
 </html>
