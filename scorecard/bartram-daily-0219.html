@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RISE Daily Leasing Report — RISE Bartram Park</title>
+
+<style>
+:root{--teal:#003146;--blue:#559CB5;--light:#F5F7F9;--white:#fff;--green:#28a745;--red:#dc3545;--amber:#ffc107;--gray:#6C7A89;--border:#E0E4EA;--shadow:0 2px 8px rgba(0,49,70,.08)}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--light);color:#333;line-height:1.5;font-size:14px}
+.container{max-width:1320px;margin:0 auto;padding:16px}
+.header{background:linear-gradient(135deg,var(--teal),#004d6d);color:#fff;padding:24px 32px;border-radius:12px;margin-bottom:20px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+.header-left h1{font-size:26px;font-weight:700;letter-spacing:-.5px}
+.header-left h1 span{color:var(--blue)}
+.header-left .subtitle{opacity:.8;font-size:14px;margin-top:2px}
+.header-right{text-align:right}
+.header-right .date{font-size:18px;font-weight:600}
+.badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.5px}
+.badge-blue{background:var(--blue);color:#fff}
+.badge-mock{background:var(--amber);color:#333;font-size:10px;margin-left:4px}
+.kpi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:20px}
+.kpi-card{background:#fff;border-radius:10px;padding:16px;box-shadow:var(--shadow);text-align:center;border-top:3px solid var(--blue)}
+.kpi-label{font-size:10px;text-transform:uppercase;letter-spacing:.8px;color:var(--gray);font-weight:600;margin-bottom:4px}
+.kpi-value{font-size:26px;font-weight:800;color:var(--teal)}
+.kpi-sub{font-size:11px;color:var(--gray);margin-top:2px}
+.section{background:#fff;border-radius:10px;box-shadow:var(--shadow);margin-bottom:20px;overflow:hidden}
+.section-header{background:linear-gradient(135deg,var(--teal),#004d6d);color:#fff;padding:13px 20px;font-size:15px;font-weight:600;cursor:pointer;display:flex;justify-content:space-between;align-items:center}
+.section-header::after{content:'▾';font-size:12px;transition:transform .2s}
+.section.collapsed .section-header::after{transform:rotate(-90deg)}
+.section.collapsed .section-body{display:none}
+.section-body{padding:20px;overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{background:var(--light);color:var(--teal);font-weight:600;text-transform:uppercase;font-size:10px;letter-spacing:.5px;padding:8px 10px;text-align:left;border-bottom:2px solid var(--border);white-space:nowrap}
+td{padding:7px 10px;border-bottom:1px solid var(--border);white-space:nowrap}
+tbody tr:nth-child(even){background:#FAFBFC}
+tbody tr:hover{background:#EDF2F7}
+.text-right{text-align:right}.text-center{text-align:center}
+.totals td{font-weight:700;background:#EDF2F7!important;border-top:2px solid var(--teal)}
+.chart-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;margin-bottom:20px}
+.mini-card{background:#fff;border-radius:10px;box-shadow:var(--shadow);padding:20px}
+.mini-card h3{font-size:14px;color:var(--teal);margin-bottom:12px;font-weight:600}
+.bar-track{height:20px;background:#EDF2F7;border-radius:3px;position:relative;overflow:hidden;margin-bottom:6px}
+.bar-fill{height:100%;border-radius:3px;display:flex;align-items:center;padding-left:6px;color:#fff;font-size:10px;font-weight:700}
+.prop-select{background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.3);border-radius:6px;padding:6px 12px;font-size:13px;margin-top:8px;cursor:pointer}
+.prop-select option{color:#333;background:#fff}
+.mock-highlight{background:#FFF3CD!important;position:relative}
+.mock-badge{background:var(--amber);color:#333;font-size:9px;padding:1px 6px;border-radius:8px;font-weight:700;vertical-align:super}
+.highlights-card{background:linear-gradient(135deg,#F8FAFC,#EDF2F7);border-left:4px solid var(--blue);padding:18px;border-radius:0 8px 8px 0;line-height:1.8;font-size:13px;color:#444}
+.highlights-card strong{color:var(--teal)}
+@media print{body{background:#fff;font-size:11px}.container{padding:0}.section{break-inside:avoid;box-shadow:none;border:1px solid #ddd}}
+@media(max-width:768px){.header{flex-direction:column;text-align:center}.header-right{text-align:center}.kpi-grid{grid-template-columns:repeat(2,1fr)}.chart-row{grid-template-columns:1fr}}
+</style>
+
+</head>
+<body>
+<div class="container">
+
+<div class="header">
+<div class="header-left">
+<h1><span>RISE</span> Daily Leasing Report</h1>
+<div class="subtitle">RISE Bartram Park &nbsp;|&nbsp; Conventional &nbsp;|&nbsp; 297 Units</div>
+</div>
+<div class="header-right">
+<div class="date">February 19, 2026</div>
+<div style="margin-top:6px"><span class="badge badge-blue">Conventional</span></div>
+<select class="prop-select" onchange="if(this.value)window.location=this.value">
+<option value="" selected>RISE Bartram Park</option>
+<option value="prosper-daily-0219.html">Prosper On Fayette</option>
+<option value="bartram-weekly-0219.html">📊 Weekly Report</option>
+</select>
+</div>
+</div>
+
+<div class="kpi-grid">
+<div class="kpi-card"><div class="kpi-label">Physical Occupancy</div><div class="kpi-value">89.9%</div><div class="kpi-sub">267 / 297 units</div></div>
+<div class="kpi-card"><div class="kpi-label">Leased %</div><div class="kpi-value">93.3%</div><div class="kpi-sub">277 / 297 units</div></div>
+<div class="kpi-card"><div class="kpi-label">Exposure</div><div class="kpi-value" style="color:var(--red)">11.4%</div><div class="kpi-sub">34 units exposed</div></div>
+<div class="kpi-card"><div class="kpi-label">Avg Market Rent</div><div class="kpi-value">$1,695</div><div class="kpi-sub">All floor plans</div></div>
+<div class="kpi-card"><div class="kpi-label">Avg Scheduled Rent</div><div class="kpi-value">$1,665</div><div class="kpi-sub">In-place average</div></div>
+<div class="kpi-card"><div class="kpi-label">Make Ready</div><div class="kpi-value" style="color:var(--red)">20%</div><div class="kpi-sub">6 of 30 ready</div></div>
+</div>
+
+<!-- LEASE ACTIVITY -->
+<div class="section">
+<div class="section-header">📋 Lease Activity This Week (02/13 – 02/19)</div>
+<div class="section-body">
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px">
+<div style="background:var(--light);padding:16px;border-radius:8px;text-align:center">
+<div style="font-size:11px;color:var(--gray);text-transform:uppercase">New Lease Apps</div>
+<div style="font-size:28px;font-weight:800;color:var(--teal)">1</div>
+<div style="font-size:11px;color:var(--gray)">approved</div>
+</div>
+<div style="background:var(--light);padding:16px;border-radius:8px;text-align:center">
+<div style="font-size:11px;color:var(--gray);text-transform:uppercase">Leases Started</div>
+<div style="font-size:28px;font-weight:800;color:var(--blue)">4</div>
+<div style="font-size:11px;color:var(--gray)">this week</div>
+</div>
+<div style="background:var(--light);padding:16px;border-radius:8px;text-align:center">
+<div style="font-size:11px;color:var(--gray);text-transform:uppercase">Leases Completed</div>
+<div style="font-size:28px;font-weight:800;color:var(--green)">3</div>
+<div style="font-size:11px;color:var(--gray)">executed</div>
+</div>
+<div style="background:var(--light);padding:16px;border-radius:8px;text-align:center">
+<div style="font-size:11px;color:var(--gray);text-transform:uppercase">Renewals</div>
+<div style="font-size:28px;font-weight:800;color:var(--teal)">5</div>
+<div style="font-size:11px;color:var(--gray)">completed / 4 started</div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- UNIT STATUS -->
+<div class="section">
+<div class="section-header">🏠 Unit Status Distribution</div>
+<div class="section-body">
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px"><div style="background:var(--light);padding:12px;border-radius:8px;border-left:4px solid var(--green)"><div style="font-size:11px;color:var(--gray);text-transform:uppercase">Occupied No Notice</div><div style="font-size:22px;font-weight:800;color:var(--teal)">250</div><div style="font-size:11px;color:var(--gray)">84.2% of 297</div></div><div style="background:var(--light);padding:12px;border-radius:8px;border-left:4px solid #dc3545"><div style="font-size:11px;color:var(--gray);text-transform:uppercase">Vacant Unrented Not Ready</div><div style="font-size:22px;font-weight:800;color:var(--teal)">17</div><div style="font-size:11px;color:var(--gray)">5.7% of 297</div></div><div style="background:var(--light);padding:12px;border-radius:8px;border-left:4px solid var(--amber)"><div style="font-size:11px;color:var(--gray);text-transform:uppercase">Notice Unrented</div><div style="font-size:22px;font-weight:800;color:var(--teal)">14</div><div style="font-size:11px;color:var(--gray)">4.7% of 297</div></div><div style="background:var(--light);padding:12px;border-radius:8px;border-left:4px solid #6c757d"><div style="font-size:11px;color:var(--gray);text-transform:uppercase">Vacant Rented Not Ready</div><div style="font-size:22px;font-weight:800;color:var(--teal)">7</div><div style="font-size:11px;color:var(--gray)">2.4% of 297</div></div><div style="background:var(--light);padding:12px;border-radius:8px;border-left:4px solid var(--blue)"><div style="font-size:11px;color:var(--gray);text-transform:uppercase">Notice Rented</div><div style="font-size:22px;font-weight:800;color:var(--teal)">3</div><div style="font-size:11px;color:var(--gray)">1.0% of 297</div></div><div style="background:var(--light);padding:12px;border-radius:8px;border-left:4px solid var(--red)"><div style="font-size:11px;color:var(--gray);text-transform:uppercase">Vacant Unrented Ready</div><div style="font-size:22px;font-weight:800;color:var(--teal)">3</div><div style="font-size:11px;color:var(--gray)">1.0% of 297</div></div><div style="background:var(--light);padding:12px;border-radius:8px;border-left:4px solid #17a2b8"><div style="font-size:11px;color:var(--gray);text-transform:uppercase">Vacant Rented Ready</div><div style="font-size:22px;font-weight:800;color:var(--teal)">3</div><div style="font-size:11px;color:var(--gray)">1.0% of 297</div></div></div>
+</div>
+</div>
+
+<!-- BOX SCORE BY UNIT TYPE -->
+<div class="section">
+<div class="section-header">📊 Box Score by Unit Type</div>
+<div class="section-body">
+<table><thead><tr><th>Type</th><th class="text-right">SQFT</th><th class="text-right">Mkt Rent</th><th class="text-right">Sched Rent</th><th class="text-right">Units</th><th class="text-right">Occupied</th><th class="text-right">Vacant</th><th class="text-right">Occ %</th><th class="text-right">Leased %</th><th class="text-right">Exposure</th></tr></thead><tbody><tr><td><strong>A1</strong></td><td class="text-right">777</td><td class="text-right">$1,516</td><td class="text-right">$1,494</td><td class="text-right">83</td><td class="text-right">72</td><td class="text-right">11</td><td class="text-right" style="color:var(--red);font-weight:600">86.7%</td><td class="text-right" style="font-weight:600">90.4%</td><td class="text-right">15.7%</td></tr><tr><td><strong>A2</strong></td><td class="text-right">776</td><td class="text-right">$1,506</td><td class="text-right">$1,446</td><td class="text-right">19</td><td class="text-right">17</td><td class="text-right">2</td><td class="text-right" style="color:var(--red);font-weight:600">89.5%</td><td class="text-right" style="font-weight:600">94.7%</td><td class="text-right">10.5%</td></tr><tr><td><strong>A3</strong></td><td class="text-right">900</td><td class="text-right">$1,738</td><td class="text-right">$1,727</td><td class="text-right">4</td><td class="text-right">3</td><td class="text-right">1</td><td class="text-right" style="color:var(--red);font-weight:600">75.0%</td><td class="text-right" style="font-weight:600">75.0%</td><td class="text-right">25.0%</td></tr><tr><td><strong>A4</strong></td><td class="text-right">731</td><td class="text-right">$1,442</td><td class="text-right">$1,417</td><td class="text-right">33</td><td class="text-right">32</td><td class="text-right">1</td><td class="text-right" style="color:var(--green);font-weight:600">97.0%</td><td class="text-right" style="font-weight:600">100.0%</td><td class="text-right">0.0%</td></tr><tr><td><strong>A5</strong></td><td class="text-right">815</td><td class="text-right">$1,574</td><td class="text-right">$1,544</td><td class="text-right">8</td><td class="text-right">7</td><td class="text-right">1</td><td class="text-right" style="color:var(--red);font-weight:600">87.5%</td><td class="text-right" style="font-weight:600">87.5%</td><td class="text-right">25.0%</td></tr><tr><td><strong>B1</strong></td><td class="text-right">1,047</td><td class="text-right">$1,789</td><td class="text-right">$1,746</td><td class="text-right">27</td><td class="text-right">25</td><td class="text-right">2</td><td class="text-right" style="color:var(--amber);font-weight:600">92.6%</td><td class="text-right" style="font-weight:600">96.3%</td><td class="text-right">11.1%</td></tr><tr><td><strong>B2</strong></td><td class="text-right">1,098</td><td class="text-right">$1,816</td><td class="text-right">$1,796</td><td class="text-right">44</td><td class="text-right">38</td><td class="text-right">6</td><td class="text-right" style="color:var(--red);font-weight:600">86.4%</td><td class="text-right" style="font-weight:600">93.2%</td><td class="text-right">9.1%</td></tr><tr><td><strong>B3</strong></td><td class="text-right">1,195</td><td class="text-right">$2,006</td><td class="text-right">$1,953</td><td class="text-right">28</td><td class="text-right">27</td><td class="text-right">1</td><td class="text-right" style="color:var(--green);font-weight:600">96.4%</td><td class="text-right" style="font-weight:600">96.4%</td><td class="text-right">10.7%</td></tr><tr><td><strong>B4</strong></td><td class="text-right">1,226</td><td class="text-right">$1,870</td><td class="text-right">$1,845</td><td class="text-right">3</td><td class="text-right">3</td><td class="text-right">0</td><td class="text-right" style="color:var(--green);font-weight:600">100.0%</td><td class="text-right" style="font-weight:600">100.0%</td><td class="text-right">0.0%</td></tr><tr><td><strong>B5</strong></td><td class="text-right">1,113</td><td class="text-right">$1,777</td><td class="text-right">$1,759</td><td class="text-right">9</td><td class="text-right">9</td><td class="text-right">0</td><td class="text-right" style="color:var(--green);font-weight:600">100.0%</td><td class="text-right" style="font-weight:600">100.0%</td><td class="text-right">0.0%</td></tr><tr><td><strong>B6</strong></td><td class="text-right">1,189</td><td class="text-right">$1,823</td><td class="text-right">$1,734</td><td class="text-right">8</td><td class="text-right">6</td><td class="text-right">2</td><td class="text-right" style="color:var(--red);font-weight:600">75.0%</td><td class="text-right" style="font-weight:600">75.0%</td><td class="text-right">37.5%</td></tr><tr><td><strong>B7</strong></td><td class="text-right">1,120</td><td class="text-right">$1,891</td><td class="text-right">$1,834</td><td class="text-right">2</td><td class="text-right">2</td><td class="text-right">0</td><td class="text-right" style="color:var(--green);font-weight:600">100.0%</td><td class="text-right" style="font-weight:600">100.0%</td><td class="text-right">0.0%</td></tr><tr><td><strong>B8</strong></td><td class="text-right">1,195</td><td class="text-right">$1,655</td><td class="text-right">$1,950</td><td class="text-right">6</td><td class="text-right">6</td><td class="text-right">0</td><td class="text-right" style="color:var(--green);font-weight:600">100.0%</td><td class="text-right" style="font-weight:600">100.0%</td><td class="text-right">0.0%</td></tr><tr><td><strong>C1</strong></td><td class="text-right">1,459</td><td class="text-right">$2,391</td><td class="text-right">$2,297</td><td class="text-right">16</td><td class="text-right">13</td><td class="text-right">3</td><td class="text-right" style="color:var(--red);font-weight:600">81.2%</td><td class="text-right" style="font-weight:600">87.5%</td><td class="text-right">18.8%</td></tr><tr><td><strong>S1</strong></td><td class="text-right">608</td><td class="text-right">$1,399</td><td class="text-right">$1,377</td><td class="text-right">3</td><td class="text-right">3</td><td class="text-right">0</td><td class="text-right" style="color:var(--green);font-weight:600">100.0%</td><td class="text-right" style="font-weight:600">100.0%</td><td class="text-right">0.0%</td></tr><tr><td><strong>S2</strong></td><td class="text-right">608</td><td class="text-right">$1,307</td><td class="text-right">$1,298</td><td class="text-right">4</td><td class="text-right">4</td><td class="text-right">0</td><td class="text-right" style="color:var(--green);font-weight:600">100.0%</td><td class="text-right" style="font-weight:600">100.0%</td><td class="text-right">0.0%</td></tr></tbody></table>
+</div>
+</div>
+
+<!-- VACANCY / AVAILABILITY -->
+<div class="section">
+<div class="section-header">🔑 Vacancy & Availability Detail</div>
+<div class="section-body">
+<div style="display:flex;gap:20px;margin-bottom:16px;flex-wrap:wrap"><div style="background:#FFF3CD;padding:12px 16px;border-radius:8px;flex:1;min-width:200px"><div style="font-size:11px;color:var(--gray)">Total Vacancy Cost</div><div style="font-size:22px;font-weight:800;color:var(--red)">$200,911</div></div><div style="background:var(--light);padding:12px 16px;border-radius:8px;flex:1;min-width:200px"><div style="font-size:11px;color:var(--gray)">Avg Days Vacant</div><div style="font-size:22px;font-weight:800;color:var(--teal)">95</div></div></div>
+<h4 style="color:var(--teal);margin-bottom:8px;font-size:13px">Currently Vacant</h4><table><thead><tr><th>Unit</th><th>Type</th><th>Floor Plan</th><th class="text-right">Rent</th><th class="text-right">Days Vacant</th><th class="text-right">Vac. Cost</th><th>Move-In</th><th>Lead</th></tr></thead><tbody><tr><td>2-2432</td><td>B3</td><td>The Botanist</td><td class="text-right">$2,066</td><td class="text-right" style="color:var(--red);font-weight:600">252</td><td class="text-right" style="color:var(--red)">$19,304</td><td></td><td></td></tr><tr><td>2-2330</td><td>B1</td><td>The Linden</td><td class="text-right">$1,789</td><td class="text-right" style="color:var(--red);font-weight:600">234</td><td class="text-right" style="color:var(--red)">$14,955</td><td></td><td></td></tr><tr><td>2-2204</td><td>B2</td><td>The Franklin</td><td class="text-right">$1,821</td><td class="text-right" style="color:var(--red);font-weight:600">234</td><td class="text-right" style="color:var(--red)">$17,456</td><td>02/20</td><td>Ansley, Marcella</td></tr><tr><td>2-2425</td><td>C1</td><td>The Carpenter</td><td class="text-right">$2,396</td><td class="text-right" style="color:var(--red);font-weight:600">211</td><td class="text-right" style="color:var(--red)">$19,659</td><td></td><td></td></tr><tr><td>3-3208</td><td>A5</td><td>The Cooper</td><td class="text-right">$1,571</td><td class="text-right" style="color:var(--red);font-weight:600">209</td><td class="text-right" style="color:var(--red)">$14,491</td><td></td><td></td></tr><tr><td>2-2422</td><td>A2</td><td>The Architect</td><td class="text-right">$1,516</td><td class="text-right" style="color:var(--red);font-weight:600">208</td><td class="text-right" style="color:var(--red)">$13,075</td><td>03/20</td><td>Hermida, Clemencia</td></tr><tr><td>3-3318</td><td>A1</td><td>The Jackson</td><td class="text-right">$1,499</td><td class="text-right" style="color:var(--red);font-weight:600">172</td><td class="text-right" style="color:var(--red)">$9,477</td><td></td><td></td></tr><tr><td>1-1307</td><td>A1</td><td>The Jackson</td><td class="text-right">$1,504</td><td class="text-right" style="color:var(--red);font-weight:600">159</td><td class="text-right" style="color:var(--red)">$10,565</td><td>03/13</td><td>Foreman, Tauja</td></tr><tr><td>1-1213</td><td>A3</td><td>The Augustine</td><td class="text-right">$1,727</td><td class="text-right" style="color:var(--red);font-weight:600">152</td><td class="text-right" style="color:var(--red)">$11,484</td><td></td><td></td></tr><tr><td>3-3405</td><td>A1</td><td>The Jackson</td><td class="text-right">$1,524</td><td class="text-right" style="color:var(--red);font-weight:600">117</td><td class="text-right" style="color:var(--red)">$5,943</td><td>02/19</td><td>Howell, Ayden</td></tr><tr><td>2-2227</td><td>B2</td><td>The Franklin</td><td class="text-right">$1,796</td><td class="text-right" style="color:var(--red);font-weight:600">97</td><td class="text-right" style="color:var(--red)">$7,140</td><td>02/28</td><td>Carvalho Da Silva Dias, Aline</td></tr><tr><td>1-1317</td><td>B2</td><td>The Franklin</td><td class="text-right">$1,796</td><td class="text-right" style="color:var(--red);font-weight:600">90</td><td class="text-right" style="color:var(--red)">$6,658</td><td></td><td></td></tr><tr><td>3-3409</td><td>A1</td><td>The Jackson</td><td class="text-right">$1,524</td><td class="text-right" style="color:var(--red);font-weight:600">82</td><td class="text-right" style="color:var(--red)">$4,335</td><td>02/20</td><td>Furtick, Payton</td></tr><tr><td>2-2423</td><td>A1</td><td>The Jackson</td><td class="text-right">$1,549</td><td class="text-right" style="color:var(--red);font-weight:600">81</td><td class="text-right" style="color:var(--red)">$4,929</td><td></td><td></td></tr><tr><td>1-1225</td><td>B1</td><td>The Linden</td><td class="text-right">$1,769</td><td class="text-right" style="color:var(--red);font-weight:600">75</td><td class="text-right" style="color:var(--red)">$5,390</td><td>03/25</td><td>Vaz, Lidiane</td></tr><tr><td>1-1334</td><td>B6</td><td>The Arden</td><td class="text-right">$1,814</td><td class="text-right" style="color:var(--red);font-weight:600">64</td><td class="text-right" style="color:var(--red)">$5,563</td><td></td><td></td></tr><tr><td>1-1308</td><td>A2</td><td>The Architect</td><td class="text-right">$1,491</td><td class="text-right" style="color:var(--amber);font-weight:600">59</td><td class="text-right" style="color:var(--red)">$3,753</td><td></td><td></td></tr><tr><td>2-2318</td><td>A1</td><td>The Jackson</td><td class="text-right">$1,519</td><td class="text-right" style="color:var(--amber);font-weight:600">57</td><td class="text-right" style="color:var(--red)">$3,838</td><td></td><td></td></tr><tr><td>1-1221</td><td>B2</td><td>The Franklin</td><td class="text-right">$1,796</td><td class="text-right" style="color:var(--amber);font-weight:600">50</td><td class="text-right" style="color:var(--red)">$3,886</td><td></td><td></td></tr><tr><td>1-1434</td><td>B6</td><td>The Arden</td><td class="text-right">$1,834</td><td class="text-right" style="color:var(--amber);font-weight:600">45</td><td class="text-right" style="color:var(--red)">$4,147</td><td></td><td></td></tr><tr><td>2-2315</td><td>A1</td><td>The Jackson</td><td class="text-right">$1,519</td><td class="text-right" style="color:var(--amber);font-weight:600">43</td><td class="text-right" style="color:var(--red)">$2,945</td><td></td><td></td></tr><tr><td>3-3415</td><td>A1</td><td>The Jackson</td><td class="text-right">$1,524</td><td class="text-right" style="color:var(--amber);font-weight:600">40</td><td class="text-right" style="color:var(--red)">$2,734</td><td></td><td></td></tr><tr><td>3-3417</td><td>A1</td><td>The Jackson</td><td class="text-right">$1,524</td><td class="text-right" style="color:var(--amber);font-weight:600">40</td><td class="text-right" style="color:var(--red)">$2,734</td><td></td><td></td></tr><tr><td>2-2209</td><td>C1</td><td>The Carpenter</td><td class="text-right">$2,381</td><td class="text-right" style="color:inherit;font-weight:600">20</td><td class="text-right" style="color:var(--red)">$1,872</td><td></td><td></td></tr><tr><td>1-1121</td><td>B2</td><td>The Franklin</td><td class="text-right">$1,821</td><td class="text-right" style="color:inherit;font-weight:600">20</td><td class="text-right" style="color:var(--red)">$1,607</td><td>03/04</td><td>Ramirez, Christian</td></tr><tr><td>3-3210</td><td>A1</td><td>The Jackson</td><td class="text-right">$1,514</td><td class="text-right" style="color:inherit;font-weight:600">12</td><td class="text-right" style="color:var(--red)">$853</td><td></td><td></td></tr><tr><td>1-1126</td><td>A4</td><td>The Starling</td><td class="text-right">$1,464</td><td class="text-right" style="color:inherit;font-weight:600">9</td><td class="text-right" style="color:var(--red)">$568</td><td>02/19</td><td>Cser, Kyle</td></tr><tr><td>3-3204</td><td>B2</td><td>The Franklin</td><td class="text-right">$1,816</td><td class="text-right" style="color:inherit;font-weight:600">7</td><td class="text-right" style="color:var(--red)">$536</td><td></td><td></td></tr><tr><td>2-2125</td><td>C1</td><td>The Carpenter</td><td class="text-right">$2,376</td><td class="text-right" style="color:inherit;font-weight:600">7</td><td class="text-right" style="color:var(--red)">$654</td><td>02/25</td><td>Campana, Ashley</td></tr><tr><td>3-3406</td><td>A1</td><td>The Jackson</td><td class="text-right">$1,534</td><td class="text-right" style="color:inherit;font-weight:600">5</td><td class="text-right" style="color:var(--red)">$360</td><td></td><td></td></tr></tbody></table><h4 style="color:var(--teal);margin:16px 0 8px;font-size:13px">Upcoming Vacancies (17 units on notice)</h4><table><thead><tr><th>Unit</th><th>Type</th><th>Floor Plan</th><th class="text-right">Rent</th><th>Move-Out</th><th>Lead</th><th>Move-In</th></tr></thead><tbody><tr><td>1-1111</td><td>B3</td><td>The Botanist</td><td class="text-right">$1,991</td><td>03/06</td><td>Coble, Trenton</td><td></td></tr><tr><td>1-1125</td><td>B1</td><td>The Linden</td><td class="text-right">$1,779</td><td>02/28</td><td>Ramirez Sanchez, Miguel</td><td></td></tr><tr><td>1-1239</td><td>B3</td><td>The Botanist</td><td class="text-right">$1,976</td><td>02/26</td><td>Ricks, Tamara</td><td></td></tr><tr><td>1-1328</td><td>B6</td><td>The Arden</td><td class="text-right">$1,814</td><td>04/16</td><td>Williams, Shaquandrea</td><td></td></tr><tr><td>1-1407</td><td>A1</td><td>The Jackson</td><td class="text-right">$1,524</td><td>03/30</td><td>Fussell, Callie</td><td></td></tr><tr><td>1-1418</td><td>A1</td><td>The Jackson</td><td class="text-right">$1,549</td><td>03/20</td><td>Clement, Justin</td><td></td></tr><tr><td>2-2101</td><td>C1</td><td>The Carpenter</td><td class="text-right">$2,396</td><td>04/16</td><td>Christian, Monica</td><td></td></tr><tr><td>2-2122</td><td>A2</td><td>The Architect</td><td class="text-right">$1,516</td><td>04/16</td><td>Shevada, Taylor</td><td></td></tr><tr><td>2-2421</td><td>B1</td><td>The Linden</td><td class="text-right">$1,809</td><td>03/27</td><td>Murdock, John</td><td></td></tr><tr><td>3-3105</td><td>A1</td><td>The Jackson</td><td class="text-right">$1,519</td><td>03/19</td><td>Crowley Sr, Chris</td><td></td></tr><tr><td>3-3107</td><td>A5</td><td>The Cooper</td><td class="text-right">$1,576</td><td>03/20</td><td>Leveson, Madelyne</td><td></td></tr><tr><td>3-3115</td><td>A1</td><td>The Jackson</td><td class="text-right">$1,519</td><td>04/14</td><td>Lee, Aspen</td><td></td></tr><tr><td>3-3214</td><td>B2</td><td>The Franklin</td><td class="text-right">$1,801</td><td>04/16</td><td>Asbell, Quentin</td><td></td></tr><tr><td>3-3217</td><td>A1</td><td>The Jackson</td><td class="text-right">$1,504</td><td>05/04</td><td>Higginbotham, Brandi</td><td></td></tr><tr><td>1-1109</td><td>S2</td><td>The Voyager</td><td class="text-right">$1,313</td><td>04/28</td><td>Spinks, Zackary</td><td>05/07</td></tr><tr><td colspan="7" style="text-align:center;color:var(--gray);font-style:italic">+ 2 more upcoming vacancies</td></tr></tbody></table>
+</div>
+</div>
+
+<!-- LEASE EXPIRATIONS -->
+<div class="section">
+<div class="section-header">📅 Lease Expirations by Month</div>
+<div class="section-body">
+<table><thead><tr><th>Month</th><th class="text-right">Expirations</th><th>Bar</th></tr></thead><tbody><tr class="curr-month"><td>Feb 2026</td><td class="text-right">8</td><td><div class="bar-track"><div class="bar-fill" style="width:33.33333333333333%;background:var(--blue)">8</div></div></td></tr><tr><td>Mar 2026</td><td class="text-right">13</td><td><div class="bar-track"><div class="bar-fill" style="width:54.166666666666664%;background:var(--blue)">13</div></div></td></tr><tr><td>Apr 2026</td><td class="text-right">16</td><td><div class="bar-track"><div class="bar-fill" style="width:66.66666666666666%;background:var(--blue)">16</div></div></td></tr><tr><td>May 2026</td><td class="text-right">16</td><td><div class="bar-track"><div class="bar-fill" style="width:66.66666666666666%;background:var(--blue)">16</div></div></td></tr><tr><td>Jun 2026</td><td class="text-right">24</td><td><div class="bar-track"><div class="bar-fill" style="width:100%;background:var(--blue)">24</div></div></td></tr><tr><td>Jul 2026</td><td class="text-right">22</td><td><div class="bar-track"><div class="bar-fill" style="width:91.66666666666666%;background:var(--blue)">22</div></div></td></tr><tr><td>Aug 2026</td><td class="text-right">23</td><td><div class="bar-track"><div class="bar-fill" style="width:95.83333333333334%;background:var(--blue)">23</div></div></td></tr><tr><td>Sep 2026</td><td class="text-right">24</td><td><div class="bar-track"><div class="bar-fill" style="width:100%;background:var(--blue)">24</div></div></td></tr><tr><td>Oct 2026</td><td class="text-right">22</td><td><div class="bar-track"><div class="bar-fill" style="width:91.66666666666666%;background:var(--blue)">22</div></div></td></tr><tr><td>Nov 2026</td><td class="text-right">17</td><td><div class="bar-track"><div class="bar-fill" style="width:70.83333333333334%;background:var(--blue)">17</div></div></td></tr><tr><td>Dec 2026</td><td class="text-right">16</td><td><div class="bar-track"><div class="bar-fill" style="width:66.66666666666666%;background:var(--blue)">16</div></div></td></tr><tr><td>Jan 2027</td><td class="text-right">23</td><td><div class="bar-track"><div class="bar-fill" style="width:95.83333333333334%;background:var(--blue)">23</div></div></td></tr></tbody></table>
+</div>
+</div>
+
+<!-- TODAY'S HIGHLIGHTS -->
+<div class="section">
+<div class="section-header">⚡ Today's Highlights</div>
+<div class="section-body">
+<div class="highlights-card">
+<strong>Occupancy:</strong> 89.9% physical occupancy (267/297), 93.3% leased (277/297).<br>
+<strong>Exposure:</strong> 34 units exposed (11.4%)—monitor closely.<br>
+<strong>Leasing:</strong> 4 new lease(s) started, 5 renewal(s) completed this week.<br>
+<strong>Vacancy Cost:</strong> $200,911 accumulated across 30 vacant units.<br>
+<strong>Rent:</strong> Avg market $1,695 vs scheduled $1,665 ($-31 delta).
+</div>
+</div>
+</div>
+
+<!-- MOCK DATA SECTIONS -->
+<div class="section">
+<div class="section-header">🔧 Maintenance & Work Orders <span class="mock-badge">MOCK DATA</span></div>
+<div class="section-body mock-highlight">
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px">
+<div style="text-align:center;padding:12px"><div style="font-size:11px;color:var(--gray)">Open WOs</div><div style="font-size:24px;font-weight:800;color:var(--teal)">12</div></div>
+<div style="text-align:center;padding:12px"><div style="font-size:11px;color:var(--gray)">Completed Today</div><div style="font-size:24px;font-weight:800;color:var(--green)">3</div></div>
+<div style="text-align:center;padding:12px"><div style="font-size:11px;color:var(--gray)">Avg Days to Close</div><div style="font-size:24px;font-weight:800;color:var(--blue)">2.4</div></div>
+<div style="text-align:center;padding:12px"><div style="font-size:11px;color:var(--gray)">Emergency</div><div style="font-size:24px;font-weight:800;color:var(--red)">0</div></div>
+</div>
+</div>
+</div>
+
+<div style="text-align:center;padding:20px;color:var(--gray);font-size:12px">
+RISE Daily Leasing Report — RISE Bartram Park — Generated 02/19/2026 11:00 AM EST<br>
+Data source: Entrata Box Score, Availability, Lease Execution & Rent Roll reports.<br>
+Sections marked <span class="badge-mock" style="display:inline">MOCK DATA</span> use placeholder values.
+</div>
+
+</div>
+
+<script>
+document.querySelectorAll('.section-header').forEach(h=>{
+  h.addEventListener('click',()=>h.parentElement.classList.toggle('collapsed'));
+});
+</script>
+
+</body>
+</html>
