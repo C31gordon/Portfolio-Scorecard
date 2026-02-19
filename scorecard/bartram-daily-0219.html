@@ -150,21 +150,10 @@ tbody tr:hover{background:#EDF2F7}
 <tr class="mock-row"><td>Email <span class="mock">MOCK</span></td><td class="text-right">6 <span class="mock">MOCK</span></td><td class="text-right">24 <span class="mock">MOCK</span></td><td class="text-right">51 <span class="mock">MOCK</span></td></tr>
 <tr class="mock-row"><td>Online Leads <span class="mock">MOCK</span></td><td class="text-right">2 <span class="mock">MOCK</span></td><td class="text-right">5 <span class="mock">MOCK</span></td><td class="text-right">10 <span class="mock">MOCK</span></td></tr>
 <tr class="mock-row"><td>Total New Leads <span class="mock">MOCK</span></td><td class="text-right"><strong>10</strong> <span class="mock">MOCK</span></td><td class="text-right"><strong>26</strong> <span class="mock">MOCK</span></td><td class="text-right"><strong>49</strong> <span class="mock">MOCK</span></td></tr>
-<tr><td>Applications (New Lease)</td><td class="text-right">—<sup>†</sup></td><td class="text-right"><strong>4</strong> started</td><td class="text-right">— <span class="mock">MOCK</span></td></tr>
-<tr><td>Approved (New Lease)</td><td class="text-right">—<sup>†</sup></td><td class="text-right"><strong>1</strong></td><td class="text-right">— <span class="mock">MOCK</span></td></tr>
-<tr><td>Leases Executed (New)</td><td class="text-right">—<sup>†</sup></td><td class="text-right"><strong>3</strong> completed</td><td class="text-right">— <span class="mock">MOCK</span></td></tr>
-<tr><td>New Lease Cancelled</td><td class="text-right">—<sup>†</sup></td><td class="text-right"><strong>1</strong></td><td class="text-right">— <span class="mock">MOCK</span></td></tr>
-<tr><td>Renewals (Apps Started)</td><td class="text-right">—<sup>†</sup></td><td class="text-right"><strong>4</strong></td><td class="text-right">— <span class="mock">MOCK</span></td></tr>
-<tr><td>Renewals (Completed)</td><td class="text-right">—<sup>†</sup></td><td class="text-right"><strong>5</strong></td><td class="text-right">— <span class="mock">MOCK</span></td></tr>
-<tr><td>Renewals (Approved)</td><td class="text-right">—<sup>†</sup></td><td class="text-right"><strong>4</strong></td><td class="text-right">— <span class="mock">MOCK</span></td></tr>
-<tr><td>Move-Ins</td><td class="text-right">—<sup>†</sup></td><td class="text-right">1</td><td class="text-right">3</td></tr>
-<tr><td>Move-Outs</td><td class="text-right">—<sup>†</sup></td><td class="text-right">2</td><td class="text-right">4</td></tr>
-<tr><td>Notices Given (on notice now)</td><td class="text-right">—<sup>†</sup></td><td class="text-right">—<sup>†</sup></td><td class="text-right">20 on notice</td></tr>
 </tbody>
 </table>
-<div class="footnote">† Daily breakdown requires comparing consecutive day snapshots. This is the first day storing Entrata snapshots — daily deltas will be available starting tomorrow (02/20).<br>
-WTD lease data from Entrata Lease Execution Summary (02/13–02/19). Move-ins/outs from rent roll move-in dates and expected move-out dates in Feb. "20 on notice" = current snapshot of all units with notice status (Notice Rented: 6, Notice Unrented: 14).<br>
-MTD move-ins (3) and move-outs (4 expected in Feb) are from real Entrata rent roll data.</div>
+<div class="footnote">Traffic data (tours, walk-ins, phone, email, online leads) is mock — real lead source tracking requires CRM integration.<br>
+Leasing activity, move-ins/outs, renewals, and notices are tracked in Property Pulse below.</div>
 </div>
 </div>
 
@@ -422,9 +411,10 @@ Net absorption = Move-ins (3) − Move-outs (4 expected) = -1.</div>
 </tbody>
 </table>
 
-<!-- Projection methodology -->
-<div style="background:#F8FAFC;border:1px solid var(--border);border-radius:8px;padding:12px;margin-top:12px;font-size:11px;line-height:1.6;color:var(--gray)">
-<strong style="color:var(--navy)">📐 Projection Methodology (v6)</strong><br>
+<!-- Projection methodology — collapsible -->
+<details style="margin-top:12px">
+<summary style="cursor:pointer;font-size:12px;font-weight:600;color:var(--navy);padding:8px 0;user-select:none">📐 Projection Methodology ▸</summary>
+<div style="background:#F8FAFC;border:1px solid var(--border);border-radius:8px;padding:12px;font-size:11px;line-height:1.6;color:var(--gray)">
 <strong>Formula:</strong> Projected Occ = (Current Occupied − Expected Move-Outs + Expected Move-Ins) / 297<br>
 <strong>Move-outs:</strong> Lease expirations by month × 35% non-renewal rate (based on Dec 20%, Jan 25%, Feb 37% avg) + 2/mo miscellaneous (skips, early terms).<br>
 Expirations from Entrata rent roll: Mar=13, Apr=16, May=16, Jun=24, Jul=22, Aug=23.<br>
@@ -432,6 +422,7 @@ Expirations from Entrata rent roll: Mar=13, Apr=16, May=16, Jun=24, Jul=22, Aug=
 Seasonal factors account for late-winter slowdown and spring/summer leasing season ramp-up.<br>
 <strong>Result:</strong> Projected to reach 93.3% by Jun-26, closing budget gap from -3.1% to -1.7%.
 </div>
+</details>
 
 <div style="margin-top:16px">
 <div style="font-size:12px;font-weight:600;color:var(--navy);margin-bottom:6px">Occupancy Trend: Actual/Projected vs Budget</div>
