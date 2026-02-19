@@ -144,20 +144,20 @@ tbody tr:hover{background:#EDF2F7}
 <div class="section-header" onclick="toggle(this)">📊 Today's Activity</div>
 <div class="section-body">
 <div style="font-size:11px;color:var(--gray);margin-bottom:10px">
-Traffic activity for the day. <span class="mock">MOCK</span> = RISE Viera data (Bartram lead source report not yet available).
+Traffic activity for the day. Bartram Park lead source report not yet available — section will populate once daily lead source pull is configured for this property.
 </div>
 <table>
-<thead><tr><th>Metric</th><th class="text-right">Today</th><th class="text-right">Source</th></tr></thead>
+<thead><tr><th>Metric</th><th class="text-right">Daily</th><th class="text-right">WTD (02/13–02/18)</th><th class="text-right">MTD</th></tr></thead>
 <tbody>
-<tr class="mock-row"><td>Tours <span class="mock">MOCK</span></td><td class="text-right">1</td><td class="text-right"><span class="mock">Viera</span></td></tr>
-<tr class="mock-row"><td>Walk-In <span class="mock">MOCK</span></td><td class="text-right">0</td><td class="text-right"><span class="mock">Viera</span></td></tr>
-<tr class="mock-row"><td>Phone <span class="mock">MOCK</span></td><td class="text-right">0</td><td class="text-right"><span class="mock">Viera</span></td></tr>
-<tr class="mock-row"><td>Email <span class="mock">MOCK</span></td><td class="text-right">0</td><td class="text-right"><span class="mock">Viera</span></td></tr>
-<tr class="mock-row"><td>Online Leads <span class="mock">MOCK</span></td><td class="text-right">6</td><td class="text-right"><span class="mock">Viera</span></td></tr>
-<tr class="mock-row"><td><strong>Total New Leads</strong> <span class="mock">MOCK</span></td><td class="text-right"><strong>6</strong></td><td class="text-right"><span class="mock">Viera</span></td></tr>
+<tr><td>Tours</td><td class="text-right" style="color:#bbb">—</td><td class="text-right" style="color:#bbb">—</td><td class="text-right" style="color:#bbb">—</td></tr>
+<tr><td>Walk-In</td><td class="text-right" style="color:#bbb">—</td><td class="text-right" style="color:#bbb">—</td><td class="text-right" style="color:#bbb">—</td></tr>
+<tr><td>Phone</td><td class="text-right" style="color:#bbb">—</td><td class="text-right" style="color:#bbb">—</td><td class="text-right" style="color:#bbb">—</td></tr>
+<tr><td>Email</td><td class="text-right" style="color:#bbb">—</td><td class="text-right" style="color:#bbb">—</td><td class="text-right" style="color:#bbb">—</td></tr>
+<tr><td>Online Leads</td><td class="text-right" style="color:#bbb">—</td><td class="text-right" style="color:#bbb">—</td><td class="text-right" style="color:#bbb">—</td></tr>
+<tr><td><strong>Total New Leads</strong></td><td class="text-right" style="color:#bbb"><strong>—</strong></td><td class="text-right" style="color:#bbb"><strong>—</strong></td><td class="text-right" style="color:#bbb"><strong>—</strong></td></tr>
 </tbody>
 </table>
-<div class="footnote">Source: Entrata Lead Sources Report (RISE Viera sample data). Online Leads = Property Website (4) + Facebook (1) + Google (1). Tours = Visits from report. Walk-In/Phone/Email not broken out in source report — shown as 0. Bartram-specific data pending.</div>
+<div class="footnote">⚠️ Bartram Park lead source report required. Traffic data will auto-populate once the daily Entrata lead source pull is configured for this property.</div>
 </div>
 </div>
 
@@ -166,43 +166,34 @@ Traffic activity for the day. <span class="mock">MOCK</span> = RISE Viera data (
 
 <!-- Lead Source Breakdown (MTD) -->
 <div class="mini-card">
-<h3>Lead Source Breakdown <span class="mock">MOCK</span></h3>
+<h3>Lead Source Breakdown</h3>
 <div class="donut-wrap">
 <svg width="140" height="140" viewBox="0 0 140 140">
 <circle cx="70" cy="70" r="50" fill="none" stroke="#EDF2F7" stroke-width="18"/>
-<circle cx="70" cy="70" r="50" fill="none" stroke="var(--blue)" stroke-width="18"
-  stroke-dasharray="209.44 314.16" stroke-dashoffset="0" transform="rotate(-90 70 70)"/>
-<circle cx="70" cy="70" r="50" fill="none" stroke="#4267B2" stroke-width="18"
-  stroke-dasharray="52.36 314.16" stroke-dashoffset="-209.44" transform="rotate(-90 70 70)"/>
-<circle cx="70" cy="70" r="50" fill="none" stroke="var(--green)" stroke-width="18"
-  stroke-dasharray="52.36 314.16" stroke-dashoffset="-261.80" transform="rotate(-90 70 70)"/>
-<text x="70" y="66" text-anchor="middle" font-size="20" font-weight="800" fill="var(--navy)">6</text>
-<text x="70" y="80" text-anchor="middle" font-size="10" fill="var(--gray)">leads</text>
+<text x="70" y="66" text-anchor="middle" font-size="14" font-weight="600" fill="var(--gray)">Pending</text>
+<text x="70" y="82" text-anchor="middle" font-size="10" fill="var(--gray)">lead report</text>
 </svg>
-<div class="donut-legend">
-<div><span class="sw" style="background:var(--blue)"></span> Website: 4 (67%)</div>
-<div><span class="sw" style="background:#4267B2"></span> Facebook: 1 (17%)</div>
-<div><span class="sw" style="background:var(--green)"></span> Google: 1 (17%)</div>
+<div class="donut-legend" style="color:var(--gray);font-style:italic">
+<div>Bartram lead source report required</div>
 </div>
 </div>
-<div class="footnote">Viera sample data — Bartram lead sources pending.</div>
+<div class="footnote">⚠️ Will populate once Bartram lead source report is pulled from Entrata.</div>
 </div>
 
 <!-- Conversion Funnel (MTD) — simplified, no targets -->
 <div class="mini-card">
-<h3>Conversion Funnel <span class="mock">MOCK</span></h3>
-<div class="funnel-stage" style="background:var(--blue)"><span>Total Leads</span><span class="num">6</span></div>
-<div class="funnel-arrow">▼ 100%</div>
-<div class="funnel-stage" style="background:var(--blue);opacity:.9"><span>Prospects</span><span class="num">6</span></div>
-<div class="funnel-arrow">▼ 17%</div>
-<div class="funnel-stage" style="background:var(--amber);opacity:.9"><span>Visits (Tours)</span><span class="num">1</span></div>
-<div class="funnel-arrow">▼ 0%</div>
-<div class="funnel-stage" style="background:var(--gray);opacity:.9"><span>Gross Applications</span><span class="num">0</span></div>
+<h3>Conversion Funnel (WTD 02/13–02/18)</h3>
+<div class="funnel-stage" style="background:var(--blue)"><span>Total Leads</span><span class="num" style="opacity:.4">—</span></div>
+<div class="funnel-arrow">▼ lead source pending</div>
+<div class="funnel-stage" style="background:var(--blue);opacity:.85"><span>Prospects / Tours</span><span class="num" style="opacity:.4">—</span></div>
 <div class="funnel-arrow">▼</div>
-<div class="funnel-stage" style="background:var(--gray);opacity:.9"><span>Net Leases</span><span class="num">0</span></div>
+<div class="funnel-stage" style="background:var(--amber)"><span>Gross Applications</span><span class="num">3</span></div>
+<div class="funnel-arrow">▼ 33% approval</div>
+<div class="funnel-stage" style="background:var(--green)"><span>Net Leases</span><span class="num">1</span></div>
 <div style="margin-top:10px;font-size:11px;color:var(--gray)">
-<span class="mock">RISE Viera data</span> — Bartram funnel pending.<br>
-Total cost: $251.61 · $41.94/prospect
+Bartram Park — Lease Execution Summary data.<br>
+Gross Apps = 3 completed (WTD). Net Leases = 1 approved (WTD).<br>
+Leads/Tours pending Bartram lead source report.
 </div>
 </div>
 
