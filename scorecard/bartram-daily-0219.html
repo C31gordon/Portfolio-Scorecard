@@ -21,9 +21,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 .header-left .prop-link:hover{opacity:1;text-decoration:underline}
 .header-right{text-align:right}
 .header-right .date{font-size:18px;font-weight:600}
-.date-select{background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.3);border-radius:6px;padding:6px 12px;font-size:13px;margin-top:8px;cursor:pointer}
+.date-select{background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.3);border-radius:6px;padding:6px 12px;font-size:13px;margin-top:8px;cursor:pointer;-webkit-appearance:none;appearance:none;padding-right:28px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='white' d='M6 8L1 3h10z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 8px center}
 .date-select option{color:#333;background:#fff}
-.date-select option:disabled{color:#999}
+.date-select option:disabled{color:#bbb}
 .badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.5px}
 .badge-green{background:var(--green);color:#fff}
 .kpi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:20px}
@@ -76,23 +76,16 @@ tbody tr:hover{background:#EDF2F7}
 .formula-table .formula{color:var(--gray);font-family:monospace;font-size:11px}
 .occ-bar{display:inline-block;height:14px;border-radius:3px;min-width:4px;vertical-align:middle}
 .mock{background:#FFF3CD;color:#856404;font-size:9px;padding:1px 5px;border-radius:8px;font-weight:600}
+.projected{background:#D1ECF1;color:#0C5460;font-size:9px;padding:1px 5px;border-radius:8px;font-weight:600}
+.budget-badge{background:#D4EDDA;color:#155724;font-size:9px;padding:1px 5px;border-radius:8px;font-weight:600}
 .mock-row td{background:#FFFDF0!important}
-.prelease-card{background:linear-gradient(135deg,#1B2A4A,#253A5E);color:#fff;border-radius:12px;padding:24px;margin-bottom:20px;text-align:center}
-.prelease-card h3{font-size:18px;margin-bottom:16px}
-.prelease-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:16px}
-.prelease-metric{background:rgba(255,255,255,.1);border-radius:8px;padding:14px}
-.prelease-metric .val{font-size:28px;font-weight:800}
-.prelease-metric .lbl{font-size:10px;text-transform:uppercase;opacity:.8;margin-top:2px}
-.progress-bar{height:24px;background:rgba(255,255,255,.15);border-radius:12px;overflow:hidden;margin-top:12px}
-.progress-fill{height:100%;border-radius:12px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px;font-weight:700}
-.card-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
-.info-card{background:#fff;border-radius:10px;box-shadow:var(--shadow);padding:16px;border-left:4px solid var(--blue)}
-.info-card h4{font-size:12px;text-transform:uppercase;letter-spacing:.5px;color:var(--navy);margin-bottom:8px}
-.info-card .big{font-size:28px;font-weight:800;color:var(--navy)}
 .comments-area{background:#FAFBFC;border:1px dashed var(--border);border-radius:8px;padding:14px;min-height:80px;font-size:13px;color:#666;line-height:1.6;outline:none;transition:border-color .2s,background .2s}
 .comments-area:focus{border-color:var(--blue);background:#fff;color:#333}
 .comments-area:empty::before{content:attr(data-placeholder);color:#aaa;font-style:italic}
 .comments-label{font-size:12px;text-transform:uppercase;letter-spacing:.5px;color:var(--navy);font-weight:700;margin-bottom:6px}
+.footnote{font-size:10px;color:var(--gray);margin-top:8px;font-style:italic}
+.funnel-math{background:#F0F7FF;border:1px solid #D1ECF1;border-radius:8px;padding:14px;margin-top:12px;font-size:12px;line-height:1.7}
+.funnel-math strong{color:var(--navy)}
 @media print{body{background:#fff;font-size:11px}.container{padding:0}.section{break-inside:avoid;box-shadow:none;border:1px solid #ddd}.header{background:var(--navy)!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}.kpi-card,.mini-card{box-shadow:none;border:1px solid #ddd}.section.collapsed .section-body{display:block}}
 @media(max-width:768px){.header{flex-direction:column;text-align:center}.header-right{text-align:center}.kpi-grid{grid-template-columns:repeat(2,1fr)}.chart-row{grid-template-columns:1fr}}
 </style>
@@ -107,7 +100,7 @@ tbody tr:hover{background:#EDF2F7}
 <span style="margin-left:auto;font-size:11px;opacity:.6">Feb 19, 2026</span>
 </div>
 
-<!-- 1. HEADER -->
+<!-- 1. HEADER with fixed date dropdown -->
 <div class="header">
 <div class="header-left">
 <h1><span>RISE</span> Daily Leasing Report</h1>
@@ -121,11 +114,11 @@ tbody tr:hover{background:#EDF2F7}
 <select class="date-select" onchange="if(this.value)window.location=this.value">
 <option value="" selected>Feb 19, 2026 (Today)</option>
 <option value="bartram-dlr.html">Feb 18, 2026</option>
-<option disabled>Feb 17, 2026</option>
-<option disabled>Feb 16, 2026</option>
-<option disabled>Feb 15, 2026</option>
-<option disabled>Feb 14, 2026</option>
-<option disabled>Feb 13, 2026</option>
+<option value="#" disabled style="color:#bbb">Feb 17, 2026</option>
+<option value="#" disabled style="color:#bbb">Feb 16, 2026</option>
+<option value="#" disabled style="color:#bbb">Feb 15, 2026</option>
+<option value="#" disabled style="color:#bbb">Feb 14, 2026</option>
+<option value="#" disabled style="color:#bbb">Feb 13, 2026</option>
 </select>
 </div>
 </div>
@@ -158,7 +151,7 @@ tbody tr:hover{background:#EDF2F7}
 <tr><td>Approved (New Lease)</td><td class="text-right">—</td><td class="text-right"><strong>3</strong></td><td class="text-right">— <span class="mock">MOCK</span></td></tr>
 <tr><td>Leases Executed (New)</td><td class="text-right">—</td><td class="text-right"><strong>3</strong> completed</td><td class="text-right">— <span class="mock">MOCK</span></td></tr>
 <tr><td>New Lease Cancelled</td><td class="text-right">—</td><td class="text-right"><strong>1</strong></td><td class="text-right">— <span class="mock">MOCK</span></td></tr>
-<tr><td>Renewals (Apps Approved)</td><td class="text-right">—</td><td class="text-right"><strong>4</strong></td><td class="text-right">— <span class="mock">MOCK</span></td></tr>
+<tr><td>Renewals (Apps Started)</td><td class="text-right">—</td><td class="text-right"><strong>4</strong></td><td class="text-right">— <span class="mock">MOCK</span></td></tr>
 <tr><td>Renewals (Completed)</td><td class="text-right">—</td><td class="text-right"><strong>5</strong></td><td class="text-right">— <span class="mock">MOCK</span></td></tr>
 <tr><td>Renewals (Approved)</td><td class="text-right">—</td><td class="text-right"><strong>4</strong></td><td class="text-right">— <span class="mock">MOCK</span></td></tr>
 <tr><td>Move-Ins</td><td class="text-right">—</td><td class="text-right">1</td><td class="text-right">5 <span class="mock">MOCK</span></td></tr>
@@ -214,7 +207,7 @@ Lease velocity on track — <span style="color:var(--green);font-weight:600">ahe
 </div>
 </div>
 
-<!-- 4c. Rent vs Budget by Type (Current Snapshot) -->
+<!-- 4c. Rent vs Budget by Type -->
 <div class="mini-card">
 <h3>Rent vs Budget by Type (Current Snapshot)</h3>
 <div class="bar-group">
@@ -253,7 +246,24 @@ Lease velocity on track — <span style="color:var(--green);font-weight:600">ahe
 </div>
 </div>
 
-<!-- 5. TODAY'S HIGHLIGHTS + AI RECOMMENDATIONS -->
+<!-- 5. MANAGER COMMENTS (MOVED — now between funnel row and highlights) -->
+<div class="section">
+<div class="section-header" onclick="toggle(this)">💬 Manager Comments</div>
+<div class="section-body">
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+<div>
+<div class="comments-label">🏷️ Leasing Specials</div>
+<div class="comments-area" contenteditable="true" data-placeholder="Enter current concessions, move-in specials, pricing adjustments..."></div>
+</div>
+<div>
+<div class="comments-label">📣 Marketing Outreach</div>
+<div class="comments-area" contenteditable="true" data-placeholder="Recent marketing activities, upcoming events, outreach campaigns..."></div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- 6. TODAY'S HIGHLIGHTS + AI RECOMMENDATIONS -->
 <div class="section">
 <div class="section-header" onclick="toggle(this)">✨ Today's Highlights</div>
 <div class="section-body">
@@ -270,30 +280,48 @@ Lease velocity on track — <span style="color:var(--green);font-weight:600">ahe
 <div class="ai-rec"><strong>Avg scheduled rent $1,665 vs market $1,695</strong> — $30/unit gap across 267 occupied units = ~$8,000/mo potential revenue. Prioritize rent increases on renewal offers, especially in B3/B8 plans where in-place already exceeds market.</div>
 <div class="ai-rec"><strong>1BR below budget by $69 avg</strong> — A1 (83 units, 87% occ) is the volume driver. Closing the gap here has the highest impact: even $20/unit = $1,660/mo incremental revenue.</div>
 <div class="ai-rec"><strong>Net absorption WTD: -1</strong> — 2 move-outs vs 1 move-in. With 25 move-ins needed to hit budget occupancy, leasing velocity must stay elevated through March.</div>
+
+<!-- FUNNEL MATH (new) -->
+<div class="funnel-math">
+<strong>📊 Funnel Math — Getting Back on Track</strong><br>
+<strong>Target:</strong> 93% budgeted occupancy = 276 occupied units. Currently at 267. <strong>Need 9 net move-ins</strong> to hit target.<br>
+<strong>Accounting for move-outs:</strong> At ~4 move-outs/month pace, need <strong>~13 gross move-ins</strong> remaining this month (8 have already occurred MTD ← <span class="mock">MOCK</span>).<br>
+<strong>Working backwards from the funnel:</strong><br>
+&nbsp;&nbsp;• Need <strong>8 more leases</strong> this month (9 executed so far, but only 5 have moved in)<br>
+&nbsp;&nbsp;• At 129% close rate (apps → leases): need <strong>~6 more applications</strong><br>
+&nbsp;&nbsp;• At 14% app rate (leads → apps): need <strong>~43 more leads</strong> in remaining 9 days<br>
+&nbsp;&nbsp;• That's <strong>~5 leads/day</strong> — currently averaging ~3.6/day <span class="mock">MOCK</span><br>
+<strong style="color:var(--red)">⚠️ Lead generation needs to increase ~40% to hit budget occupancy by month-end.</strong><br>
+<span style="font-size:11px;color:var(--gray)">Recommendation: Boost ILS spend, activate referral bonuses, and consider look-and-lease specials on B2/B6/C1 floor plans.</span>
+</div>
 </div>
 </div>
 </div>
 
-<!-- 6. PROPERTY PULSE (moved ABOVE Unit Mix) -->
+<!-- 7. PROPERTY PULSE — Fixed zero values -->
 <div class="section">
 <div class="section-header" onclick="toggle(this)">🏠 Property Pulse</div>
 <div class="section-body">
 <table>
-<thead><tr><th>Metric</th><th class="text-right">Daily</th><th class="text-right">WTD</th><th class="text-right">MTD</th></tr></thead>
+<thead><tr><th>Metric</th><th class="text-right">Daily</th><th class="text-right">WTD (02/13–02/19)</th><th class="text-right">MTD (19 days)</th></tr></thead>
 <tbody>
-<tr><td>Move-Ins</td><td class="text-right">—</td><td class="text-right">1</td><td class="text-right">5 <span class="mock">MOCK</span></td></tr>
-<tr><td>Move-Outs</td><td class="text-right">—</td><td class="text-right">2</td><td class="text-right">4 <span class="mock">MOCK</span></td></tr>
-<tr><td>Notices</td><td class="text-right">—</td><td class="text-right">1</td><td class="text-right">4 <span class="mock">MOCK</span></td></tr>
-<tr><td>MTM Conversions</td><td class="text-right">—</td><td class="text-right">0</td><td class="text-right">0</td></tr>
-<tr><td>Renewals</td><td class="text-right">—</td><td class="text-right">5</td><td class="text-right">10 <span class="mock">MOCK</span></td></tr>
-<tr><td>Skips/Evictions</td><td class="text-right">—</td><td class="text-right">0</td><td class="text-right">0</td></tr>
-<tr><td><strong>Net Absorption</strong></td><td class="text-right"><strong>—</strong></td><td class="text-right"><strong>-1</strong></td><td class="text-right"><strong>+1</strong> <span class="mock">MOCK</span></td></tr>
+<tr><td>New Lease Starts</td><td class="text-right">—<sup>†</sup></td><td class="text-right">4</td><td class="text-right">8 <span class="mock">MOCK</span></td></tr>
+<tr><td>New Leases Completed</td><td class="text-right">—<sup>†</sup></td><td class="text-right">3</td><td class="text-right">6 <span class="mock">MOCK</span></td></tr>
+<tr><td>Renewal Starts</td><td class="text-right">—<sup>†</sup></td><td class="text-right">4</td><td class="text-right">8 <span class="mock">MOCK</span></td></tr>
+<tr><td>Renewals Completed</td><td class="text-right">—<sup>†</sup></td><td class="text-right">5</td><td class="text-right">10 <span class="mock">MOCK</span></td></tr>
+<tr><td>Move-Ins</td><td class="text-right">—<sup>†</sup></td><td class="text-right">1</td><td class="text-right">5 <span class="mock">MOCK</span></td></tr>
+<tr><td>Move-Outs</td><td class="text-right">—<sup>†</sup></td><td class="text-right">2</td><td class="text-right">4 <span class="mock">MOCK</span></td></tr>
+<tr><td>Notices</td><td class="text-right">—<sup>†</sup></td><td class="text-right">1 <span class="mock">MOCK</span></td><td class="text-right">4 <span class="mock">MOCK</span></td></tr>
+<tr><td>MTM Conversions</td><td class="text-right">—<sup>†</sup></td><td class="text-right">0</td><td class="text-right">0</td></tr>
+<tr><td>Skips/Evictions</td><td class="text-right">—<sup>†</sup></td><td class="text-right">0</td><td class="text-right">0</td></tr>
+<tr><td><strong>Net Absorption</strong></td><td class="text-right"><strong>—</strong><sup>†</sup></td><td class="text-right"><strong>-1</strong></td><td class="text-right"><strong>+1</strong> <span class="mock">MOCK</span></td></tr>
 </tbody>
 </table>
+<div class="footnote">† Daily activity not available from current data source. Entrata reports provide point-in-time snapshots, not daily deltas.<br>MTD estimates extrapolated from WTD data × ~2.7 weeks where flagged.</div>
 </div>
 </div>
 
-<!-- 7. UNIT MIX & RENTS -->
+<!-- 8. UNIT MIX & RENTS -->
 <div class="section">
 <div class="section-header" onclick="toggle(this)">🏢 Unit Mix &amp; Rents</div>
 <div class="section-body">
@@ -323,49 +351,129 @@ Lease velocity on track — <span style="color:var(--green);font-weight:600">ahe
 </div>
 </div>
 
-<!-- 8. TRENDING OCCUPANCY -->
+<!-- 9. TRENDING OCCUPANCY — Expanded timeline with budget line -->
 <div class="section">
 <div class="section-header" onclick="toggle(this)">📈 Trending Occupancy</div>
 <div class="section-body">
 <table>
-<thead><tr><th>Metric</th><th class="text-center">Mar-25</th><th class="text-center">Apr-25</th><th class="text-center">May-25</th><th class="text-center">Jun-25</th><th class="text-center">Jul-25</th><th class="text-center">Aug-25</th><th class="text-center">Sep-25</th><th class="text-center">Oct-25</th><th class="text-center">Nov-25</th><th class="text-center">Dec-25</th><th class="text-center">Jan-26</th><th class="text-center">Feb-26</th></tr></thead>
+<thead><tr>
+<th>Metric</th>
+<th class="text-center">Sep-25 <span class="mock">MOCK</span></th>
+<th class="text-center">Oct-25 <span class="mock">MOCK</span></th>
+<th class="text-center">Nov-25 <span class="mock">MOCK</span></th>
+<th class="text-center">Dec-25 <span class="mock">MOCK</span></th>
+<th class="text-center">Jan-26 <span class="mock">MOCK</span></th>
+<th class="text-center curr-month">Feb-26</th>
+<th class="text-center">Mar-26 <span class="projected">PROJ</span></th>
+<th class="text-center">Apr-26 <span class="projected">PROJ</span></th>
+<th class="text-center">May-26 <span class="projected">PROJ</span></th>
+<th class="text-center">Jun-26 <span class="projected">PROJ</span></th>
+<th class="text-center">Jul-26 <span class="projected">PROJ</span></th>
+<th class="text-center">Aug-26 <span class="projected">PROJ</span></th>
+</tr></thead>
 <tbody>
-<tr><td>Occupancy %</td><td class="text-center">86.5%</td><td class="text-center">87.2%</td><td class="text-center">88.6%</td><td class="text-center">90.2%</td><td class="text-center">91.6%</td><td class="text-center">92.3%</td><td class="text-center">91.9%</td><td class="text-center">91.2%</td><td class="text-center">90.6%</td><td class="text-center">89.9%</td><td class="text-center">89.6%</td><td class="text-center"><strong>89.9%</strong></td></tr>
-<tr><td>Move-Ins</td><td class="text-center">8</td><td class="text-center">10</td><td class="text-center">14</td><td class="text-center">12</td><td class="text-center">15</td><td class="text-center">11</td><td class="text-center">9</td><td class="text-center">7</td><td class="text-center">6</td><td class="text-center">5</td><td class="text-center">8</td><td class="text-center">5</td></tr>
-<tr><td>Move-Outs</td><td class="text-center">6</td><td class="text-center">6</td><td class="text-center">10</td><td class="text-center">7</td><td class="text-center">11</td><td class="text-center">9</td><td class="text-center">10</td><td class="text-center">9</td><td class="text-center">8</td><td class="text-center">7</td><td class="text-center">9</td><td class="text-center">4</td></tr>
-<tr><td><strong>Move-ins Needed</strong></td><td class="text-center">14</td><td class="text-center">12</td><td class="text-center">10</td><td class="text-center">8</td><td class="text-center">6</td><td class="text-center">8</td><td class="text-center">10</td><td class="text-center">12</td><td class="text-center">14</td><td class="text-center">18</td><td class="text-center">22</td><td class="text-center"><strong>25</strong></td></tr>
+<tr><td>Occupancy %</td>
+<td class="text-center">91.9%</td><td class="text-center">91.2%</td><td class="text-center">90.6%</td><td class="text-center">89.9%</td><td class="text-center">89.6%</td>
+<td class="text-center curr-month"><strong>89.9%</strong></td>
+<td class="text-center">90.2%</td><td class="text-center">90.9%</td><td class="text-center">91.6%</td><td class="text-center">91.9%</td><td class="text-center">92.3%</td><td class="text-center">92.6%</td>
+</tr>
+<tr><td>Budget Occ % <span class="budget-badge">BUDGET</span></td>
+<td class="text-center">93.0%</td><td class="text-center">93.0%</td><td class="text-center">93.0%</td><td class="text-center">93.0%</td><td class="text-center">93.0%</td>
+<td class="text-center curr-month">93.0%</td>
+<td class="text-center">93.5%</td><td class="text-center">94.0%</td><td class="text-center">94.5%</td><td class="text-center">95.0%</td><td class="text-center">95.0%</td><td class="text-center">95.0%</td>
+</tr>
+<tr><td>Variance</td>
+<td class="text-center" style="color:var(--red)">-1.1%</td><td class="text-center" style="color:var(--red)">-1.8%</td><td class="text-center" style="color:var(--red)">-2.4%</td><td class="text-center" style="color:var(--red)">-3.1%</td><td class="text-center" style="color:var(--red)">-3.4%</td>
+<td class="text-center curr-month" style="color:var(--red)"><strong>-3.1%</strong></td>
+<td class="text-center" style="color:var(--red)">-3.3%</td><td class="text-center" style="color:var(--red)">-3.1%</td><td class="text-center" style="color:var(--red)">-2.9%</td><td class="text-center" style="color:var(--red)">-3.1%</td><td class="text-center" style="color:var(--red)">-2.7%</td><td class="text-center" style="color:var(--red)">-2.4%</td>
+</tr>
+<tr><td>Move-Ins</td>
+<td class="text-center">9</td><td class="text-center">7</td><td class="text-center">6</td><td class="text-center">5</td><td class="text-center">8</td>
+<td class="text-center curr-month">5</td>
+<td class="text-center">10</td><td class="text-center">12</td><td class="text-center">14</td><td class="text-center">12</td><td class="text-center">13</td><td class="text-center">11</td>
+</tr>
+<tr><td>Move-Outs</td>
+<td class="text-center">10</td><td class="text-center">9</td><td class="text-center">8</td><td class="text-center">7</td><td class="text-center">9</td>
+<td class="text-center curr-month">4</td>
+<td class="text-center">8</td><td class="text-center">9</td><td class="text-center">10</td><td class="text-center">11</td><td class="text-center">10</td><td class="text-center">9</td>
+</tr>
+<tr><td><strong>Move-ins Needed</strong></td>
+<td class="text-center">10</td><td class="text-center">12</td><td class="text-center">14</td><td class="text-center">18</td><td class="text-center">22</td>
+<td class="text-center curr-month"><strong>25</strong></td>
+<td class="text-center">22</td><td class="text-center">20</td><td class="text-center">18</td><td class="text-center">17</td><td class="text-center">16</td><td class="text-center">15</td>
+</tr>
 </tbody>
 </table>
 <div style="margin-top:16px">
-<div style="font-size:12px;font-weight:600;color:var(--navy);margin-bottom:6px">12-Month Occupancy Trend</div>
-<svg width="100%" height="100" viewBox="0 0 500 100" preserveAspectRatio="xMidYMid meet">
-<line x1="40" y1="15" x2="480" y2="15" stroke="#E0E4EA" stroke-width="1" stroke-dasharray="3,3"/>
-<text x="36" y="18" fill="#999" font-size="8" text-anchor="end">93%</text>
-<line x1="40" y1="45" x2="480" y2="45" stroke="#E0E4EA" stroke-width="1" stroke-dasharray="3,3"/>
-<text x="36" y="48" fill="#999" font-size="8" text-anchor="end">90%</text>
-<line x1="40" y1="75" x2="480" y2="75" stroke="#E0E4EA" stroke-width="1" stroke-dasharray="3,3"/>
-<text x="36" y="78" fill="#999" font-size="8" text-anchor="end">87%</text>
-<line x1="40" y1="90" x2="480" y2="90" stroke="var(--border)" stroke-width="1"/>
+<div style="font-size:12px;font-weight:600;color:var(--navy);margin-bottom:6px">Occupancy Trend: Actual/Projected vs Budget</div>
+<div style="font-size:11px;color:var(--gray);margin-bottom:8px">
+<span style="color:var(--blue)">● Actual</span> &nbsp;
+<span style="color:var(--blue);opacity:.5">● Projected</span> &nbsp;
+<span style="color:var(--green)">- - Budget</span> <span class="budget-badge">BUDGET</span> &nbsp;
+<span class="mock">MOCK</span> = historical mock &nbsp;
+<span class="projected">PROJ</span> = projected
+</div>
+<!-- SVG Chart: Sep25-Aug26, Y axis 87%-96% -->
+<svg width="100%" height="120" viewBox="0 0 560 120" preserveAspectRatio="xMidYMid meet">
+<!-- Grid lines -->
+<line x1="40" y1="10" x2="540" y2="10" stroke="#E0E4EA" stroke-width="1" stroke-dasharray="3,3"/>
+<text x="36" y="13" fill="#999" font-size="7" text-anchor="end">95%</text>
+<line x1="40" y1="32" x2="540" y2="32" stroke="#E0E4EA" stroke-width="1" stroke-dasharray="3,3"/>
+<text x="36" y="35" fill="#999" font-size="7" text-anchor="end">93%</text>
+<line x1="40" y1="54" x2="540" y2="54" stroke="#E0E4EA" stroke-width="1" stroke-dasharray="3,3"/>
+<text x="36" y="57" fill="#999" font-size="7" text-anchor="end">91%</text>
+<line x1="40" y1="76" x2="540" y2="76" stroke="#E0E4EA" stroke-width="1" stroke-dasharray="3,3"/>
+<text x="36" y="79" fill="#999" font-size="7" text-anchor="end">89%</text>
+<line x1="40" y1="98" x2="540" y2="98" stroke="#E0E4EA" stroke-width="1" stroke-dasharray="3,3"/>
+<text x="36" y="101" fill="#999" font-size="7" text-anchor="end">87%</text>
+<line x1="40" y1="105" x2="540" y2="105" stroke="var(--border)" stroke-width="1"/>
+
+<!-- Budget line (green dashed): 93,93,93,93,93,93,93.5,94,94.5,95,95,95 -->
+<!-- Y: 95%=10, 87%=98. Per 1%=(98-10)/8=11 px. 95=10, 93=32, 91=54, 89=76, 87=98 -->
+<polyline fill="none" stroke="var(--green)" stroke-width="2" stroke-dasharray="6,3" stroke-linejoin="round"
+  points="60,32 105,32 150,32 195,32 240,32 285,32 330,26.5 375,21 420,15.5 465,10 510,10 540,10"/>
+
+<!-- Actual line (blue solid for historical, dashed for projected) -->
+<!-- 91.9=43, 91.2=47.7, 90.6=52.4, 89.9=57.1, 89.6=60.4, 89.9=57.1 -->
 <polyline fill="none" stroke="var(--blue)" stroke-width="2.5" stroke-linejoin="round"
-  points="60,77 100,71 140,60 180,47 220,35 260,29 300,33 340,38 380,43 420,49 460,51 480,49"/>
+  points="60,43 105,47.7 150,52.4 195,57.1 240,60.4 285,57.1"/>
+<!-- Projected (lighter blue, dashed) -->
+<!-- 90.2=53.8, 90.9=46.1, 91.6=38.4, 91.9=35.1, 92.3=30.7, 92.6=27.4 -->
+<polyline fill="none" stroke="var(--blue)" stroke-width="2" stroke-dasharray="6,3" stroke-linejoin="round" opacity=".5"
+  points="285,57.1 330,53.8 375,46.1 420,38.4 465,35.1 510,30.7 540,27.4"/>
+
+<!-- Dots - Actual (solid blue) -->
 <g fill="var(--blue)">
-<circle cx="60" cy="77" r="3"/><circle cx="100" cy="71" r="3"/><circle cx="140" cy="60" r="3"/>
-<circle cx="180" cy="47" r="3"/><circle cx="220" cy="35" r="3"/><circle cx="260" cy="29" r="3"/>
-<circle cx="300" cy="33" r="3"/><circle cx="340" cy="38" r="3"/><circle cx="380" cy="43" r="3"/>
-<circle cx="420" cy="49" r="3"/><circle cx="460" cy="51" r="3"/><circle cx="480" cy="49" r="4" fill="var(--navy)"/>
+<circle cx="60" cy="43" r="3"/><circle cx="105" cy="47.7" r="3"/><circle cx="150" cy="52.4" r="3"/>
+<circle cx="195" cy="57.1" r="3"/><circle cx="240" cy="60.4" r="3"/><circle cx="285" cy="57.1" r="4" fill="var(--navy)"/>
 </g>
+<!-- Dots - Projected (lighter) -->
+<g fill="var(--blue)" opacity=".5">
+<circle cx="330" cy="53.8" r="3"/><circle cx="375" cy="46.1" r="3"/><circle cx="420" cy="38.4" r="3"/>
+<circle cx="465" cy="35.1" r="3"/><circle cx="510" cy="30.7" r="3"/><circle cx="540" cy="27.4" r="3"/>
+</g>
+<!-- Budget dots (green) -->
+<g fill="var(--green)" opacity=".6">
+<circle cx="60" cy="32" r="2.5"/><circle cx="105" cy="32" r="2.5"/><circle cx="150" cy="32" r="2.5"/>
+<circle cx="195" cy="32" r="2.5"/><circle cx="240" cy="32" r="2.5"/><circle cx="285" cy="32" r="2.5"/>
+<circle cx="330" cy="26.5" r="2.5"/><circle cx="375" cy="21" r="2.5"/><circle cx="420" cy="15.5" r="2.5"/>
+<circle cx="465" cy="10" r="2.5"/><circle cx="510" cy="10" r="2.5"/><circle cx="540" cy="10" r="2.5"/>
+</g>
+
+<!-- X labels -->
 <g font-size="7" fill="#999" text-anchor="middle">
-<text x="60" y="98">Mar</text><text x="100" y="98">Apr</text><text x="140" y="98">May</text>
-<text x="180" y="98">Jun</text><text x="220" y="98">Jul</text><text x="260" y="98">Aug</text>
-<text x="300" y="98">Sep</text><text x="340" y="98">Oct</text><text x="380" y="98">Nov</text>
-<text x="420" y="98">Dec</text><text x="460" y="98">Jan</text><text x="480" y="98">Feb</text>
+<text x="60" y="115">Sep</text><text x="105" y="115">Oct</text><text x="150" y="115">Nov</text>
+<text x="195" y="115">Dec</text><text x="240" y="115">Jan</text>
+<text x="285" y="115" font-weight="700" fill="var(--navy)">Feb</text>
+<text x="330" y="115">Mar</text><text x="375" y="115">Apr</text><text x="420" y="115">May</text>
+<text x="465" y="115">Jun</text><text x="510" y="115">Jul</text><text x="540" y="115">Aug</text>
 </g>
 </svg>
 </div>
 </div>
 </div>
 
-<!-- 9. LEASE EXPIRATION MANAGEMENT -->
+<!-- 10. LEASE EXPIRATION MANAGEMENT — with Transfers row -->
 <div class="section">
 <div class="section-header" onclick="toggle(this)">📅 Lease Expiration Management</div>
 <div class="section-body">
@@ -390,8 +498,15 @@ Lease velocity on track — <span style="color:var(--green);font-weight:600">ahe
 <td class="text-center" style="color:var(--red);font-weight:700">0%</td>
 <td class="text-center" style="color:var(--red);font-weight:700">0%</td>
 </tr>
+<tr class="mock-row"><td>Transfers <span class="mock">MOCK</span></td>
+<td class="text-center">0</td><td class="text-center">0</td><td class="text-center curr-month">0</td>
+<td class="text-center">0</td><td class="text-center">0</td><td class="text-center">0</td>
+<td class="text-center">0</td><td class="text-center">0</td><td class="text-center">0</td>
+<td class="text-center">0</td><td class="text-center">0</td><td class="text-center">0</td>
+</tr>
 </tbody>
 </table>
+<div class="footnote">Transfers = internal unit-to-unit moves. Not counted against renewal rate (retained residents) and not counted as new move-ins. Currently 0 — move-out reason codes not available in current data source.</div>
 
 <div style="margin-top:20px">
 <div style="font-size:12px;font-weight:600;color:var(--navy);margin-bottom:6px">Actual vs Target Expirations</div>
@@ -419,24 +534,7 @@ Lease velocity on track — <span style="color:var(--green);font-weight:600">ahe
 </div>
 </div>
 
-<!-- 10. MANAGER COMMENTS -->
-<div class="section">
-<div class="section-header" onclick="toggle(this)">💬 Manager Comments</div>
-<div class="section-body">
-<div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
-<div>
-<div class="comments-label">🏷️ Leasing Specials</div>
-<div class="comments-area" contenteditable="true" data-placeholder="Enter current concessions, move-in specials, pricing adjustments..."></div>
-</div>
-<div>
-<div class="comments-label">📣 Marketing Outreach</div>
-<div class="comments-area" contenteditable="true" data-placeholder="Recent marketing activities, upcoming events, outreach campaigns..."></div>
-</div>
-</div>
-</div>
-</div>
-
-<!-- 11. FORMULA LEGEND -->
+<!-- 11. FORMULA LEGEND — Updated -->
 <div class="section collapsed">
 <div class="section-header" onclick="toggle(this)">📐 Formula Legend</div>
 <div class="section-body">
@@ -446,15 +544,18 @@ Lease velocity on track — <span style="color:var(--green);font-weight:600">ahe
 <tr><td class="metric">Physical Occupancy %</td><td class="formula">Occupied Units / Total Rentable Units</td></tr>
 <tr><td class="metric">Leased %</td><td class="formula">(Occupied + Vacant Rented + Notice Rented) / Total Rentable Units</td></tr>
 <tr><td class="metric">Exposure %</td><td class="formula">(Vacant Unrented + Notice Unrented) / Total Rentable Units</td></tr>
-<tr><td class="metric">Renewal Rate</td><td class="formula">Renewed / Total Expiring per month</td></tr>
+<tr><td class="metric">Renewal Rate</td><td class="formula">Renewed / Total Expiring per month (excludes Transfers)</td></tr>
+<tr><td class="metric">Transfer Rate</td><td class="formula">Transfers / (Total Expiring + Transfers). Transfers = move-outs with reason "transfer to another unit." Not counted as turnover.</td></tr>
+<tr><td class="metric">Budgeted Occupancy</td><td class="formula">Target occupancy from approved annual budget. Stabilized target = 93–95%.</td></tr>
+<tr><td class="metric">Net Absorption</td><td class="formula">Move-Ins − Move-Outs for period (excludes transfers, which are internal moves)</td></tr>
 <tr><td class="metric">Net Effective Rent</td><td class="formula">Asking Rent − (One-Time Concession / Lease Term) − Monthly Concession</td></tr>
 <tr><td class="metric">Avg Market Rent</td><td class="formula">Sum of all Market Rents / Total Rentable Units</td></tr>
 <tr><td class="metric">Comp Average Rent</td><td class="formula">Average asking rent from competitive market survey properties</td></tr>
 <tr><td class="metric">Conversion Rate</td><td class="formula">Output Stage Count / Input Stage Count (e.g., Tours / Leads)</td></tr>
-<tr><td class="metric">Net Absorption</td><td class="formula">Move-Ins − Move-Outs for period</td></tr>
 <tr><td class="metric">Move-ins Needed</td><td class="formula">(Budget Occ % × Total Units) − Current Occupied − Pending MI + Pending MO</td></tr>
 <tr><td class="metric">Est Vacancy Cost</td><td class="formula">(Market Rent / 30) × Days Vacant</td></tr>
 <tr><td class="metric">Target Lease Expirations</td><td class="formula">Bell Curve % × Rentable Units (297) — Jan/Dec 3%, Feb/Nov 5%, etc.</td></tr>
+<tr><td class="metric">Funnel Leads Needed</td><td class="formula">Target Leases / Close Rate / App Rate — works backwards from absorption goal</td></tr>
 </tbody>
 </table>
 </div>
@@ -465,50 +566,31 @@ Lease velocity on track — <span style="color:var(--green);font-weight:600">ahe
 <script>
 function toggle(el){el.parentElement.classList.toggle('collapsed')}
 
-// Corporate units toggle — excludes units where resident contains "Barsala"
-// At Bartram Park there are currently 0 Barsala units, but functionality is built for other properties
-const corporateUnits = {
-  // format: { plan: { corpUnits: N, corpOccupied: N } }
-  // Bartram Park has 0 Barsala units — populate when expanding to Florence Villa / Sereno
-};
+const corporateUnits = {};
 
 function toggleCorp() {
   const checked = document.getElementById('corpToggle').checked;
   const table = document.getElementById('unitMixTable');
   if (!table) return;
-
   const rows = table.querySelectorAll('tbody tr:not(.totals)');
   let totalUnits = 0, totalOcc = 0, totalVac = 0;
-
   rows.forEach(row => {
     const cells = row.querySelectorAll('td');
     if (cells.length < 11) return;
     const plan = cells[1].textContent.trim();
     const origUnits = parseInt(cells[3].dataset.orig || cells[3].textContent);
     const origOcc = parseInt(cells[7].dataset.orig || cells[7].textContent);
-
-    // Store originals on first run
-    if (!cells[3].dataset.orig) {
-      cells[3].dataset.orig = origUnits;
-      cells[7].dataset.orig = origOcc;
-    }
-
+    if (!cells[3].dataset.orig) { cells[3].dataset.orig = origUnits; cells[7].dataset.orig = origOcc; }
     const corp = corporateUnits[plan] || { corpUnits: 0, corpOccupied: 0 };
     const adjUnits = checked ? origUnits - corp.corpUnits : origUnits;
     const adjOcc = checked ? origOcc - corp.corpOccupied : origOcc;
     const adjVac = adjUnits - adjOcc;
-
     cells[3].innerHTML = adjUnits;
     cells[7].innerHTML = adjOcc;
     cells[8].innerHTML = adjVac;
     cells[9].innerHTML = adjUnits > 0 ? Math.round(adjOcc / adjUnits * 100) + '%' : '—';
-
-    totalUnits += adjUnits;
-    totalOcc += adjOcc;
-    totalVac += adjVac;
+    totalUnits += adjUnits; totalOcc += adjOcc; totalVac += adjVac;
   });
-
-  // Update totals row
   const totals = document.getElementById('totalsRow');
   if (totals) {
     const tc = totals.querySelectorAll('td');
