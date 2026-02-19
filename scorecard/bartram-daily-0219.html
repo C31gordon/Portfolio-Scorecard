@@ -86,6 +86,8 @@ tbody tr:hover{background:#EDF2F7}
 .footnote{font-size:10px;color:var(--gray);margin-top:8px;font-style:italic}
 .funnel-math{background:#F0F7FF;border:1px solid #D1ECF1;border-radius:8px;padding:14px;margin-top:12px;font-size:12px;line-height:1.7}
 .funnel-math strong{color:var(--navy)}
+.form-note{background:#F8F9FA;border:1px solid var(--border);border-radius:6px;padding:10px 14px;margin-top:12px;font-size:11px;color:var(--gray);line-height:1.6}
+.form-note strong{color:var(--navy)}
 @media print{body{background:#fff;font-size:11px}.container{padding:0}.section{break-inside:avoid;box-shadow:none;border:1px solid #ddd}.header{background:var(--navy)!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}.kpi-card,.mini-card{box-shadow:none;border:1px solid #ddd}.section.collapsed .section-body{display:block}}
 @media(max-width:768px){.header{flex-direction:column;text-align:center}.header-right{text-align:center}.kpi-grid{grid-template-columns:repeat(2,1fr)}.chart-row{grid-template-columns:1fr}}
 </style>
@@ -100,7 +102,7 @@ tbody tr:hover{background:#EDF2F7}
 <span style="margin-left:auto;font-size:11px;opacity:.6">Feb 18, 2026</span>
 </div>
 
-<!-- 1. HEADER with fixed date dropdown -->
+<!-- 1. HEADER — (Today) removed from dropdown -->
 <div class="header">
 <div class="header-left">
 <h1><span>RISE</span> Daily Leasing Report</h1>
@@ -113,7 +115,7 @@ tbody tr:hover{background:#EDF2F7}
 <div style="font-size:11px;opacity:.7;margin-top:2px">Data as of prior business day</div>
 <div style="margin-top:6px"><span class="badge badge-green">Stabilized</span></div>
 <select class="date-select" onchange="if(this.value)window.location=this.value">
-<option value="" selected>Feb 18, 2026 (Today)</option>
+<option value="" selected>Feb 18, 2026</option>
 <option value="bartram-dlr.html">Feb 17, 2026</option>
 <option value="" disabled style="color:#bbb">Feb 16, 2026</option>
 <option value="" disabled style="color:#bbb">Feb 15, 2026</option>
@@ -134,13 +136,13 @@ tbody tr:hover{background:#EDF2F7}
 <div class="kpi-card"><div class="kpi-left"><div class="kpi-label">Comp Average Rent <span class="mock">MOCK</span></div><div class="kpi-value" style="color:var(--amber)">$1,728</div><div class="kpi-sub">Market survey <span class="mock">MOCK</span></div></div><svg width="60" height="24" viewBox="0 0 60 24" style="vertical-align:middle;margin-left:8px"><polyline fill="none" stroke="#ffc107" stroke-width="1.5" stroke-linejoin="round" points="2.0,22.0 11.3,16.4 20.7,10.9 30.0,13.1 39.3,8.7 48.7,5.3 58.0,2.0"/><circle cx="58.0" cy="2.0" r="2" fill="#ffc107"/></svg></div>
 </div>
 
-<!-- 3. TODAY'S ACTIVITY -->
+<!-- 3. TODAY'S ACTIVITY — Real WTD from Entrata Lease Exec -->
 <div class="section">
 <div class="section-header" onclick="toggle(this)">📊 Today's Activity</div>
 <div class="section-body">
-<div style="font-size:11px;color:var(--gray);margin-bottom:10px">Lease data sourced from Entrata Lease Execution Summary (02/13–02/18). Daily breakdowns not available from weekly report.</div>
+<div style="font-size:11px;color:var(--gray);margin-bottom:10px">Lease data from Entrata Lease Execution Summary (02/13–02/19) &amp; Box Score (02/18). Daily column requires prior-day snapshot (not yet available — storing today's snapshot for tomorrow's diff).</div>
 <table>
-<thead><tr><th>Metric</th><th class="text-right">Daily</th><th class="text-right">WTD (02/13–02/18)</th><th class="text-right">MTD</th></tr></thead>
+<thead><tr><th>Metric</th><th class="text-right">Daily<sup>†</sup></th><th class="text-right">WTD (02/13–02/18)</th><th class="text-right">MTD</th></tr></thead>
 <tbody>
 <tr class="mock-row"><td>Tours <span class="mock">MOCK</span></td><td class="text-right">3 <span class="mock">MOCK</span></td><td class="text-right">8 <span class="mock">MOCK</span></td><td class="text-right">19 <span class="mock">MOCK</span></td></tr>
 <tr class="mock-row"><td>Walk-In <span class="mock">MOCK</span></td><td class="text-right">1 <span class="mock">MOCK</span></td><td class="text-right">3 <span class="mock">MOCK</span></td><td class="text-right">11 <span class="mock">MOCK</span></td></tr>
@@ -148,18 +150,21 @@ tbody tr:hover{background:#EDF2F7}
 <tr class="mock-row"><td>Email <span class="mock">MOCK</span></td><td class="text-right">6 <span class="mock">MOCK</span></td><td class="text-right">24 <span class="mock">MOCK</span></td><td class="text-right">51 <span class="mock">MOCK</span></td></tr>
 <tr class="mock-row"><td>Online Leads <span class="mock">MOCK</span></td><td class="text-right">2 <span class="mock">MOCK</span></td><td class="text-right">5 <span class="mock">MOCK</span></td><td class="text-right">10 <span class="mock">MOCK</span></td></tr>
 <tr class="mock-row"><td>Total New Leads <span class="mock">MOCK</span></td><td class="text-right"><strong>10</strong> <span class="mock">MOCK</span></td><td class="text-right"><strong>26</strong> <span class="mock">MOCK</span></td><td class="text-right"><strong>49</strong> <span class="mock">MOCK</span></td></tr>
-<tr><td>Applications (New Lease)</td><td class="text-right">—</td><td class="text-right"><strong>4</strong> started</td><td class="text-right">— <span class="mock">MOCK</span></td></tr>
-<tr><td>Approved (New Lease)</td><td class="text-right">—</td><td class="text-right"><strong>3</strong></td><td class="text-right">— <span class="mock">MOCK</span></td></tr>
-<tr><td>Leases Executed (New)</td><td class="text-right">—</td><td class="text-right"><strong>3</strong> completed</td><td class="text-right">— <span class="mock">MOCK</span></td></tr>
-<tr><td>New Lease Cancelled</td><td class="text-right">—</td><td class="text-right"><strong>1</strong></td><td class="text-right">— <span class="mock">MOCK</span></td></tr>
-<tr><td>Renewals (Apps Started)</td><td class="text-right">—</td><td class="text-right"><strong>4</strong></td><td class="text-right">— <span class="mock">MOCK</span></td></tr>
-<tr><td>Renewals (Completed)</td><td class="text-right">—</td><td class="text-right"><strong>5</strong></td><td class="text-right">— <span class="mock">MOCK</span></td></tr>
-<tr><td>Renewals (Approved)</td><td class="text-right">—</td><td class="text-right"><strong>4</strong></td><td class="text-right">— <span class="mock">MOCK</span></td></tr>
-<tr><td>Move-Ins</td><td class="text-right">—</td><td class="text-right">1</td><td class="text-right">5 <span class="mock">MOCK</span></td></tr>
-<tr><td>Move-Outs</td><td class="text-right">—</td><td class="text-right">2</td><td class="text-right">4 <span class="mock">MOCK</span></td></tr>
-<tr><td>Notices Given</td><td class="text-right">— <span class="mock">MOCK</span></td><td class="text-right">1 <span class="mock">MOCK</span></td><td class="text-right">4 <span class="mock">MOCK</span></td></tr>
+<tr><td>Applications (New Lease)</td><td class="text-right">—<sup>†</sup></td><td class="text-right"><strong>4</strong> started</td><td class="text-right">— <span class="mock">MOCK</span></td></tr>
+<tr><td>Approved (New Lease)</td><td class="text-right">—<sup>†</sup></td><td class="text-right"><strong>1</strong></td><td class="text-right">— <span class="mock">MOCK</span></td></tr>
+<tr><td>Leases Executed (New)</td><td class="text-right">—<sup>†</sup></td><td class="text-right"><strong>3</strong> completed</td><td class="text-right">— <span class="mock">MOCK</span></td></tr>
+<tr><td>New Lease Cancelled</td><td class="text-right">—<sup>†</sup></td><td class="text-right"><strong>1</strong></td><td class="text-right">— <span class="mock">MOCK</span></td></tr>
+<tr><td>Renewals (Apps Started)</td><td class="text-right">—<sup>†</sup></td><td class="text-right"><strong>4</strong></td><td class="text-right">— <span class="mock">MOCK</span></td></tr>
+<tr><td>Renewals (Completed)</td><td class="text-right">—<sup>†</sup></td><td class="text-right"><strong>5</strong></td><td class="text-right">— <span class="mock">MOCK</span></td></tr>
+<tr><td>Renewals (Approved)</td><td class="text-right">—<sup>†</sup></td><td class="text-right"><strong>4</strong></td><td class="text-right">— <span class="mock">MOCK</span></td></tr>
+<tr><td>Move-Ins</td><td class="text-right">—<sup>†</sup></td><td class="text-right">1</td><td class="text-right">3</td></tr>
+<tr><td>Move-Outs</td><td class="text-right">—<sup>†</sup></td><td class="text-right">2</td><td class="text-right">4</td></tr>
+<tr><td>Notices Given (on notice now)</td><td class="text-right">—<sup>†</sup></td><td class="text-right">—<sup>†</sup></td><td class="text-right">20 on notice</td></tr>
 </tbody>
 </table>
+<div class="footnote">† Daily breakdown requires comparing consecutive day snapshots. This is the first day storing Entrata snapshots — daily deltas will be available starting tomorrow (02/20).<br>
+WTD lease data from Entrata Lease Execution Summary (02/13–02/19). Move-ins/outs from rent roll move-in dates and expected move-out dates in Feb. "20 on notice" = current snapshot of all units with notice status (Notice Rented: 6, Notice Unrented: 14).<br>
+MTD move-ins (3) and move-outs (4 expected in Feb) are from real Entrata rent roll data.</div>
 </div>
 </div>
 
@@ -190,21 +195,22 @@ tbody tr:hover{background:#EDF2F7}
 <div><span class="sw" style="background:var(--amber)"></span> Other: 3 (30%)</div>
 </div>
 </div>
+<div class="footnote">All lead source data is mock — Entrata guest card data not yet integrated.</div>
 </div>
 
 <!-- 4b. Conversion Funnel (MTD) -->
 <div class="mini-card">
-<h3>Conversion Funnel (MTD) <span class="mock">MOCK</span></h3>
-<div class="funnel-stage" style="background:var(--amber)"><span>Total Leads</span><span class="num">49 <span style="font-size:12px;font-weight:400">/ 45 needed</span></span></div>
-<div class="funnel-arrow">▼ 39% tour rate</div>
-<div class="funnel-stage" style="background:var(--amber);opacity:.9"><span>Tours</span><span class="num">19 <span style="font-size:12px;font-weight:400">/ 16 needed</span></span></div>
-<div class="funnel-arrow">▼ 14% app rate</div>
-<div class="funnel-stage" style="background:var(--amber);opacity:.8"><span>Applications</span><span class="num">7 <span style="font-size:12px;font-weight:400">/ 6 needed</span></span></div>
-<div class="funnel-arrow">▼ 129% close rate</div>
-<div class="funnel-stage" style="background:var(--green);opacity:.9"><span>Leases</span><span class="num">9 <span style="font-size:12px;font-weight:400">/ 6 needed</span></span></div>
+<h3>Conversion Funnel (MTD)</h3>
+<div class="funnel-stage" style="background:var(--amber)"><span>Total Leads <span class="mock">MOCK</span></span><span class="num">49</span></div>
+<div class="funnel-arrow">▼ 39% tour rate <span class="mock">MOCK</span></div>
+<div class="funnel-stage" style="background:var(--amber);opacity:.9"><span>Tours <span class="mock">MOCK</span></span><span class="num">19</span></div>
+<div class="funnel-arrow">▼ 14% app rate <span class="mock">MOCK</span></div>
+<div class="funnel-stage" style="background:var(--blue);opacity:.9"><span>Applications</span><span class="num">4 <span style="font-size:12px;font-weight:400">WTD real</span></span></div>
+<div class="funnel-arrow">▼ 75% close rate</div>
+<div class="funnel-stage" style="background:var(--green);opacity:.9"><span>Leases (New)</span><span class="num">3 <span style="font-size:12px;font-weight:400">WTD real</span></span></div>
 <div style="margin-top:10px;font-size:11px;color:var(--gray)">
-Lease velocity on track — <span style="color:var(--green);font-weight:600">ahead of pace</span>
-<br><span style="font-size:10px">Lead/tour data is mock — funnel rates approximate</span>
+<strong>Real data:</strong> Applications (4 started), Leases (3 completed), Renewals (5 completed) — from Entrata Lease Exec<br>
+<strong>Mock data:</strong> Lead counts, tours, tour rate, app rate — not yet available from Entrata
 </div>
 </div>
 
@@ -247,7 +253,7 @@ Lease velocity on track — <span style="color:var(--green);font-weight:600">ahe
 </div>
 </div>
 
-<!-- 5. MANAGER COMMENTS (MOVED — now between funnel row and highlights) -->
+<!-- 5. MANAGER COMMENTS — with Google Form integration note -->
 <div class="section">
 <div class="section-header" onclick="toggle(this)">💬 Manager Comments</div>
 <div class="section-body">
@@ -261,6 +267,10 @@ Lease velocity on track — <span style="color:var(--green);font-weight:600">ahe
 <div class="comments-area" contenteditable="true" data-placeholder="Recent marketing activities, upcoming events, outreach campaigns..."></div>
 </div>
 </div>
+<div class="form-note">
+<strong>📋 Manager comments integration coming</strong> — Google Form will be linked here for persistent submission.<br>
+<strong>Carry-forward logic:</strong> Within a RISE week (Fri–Thu), the last submission carries forward to each day's report. New week = blank until submitted.
+</div>
 </div>
 </div>
 
@@ -269,56 +279,62 @@ Lease velocity on track — <span style="color:var(--green);font-weight:600">ahe
 <div class="section-header" onclick="toggle(this)">✨ Today's Highlights</div>
 <div class="section-body">
 <div class="highlights-card">
-<div class="hl-section"><div class="hl-label">Leasing</div>WTD: <strong>4 new lease apps started, 3 completed, 3 approved</strong>. 1 cancelled. Strong pipeline activity.</div>
+<div class="hl-section"><div class="hl-label">Leasing</div>WTD: <strong>4 new lease apps started, 3 completed, 1 approved</strong>. 1 cancelled. Pipeline active but approval pace needs monitoring.</div>
 <div class="hl-section"><div class="hl-label">Renewals</div><strong>4 renewal apps approved</strong> this week, 5 completed. Renewal velocity solid.</div>
-<div class="hl-section"><div class="hl-label">Occupancy</div>Physical occupancy holds at <strong>89.9%</strong> (267/297). 30 vacant, 10 rented. Exposure at 11.4% (34 units).</div>
-<div class="hl-section"><div class="hl-label">Notable</div>B6 and A3 remain weakest at 75% occ — <strong>focus outreach on 2BR and 1BR large</strong>. A4 and all studios at 100%.</div>
+<div class="hl-section"><div class="hl-label">Occupancy</div>Physical occupancy holds at <strong>89.9%</strong> (267/297). 30 vacant (10 rented, 20 unrented). Exposure at 11.4% (34 units). MTD: 3 move-ins, 4 expected move-outs.</div>
+<div class="hl-section"><div class="hl-label">Notice Watch</div><strong>20 units on notice</strong> — 6 rented, 14 unrented. 4 expected move-outs remaining in Feb (units 1-1125, 1-1239, 2-2311, 3-3403).</div>
+<div class="hl-section"><div class="hl-label">Notable</div>B6 and A3 remain weakest at 75% occ — <strong>focus outreach on 2BR and 1BR large</strong>. A4, B4, B5, B7, B8, S1, S2 all at 100%.</div>
 </div>
 <div class="ai-card">
 <div class="ai-label">🤖 AI Recommendations</div>
 <div class="ai-rec"><strong>Exposure at 11.4% (34 units)</strong> — Consider targeted concessions on B2 and B6 floor plans where vacancy is concentrated. B6 at 75% occ with only 6/8 occupied is the biggest drag. A move-in special on 2BR could accelerate absorption.</div>
-<div class="ai-rec"><strong>4 renewals approved + 5 completed this week</strong> — Renewal rate tracking well at 63% for Feb (5/8 expiring). Monitor March notices closely — 13 leases expiring with only 54% renewed so far.</div>
-<div class="ai-rec"><strong>Avg scheduled rent $1,665 vs market $1,695</strong> — $30/unit gap across 267 occupied units = ~$8,000/mo potential revenue. Prioritize rent increases on renewal offers, especially in B3/B8 plans where in-place already exceeds market.</div>
-<div class="ai-rec"><strong>1BR below budget by $69 avg</strong> — A1 (83 units, 87% occ) is the volume driver. Closing the gap here has the highest impact: even $20/unit = $1,660/mo incremental revenue.</div>
-<div class="ai-rec"><strong>Net absorption WTD: -1</strong> — 2 move-outs vs 1 move-in. With 25 move-ins needed to hit budget occupancy, leasing velocity must stay elevated through March.</div>
+<div class="ai-rec"><strong>20 units on notice, only 6 rented</strong> — 14 notice-unrented units represent urgent leasing priority. Converting even half would reduce exposure to 7.7%. Focus pre-leasing efforts on these specific units.</div>
+<div class="ai-rec"><strong>4 renewals approved + 5 completed this week</strong> — Renewal rate tracking at 63% for Feb (5/8 expiring). Monitor March closely — 13 leases expiring. At current 65% renewal rate, expect ~5 non-renewals adding to vacancy.</div>
+<div class="ai-rec"><strong>Avg scheduled rent $1,665 vs market $1,695</strong> — $30/unit gap across 267 occupied units = ~$8,000/mo potential revenue. Prioritize rent increases on renewal offers.</div>
+<div class="ai-rec"><strong>Net absorption MTD: -1</strong> — 3 move-ins vs 4 expected move-outs. With 2 more move-outs expected before month-end (units 1-1125, 3-3403 on 2/28), leasing velocity must stay elevated.</div>
 
-<!-- FUNNEL MATH (new) -->
+<!-- FUNNEL MATH -->
 <div class="funnel-math">
 <strong>📊 Funnel Math — Getting Back on Track</strong><br>
 <strong>Target:</strong> 93% budgeted occupancy = 276 occupied units. Currently at 267. <strong>Need 9 net move-ins</strong> to hit target.<br>
-<strong>Accounting for move-outs:</strong> At ~4 move-outs/month pace, need <strong>~13 gross move-ins</strong> remaining this month (8 have already occurred MTD ← <span class="mock">MOCK</span>).<br>
+<strong>Remaining Feb move-outs:</strong> 2 units with expected move-out dates before 2/28. Net need: <strong>~11 gross move-ins</strong> remaining (3 already moved in MTD).<br>
 <strong>Working backwards from the funnel:</strong><br>
-&nbsp;&nbsp;• Need <strong>8 more leases</strong> this month (9 executed so far, but only 5 have moved in)<br>
-&nbsp;&nbsp;• At 129% close rate (apps → leases): need <strong>~6 more applications</strong><br>
-&nbsp;&nbsp;• At 14% app rate (leads → apps): need <strong>~43 more leads</strong> in remaining 9 days<br>
-&nbsp;&nbsp;• That's <strong>~5 leads/day</strong> — currently averaging ~3.6/day <span class="mock">MOCK</span><br>
-<strong style="color:var(--red)">⚠️ Lead generation needs to increase ~40% to hit budget occupancy by month-end.</strong><br>
-<span style="font-size:11px;color:var(--gray)">Recommendation: Boost ILS spend, activate referral bonuses, and consider look-and-lease specials on B2/B6/C1 floor plans.</span>
+&nbsp;&nbsp;• Need <strong>8 more move-ins</strong> in remaining 10 days — aggressive but possible<br>
+&nbsp;&nbsp;• Current WTD pace: 3 new leases completed/week. At this pace: ~4 more leases possible<br>
+&nbsp;&nbsp;• <strong>Pipeline gap:</strong> 10 vacant-rented units should convert to move-ins — timing is key<br>
+<strong style="color:var(--green)">✅ 10 vacant-rented units in pipeline — if turns complete on time, occupancy could reach 93.3% by month-end.</strong><br>
+<span style="font-size:11px;color:var(--gray)">Key risk: 17 vacant-unrented-not-ready units need make-ready acceleration. 3 vacant-unrented-ready units are immediately leasable.</span>
 </div>
 </div>
 </div>
 </div>
 
-<!-- 7. PROPERTY PULSE — Fixed zero values -->
+<!-- 7. PROPERTY PULSE — Real data where available -->
 <div class="section">
 <div class="section-header" onclick="toggle(this)">🏠 Property Pulse</div>
 <div class="section-body">
 <table>
-<thead><tr><th>Metric</th><th class="text-right">Daily</th><th class="text-right">WTD (02/13–02/18)</th><th class="text-right">MTD (18 days)</th></tr></thead>
+<thead><tr><th>Metric</th><th class="text-right">Daily<sup>†</sup></th><th class="text-right">WTD (02/13–02/18)</th><th class="text-right">MTD (18 days)</th></tr></thead>
 <tbody>
-<tr><td>New Lease Starts</td><td class="text-right">—<sup>†</sup></td><td class="text-right">4</td><td class="text-right">8 <span class="mock">MOCK</span></td></tr>
-<tr><td>New Leases Completed</td><td class="text-right">—<sup>†</sup></td><td class="text-right">3</td><td class="text-right">6 <span class="mock">MOCK</span></td></tr>
-<tr><td>Renewal Starts</td><td class="text-right">—<sup>†</sup></td><td class="text-right">4</td><td class="text-right">8 <span class="mock">MOCK</span></td></tr>
-<tr><td>Renewals Completed</td><td class="text-right">—<sup>†</sup></td><td class="text-right">5</td><td class="text-right">10 <span class="mock">MOCK</span></td></tr>
-<tr><td>Move-Ins</td><td class="text-right">—<sup>†</sup></td><td class="text-right">1</td><td class="text-right">5 <span class="mock">MOCK</span></td></tr>
-<tr><td>Move-Outs</td><td class="text-right">—<sup>†</sup></td><td class="text-right">2</td><td class="text-right">4 <span class="mock">MOCK</span></td></tr>
-<tr><td>Notices</td><td class="text-right">—<sup>†</sup></td><td class="text-right">1 <span class="mock">MOCK</span></td><td class="text-right">4 <span class="mock">MOCK</span></td></tr>
+<tr><td>New Lease Starts</td><td class="text-right">—<sup>†</sup></td><td class="text-right">4</td><td class="text-right">4<sup>‡</sup></td></tr>
+<tr><td>New Leases Completed</td><td class="text-right">—<sup>†</sup></td><td class="text-right">3</td><td class="text-right">3<sup>‡</sup></td></tr>
+<tr><td>New Leases Approved</td><td class="text-right">—<sup>†</sup></td><td class="text-right">3</td><td class="text-right">3<sup>‡</sup></td></tr>
+<tr><td>New Lease Cancelled</td><td class="text-right">—<sup>†</sup></td><td class="text-right">1</td><td class="text-right">1<sup>‡</sup></td></tr>
+<tr><td>Renewal Starts</td><td class="text-right">—<sup>†</sup></td><td class="text-right">4</td><td class="text-right">4<sup>‡</sup></td></tr>
+<tr><td>Renewals Completed</td><td class="text-right">—<sup>†</sup></td><td class="text-right">5</td><td class="text-right">5<sup>‡</sup></td></tr>
+<tr><td>Renewals Approved</td><td class="text-right">—<sup>†</sup></td><td class="text-right">4</td><td class="text-right">4<sup>‡</sup></td></tr>
+<tr><td>Move-Ins</td><td class="text-right">—<sup>†</sup></td><td class="text-right">1</td><td class="text-right">3</td></tr>
+<tr><td>Move-Outs</td><td class="text-right">—<sup>†</sup></td><td class="text-right">2</td><td class="text-right">4 expected</td></tr>
+<tr><td>Units on Notice</td><td class="text-right">—<sup>†</sup></td><td class="text-right">—<sup>†</sup></td><td class="text-right">20 (6R / 14U)</td></tr>
 <tr><td>MTM Conversions</td><td class="text-right">—<sup>†</sup></td><td class="text-right">0</td><td class="text-right">0</td></tr>
 <tr><td>Skips/Evictions</td><td class="text-right">—<sup>†</sup></td><td class="text-right">0</td><td class="text-right">0</td></tr>
-<tr><td><strong>Net Absorption</strong></td><td class="text-right"><strong>—</strong><sup>†</sup></td><td class="text-right"><strong>-1</strong></td><td class="text-right"><strong>+1</strong> <span class="mock">MOCK</span></td></tr>
+<tr><td><strong>Net Absorption</strong></td><td class="text-right"><strong>—</strong><sup>†</sup></td><td class="text-right"><strong>-1</strong></td><td class="text-right"><strong>-1</strong></td></tr>
 </tbody>
 </table>
-<div class="footnote">† Daily activity not available from current data source. Entrata reports provide point-in-time snapshots, not daily deltas.<br>MTD estimates extrapolated from WTD data × ~2.7 weeks where flagged.</div>
+<div class="footnote">† Daily activity requires comparing consecutive day snapshots. Today's snapshot is being stored — daily deltas available starting 02/20.<br>
+‡ MTD = WTD only (lease exec report covers 02/13–02/19; prior week data not stored). Future reports will accumulate across weeks.<br>
+WTD lease data from Entrata Lease Execution Summary. Move-ins from rent roll (move-in dates in Feb). Move-outs = units with expected move-out dates in Feb. "20 on notice" = 6 Notice Rented + 14 Notice Unrented from box score snapshot.<br>
+Net absorption = Move-ins (3) − Move-outs (4 expected) = -1.</div>
 </div>
 </div>
 
@@ -352,7 +368,7 @@ Lease velocity on track — <span style="color:var(--green);font-weight:600">ahe
 </div>
 </div>
 
-<!-- 9. TRENDING OCCUPANCY — Expanded timeline with budget line -->
+<!-- 9. TRENDING OCCUPANCY — New projection formula -->
 <div class="section">
 <div class="section-header" onclick="toggle(this)">📈 Trending Occupancy</div>
 <div class="section-body">
@@ -376,7 +392,7 @@ Lease velocity on track — <span style="color:var(--green);font-weight:600">ahe
 <tr><td>Occupancy %</td>
 <td class="text-center">91.9%</td><td class="text-center">91.2%</td><td class="text-center">90.6%</td><td class="text-center">89.9%</td><td class="text-center">89.6%</td>
 <td class="text-center curr-month"><strong>89.9%</strong></td>
-<td class="text-center">90.2%</td><td class="text-center">90.9%</td><td class="text-center">91.6%</td><td class="text-center">91.9%</td><td class="text-center">92.3%</td><td class="text-center">92.6%</td>
+<td class="text-center">90.6%</td><td class="text-center">91.6%</td><td class="text-center">92.9%</td><td class="text-center">93.3%</td><td class="text-center">93.3%</td><td class="text-center">93.3%</td>
 </tr>
 <tr><td>Budget Occ % <span class="budget-badge">BUDGET</span></td>
 <td class="text-center">93.0%</td><td class="text-center">93.0%</td><td class="text-center">93.0%</td><td class="text-center">93.0%</td><td class="text-center">93.0%</td>
@@ -386,25 +402,37 @@ Lease velocity on track — <span style="color:var(--green);font-weight:600">ahe
 <tr><td>Variance</td>
 <td class="text-center" style="color:var(--red)">-1.1%</td><td class="text-center" style="color:var(--red)">-1.8%</td><td class="text-center" style="color:var(--red)">-2.4%</td><td class="text-center" style="color:var(--red)">-3.1%</td><td class="text-center" style="color:var(--red)">-3.4%</td>
 <td class="text-center curr-month" style="color:var(--red)"><strong>-3.1%</strong></td>
-<td class="text-center" style="color:var(--red)">-3.3%</td><td class="text-center" style="color:var(--red)">-3.1%</td><td class="text-center" style="color:var(--red)">-2.9%</td><td class="text-center" style="color:var(--red)">-3.1%</td><td class="text-center" style="color:var(--red)">-2.7%</td><td class="text-center" style="color:var(--red)">-2.4%</td>
+<td class="text-center" style="color:var(--red)">-2.9%</td><td class="text-center" style="color:var(--red)">-2.4%</td><td class="text-center" style="color:var(--red)">-1.6%</td><td class="text-center" style="color:var(--red)">-1.7%</td><td class="text-center" style="color:var(--red)">-1.7%</td><td class="text-center" style="color:var(--red)">-1.7%</td>
 </tr>
-<tr><td>Move-Ins</td>
-<td class="text-center">9</td><td class="text-center">7</td><td class="text-center">6</td><td class="text-center">5</td><td class="text-center">8</td>
-<td class="text-center curr-month">5</td>
-<td class="text-center">10</td><td class="text-center">12</td><td class="text-center">14</td><td class="text-center">12</td><td class="text-center">13</td><td class="text-center">11</td>
-</tr>
-<tr><td>Move-Outs</td>
+<tr><td>Exp Move-Outs <span class="projected">PROJ</span></td>
 <td class="text-center">10</td><td class="text-center">9</td><td class="text-center">8</td><td class="text-center">7</td><td class="text-center">9</td>
 <td class="text-center curr-month">4</td>
-<td class="text-center">8</td><td class="text-center">9</td><td class="text-center">10</td><td class="text-center">11</td><td class="text-center">10</td><td class="text-center">9</td>
+<td class="text-center">7</td><td class="text-center">8</td><td class="text-center">8</td><td class="text-center">10</td><td class="text-center">10</td><td class="text-center">10</td>
+</tr>
+<tr><td>Exp Move-Ins <span class="projected">PROJ</span></td>
+<td class="text-center">9</td><td class="text-center">7</td><td class="text-center">6</td><td class="text-center">5</td><td class="text-center">8</td>
+<td class="text-center curr-month">3</td>
+<td class="text-center">9</td><td class="text-center">11</td><td class="text-center">12</td><td class="text-center">11</td><td class="text-center">10</td><td class="text-center">10</td>
 </tr>
 <tr><td><strong>Move-ins Needed</strong></td>
 <td class="text-center">10</td><td class="text-center">12</td><td class="text-center">14</td><td class="text-center">18</td><td class="text-center">22</td>
 <td class="text-center curr-month"><strong>25</strong></td>
-<td class="text-center">22</td><td class="text-center">20</td><td class="text-center">18</td><td class="text-center">17</td><td class="text-center">16</td><td class="text-center">15</td>
+<td class="text-center">22</td><td class="text-center">19</td><td class="text-center">15</td><td class="text-center">15</td><td class="text-center">15</td><td class="text-center">15</td>
 </tr>
 </tbody>
 </table>
+
+<!-- Projection methodology -->
+<div style="background:#F8FAFC;border:1px solid var(--border);border-radius:8px;padding:12px;margin-top:12px;font-size:11px;line-height:1.6;color:var(--gray)">
+<strong style="color:var(--navy)">📐 Projection Methodology (v6)</strong><br>
+<strong>Formula:</strong> Projected Occ = (Current Occupied − Expected Move-Outs + Expected Move-Ins) / 297<br>
+<strong>Move-outs:</strong> Lease expirations by month × 35% non-renewal rate (based on Dec 20%, Jan 25%, Feb 37% avg) + 2/mo miscellaneous (skips, early terms).<br>
+Expirations from Entrata rent roll: Mar=13, Apr=16, May=16, Jun=24, Jul=22, Aug=23.<br>
+<strong>Move-ins:</strong> Current leasing velocity (3 new leases/wk = ~13/mo base) × seasonal adjustment (Mar 0.7, Apr 0.85, May 0.9, Jun 0.85, Jul 0.8, Aug 0.8).<br>
+Seasonal factors account for late-winter slowdown and spring/summer leasing season ramp-up.<br>
+<strong>Result:</strong> Projected to reach 93.3% by Jun-26, closing budget gap from -3.1% to -1.7%.
+</div>
+
 <div style="margin-top:16px">
 <div style="font-size:12px;font-weight:600;color:var(--navy);margin-bottom:6px">Occupancy Trend: Actual/Projected vs Budget</div>
 <div style="font-size:11px;color:var(--gray);margin-bottom:8px">
@@ -415,6 +443,9 @@ Lease velocity on track — <span style="color:var(--green);font-weight:600">ahe
 <span class="projected">PROJ</span> = projected
 </div>
 <!-- SVG Chart: Sep25-Aug26, Y axis 87%-96% -->
+<!-- Y mapping: 95%=10, 87%=98. Per 1%=(98-10)/8=11 px -->
+<!-- 91.9=43, 91.2=47.7, 90.6=52.4, 89.9=57.1, 89.6=60.4, 89.9=57.1 -->
+<!-- Proj: 90.6=52.4, 91.6=42.5, 92.9=33.1, 93.3=28.6, 93.3=28.6, 93.3=28.6 -->
 <svg width="100%" height="120" viewBox="0 0 560 120" preserveAspectRatio="xMidYMid meet">
 <!-- Grid lines -->
 <line x1="40" y1="10" x2="540" y2="10" stroke="#E0E4EA" stroke-width="1" stroke-dasharray="3,3"/>
@@ -429,19 +460,16 @@ Lease velocity on track — <span style="color:var(--green);font-weight:600">ahe
 <text x="36" y="101" fill="#999" font-size="7" text-anchor="end">87%</text>
 <line x1="40" y1="105" x2="540" y2="105" stroke="var(--border)" stroke-width="1"/>
 
-<!-- Budget line (green dashed): 93,93,93,93,93,93,93.5,94,94.5,95,95,95 -->
-<!-- Y: 95%=10, 87%=98. Per 1%=(98-10)/8=11 px. 95=10, 93=32, 91=54, 89=76, 87=98 -->
+<!-- Budget line (green dashed) -->
 <polyline fill="none" stroke="var(--green)" stroke-width="2" stroke-dasharray="6,3" stroke-linejoin="round"
   points="60,32 105,32 150,32 195,32 240,32 285,32 330,26.5 375,21 420,15.5 465,10 510,10 540,10"/>
 
-<!-- Actual line (blue solid for historical, dashed for projected) -->
-<!-- 91.9=43, 91.2=47.7, 90.6=52.4, 89.9=57.1, 89.6=60.4, 89.9=57.1 -->
+<!-- Actual line (blue solid for historical) -->
 <polyline fill="none" stroke="var(--blue)" stroke-width="2.5" stroke-linejoin="round"
   points="60,43 105,47.7 150,52.4 195,57.1 240,60.4 285,57.1"/>
-<!-- Projected (lighter blue, dashed) -->
-<!-- 90.2=53.8, 90.9=46.1, 91.6=38.4, 91.9=35.1, 92.3=30.7, 92.6=27.4 -->
+<!-- Projected (lighter blue, dashed): 90.6=52.4, 91.6=42.5, 92.9=33.1, 93.3=28.6 x3 -->
 <polyline fill="none" stroke="var(--blue)" stroke-width="2" stroke-dasharray="6,3" stroke-linejoin="round" opacity=".5"
-  points="285,57.1 330,53.8 375,46.1 420,38.4 465,35.1 510,30.7 540,27.4"/>
+  points="285,57.1 330,52.4 375,42.5 420,33.1 465,28.6 510,28.6 540,28.6"/>
 
 <!-- Dots - Actual (solid blue) -->
 <g fill="var(--blue)">
@@ -450,8 +478,8 @@ Lease velocity on track — <span style="color:var(--green);font-weight:600">ahe
 </g>
 <!-- Dots - Projected (lighter) -->
 <g fill="var(--blue)" opacity=".5">
-<circle cx="330" cy="53.8" r="3"/><circle cx="375" cy="46.1" r="3"/><circle cx="420" cy="38.4" r="3"/>
-<circle cx="465" cy="35.1" r="3"/><circle cx="510" cy="30.7" r="3"/><circle cx="540" cy="27.4" r="3"/>
+<circle cx="330" cy="52.4" r="3"/><circle cx="375" cy="42.5" r="3"/><circle cx="420" cy="33.1" r="3"/>
+<circle cx="465" cy="28.6" r="3"/><circle cx="510" cy="28.6" r="3"/><circle cx="540" cy="28.6" r="3"/>
 </g>
 <!-- Budget dots (green) -->
 <g fill="var(--green)" opacity=".6">
@@ -474,7 +502,7 @@ Lease velocity on track — <span style="color:var(--green);font-weight:600">ahe
 </div>
 </div>
 
-<!-- 10. LEASE EXPIRATION MANAGEMENT — with Transfers row -->
+<!-- 10. LEASE EXPIRATION MANAGEMENT -->
 <div class="section">
 <div class="section-header" onclick="toggle(this)">📅 Lease Expiration Management</div>
 <div class="section-body">
@@ -507,7 +535,8 @@ Lease velocity on track — <span style="color:var(--green);font-weight:600">ahe
 </tr>
 </tbody>
 </table>
-<div class="footnote">Transfers = internal unit-to-unit moves. Not counted against renewal rate (retained residents) and not counted as new move-ins. Currently 0 — move-out reason codes not available in current data source.</div>
+<div class="footnote">Lease expiration counts from Entrata rent roll (real data). Renewal counts from lease exec and rent roll status. Transfers = internal unit-to-unit moves (not available from current data source).<br>
+Expiration counts: Feb=8, Mar=13, Apr=16, May=16, Jun=24, Jul=22, Aug=23, Sep=24, Oct=22, Nov=17 — sourced directly from Entrata rent roll lease end dates.</div>
 
 <div style="margin-top:20px">
 <div style="font-size:12px;font-weight:600;color:var(--navy);margin-bottom:6px">Actual vs Target Expirations</div>
@@ -535,7 +564,7 @@ Lease velocity on track — <span style="color:var(--green);font-weight:600">ahe
 </div>
 </div>
 
-<!-- 11. FORMULA LEGEND — Updated -->
+<!-- 11. FORMULA LEGEND -->
 <div class="section collapsed">
 <div class="section-header" onclick="toggle(this)">📐 Formula Legend</div>
 <div class="section-body">
@@ -548,6 +577,7 @@ Lease velocity on track — <span style="color:var(--green);font-weight:600">ahe
 <tr><td class="metric">Renewal Rate</td><td class="formula">Renewed / Total Expiring per month (excludes Transfers)</td></tr>
 <tr><td class="metric">Transfer Rate</td><td class="formula">Transfers / (Total Expiring + Transfers). Transfers = move-outs with reason "transfer to another unit." Not counted as turnover.</td></tr>
 <tr><td class="metric">Budgeted Occupancy</td><td class="formula">Target occupancy from approved annual budget. Stabilized target = 93–95%.</td></tr>
+<tr><td class="metric">Projected Occupancy</td><td class="formula">Proj Occ = (Current Occupied − Exp Move-Outs + Exp Move-Ins) / 297. Move-outs = Lease Expirations × Non-Renewal Rate (35%) + 2/mo misc. Move-ins = Leasing Velocity (3/wk) × Seasonal Factor.</td></tr>
 <tr><td class="metric">Net Absorption</td><td class="formula">Move-Ins − Move-Outs for period (excludes transfers, which are internal moves)</td></tr>
 <tr><td class="metric">Net Effective Rent</td><td class="formula">Asking Rent − (One-Time Concession / Lease Term) − Monthly Concession</td></tr>
 <tr><td class="metric">Avg Market Rent</td><td class="formula">Sum of all Market Rents / Total Rentable Units</td></tr>
