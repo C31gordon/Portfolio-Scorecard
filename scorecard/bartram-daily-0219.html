@@ -9,10 +9,14 @@
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--light);color:#333;line-height:1.5;font-size:14px}
 .container{max-width:1320px;margin:0 auto;padding:16px}
+.weather-bar{background:linear-gradient(135deg,#253A5E,#1B2A4A);color:#fff;padding:8px 20px;border-radius:8px;margin-bottom:12px;display:flex;align-items:center;gap:8px;font-size:13px}
+.weather-bar .weather-icon{font-size:18px}
+.weather-bar .weather-text{opacity:.9}
 .header{background:linear-gradient(135deg,var(--navy),#253A5E);color:#fff;padding:24px 32px;border-radius:12px;margin-bottom:20px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
 .header-left h1{font-size:26px;font-weight:700;letter-spacing:-.5px}
 .header-left h1 span{color:var(--blue)}
-.header-left .subtitle{opacity:.8;font-size:14px;margin-top:2px}
+.header-left .prop-name{font-size:16px;font-weight:600;margin-top:4px}
+.header-left .prop-location{font-size:13px;opacity:.7;margin-top:2px}
 .header-left .prop-link{color:var(--blue);font-size:12px;text-decoration:none;opacity:.8}
 .header-left .prop-link:hover{opacity:1;text-decoration:underline}
 .header-right{text-align:right}
@@ -60,6 +64,9 @@ tbody tr:hover{background:#EDF2F7}
 .highlights-card strong{color:var(--navy)}
 .highlights-card .hl-section{margin-bottom:8px}
 .highlights-card .hl-label{font-size:11px;text-transform:uppercase;letter-spacing:.5px;color:var(--blue);font-weight:700}
+.ai-card{background:linear-gradient(135deg,#F0F7FF,#E8F4FD);border-left:4px solid var(--navy);padding:18px;border-radius:0 8px 8px 0;margin-top:16px;line-height:1.8;font-size:13px;color:#444}
+.ai-card .ai-label{font-size:12px;text-transform:uppercase;letter-spacing:.5px;color:var(--navy);font-weight:700;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.ai-card .ai-rec{margin-bottom:6px;padding-left:12px;border-left:2px solid var(--blue)}
 .leased-bar{display:inline-block;height:14px;border-radius:3px;min-width:4px;vertical-align:middle}
 .toggle-row{display:flex;align-items:center;gap:8px;margin-bottom:12px;font-size:13px}
 .toggle-row input{cursor:pointer}
@@ -69,6 +76,7 @@ tbody tr:hover{background:#EDF2F7}
 .formula-table .formula{color:var(--gray);font-family:monospace;font-size:11px}
 .occ-bar{display:inline-block;height:14px;border-radius:3px;min-width:4px;vertical-align:middle}
 .mock{background:#FFF3CD;color:#856404;font-size:9px;padding:1px 5px;border-radius:8px;font-weight:600}
+.mock-row td{background:#FFFDF0!important}
 .prelease-card{background:linear-gradient(135deg,#1B2A4A,#253A5E);color:#fff;border-radius:12px;padding:24px;margin-bottom:20px;text-align:center}
 .prelease-card h3{font-size:18px;margin-bottom:16px}
 .prelease-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:16px}
@@ -81,6 +89,10 @@ tbody tr:hover{background:#EDF2F7}
 .info-card{background:#fff;border-radius:10px;box-shadow:var(--shadow);padding:16px;border-left:4px solid var(--blue)}
 .info-card h4{font-size:12px;text-transform:uppercase;letter-spacing:.5px;color:var(--navy);margin-bottom:8px}
 .info-card .big{font-size:28px;font-weight:800;color:var(--navy)}
+.comments-area{background:#FAFBFC;border:1px dashed var(--border);border-radius:8px;padding:14px;min-height:80px;font-size:13px;color:#666;line-height:1.6;outline:none;transition:border-color .2s,background .2s}
+.comments-area:focus{border-color:var(--blue);background:#fff;color:#333}
+.comments-area:empty::before{content:attr(data-placeholder);color:#aaa;font-style:italic}
+.comments-label{font-size:12px;text-transform:uppercase;letter-spacing:.5px;color:var(--navy);font-weight:700;margin-bottom:6px}
 @media print{body{background:#fff;font-size:11px}.container{padding:0}.section{break-inside:avoid;box-shadow:none;border:1px solid #ddd}.header{background:var(--navy)!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}.kpi-card,.mini-card{box-shadow:none;border:1px solid #ddd}.section.collapsed .section-body{display:block}}
 @media(max-width:768px){.header{flex-direction:column;text-align:center}.header-right{text-align:center}.kpi-grid{grid-template-columns:repeat(2,1fr)}.chart-row{grid-template-columns:1fr}}
 </style>
@@ -88,11 +100,19 @@ tbody tr:hover{background:#EDF2F7}
 <body>
 <div class="container">
 
+<!-- WEATHER BAR -->
+<div class="weather-bar">
+<span class="weather-icon">☁️</span>
+<span class="weather-text">Jacksonville, FL — Partly Cloudy, 66°F</span>
+<span style="margin-left:auto;font-size:11px;opacity:.6">Feb 19, 2026</span>
+</div>
+
 <!-- 1. HEADER -->
 <div class="header">
 <div class="header-left">
 <h1><span>RISE</span> Daily Leasing Report</h1>
-<div class="subtitle">RISE Bartram Park &nbsp;|&nbsp; Jacksonville, FL &nbsp;|&nbsp; Conventional &nbsp;|&nbsp; 297 Units</div>
+<div class="prop-name">RISE Bartram Park</div>
+<div class="prop-location">Jacksonville, FL &nbsp;·&nbsp; Conventional &nbsp;·&nbsp; 297 Units</div>
 <a href="https://www.risebartrampark.com" target="_blank" class="prop-link">www.risebartrampark.com</a>
 </div>
 <div class="header-right">
@@ -124,21 +144,26 @@ tbody tr:hover{background:#EDF2F7}
 <div class="section">
 <div class="section-header" onclick="toggle(this)">📊 Today's Activity</div>
 <div class="section-body">
+<div style="font-size:11px;color:var(--gray);margin-bottom:10px">Lease data sourced from Entrata Lease Execution Summary (02/13–02/19). Daily breakdowns not available from weekly report.</div>
 <table>
-<thead><tr><th>Metric</th><th class="text-right">Daily</th><th class="text-right">WTD</th><th class="text-right">MTD</th></tr></thead>
+<thead><tr><th>Metric</th><th class="text-right">Daily</th><th class="text-right">WTD (02/13–02/19)</th><th class="text-right">MTD</th></tr></thead>
 <tbody>
-<tr><td>Tours</td><td class="text-right">3 <span class="mock">MOCK</span></td><td class="text-right">8 <span class="mock">MOCK</span></td><td class="text-right">19 <span class="mock">MOCK</span></td></tr>
-<tr><td>Walk In</td><td class="text-right">1 <span class="mock">MOCK</span></td><td class="text-right">3 <span class="mock">MOCK</span></td><td class="text-right">11 <span class="mock">MOCK</span></td></tr>
-<tr><td>Phone</td><td class="text-right">4 <span class="mock">MOCK</span></td><td class="text-right">12 <span class="mock">MOCK</span></td><td class="text-right">26 <span class="mock">MOCK</span></td></tr>
-<tr><td>Email</td><td class="text-right">6 <span class="mock">MOCK</span></td><td class="text-right">24 <span class="mock">MOCK</span></td><td class="text-right">51 <span class="mock">MOCK</span></td></tr>
-<tr><td>Online Leads</td><td class="text-right">2 <span class="mock">MOCK</span></td><td class="text-right">5 <span class="mock">MOCK</span></td><td class="text-right">10 <span class="mock">MOCK</span></td></tr>
-<tr><td>Total New Leads</td><td class="text-right"><strong>10</strong> <span class="mock">MOCK</span></td><td class="text-right"><strong>26</strong> <span class="mock">MOCK</span></td><td class="text-right"><strong>49</strong> <span class="mock">MOCK</span></td></tr>
-<tr><td>Applications</td><td class="text-right">1</td><td class="text-right">4</td><td class="text-right">7 <span class="mock">MOCK</span></td></tr>
-<tr><td>Approved</td><td class="text-right">1</td><td class="text-right">3</td><td class="text-right">7 <span class="mock">MOCK</span></td></tr>
-<tr><td>Leases Executed</td><td class="text-right">0</td><td class="text-right">3</td><td class="text-right">9 <span class="mock">MOCK</span></td></tr>
-<tr><td>Move-Ins</td><td class="text-right">0</td><td class="text-right">1</td><td class="text-right">5 <span class="mock">MOCK</span></td></tr>
-<tr><td>Move-Outs</td><td class="text-right">0</td><td class="text-right">2</td><td class="text-right">4 <span class="mock">MOCK</span></td></tr>
-<tr><td>Notices Given</td><td class="text-right">0 <span class="mock">MOCK</span></td><td class="text-right">1 <span class="mock">MOCK</span></td><td class="text-right">4 <span class="mock">MOCK</span></td></tr>
+<tr class="mock-row"><td>Tours <span class="mock">MOCK</span></td><td class="text-right">3 <span class="mock">MOCK</span></td><td class="text-right">8 <span class="mock">MOCK</span></td><td class="text-right">19 <span class="mock">MOCK</span></td></tr>
+<tr class="mock-row"><td>Walk-In <span class="mock">MOCK</span></td><td class="text-right">1 <span class="mock">MOCK</span></td><td class="text-right">3 <span class="mock">MOCK</span></td><td class="text-right">11 <span class="mock">MOCK</span></td></tr>
+<tr class="mock-row"><td>Phone <span class="mock">MOCK</span></td><td class="text-right">4 <span class="mock">MOCK</span></td><td class="text-right">12 <span class="mock">MOCK</span></td><td class="text-right">26 <span class="mock">MOCK</span></td></tr>
+<tr class="mock-row"><td>Email <span class="mock">MOCK</span></td><td class="text-right">6 <span class="mock">MOCK</span></td><td class="text-right">24 <span class="mock">MOCK</span></td><td class="text-right">51 <span class="mock">MOCK</span></td></tr>
+<tr class="mock-row"><td>Online Leads <span class="mock">MOCK</span></td><td class="text-right">2 <span class="mock">MOCK</span></td><td class="text-right">5 <span class="mock">MOCK</span></td><td class="text-right">10 <span class="mock">MOCK</span></td></tr>
+<tr class="mock-row"><td>Total New Leads <span class="mock">MOCK</span></td><td class="text-right"><strong>10</strong> <span class="mock">MOCK</span></td><td class="text-right"><strong>26</strong> <span class="mock">MOCK</span></td><td class="text-right"><strong>49</strong> <span class="mock">MOCK</span></td></tr>
+<tr><td>Applications (New Lease)</td><td class="text-right">—</td><td class="text-right"><strong>4</strong> started</td><td class="text-right">— <span class="mock">MOCK</span></td></tr>
+<tr><td>Approved (New Lease)</td><td class="text-right">—</td><td class="text-right"><strong>3</strong></td><td class="text-right">— <span class="mock">MOCK</span></td></tr>
+<tr><td>Leases Executed (New)</td><td class="text-right">—</td><td class="text-right"><strong>3</strong> completed</td><td class="text-right">— <span class="mock">MOCK</span></td></tr>
+<tr><td>New Lease Cancelled</td><td class="text-right">—</td><td class="text-right"><strong>1</strong></td><td class="text-right">— <span class="mock">MOCK</span></td></tr>
+<tr><td>Renewals (Apps Approved)</td><td class="text-right">—</td><td class="text-right"><strong>4</strong></td><td class="text-right">— <span class="mock">MOCK</span></td></tr>
+<tr><td>Renewals (Completed)</td><td class="text-right">—</td><td class="text-right"><strong>5</strong></td><td class="text-right">— <span class="mock">MOCK</span></td></tr>
+<tr><td>Renewals (Approved)</td><td class="text-right">—</td><td class="text-right"><strong>4</strong></td><td class="text-right">— <span class="mock">MOCK</span></td></tr>
+<tr><td>Move-Ins</td><td class="text-right">—</td><td class="text-right">1</td><td class="text-right">5 <span class="mock">MOCK</span></td></tr>
+<tr><td>Move-Outs</td><td class="text-right">—</td><td class="text-right">2</td><td class="text-right">4 <span class="mock">MOCK</span></td></tr>
+<tr><td>Notices Given</td><td class="text-right">— <span class="mock">MOCK</span></td><td class="text-right">1 <span class="mock">MOCK</span></td><td class="text-right">4 <span class="mock">MOCK</span></td></tr>
 </tbody>
 </table>
 </div>
@@ -147,9 +172,9 @@ tbody tr:hover{background:#EDF2F7}
 <!-- 4. THREE-CARD ROW -->
 <div class="chart-row">
 
-<!-- 4a. Lead Source Breakdown -->
+<!-- 4a. Lead Source Breakdown (MTD) -->
 <div class="mini-card">
-<h3>Lead Source Breakdown <span class="mock">MOCK</span></h3>
+<h3>Lead Source Breakdown (MTD) <span class="mock">MOCK</span></h3>
 <div class="donut-wrap">
 <svg width="140" height="140" viewBox="0 0 140 140">
 <circle cx="70" cy="70" r="50" fill="none" stroke="#EDF2F7" stroke-width="18"/>
@@ -175,7 +200,7 @@ tbody tr:hover{background:#EDF2F7}
 
 <!-- 4b. Conversion Funnel (MTD) -->
 <div class="mini-card">
-<h3>Conversion Funnel (MTD)</h3>
+<h3>Conversion Funnel (MTD) <span class="mock">MOCK</span></h3>
 <div class="funnel-stage" style="background:var(--amber)"><span>Total Leads</span><span class="num">49 <span style="font-size:12px;font-weight:400">/ 45 needed</span></span></div>
 <div class="funnel-arrow">▼ 39% tour rate</div>
 <div class="funnel-stage" style="background:var(--amber);opacity:.9"><span>Tours</span><span class="num">19 <span style="font-size:12px;font-weight:400">/ 16 needed</span></span></div>
@@ -185,12 +210,13 @@ tbody tr:hover{background:#EDF2F7}
 <div class="funnel-stage" style="background:var(--green);opacity:.9"><span>Leases</span><span class="num">9 <span style="font-size:12px;font-weight:400">/ 6 needed</span></span></div>
 <div style="margin-top:10px;font-size:11px;color:var(--gray)">
 Lease velocity on track — <span style="color:var(--green);font-weight:600">ahead of pace</span>
+<br><span style="font-size:10px">Lead/tour data is mock — funnel rates approximate</span>
 </div>
 </div>
 
-<!-- 4c. Rent vs Budget by Type -->
+<!-- 4c. Rent vs Budget by Type (Current Snapshot) -->
 <div class="mini-card">
-<h3>Rent vs Budget by Type</h3>
+<h3>Rent vs Budget by Type (Current Snapshot)</h3>
 <div class="bar-group">
 <label>Studio (S1/S2)</label>
 <div class="bar-pair">
@@ -227,7 +253,7 @@ Lease velocity on track — <span style="color:var(--green);font-weight:600">ahe
 </div>
 </div>
 
-<!-- 5. TODAY'S HIGHLIGHTS -->
+<!-- 5. TODAY'S HIGHLIGHTS + AI RECOMMENDATIONS -->
 <div class="section">
 <div class="section-header" onclick="toggle(this)">✨ Today's Highlights</div>
 <div class="section-body">
@@ -237,15 +263,42 @@ Lease velocity on track — <span style="color:var(--green);font-weight:600">ahe
 <div class="hl-section"><div class="hl-label">Occupancy</div>Physical occupancy holds at <strong>89.9%</strong> (267/297). 30 vacant, 10 rented. Exposure at 11.4% (34 units).</div>
 <div class="hl-section"><div class="hl-label">Notable</div>B6 and A3 remain weakest at 75% occ — <strong>focus outreach on 2BR and 1BR large</strong>. A4 and all studios at 100%.</div>
 </div>
+<div class="ai-card">
+<div class="ai-label">🤖 AI Recommendations</div>
+<div class="ai-rec"><strong>Exposure at 11.4% (34 units)</strong> — Consider targeted concessions on B2 and B6 floor plans where vacancy is concentrated. B6 at 75% occ with only 6/8 occupied is the biggest drag. A move-in special on 2BR could accelerate absorption.</div>
+<div class="ai-rec"><strong>4 renewals approved + 5 completed this week</strong> — Renewal rate tracking well at 63% for Feb (5/8 expiring). Monitor March notices closely — 13 leases expiring with only 54% renewed so far.</div>
+<div class="ai-rec"><strong>Avg scheduled rent $1,665 vs market $1,695</strong> — $30/unit gap across 267 occupied units = ~$8,000/mo potential revenue. Prioritize rent increases on renewal offers, especially in B3/B8 plans where in-place already exceeds market.</div>
+<div class="ai-rec"><strong>1BR below budget by $69 avg</strong> — A1 (83 units, 87% occ) is the volume driver. Closing the gap here has the highest impact: even $20/unit = $1,660/mo incremental revenue.</div>
+<div class="ai-rec"><strong>Net absorption WTD: -1</strong> — 2 move-outs vs 1 move-in. With 25 move-ins needed to hit budget occupancy, leasing velocity must stay elevated through March.</div>
+</div>
 </div>
 </div>
 
-<!-- 6. UNIT MIX & RENTS -->
+<!-- 6. PROPERTY PULSE (moved ABOVE Unit Mix) -->
+<div class="section">
+<div class="section-header" onclick="toggle(this)">🏠 Property Pulse</div>
+<div class="section-body">
+<table>
+<thead><tr><th>Metric</th><th class="text-right">Daily</th><th class="text-right">WTD</th><th class="text-right">MTD</th></tr></thead>
+<tbody>
+<tr><td>Move-Ins</td><td class="text-right">—</td><td class="text-right">1</td><td class="text-right">5 <span class="mock">MOCK</span></td></tr>
+<tr><td>Move-Outs</td><td class="text-right">—</td><td class="text-right">2</td><td class="text-right">4 <span class="mock">MOCK</span></td></tr>
+<tr><td>Notices</td><td class="text-right">—</td><td class="text-right">1</td><td class="text-right">4 <span class="mock">MOCK</span></td></tr>
+<tr><td>MTM Conversions</td><td class="text-right">—</td><td class="text-right">0</td><td class="text-right">0</td></tr>
+<tr><td>Renewals</td><td class="text-right">—</td><td class="text-right">5</td><td class="text-right">10 <span class="mock">MOCK</span></td></tr>
+<tr><td>Skips/Evictions</td><td class="text-right">—</td><td class="text-right">0</td><td class="text-right">0</td></tr>
+<tr><td><strong>Net Absorption</strong></td><td class="text-right"><strong>—</strong></td><td class="text-right"><strong>-1</strong></td><td class="text-right"><strong>+1</strong> <span class="mock">MOCK</span></td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<!-- 7. UNIT MIX & RENTS -->
 <div class="section">
 <div class="section-header" onclick="toggle(this)">🏢 Unit Mix &amp; Rents</div>
 <div class="section-body">
-<div class="toggle-row"><label><input type="checkbox" id="corpToggle" onchange="toggleCorp()"> Exclude Corporate Units</label></div>
-<table>
+<div class="toggle-row"><label><input type="checkbox" id="corpToggle" onchange="toggleCorp()"> Exclude Corporate Units (Barsala)</label></div>
+<table id="unitMixTable">
 <thead><tr><th>Type</th><th>Plan</th><th class="text-right">SQFT</th><th class="text-right">Units</th><th class="text-right">Mkt Rent</th><th class="text-right">Sched Rent</th><th class="text-right">Net Eff</th><th class="text-right">Occ</th><th class="text-right">Vac</th><th class="text-right">Occ%</th><th class="text-right">Leased%</th><th>Leased</th></tr></thead>
 <tbody>
 <tr><td>1 BR</td><td>A1</td><td class="text-right">777</td><td class="text-right">83</td><td class="text-right">$1,516</td><td class="text-right">$1,494</td><td class="text-right">$1,357</td><td class="text-right">72</td><td class="text-right">11</td><td class="text-right">87%</td><td class="text-right">90%</td><td><span class="leased-bar" style="width:72.0px;background:var(--amber)"></span></td></tr>
@@ -253,9 +306,9 @@ Lease velocity on track — <span style="color:var(--green);font-weight:600">ahe
 <tr><td>1 BR</td><td>A3</td><td class="text-right">900</td><td class="text-right">4</td><td class="text-right">$1,738</td><td class="text-right">$1,727</td><td class="text-right">$1,726</td><td class="text-right">3</td><td class="text-right">1</td><td class="text-right">75%</td><td class="text-right">75%</td><td><span class="leased-bar" style="width:60.0px;background:var(--red)"></span></td></tr>
 <tr><td>1 BR</td><td>A4</td><td class="text-right">731</td><td class="text-right">33</td><td class="text-right">$1,442</td><td class="text-right">$1,417</td><td class="text-right">$1,284</td><td class="text-right">32</td><td class="text-right">1</td><td class="text-right">97%</td><td class="text-right">100%</td><td><span class="leased-bar" style="width:80.0px;background:var(--green)"></span></td></tr>
 <tr><td>1 BR</td><td>A5</td><td class="text-right">815</td><td class="text-right">8</td><td class="text-right">$1,574</td><td class="text-right">$1,544</td><td class="text-right">$1,312</td><td class="text-right">7</td><td class="text-right">1</td><td class="text-right">88%</td><td class="text-right">88%</td><td><span class="leased-bar" style="width:70.4px;background:var(--amber)"></span></td></tr>
-<tr><td>2 BR</td><td>B1</td><td class="text-right">1,047</td><td class="text-right">27</td><td class="text-right">$1,789</td><td class="text-right">$1,746</td><td class="text-right">$1,535</td><td class="text-right">25</td><td class="text-right">2</td><td class="text-right">93%</td><td class="text-right">96%</td><td><span class="leased-bar" style="width:76.80000000000001px;background:var(--green)"></span></td></tr>
+<tr><td>2 BR</td><td>B1</td><td class="text-right">1,047</td><td class="text-right">27</td><td class="text-right">$1,789</td><td class="text-right">$1,746</td><td class="text-right">$1,535</td><td class="text-right">25</td><td class="text-right">2</td><td class="text-right">93%</td><td class="text-right">96%</td><td><span class="leased-bar" style="width:76.8px;background:var(--green)"></span></td></tr>
 <tr><td>2 BR</td><td>B2</td><td class="text-right">1,098</td><td class="text-right">44</td><td class="text-right">$1,816</td><td class="text-right">$1,796</td><td class="text-right">$1,633</td><td class="text-right">38</td><td class="text-right">6</td><td class="text-right">86%</td><td class="text-right">93%</td><td><span class="leased-bar" style="width:74.4px;background:var(--amber)"></span></td></tr>
-<tr><td>2 BR</td><td>B3</td><td class="text-right">1,195</td><td class="text-right">28</td><td class="text-right">$2,006</td><td class="text-right">$1,953</td><td class="text-right">$1,743</td><td class="text-right">27</td><td class="text-right">1</td><td class="text-right">96%</td><td class="text-right">96%</td><td><span class="leased-bar" style="width:76.80000000000001px;background:var(--green)"></span></td></tr>
+<tr><td>2 BR</td><td>B3</td><td class="text-right">1,195</td><td class="text-right">28</td><td class="text-right">$2,006</td><td class="text-right">$1,953</td><td class="text-right">$1,743</td><td class="text-right">27</td><td class="text-right">1</td><td class="text-right">96%</td><td class="text-right">96%</td><td><span class="leased-bar" style="width:76.8px;background:var(--green)"></span></td></tr>
 <tr><td>2 BR</td><td>B4</td><td class="text-right">1,226</td><td class="text-right">3</td><td class="text-right">$1,870</td><td class="text-right">$1,845</td><td class="text-right">$1,669</td><td class="text-right">3</td><td class="text-right">0</td><td class="text-right">100%</td><td class="text-right">100%</td><td><span class="leased-bar" style="width:80.0px;background:var(--green)"></span></td></tr>
 <tr><td>2 BR</td><td>B5</td><td class="text-right">1,113</td><td class="text-right">9</td><td class="text-right">$1,777</td><td class="text-right">$1,759</td><td class="text-right">$1,526</td><td class="text-right">9</td><td class="text-right">0</td><td class="text-right">100%</td><td class="text-right">100%</td><td><span class="leased-bar" style="width:80.0px;background:var(--green)"></span></td></tr>
 <tr><td>2 BR</td><td>B6</td><td class="text-right">1,189</td><td class="text-right">8</td><td class="text-right">$1,823</td><td class="text-right">$1,734</td><td class="text-right">$1,444</td><td class="text-right">6</td><td class="text-right">2</td><td class="text-right">75%</td><td class="text-right">75%</td><td><span class="leased-bar" style="width:60.0px;background:var(--red)"></span></td></tr>
@@ -264,26 +317,7 @@ Lease velocity on track — <span style="color:var(--green);font-weight:600">ahe
 <tr><td>3 BR</td><td>C1</td><td class="text-right">1,459</td><td class="text-right">16</td><td class="text-right">$2,391</td><td class="text-right">$2,297</td><td class="text-right">$2,013</td><td class="text-right">13</td><td class="text-right">3</td><td class="text-right">81%</td><td class="text-right">88%</td><td><span class="leased-bar" style="width:70.4px;background:var(--amber)"></span></td></tr>
 <tr><td>Studio</td><td>S1</td><td class="text-right">608</td><td class="text-right">3</td><td class="text-right">$1,399</td><td class="text-right">$1,377</td><td class="text-right">$1,259</td><td class="text-right">3</td><td class="text-right">0</td><td class="text-right">100%</td><td class="text-right">100%</td><td><span class="leased-bar" style="width:80.0px;background:var(--green)"></span></td></tr>
 <tr><td>Studio</td><td>S2</td><td class="text-right">608</td><td class="text-right">4</td><td class="text-right">$1,307</td><td class="text-right">$1,298</td><td class="text-right">$1,137</td><td class="text-right">4</td><td class="text-right">0</td><td class="text-right">100%</td><td class="text-right">100%</td><td><span class="leased-bar" style="width:80.0px;background:var(--green)"></span></td></tr>
-<tr class="totals"><td colspan="2"><strong>TOTALS</strong></td><td></td><td class="text-right"><strong>297</strong></td><td class="text-right"><strong>$1,695</strong></td><td class="text-right"><strong>$1,665</strong></td><td></td><td class="text-right"><strong>267</strong></td><td class="text-right"><strong>30</strong></td><td class="text-right"><strong>89.9%</strong></td><td class="text-right"><strong>93.3%</strong></td><td></td></tr>
-</tbody>
-</table>
-</div>
-</div>
-
-<!-- 7. PROPERTY PULSE -->
-<div class="section">
-<div class="section-header" onclick="toggle(this)">🏠 Property Pulse</div>
-<div class="section-body">
-<table>
-<thead><tr><th>Metric</th><th class="text-right">Daily</th><th class="text-right">WTD</th><th class="text-right">MTD</th></tr></thead>
-<tbody>
-<tr><td>Move-Ins</td><td class="text-right">0</td><td class="text-right">1</td><td class="text-right">5 <span class="mock">MOCK</span></td></tr>
-<tr><td>Move-Outs</td><td class="text-right">0</td><td class="text-right">2</td><td class="text-right">4 <span class="mock">MOCK</span></td></tr>
-<tr><td>Notices</td><td class="text-right">0</td><td class="text-right">1</td><td class="text-right">4 <span class="mock">MOCK</span></td></tr>
-<tr><td>MTM Conversions</td><td class="text-right">0</td><td class="text-right">0</td><td class="text-right">0</td></tr>
-<tr><td>Renewals</td><td class="text-right">1</td><td class="text-right">5</td><td class="text-right">10 <span class="mock">MOCK</span></td></tr>
-<tr><td>Skips/Evictions</td><td class="text-right">0</td><td class="text-right">0</td><td class="text-right">0</td></tr>
-<tr><td><strong>Net Absorption</strong></td><td class="text-right"><strong>0</strong></td><td class="text-right"><strong>-1</strong></td><td class="text-right"><strong>+1</strong> <span class="mock">MOCK</span></td></tr>
+<tr class="totals" id="totalsRow"><td colspan="2"><strong>TOTALS</strong></td><td></td><td class="text-right"><strong>297</strong></td><td class="text-right"><strong>$1,695</strong></td><td class="text-right"><strong>$1,665</strong></td><td></td><td class="text-right"><strong>267</strong></td><td class="text-right"><strong>30</strong></td><td class="text-right"><strong>89.9%</strong></td><td class="text-right"><strong>93.3%</strong></td><td></td></tr>
 </tbody>
 </table>
 </div>
@@ -385,7 +419,24 @@ Lease velocity on track — <span style="color:var(--green);font-weight:600">ahe
 </div>
 </div>
 
-<!-- 10. FORMULA LEGEND -->
+<!-- 10. MANAGER COMMENTS -->
+<div class="section">
+<div class="section-header" onclick="toggle(this)">💬 Manager Comments</div>
+<div class="section-body">
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+<div>
+<div class="comments-label">🏷️ Leasing Specials</div>
+<div class="comments-area" contenteditable="true" data-placeholder="Enter current concessions, move-in specials, pricing adjustments..."></div>
+</div>
+<div>
+<div class="comments-label">📣 Marketing Outreach</div>
+<div class="comments-area" contenteditable="true" data-placeholder="Recent marketing activities, upcoming events, outreach campaigns..."></div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- 11. FORMULA LEGEND -->
 <div class="section collapsed">
 <div class="section-header" onclick="toggle(this)">📐 Formula Legend</div>
 <div class="section-body">
@@ -413,7 +464,60 @@ Lease velocity on track — <span style="color:var(--green);font-weight:600">ahe
 
 <script>
 function toggle(el){el.parentElement.classList.toggle('collapsed')}
-function toggleCorp(){}
+
+// Corporate units toggle — excludes units where resident contains "Barsala"
+// At Bartram Park there are currently 0 Barsala units, but functionality is built for other properties
+const corporateUnits = {
+  // format: { plan: { corpUnits: N, corpOccupied: N } }
+  // Bartram Park has 0 Barsala units — populate when expanding to Florence Villa / Sereno
+};
+
+function toggleCorp() {
+  const checked = document.getElementById('corpToggle').checked;
+  const table = document.getElementById('unitMixTable');
+  if (!table) return;
+
+  const rows = table.querySelectorAll('tbody tr:not(.totals)');
+  let totalUnits = 0, totalOcc = 0, totalVac = 0;
+
+  rows.forEach(row => {
+    const cells = row.querySelectorAll('td');
+    if (cells.length < 11) return;
+    const plan = cells[1].textContent.trim();
+    const origUnits = parseInt(cells[3].dataset.orig || cells[3].textContent);
+    const origOcc = parseInt(cells[7].dataset.orig || cells[7].textContent);
+
+    // Store originals on first run
+    if (!cells[3].dataset.orig) {
+      cells[3].dataset.orig = origUnits;
+      cells[7].dataset.orig = origOcc;
+    }
+
+    const corp = corporateUnits[plan] || { corpUnits: 0, corpOccupied: 0 };
+    const adjUnits = checked ? origUnits - corp.corpUnits : origUnits;
+    const adjOcc = checked ? origOcc - corp.corpOccupied : origOcc;
+    const adjVac = adjUnits - adjOcc;
+
+    cells[3].innerHTML = adjUnits;
+    cells[7].innerHTML = adjOcc;
+    cells[8].innerHTML = adjVac;
+    cells[9].innerHTML = adjUnits > 0 ? Math.round(adjOcc / adjUnits * 100) + '%' : '—';
+
+    totalUnits += adjUnits;
+    totalOcc += adjOcc;
+    totalVac += adjVac;
+  });
+
+  // Update totals row
+  const totals = document.getElementById('totalsRow');
+  if (totals) {
+    const tc = totals.querySelectorAll('td');
+    tc[2].innerHTML = '<strong>' + totalUnits + '</strong>';
+    tc[6].innerHTML = '<strong>' + totalOcc + '</strong>';
+    tc[7].innerHTML = '<strong>' + totalVac + '</strong>';
+    tc[8].innerHTML = '<strong>' + (totalUnits > 0 ? (totalOcc / totalUnits * 100).toFixed(1) + '%' : '—') + '</strong>';
+  }
+}
 </script>
 </body>
 </html>
