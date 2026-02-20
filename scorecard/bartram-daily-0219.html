@@ -14,7 +14,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 .weather-bar .weather-text{opacity:.9}
 .header{background:linear-gradient(135deg,var(--navy),#253A5E);color:#fff;padding:24px 32px;border-radius:12px;margin-bottom:20px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
 .header-left{display:flex;align-items:center;gap:16px}
-.rise-logo{font-size:36px;font-weight:900;letter-spacing:2px;color:#2E86AB;text-shadow:0 2px 8px rgba(46,134,171,.3);font-family:'Segoe UI',Roboto,sans-serif}
+.rise-logo{font-size:36px;font-weight:900;letter-spacing:2px;color:#2E86AB;text-shadow:0 2px 8px rgba(46,134,171,.3);font-family:inherit}
 .header-left .header-text h1{font-size:26px;font-weight:700;letter-spacing:-.5px}
 .header-left .header-text h1 span{color:var(--blue)}
 .header-left .header-text .prop-name{font-size:16px;font-weight:600;margin-top:4px}
@@ -77,7 +77,7 @@ tbody tr:hover{background:#EDF2F7}
 .curr-month{background:#E8F4FD!important;font-weight:600}
 .formula-table td{padding:6px 10px;vertical-align:top;font-size:12px}
 .formula-table .metric{font-weight:600;color:var(--navy);white-space:nowrap}
-.formula-table .formula{color:var(--gray);font-family:monospace;font-size:11px}
+.formula-table .formula{color:var(--gray);font-family:inherit;font-size:11px}
 .occ-bar{display:inline-block;height:14px;border-radius:3px;min-width:4px;vertical-align:middle}
 .mock{background:#FFF3CD;color:#856404;font-size:9px;padding:1px 5px;border-radius:8px;font-weight:600}
 .projected{background:#D1ECF1;color:#0C5460;font-size:9px;padding:1px 5px;border-radius:8px;font-weight:600}
@@ -136,7 +136,7 @@ tbody tr:hover{background:#EDF2F7}
 <div class="kpi-card"><div class="kpi-left"><div class="kpi-label">Leased %</div><div class="kpi-value">92.9%</div><div class="kpi-sub">279 / 297 units</div></div><svg width="60" height="24" viewBox="0 0 60 24" style="vertical-align:middle;margin-left:8px"><polyline fill="none" stroke="#2E86AB" stroke-width="1.5" stroke-linejoin="round" points="2.0,22.0 11.3,17.5 20.7,11.5 30.0,5.0 39.3,2.0 48.7,3.5 58.0,6.0"/><circle cx="58.0" cy="6.0" r="2" fill="#2E86AB"/></svg></div>
 <div class="kpi-card"><div class="kpi-left"><div class="kpi-label">Lease Trend</div><div class="kpi-value" style="color:var(--amber)">88.2%</div><div class="kpi-sub">35 exposed units (11.8% exposure)</div></div><svg width="60" height="24" viewBox="0 0 60 24" style="vertical-align:middle;margin-left:8px"><polyline fill="none" stroke="#ffc107" stroke-width="1.5" stroke-linejoin="round" points="2.0,2.0 11.3,4.7 20.7,10.2 30.0,16.5 39.3,22.0 48.7,19.6 58.0,10.2"/><circle cx="58.0" cy="10.2" r="2" fill="#ffc107"/></svg></div>
 <div class="kpi-card"><div class="kpi-left"><div class="kpi-label">Avg Market Rent</div><div class="kpi-value">$1,695</div><div class="kpi-sub">All floor plans</div></div><svg width="60" height="24" viewBox="0 0 60 24" style="vertical-align:middle;margin-left:8px"><polyline fill="none" stroke="#2E86AB" stroke-width="1.5" stroke-linejoin="round" points="2.0,22.0 11.3,18.0 20.7,14.0 30.0,10.0 39.3,6.0 48.7,3.6 58.0,2.0"/><circle cx="58.0" cy="2.0" r="2" fill="#2E86AB"/></svg></div>
-<div class="kpi-card"><div class="kpi-left"><div class="kpi-label">Net Effective Rent</div><div class="kpi-value">$1,491</div><div class="kpi-sub">Market $1,695 − concessions</div><div style="font-size:10px;color:var(--amber);margin-top:2px">🏷️ 2 Months Free (14-15 mo lease, apply by 2/28)</div></div><svg width="60" height="24" viewBox="0 0 60 24" style="vertical-align:middle;margin-left:8px"><polyline fill="none" stroke="#2E86AB" stroke-width="1.5" stroke-linejoin="round" points="2.0,22.0 11.3,18.0 20.7,14.0 30.0,10.0 39.3,7.6 48.7,4.4 58.0,2.0"/><circle cx="58.0" cy="2.0" r="2" fill="#2E86AB"/></svg></div>
+<div class="kpi-card"><div class="kpi-left"><div class="kpi-label">Net Effective Rent</div><div class="kpi-value">$1,491</div><div class="kpi-sub">Market $1,695 − concessions</div><div style="font-size:10px;color:var(--blue);margin-top:2px">🏷️ 2 Months Free (14-15 mo lease, apply by 2/28)</div></div><svg width="60" height="24" viewBox="0 0 60 24" style="vertical-align:middle;margin-left:8px"><polyline fill="none" stroke="#2E86AB" stroke-width="1.5" stroke-linejoin="round" points="2.0,22.0 11.3,18.0 20.7,14.0 30.0,10.0 39.3,7.6 48.7,4.4 58.0,2.0"/><circle cx="58.0" cy="2.0" r="2" fill="#2E86AB"/></svg></div>
 <div class="kpi-card"><div class="kpi-left"><div class="kpi-label">Comp Average Rent <span class="mock">MOCK</span></div><div class="kpi-value" style="color:var(--amber)">$1,728</div><div class="kpi-sub">Market survey <span class="mock">MOCK</span></div></div><svg width="60" height="24" viewBox="0 0 60 24" style="vertical-align:middle;margin-left:8px"><polyline fill="none" stroke="#ffc107" stroke-width="1.5" stroke-linejoin="round" points="2.0,22.0 11.3,16.4 20.7,10.9 30.0,13.1 39.3,8.7 48.7,5.3 58.0,2.0"/><circle cx="58.0" cy="2.0" r="2" fill="#ffc107"/></svg></div>
 </div>
 
@@ -451,7 +451,8 @@ Net Absorption = Move-Ins (5) − Move-Outs (4 expected) = +1. MTM excluded.</di
 Physical occupancy <strong>UP to 90.6%</strong> (269/297) — <strong>gained 2 occupied units</strong> vs yesterday (267→269). 28 vacant: <strong>7 rented</strong> (in pipeline), <strong>21 unrented</strong>. Leased at 92.9% (279/297). Exposure at 11.8% (35 units). Budget target 93.0% (276 units) — <strong>7 net move-ins needed</strong>.<br>
 Budget occupancy = 93.0% = 276 units. Currently at 269 occupied (<strong>90.6%</strong>). Gap = <strong>7 units</strong> — narrowed from 9 yesterday.<br>
 With 5 MTD move-ins vs 4 move-outs, net absorption turned positive (+1). 7 vacant-rented units in pipeline — if all convert, occupancy reaches 92.9% (276/297).<br>
-At current pace of ~3 new leases/week (~13/month) and 4-5 move-outs/month, net gain = ~8-9 units/month. <strong>Hitting 276 by late March is achievable</strong> — but pipeline must convert on time. Execution on unit turns is critical.</div>
+At current pace of ~3 new leases/week (~13/month) and 4-5 move-outs/month, net gain = ~8-9 units/month. Hitting 276 by late March is achievable — but pipeline must convert on time.<br>
+<strong style="display:block;margin-top:6px;padding-top:6px;border-top:1px solid var(--border)">Action: Prioritize unit turn speed on 7 vacant-rented units. Confirm move-in dates and eliminate any maintenance delays holding up occupancy gains.</strong></div>
 
 <div class="ai-rec"><strong>🏠 Floor Plan Priorities — Revenue-Weighted Focus</strong><br>
 Ranking by revenue at risk (vacant units × market rent):<br>
@@ -459,7 +460,8 @@ Ranking by revenue at risk (vacant units × market rent):<br>
 • <strong>C1 (81% occ, 13/16)</strong> — 3 vacant × $2,391 = <strong>$7,173/mo at risk</strong>. Highest per-unit impact. Consider broker incentives ($500-750) for 3BR referrals — ROI positive within 1 month.<br>
 • <strong>B6 (75% occ, 6/8)</strong> — 2 vacant × $1,823 = <strong>$3,646/mo at risk</strong>. Worst occupancy rate. Consider $200-300 concession to accelerate. Sched rent ($1,734) already $89 below market — pricing isn't the barrier, traffic is.<br>
 • <strong>A1 (88% occ, 73/83)</strong> — 10 vacant × $1,516 = <strong>$15,160/mo at risk</strong>. Largest absolute vacancy but highest unit count (83). Net effective $1,355 suggests concessions already deployed. Focus on conversion rate, not more concessions.<br>
-• <strong>A3 (75% occ, 3/4)</strong> — 1 vacant × $1,738. Small count magnifies %. Targeted outreach to 1BR-large/upgrade prospects.</div>
+• <strong>A3 (75% occ, 3/4)</strong> — 1 vacant × $1,738. Small count magnifies %. Targeted outreach to 1BR-large/upgrade prospects.<br>
+<strong style="display:block;margin-top:6px;padding-top:6px;border-top:1px solid var(--border)">Action: Shift ILS budget to B2 and C1 floor plans. Add broker incentive ($500-750) for 3BR referrals. Route all tours to highest-revenue vacancies first.</strong></div>
 
 <div class="ai-rec"><strong>💰 Rent Gap Analysis — $8,758/Month Unrealized Revenue</strong><br>
 In-place avg $1,663 vs market avg $1,695 = <strong>$33/unit gap × 269 occupied = $8,758/month</strong> ($105,103 annualized).<br>
@@ -469,18 +471,19 @@ By bedroom type:<br>
 • <strong>2 BR (B1-B8):</strong> Budget $1,846 vs in-place ~$1,806 → $40 gap across 109 occupied = ~$4,360/mo<br>
 • <strong>3 BR (C1):</strong> Budget $2,391 vs in-place $2,297 → $94 gap × 13 = $1,222/mo<br>
 Prioritize 1BR renewals for rent increases — largest gap × highest occupied count. Each 1BR renewal at market closes ~$69/unit of the gap.<br>
-⚠️ <strong>B8 anomaly persists:</strong> Scheduled rent ($1,950) exceeds market ($1,655) by $295. Likely corporate/Barsala rate or data entry error. Verify.</div>
+⚠️ <strong>B8 anomaly persists:</strong> Scheduled rent ($1,950) exceeds market ($1,655) by $295. Likely corporate/Barsala rate or data entry error.<br>
+<strong style="display:block;margin-top:6px;padding-top:6px;border-top:1px solid var(--border)">Action: Push all 1BR renewals to market rate ($1,555+). Verify B8 rent data with property manager. Close $69/unit 1BR gap first — highest volume impact.</strong></div>
 
 <div class="ai-rec"><strong>⚠️ Notice Risk — 14 Unrented Notices = Revenue Exposure</strong><br>
 17 total on notice: 3 rented (secured), <strong>14 unrented</strong> (revenue risk). If all 14 vacate without backfill, exposure jumps from 11.8% to ~16.5%.<br>
 Current pipeline: 7 vacant-rented units being turned. Net pipeline deficit = 14 notice-unrented − 7 vacant-rented = <strong>7 units underwater</strong>.<br>
-<strong>Action:</strong> Route all tours to notice-unrented units first. Pre-market units 30 days before notice move-out date. Converting just 4 of 14 unrented notices to rented would bring pipeline to neutral.</div>
+<strong style="display:block;margin-top:6px;padding-top:6px;border-top:1px solid var(--border)">Action: Route all tours to notice-unrented units first. Pre-market units 30 days before notice move-out date. Converting just 4 of 14 unrented notices to rented would bring pipeline to neutral.</strong></div>
 
 <div class="ai-rec"><strong>📋 Renewal Risk — March & April Need Immediate Attention</strong> <span style="font-size:10px;color:var(--gray)">(60% minimum benchmark)</span><br>
 <strong>March:</strong> 13 leases expiring, <strong>8 renewed (62%)</strong> — improved from 54% two days ago. Above 60% benchmark ✓. 5 on notice. Target: get 2 more renewals to reach 77% and limit move-outs to 3.<br>
 <strong>April:</strong> 16 leases expiring, <strong>6 renewed (38%)</strong> — up from 19%. Still critical — 10 uncommitted residents. At historical ~35% non-renewal rate, expect 5-6 move-outs in April.<br>
 <strong>May:</strong> 16 expiring, only 1 renewed (6%). Early but monitor — renewal offers should go out 90 days prior (now).<br>
-<strong>Action:</strong> Personal outreach to all uncommitted March (5) and April (10) expirations this week. Offer early renewal incentive ($50-100 off first month) to lock in before notice deadlines. Each non-renewal costs ~$3,500 in turn + vacancy loss.</div>
+<strong style="display:block;margin-top:6px;padding-top:6px;border-top:1px solid var(--border)">Action: Personal outreach to all uncommitted March (5) and April (10) expirations this week. Offer early renewal incentive ($50-100 off first month) to lock in before notice deadlines. Each non-renewal costs ~$3,500 in turn + vacancy loss.</strong></div>
 
 <div class="ai-rec"><strong>📈 Positive Momentum — Build on Today's Gains</strong><br>
 Occupancy moved from 89.9% → <strong>90.6%</strong> (269 occupied, +2 units). Net absorption turned positive (+1 MTD) for first time this month. A4 hit 100% occupied.<br>
@@ -489,7 +492,8 @@ Occupancy moved from 89.9% → <strong>90.6%</strong> (269 occupied, +2 units). 
 • 7 vacant-rented converting → gets to 276 (92.9%). Still need 0 more net leases.<br>
 • Feb remaining move-outs: ~1-2 units. March projected: 5-7 move-outs (5 notices + misc).<br>
 • Need <strong>6 gross new leases</strong> in next 5-6 weeks to hit 276 by end of March.<br>
-• At 3/week pace = ~18 leases possible. Needed: ~6. <strong>Achievable with current velocity.</strong></div>
+• At 3/week pace = ~18 leases possible. Needed: ~6. <strong>Achievable with current velocity.</strong><br>
+<strong style="display:block;margin-top:6px;padding-top:6px;border-top:1px solid var(--border)">Action: Maintain current leasing pace — do not pull back on marketing spend or concessions until occupancy hits 93%. Celebrate the A4 win with the team.</strong></div>
 
 <div class="funnel-math">
 <strong>📊 Funnel Math — Weekly Velocity Check</strong><br>
