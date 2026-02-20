@@ -42,7 +42,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 .section.collapsed .section-header::after{transform:rotate(-90deg)}
 .section.collapsed .section-body{display:none}
 .section-body{padding:20px;overflow-x:auto}
-table{width:100%;border-collapse:collapse;font-size:13px}
+table{width:100%;border-collapse:collapse;font-size:13px;table-layout:fixed}
 th{background:var(--light);color:var(--navy);font-weight:600;text-transform:uppercase;font-size:10px;letter-spacing:.5px;padding:8px 10px;text-align:left;border-bottom:2px solid var(--border);white-space:nowrap}
 td{padding:7px 10px;border-bottom:1px solid var(--border);white-space:nowrap}
 tbody tr:nth-child(even){background:#FAFBFC}
@@ -146,15 +146,24 @@ tbody tr:hover{background:#EDF2F7}
 <div style="font-size:11px;color:var(--gray);margin-bottom:10px">
 Traffic activity for the day. Bartram Park lead source report not yet available — section will populate once daily lead source pull is configured for this property.
 </div>
-<table>
+<table style="table-layout:fixed">
+<colgroup><col style="width:25%"><col style="width:25%"><col style="width:25%"><col style="width:25%"></colgroup>
 <thead><tr><th>Metric</th><th class="text-right">Daily</th><th class="text-right">WTD (02/13–02/18)</th><th class="text-right">MTD</th></tr></thead>
 <tbody>
-<tr><td>Tours</td><td class="text-right" style="color:#bbb">—</td><td class="text-right" style="color:#bbb">—</td><td class="text-right" style="color:#bbb">—</td></tr>
-<tr><td>Walk-In</td><td class="text-right" style="color:#bbb">—</td><td class="text-right" style="color:#bbb">—</td><td class="text-right" style="color:#bbb">—</td></tr>
-<tr><td>Phone</td><td class="text-right" style="color:#bbb">—</td><td class="text-right" style="color:#bbb">—</td><td class="text-right" style="color:#bbb">—</td></tr>
-<tr><td>Email</td><td class="text-right" style="color:#bbb">—</td><td class="text-right" style="color:#bbb">—</td><td class="text-right" style="color:#bbb">—</td></tr>
-<tr><td>Online Leads</td><td class="text-right" style="color:#bbb">—</td><td class="text-right" style="color:#bbb">—</td><td class="text-right" style="color:#bbb">—</td></tr>
-<tr><td><strong>Total New Leads</strong></td><td class="text-right" style="color:#bbb"><strong>—</strong></td><td class="text-right" style="color:#bbb"><strong>—</strong></td><td class="text-right" style="color:#bbb"><strong>—</strong></td></tr>
+<tr><td>Tours <span class="mock">PENDING</span></td><td class="text-right" style="color:#bbb">—<sup>†</sup></td><td class="text-right" style="color:#bbb">—</td><td class="text-right" style="color:#bbb">—</td></tr>
+<tr><td>Walk-In <span class="mock">PENDING</span></td><td class="text-right" style="color:#bbb">—<sup>†</sup></td><td class="text-right" style="color:#bbb">—</td><td class="text-right" style="color:#bbb">—</td></tr>
+<tr><td>Phone <span class="mock">PENDING</span></td><td class="text-right" style="color:#bbb">—<sup>†</sup></td><td class="text-right" style="color:#bbb">—</td><td class="text-right" style="color:#bbb">—</td></tr>
+<tr><td>Email <span class="mock">PENDING</span></td><td class="text-right" style="color:#bbb">—<sup>†</sup></td><td class="text-right" style="color:#bbb">—</td><td class="text-right" style="color:#bbb">—</td></tr>
+<tr><td>Online Leads <span class="mock">PENDING</span></td><td class="text-right" style="color:#bbb">—<sup>†</sup></td><td class="text-right" style="color:#bbb">—</td><td class="text-right" style="color:#bbb">—</td></tr>
+<tr><td><strong>Total New Leads</strong> <span class="mock">PENDING</span></td><td class="text-right" style="color:#bbb"><strong>—</strong><sup>†</sup></td><td class="text-right" style="color:#bbb"><strong>—</strong></td><td class="text-right" style="color:#bbb"><strong>—</strong></td></tr>
+<tr style="border-top:2px solid var(--navy)"><td colspan="4" style="padding-top:10px;font-weight:600;color:var(--navy)">Lease Execution (from Entrata)</td></tr>
+<tr><td>New Lease Apps Started</td><td class="text-right">—<sup>†</sup></td><td class="text-right">4</td><td class="text-right">4<sup>‡</sup></td></tr>
+<tr><td>New Lease Completed</td><td class="text-right">—<sup>†</sup></td><td class="text-right">3</td><td class="text-right">3<sup>‡</sup></td></tr>
+<tr><td>New Lease Approved</td><td class="text-right">—<sup>†</sup></td><td class="text-right">3</td><td class="text-right">3<sup>‡</sup></td></tr>
+<tr><td>New Lease Cancelled</td><td class="text-right">—<sup>†</sup></td><td class="text-right">1</td><td class="text-right">1<sup>‡</sup></td></tr>
+<tr><td>Renewal Apps Started</td><td class="text-right">—<sup>†</sup></td><td class="text-right">4</td><td class="text-right">4<sup>‡</sup></td></tr>
+<tr><td>Renewal Completed</td><td class="text-right">—<sup>†</sup></td><td class="text-right">5</td><td class="text-right">5<sup>‡</sup></td></tr>
+<tr><td>Renewal Approved</td><td class="text-right">—<sup>†</sup></td><td class="text-right">4</td><td class="text-right">4<sup>‡</sup></td></tr>
 </tbody>
 </table>
 <div class="footnote">⚠️ Bartram Park lead source report required. Traffic data will auto-populate once the daily Entrata lead source pull is configured for this property.</div>
@@ -188,11 +197,11 @@ Traffic activity for the day. Bartram Park lead source report not yet available 
 <div class="funnel-stage" style="background:var(--blue);opacity:.85"><span>Prospects / Tours</span><span class="num" style="opacity:.4">—</span></div>
 <div class="funnel-arrow">▼</div>
 <div class="funnel-stage" style="background:var(--amber)"><span>Gross Applications</span><span class="num">3</span></div>
-<div class="funnel-arrow">▼ 33% approval</div>
-<div class="funnel-stage" style="background:var(--green)"><span>Net Leases</span><span class="num">1</span></div>
+<div class="funnel-arrow">▼ 100% approval rate</div>
+<div class="funnel-stage" style="background:var(--green)"><span>Net Leases</span><span class="num">3</span></div>
 <div style="margin-top:10px;font-size:11px;color:var(--gray)">
-Bartram Park — Lease Execution Summary data.<br>
-Gross Apps = 3 completed (WTD). Net Leases = 1 approved (WTD).<br>
+Bartram Park — Lease Execution Summary (WTD 02/13–02/18).<br>
+Gross Apps = 3 completed new lease applications. Net Leases = 3 approved.<br>
 Leads/Tours pending Bartram lead source report.
 </div>
 </div>
@@ -262,24 +271,50 @@ Leads/Tours pending Bartram lead source report.
 <div class="section-header" onclick="toggle(this)">✨ Today's Highlights</div>
 <div class="section-body">
 <div class="highlights-card">
-<div class="hl-section"><div class="hl-label">Leasing</div>WTD: <strong>4 new lease apps started, 3 completed, 1 approved</strong>. Pipeline active but approval pace needs monitoring.</div>
-<div class="hl-section"><div class="hl-label">Renewals</div><strong>4 renewal apps approved</strong> this week, 5 completed. Renewal velocity solid.</div>
-<div class="hl-section"><div class="hl-label">Occupancy</div>Physical occupancy holds at <strong>89.9%</strong> (267/297). 30 vacant (10 rented, 20 unrented). Exposure at 11.4% (34 units). MTD: 3 move-ins, 4 expected move-outs.</div>
-<div class="hl-section"><div class="hl-label">Notice Watch</div><strong>20 units on notice</strong> — 6 rented, 14 unrented. 4 expected move-outs remaining in Feb.</div>
-<div class="hl-section"><div class="hl-label">Notable</div>B6 and A3 remain weakest at 75% occ — <strong>focus outreach on 2BR and 1BR large</strong>. A4, B4, B5, B7, B8, S1, S2 all at 100%.</div>
+<div class="hl-section"><div class="hl-label">Leasing Velocity</div>WTD: <strong>4 new lease apps started, 3 completed, 3 approved</strong> (100% approval rate). 1 cancelled. Pipeline is converting well — 3 approved in one week is solid velocity. At this pace (~12/month), tracking close to the ~13 gross move-ins needed to offset move-outs and close the occupancy gap.</div>
+<div class="hl-section"><div class="hl-label">Renewals</div><strong>4 renewal apps approved, 5 completed</strong> this week. Strong renewal activity. Feb renewal rate at 63% (5/8 expiring). March has 13 leases expiring with only 54% renewed so far — outreach acceleration needed.</div>
+<div class="hl-section"><div class="hl-label">Occupancy Snapshot</div>Physical occupancy at <strong>89.9%</strong> (267/297). 30 vacant: <strong>10 rented</strong> (in leasing pipeline), <strong>20 unrented</strong>. Leased at 93.3% (277/297). Exposure at 11.4% (34 units) — trend declining to 88.6%. Budget target is 93.0% (276 units) — <strong>9 net move-ins needed</strong>.</div>
+<div class="hl-section"><div class="hl-label">Notice Watch</div><strong>17 units on notice</strong> — 3 rented, <strong>14 unrented</strong>. The 14 unrented notices represent significant revenue risk. 4 expected move-outs remaining in Feb. MTD: 3 move-ins vs 4 move-outs = net absorption of -1.</div>
+<div class="hl-section"><div class="hl-label">Floor Plan Watch</div><strong>Weakest:</strong> B6 at 75% (6/8) — worst performer. A3 at 75% (3/4). C1 at 81% (13/16) with 3 vacant at $2,391 market rent = high revenue impact. B2 at 86% (38/44) with 6 vacant = biggest volume opportunity.<br><strong>Strongest:</strong> A4 100% leased (33 units), S1/S2/B4/B5/B7/B8 all at 100%.</div>
+<div class="hl-section"><div class="hl-label">Revenue</div>In-place avg $1,665 vs market $1,695 — <strong>$30/unit gap</strong>. B8 scheduled rent ($1,950) exceeds market ($1,655) — verify data quality on this floor plan. Rent gap across 267 occupied = ~$8,010/mo unrealized revenue.</div>
 </div>
 <div class="ai-card">
 <div class="ai-label">🤖 AI Recommendations</div>
-<div class="ai-rec"><strong>Exposure at 11.4% (34 units)</strong> — Consider targeted concessions on B2 and B6 floor plans where vacancy is concentrated. B6 at 75% occ with only 6/8 occupied is the biggest drag.</div>
-<div class="ai-rec"><strong>20 units on notice, only 6 rented</strong> — 14 notice-unrented units represent urgent leasing priority. Converting even half would reduce exposure to 7.7%.</div>
-<div class="ai-rec"><strong>4 renewals approved + 5 completed this week</strong> — Renewal rate tracking at 63% for Feb (5/8 expiring). Monitor March closely — 13 leases expiring.</div>
-<div class="ai-rec"><strong>Avg scheduled rent $1,665 vs market $1,695</strong> — $30/unit gap across 267 occupied units = ~$8,000/mo potential revenue. Prioritize rent increases on renewal offers.</div>
-<div class="ai-rec"><strong>Net absorption MTD: -1</strong> — 3 move-ins vs 4 expected move-outs. Leasing velocity must stay elevated.</div>
+
+<div class="ai-rec"><strong>🎯 Occupancy Gap Analysis — 9 Net Move-Ins Needed</strong><br>
+Budget occupancy = 93.0% = 276 units. Currently at 267 occupied (<strong>89.9%</strong>). Gap = <strong>9 units</strong>.<br>
+At current pace of 4 move-outs/month and 3 approved new leases/week (~12/month), net gain = ~8 units/month. This means hitting 276 by late March — <strong>tight but achievable</strong> if velocity holds.<br>
+Working backwards: need ~13 gross move-ins to absorb 4 expected move-outs + close the 9-unit gap. 10 vacant-rented units already in pipeline — if all convert, occupancy reaches 93.3%. <strong>Execution on turns is critical.</strong></div>
+
+<div class="ai-rec"><strong>🏠 Floor Plan Priorities — Where to Focus</strong><br>
+• <strong>B6 (75% occ, 6/8)</strong> — Worst performer. 2 vacant units at $1,823 market. Consider $200-300 concession to accelerate lease-up.<br>
+• <strong>A3 (75% occ, 3/4)</strong> — Small unit count magnifies the %. 1 vacant at $1,738 market. Targeted outreach to 1BR-large prospects.<br>
+• <strong>B2 (86% occ, 38/44)</strong> — Biggest volume opportunity with 6 vacant units. $1,816 market rent × 6 = $10,896/mo revenue at risk. Priority for marketing spend.<br>
+• <strong>C1 (81% occ, 13/16)</strong> — 3 vacant 3BR units at $2,391 market = <strong>$7,173/mo</strong> revenue exposure. Highest per-unit impact. Consider broker incentives for 3BR referrals.</div>
+
+<div class="ai-rec"><strong>💰 Rent Gap — $8,010/Month Unrealized Revenue</strong><br>
+In-place avg $1,665 vs market avg $1,695 = <strong>$30/unit gap × 267 occupied = $8,010/month</strong> ($96,120 annualized). Prioritize rent increases on upcoming renewals. March has 13 expirations — each renewal at market closes ~$30/unit of the gap.<br>
+⚠️ <strong>B8 data anomaly:</strong> Scheduled rent ($1,950) exceeds market ($1,655) by $295. Verify if this reflects a premium unit, corporate rate, or data entry error.</div>
+
+<div class="ai-rec"><strong>⚠️ Notice Risk — 14 Unrented Notices Require Urgent Action</strong><br>
+17 total on notice: 3 rented (secured), <strong>14 unrented</strong> (revenue risk). If all 14 vacate without backfill, exposure jumps from 11.4% to 16.1%.<br>
+Converting just 7 of 14 unrented notices to rented would reduce exposure to ~9.1% and bring trend occupancy above 90%. <strong>Prioritize notice-unrented units for immediate marketing push and tour routing.</strong></div>
+
+<div class="ai-rec"><strong>📋 Renewal Risk — March Requires Immediate Outreach</strong><br>
+13 leases expiring in March, only <strong>54% renewed</strong> (7/13). 6 uncommitted residents. At current non-renewal rate, expect 2-3 additional move-outs in March.<br>
+<strong>Action:</strong> Personal outreach to all 6 uncommitted March expirations this week. Offer early renewal incentive ($50-100 off first month) to lock in before notice deadlines.</div>
+
+<div class="ai-rec"><strong>📉 Exposure Trending Wrong — 11.4% and Rising</strong><br>
+34 exposed units (vacant unrented + notice unrented: 20 + 14). Lease trend at 88.6% vs 93.3% leased — the gap signals future occupancy erosion if leasing doesn't outpace notices.<br>
+<strong>Key metric to watch:</strong> Vacant-rented (10) must exceed notice-unrented (14) for trend to improve. Currently underwater by 4 units.</div>
+
 <div class="funnel-math">
-<strong>📊 Funnel Math — Getting Back on Track</strong><br>
-<strong>Target:</strong> 93% budgeted occupancy = 276 occupied units. Currently at 267. <strong>Need 9 net move-ins</strong> to hit target.<br>
-<strong>Working backwards:</strong> 10 vacant-rented units in pipeline — if turns complete on time, occupancy could reach 93.3% by month-end.<br>
-<span style="font-size:11px;color:var(--gray)">Key risk: 17 vacant-unrented-not-ready units need make-ready acceleration. 3 vacant-unrented-ready units are immediately leasable.</span>
+<strong>📊 Funnel Math — Weekly Velocity Check</strong><br>
+<strong>This week (02/13–02/18):</strong> 4 apps started → 3 completed → 3 approved → 1 cancelled = <strong>net 3 new leases</strong><br>
+<strong>Renewals:</strong> 4 started → 5 completed → 4 approved → 0 cancelled = <strong>net 4 renewals</strong><br>
+<strong>Monthly run rate:</strong> 3 new leases/wk × 4.3 wks = ~13/month. Need ~13 gross to hit budget. <strong>On track but zero margin for slowdown.</strong><br>
+<strong>Pipeline health:</strong> 10 vacant-rented units in queue. 20 vacant-unrented need conversion. 14 notice-unrented need backfill.<br>
+<span style="font-size:11px;color:var(--gray)">Budget target: 276 occupied (93%). Current: 267. Deficit: 9 units. With 10 vacant-rented converting, could reach 277 (93.3%) if all execute — but 14 unrented notices threaten to widen the gap.</span>
 </div>
 </div>
 </div>
@@ -289,21 +324,23 @@ Leads/Tours pending Bartram lead source report.
 <div class="section">
 <div class="section-header" onclick="toggle(this)">🏠 Property Pulse</div>
 <div class="section-body">
-<table>
+<table style="table-layout:fixed">
+<colgroup><col style="width:25%"><col style="width:25%"><col style="width:25%"><col style="width:25%"></colgroup>
 <thead><tr><th>Metric</th><th class="text-right">Daily<sup>†</sup></th><th class="text-right">WTD (02/13–02/18)</th><th class="text-right">MTD</th></tr></thead>
 <tbody>
-<tr><td>New Leases</td><td class="text-right">—<sup>†</sup></td><td class="text-right">1</td><td class="text-right">1<sup>‡</sup></td></tr>
+<tr><td>New Leases</td><td class="text-right">—<sup>†</sup></td><td class="text-right">3</td><td class="text-right">3<sup>‡</sup></td></tr>
 <tr><td>Notices Received</td><td class="text-right">—<sup>†</sup></td><td class="text-right">—</td><td class="text-right">17 (3R / 14U)</td></tr>
 <tr><td>Move-In</td><td class="text-right">—<sup>†</sup></td><td class="text-right">—</td><td class="text-right">3</td></tr>
 <tr><td>Move-Out</td><td class="text-right">—<sup>†</sup></td><td class="text-right">—</td><td class="text-right">4 expected</td></tr>
 <tr><td>Renewals</td><td class="text-right">—<sup>†</sup></td><td class="text-right">4</td><td class="text-right">4<sup>‡</sup></td></tr>
+
 <tr class="mock-row"><td>MTM <span class="mock">MOCK</span></td><td class="text-right">—<sup>†</sup></td><td class="text-right">—</td><td class="text-right">0 <span class="mock">MOCK</span></td></tr>
 <tr class="mock-row"><td>Skips/Evictions <span class="mock">MOCK</span></td><td class="text-right">—<sup>†</sup></td><td class="text-right">0 <span class="mock">MOCK</span></td><td class="text-right">0 <span class="mock">MOCK</span></td></tr>
 <tr><td><strong>Net Absorption</strong></td><td class="text-right"><strong>—</strong><sup>†</sup></td><td class="text-right"><strong>—</strong></td><td class="text-right"><strong>-1</strong></td></tr>
 </tbody>
 </table>
-<div class="footnote">† Daily requires prior-day snapshot — available starting 02/20. ‡ MTD = WTD only (lease exec covers 02/13–02/19).<br>
-New Leases = Approved from Lease Exec. Renewals = Approved from Lease Exec. Notices = Notice Rented (3) + Notice Unrented (14) from box score. MTM = month-to-month count (not included in Net Absorption).<br>
+<div class="footnote">† Daily requires prior-day snapshot — available starting 02/20. ‡ MTD = WTD only (lease exec covers 02/13–02/18).<br>
+New Leases = Approved from Lease Exec (3 WTD). Renewals = Approved from Lease Exec (4 WTD). Notices = Notice Rented (3) + Notice Unrented (14) = 17 total from box score.<br>
 Net Absorption = Move-Ins (3) − Move-Outs (4 expected) = -1. MTM excluded.</div>
 </div>
 </div>
