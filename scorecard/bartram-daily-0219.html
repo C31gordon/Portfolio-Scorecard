@@ -136,7 +136,7 @@ tbody tr:hover{background:#EDF2F7}
 <div class="kpi-card"><div class="kpi-left"><div class="kpi-label">Leased %</div><div class="kpi-value">92.9%</div><div class="kpi-sub">279 / 297 units</div></div><svg width="60" height="24" viewBox="0 0 60 24" style="vertical-align:middle;margin-left:8px"><polyline fill="none" stroke="#2E86AB" stroke-width="1.5" stroke-linejoin="round" points="2.0,22.0 11.3,17.5 20.7,11.5 30.0,5.0 39.3,2.0 48.7,3.5 58.0,6.0"/><circle cx="58.0" cy="6.0" r="2" fill="#2E86AB"/></svg></div>
 <div class="kpi-card"><div class="kpi-left"><div class="kpi-label">Lease Trend</div><div class="kpi-value" style="color:var(--amber)">88.2%</div><div class="kpi-sub">35 exposed units (11.8% exposure)</div></div><svg width="60" height="24" viewBox="0 0 60 24" style="vertical-align:middle;margin-left:8px"><polyline fill="none" stroke="#ffc107" stroke-width="1.5" stroke-linejoin="round" points="2.0,2.0 11.3,4.7 20.7,10.2 30.0,16.5 39.3,22.0 48.7,19.6 58.0,10.2"/><circle cx="58.0" cy="10.2" r="2" fill="#ffc107"/></svg></div>
 <div class="kpi-card"><div class="kpi-left"><div class="kpi-label">Avg Market Rent</div><div class="kpi-value">$1,695</div><div class="kpi-sub">All floor plans</div></div><svg width="60" height="24" viewBox="0 0 60 24" style="vertical-align:middle;margin-left:8px"><polyline fill="none" stroke="#2E86AB" stroke-width="1.5" stroke-linejoin="round" points="2.0,22.0 11.3,18.0 20.7,14.0 30.0,10.0 39.3,6.0 48.7,3.6 58.0,2.0"/><circle cx="58.0" cy="2.0" r="2" fill="#2E86AB"/></svg></div>
-<div class="kpi-card"><div class="kpi-left"><div class="kpi-label">Avg Scheduled Rent</div><div class="kpi-value">$1,663</div><div class="kpi-sub">In-place average</div></div><svg width="60" height="24" viewBox="0 0 60 24" style="vertical-align:middle;margin-left:8px"><polyline fill="none" stroke="#2E86AB" stroke-width="1.5" stroke-linejoin="round" points="2.0,22.0 11.3,18.0 20.7,14.0 30.0,10.0 39.3,7.6 48.7,4.4 58.0,2.0"/><circle cx="58.0" cy="2.0" r="2" fill="#2E86AB"/></svg></div>
+<div class="kpi-card"><div class="kpi-left"><div class="kpi-label">Net Effective Rent</div><div class="kpi-value">$1,491</div><div class="kpi-sub">Market $1,695 − concessions</div><div style="font-size:10px;color:var(--amber);margin-top:2px">Concession: $204/unit avg</div></div><svg width="60" height="24" viewBox="0 0 60 24" style="vertical-align:middle;margin-left:8px"><polyline fill="none" stroke="#2E86AB" stroke-width="1.5" stroke-linejoin="round" points="2.0,22.0 11.3,18.0 20.7,14.0 30.0,10.0 39.3,7.6 48.7,4.4 58.0,2.0"/><circle cx="58.0" cy="2.0" r="2" fill="#2E86AB"/></svg></div>
 <div class="kpi-card"><div class="kpi-left"><div class="kpi-label">Comp Average Rent <span class="mock">MOCK</span></div><div class="kpi-value" style="color:var(--amber)">$1,728</div><div class="kpi-sub">Market survey <span class="mock">MOCK</span></div></div><svg width="60" height="24" viewBox="0 0 60 24" style="vertical-align:middle;margin-left:8px"><polyline fill="none" stroke="#ffc107" stroke-width="1.5" stroke-linejoin="round" points="2.0,22.0 11.3,16.4 20.7,10.9 30.0,13.1 39.3,8.7 48.7,5.3 58.0,2.0"/><circle cx="58.0" cy="2.0" r="2" fill="#ffc107"/></svg></div>
 </div>
 
@@ -239,99 +239,6 @@ Leads/Tours pending Bartram lead source report.
 </div>
 </div>
 
-<!-- MANAGER COMMENTS -->
-<div class="section">
-<div class="section-header" onclick="toggle(this)">💬 Manager Comments</div>
-<div class="section-body">
-<div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
-<div>
-<div class="comments-label">🏷️ Leasing Specials</div>
-<div class="comments-area" contenteditable="true" data-placeholder="Enter current concessions, move-in specials, pricing adjustments..."></div>
-</div>
-<div>
-<div class="comments-label">📣 Marketing Outreach</div>
-<div class="comments-area" contenteditable="true" data-placeholder="Recent marketing activities, upcoming events, outreach campaigns..."></div>
-</div>
-</div>
-<div class="form-note">
-<strong>📋 Manager comments integration coming</strong> — Google Form will be linked here for persistent submission.<br>
-<strong>Carry-forward logic:</strong> Within a RISE week (Fri–Thu), the last submission carries forward to each day's report. New week = blank until submitted.
-</div>
-</div>
-</div>
-
-<!-- TODAY'S HIGHLIGHTS + AI RECOMMENDATIONS -->
-<div class="section">
-<div class="section-header" onclick="toggle(this)">✨ Today's Highlights</div>
-<div class="section-body">
-<div class="highlights-card">
-<div class="hl-section"><div class="hl-label">Leasing Velocity</div>WTD lead conversion: <strong>3 new leads</strong> (1 Google Search, 2 Website), <strong>2 applications started</strong>. Lease execution summary for new week (02/20–02/26) not yet populated. Prior WTD: 4 apps started, 3 completed, 3 approved. Pipeline velocity needs to sustain ~3 new leases/week to close occupancy gap.</div>
-<div class="hl-section"><div class="hl-label">Renewals</div>Feb renewal rate steady at <strong>63% (5/8 expiring)</strong>. March improved to <strong>62% (8/13)</strong> — up from 54% two days ago. April now at <strong>38% (6/16)</strong> — active outreach converting. Renewal momentum building across the next 60 days.</div>
-<div class="hl-section"><div class="hl-label">Occupancy Snapshot</div>Physical occupancy <strong>UP to 90.6%</strong> (269/297) — <strong>gained 2 occupied units</strong> vs yesterday (267→269). 28 vacant: <strong>7 rented</strong> (in pipeline), <strong>21 unrented</strong>. Leased at 92.9% (279/297). Exposure at 11.8% (35 units). Budget target 93.0% (276 units) — <strong>7 net move-ins needed</strong>.</div>
-<div class="hl-section"><div class="hl-label">Notice Watch</div><strong>17 units on notice</strong> — 3 rented, <strong>14 unrented</strong>. The 14 unrented notices represent significant revenue risk. MTD: 5 move-ins vs 4 move-outs = <strong>net absorption +1</strong>. Positive trend — first positive net absorption this month.</div>
-<div class="hl-section"><div class="hl-label">Floor Plan Watch</div><strong>Weakest:</strong> B6 at 75% (6/8) — worst performer. A3 at 75% (3/4). C1 at 81% (13/16) with 3 vacant at $2,391 market rent = high revenue impact. B2 at 86% (38/44) with 6 vacant = biggest volume opportunity.<br><strong>Strongest:</strong> A4 now <strong>100% occupied</strong> (33/33 — gained 1 unit). S1/S2/B4/B5/B7/B8 all at 100%.</div>
-<div class="hl-section"><div class="hl-label">Revenue</div>In-place avg $1,663 vs market $1,695 — <strong>$33/unit gap</strong>. B8 scheduled rent ($1,950) exceeds market ($1,655) — verify data quality. Rent gap across 269 occupied = ~$8,758/mo unrealized revenue.</div>
-</div></div>
-<div class="ai-card">
-<div class="ai-label">🤖 AI Recommendations</div>
-
-<div class="ai-rec"><strong>🎯 Occupancy Gap Analysis — 7 Net Move-Ins to Budget</strong><br>
-Budget occupancy = 93.0% = 276 units. Currently at 269 occupied (<strong>90.6%</strong>). Gap = <strong>7 units</strong> — narrowed from 9 yesterday.<br>
-With 5 MTD move-ins vs 4 move-outs, net absorption turned positive (+1). 7 vacant-rented units in pipeline — if all convert, occupancy reaches 92.9% (276/297).<br>
-At current pace of ~3 new leases/week (~13/month) and 4-5 move-outs/month, net gain = ~8-9 units/month. <strong>Hitting 276 by late March is achievable</strong> — but pipeline must convert on time. Execution on unit turns is critical.</div>
-
-<div class="ai-rec"><strong>🏠 Floor Plan Priorities — Revenue-Weighted Focus</strong><br>
-Ranking by revenue at risk (vacant units × market rent):<br>
-• <strong>B2 (86% occ, 38/44)</strong> — 6 vacant × $1,816 = <strong>$10,896/mo at risk</strong>. Biggest volume opportunity. Priority for ILS spend and tour routing.<br>
-• <strong>C1 (81% occ, 13/16)</strong> — 3 vacant × $2,391 = <strong>$7,173/mo at risk</strong>. Highest per-unit impact. Consider broker incentives ($500-750) for 3BR referrals — ROI positive within 1 month.<br>
-• <strong>B6 (75% occ, 6/8)</strong> — 2 vacant × $1,823 = <strong>$3,646/mo at risk</strong>. Worst occupancy rate. Consider $200-300 concession to accelerate. Sched rent ($1,734) already $89 below market — pricing isn't the barrier, traffic is.<br>
-• <strong>A1 (88% occ, 73/83)</strong> — 10 vacant × $1,516 = <strong>$15,160/mo at risk</strong>. Largest absolute vacancy but highest unit count (83). Net effective $1,355 suggests concessions already deployed. Focus on conversion rate, not more concessions.<br>
-• <strong>A3 (75% occ, 3/4)</strong> — 1 vacant × $1,738. Small count magnifies %. Targeted outreach to 1BR-large/upgrade prospects.</div>
-
-<div class="ai-rec"><strong>💰 Rent Gap Analysis — $8,758/Month Unrealized Revenue</strong><br>
-In-place avg $1,663 vs market avg $1,695 = <strong>$33/unit gap × 269 occupied = $8,758/month</strong> ($105,103 annualized).<br>
-By bedroom type:<br>
-• <strong>Studios:</strong> Budget $1,398 vs in-place $1,338 → $60 gap (small unit count, low impact)<br>
-• <strong>1 BR (A1-A5):</strong> Budget $1,555 vs in-place ~$1,486 → <strong>$69 gap</strong> — biggest opportunity given 131 occupied 1BR units = ~$9,039/mo<br>
-• <strong>2 BR (B1-B8):</strong> Budget $1,846 vs in-place ~$1,806 → $40 gap across 109 occupied = ~$4,360/mo<br>
-• <strong>3 BR (C1):</strong> Budget $2,391 vs in-place $2,297 → $94 gap × 13 = $1,222/mo<br>
-Prioritize 1BR renewals for rent increases — largest gap × highest occupied count. Each 1BR renewal at market closes ~$69/unit of the gap.<br>
-⚠️ <strong>B8 anomaly persists:</strong> Scheduled rent ($1,950) exceeds market ($1,655) by $295. Likely corporate/Barsala rate or data entry error. Verify.</div>
-
-<div class="ai-rec"><strong>⚠️ Notice Risk — 14 Unrented Notices = Revenue Exposure</strong><br>
-17 total on notice: 3 rented (secured), <strong>14 unrented</strong> (revenue risk). If all 14 vacate without backfill, exposure jumps from 11.8% to ~16.5%.<br>
-Current pipeline: 7 vacant-rented units being turned. Net pipeline deficit = 14 notice-unrented − 7 vacant-rented = <strong>7 units underwater</strong>.<br>
-<strong>Action:</strong> Route all tours to notice-unrented units first. Pre-market units 30 days before notice move-out date. Converting just 4 of 14 unrented notices to rented would bring pipeline to neutral.</div>
-
-<div class="ai-rec"><strong>📋 Renewal Risk — March & April Need Immediate Attention</strong><br>
-<strong>March:</strong> 13 leases expiring, <strong>8 renewed (62%)</strong> — improved from 54% two days ago. 5 on notice. Target: get 2 more renewals to reach 77% and limit move-outs to 3.<br>
-<strong>April:</strong> 16 leases expiring, <strong>6 renewed (38%)</strong> — up from 19%. Still critical — 10 uncommitted residents. At historical ~35% non-renewal rate, expect 5-6 move-outs in April.<br>
-<strong>May:</strong> 16 expiring, only 1 renewed (6%). Early but monitor — renewal offers should go out 90 days prior (now).<br>
-<strong>Action:</strong> Personal outreach to all uncommitted March (5) and April (10) expirations this week. Offer early renewal incentive ($50-100 off first month) to lock in before notice deadlines. Each non-renewal costs ~$3,500 in turn + vacancy loss.</div>
-
-<div class="ai-rec"><strong>📈 Positive Momentum — Build on Today's Gains</strong><br>
-Occupancy moved from 89.9% → <strong>90.6%</strong> (269 occupied, +2 units). Net absorption turned positive (+1 MTD) for first time this month. A4 hit 100% occupied.<br>
-<strong>Leasing math to hit budget by March 31:</strong><br>
-• Current: 269 occupied. Target: 276. Gap: 7 units.<br>
-• 7 vacant-rented converting → gets to 276 (92.9%). Still need 0 more net leases.<br>
-• Feb remaining move-outs: ~1-2 units. March projected: 5-7 move-outs (5 notices + misc).<br>
-• Need <strong>6 gross new leases</strong> in next 5-6 weeks to hit 276 by end of March.<br>
-• At 3/week pace = ~18 leases possible. Needed: ~6. <strong>Achievable with current velocity.</strong></div>
-
-<div class="funnel-math">
-<strong>📊 Funnel Math — Weekly Velocity Check</strong><br>
-<strong>Lead Conversion (WTD 02/13–02/19):</strong> 3 new leads → 2 apps started → applications in process<br>
-<strong>Lead Sources:</strong> Google Search (1), Website (2) — both converting to apps. Online/organic channels driving pipeline.<br>
-<strong>Prior Week Lease Exec:</strong> 4 apps started → 3 completed → 3 approved → 1 cancelled = net 3 new leases<br>
-<strong>Renewals (prior WTD):</strong> 4 started → 5 completed → 4 approved = net 4 renewals<br>
-<strong>Monthly run rate:</strong> 3 new leases/wk × 4.3 wks = ~13/month. Need ~13 gross to hit budget. <strong>On pace but zero margin for slowdown.</strong><br>
-<strong>Pipeline health:</strong> 7 vacant-rented in queue. 21 vacant-unrented need conversion. 14 notice-unrented need backfill.<br>
-<span style="font-size:11px;color:var(--gray)">Budget target: 276 occupied (93%). Current: 269. Deficit: 7 units. With 7 vacant-rented converting, could reach 276 (92.9%) — then need 0 more net leases.</span>
-</div>
-</div></div>
-</div>
-</div>
-
 <!-- PROPERTY PULSE — Simplified -->
 <div class="section">
 <div class="section-header" onclick="toggle(this)">🏠 Property Pulse</div>
@@ -354,36 +261,6 @@ Occupancy moved from 89.9% → <strong>90.6%</strong> (269 occupied, +2 units). 
 <div class="footnote">† Daily requires prior-day snapshot — available starting 02/20. ‡ MTD = WTD only (lease exec covers 02/13–02/19).<br>
 New Leases = Approved from Lease Exec (3 WTD). Renewals = Approved from Lease Exec (4 WTD). Notices = Notice Rented (3) + Notice Unrented (14) = 17 total from box score.<br>
 Net Absorption = Move-Ins (5) − Move-Outs (4 expected) = +1. MTM excluded.</div>
-</div>
-</div>
-
-<!-- UNIT MIX & RENTS -->
-<div class="section">
-<div class="section-header" onclick="toggle(this)">🏢 Unit Mix &amp; Rents</div>
-<div class="section-body">
-<div class="toggle-row"><label><input type="checkbox" id="corpToggle" onchange="toggleCorp()"> Exclude Corporate Units (Barsala)</label></div>
-<table id="unitMixTable">
-<thead><tr><th>Type</th><th>Plan</th><th class="text-right">SQFT</th><th class="text-right">Units</th><th class="text-right">Mkt Rent</th><th class="text-right">Sched Rent</th><th class="text-right">Net Eff</th><th class="text-right">Occ</th><th class="text-right">Vac</th><th class="text-right">Occ%</th><th class="text-right">Leased%</th><th>Leased</th></tr></thead>
-<tbody>
-<tr><td>1 BR</td><td>A1</td><td class="text-right">777</td><td class="text-right">83</td><td class="text-right">$1,516</td><td class="text-right">$1,494</td><td class="text-right">$1,357</td><td class="text-right">73</td><td class="text-right">10</td><td class="text-right">88%</td><td class="text-right">90%</td><td><span class="leased-bar" style="width:72.0px;background:var(--amber)"></span></td></tr>
-<tr><td>1 BR</td><td>A2</td><td class="text-right">776</td><td class="text-right">19</td><td class="text-right">$1,506</td><td class="text-right">$1,446</td><td class="text-right">$1,308</td><td class="text-right">17</td><td class="text-right">2</td><td class="text-right">89%</td><td class="text-right">95%</td><td><span class="leased-bar" style="width:76.0px;background:var(--green)"></span></td></tr>
-<tr><td>1 BR</td><td>A3</td><td class="text-right">900</td><td class="text-right">4</td><td class="text-right">$1,738</td><td class="text-right">$1,727</td><td class="text-right">$1,726</td><td class="text-right">3</td><td class="text-right">1</td><td class="text-right">75%</td><td class="text-right">75%</td><td><span class="leased-bar" style="width:60.0px;background:var(--red)"></span></td></tr>
-<tr><td>1 BR</td><td>A4</td><td class="text-right">731</td><td class="text-right">33</td><td class="text-right">$1,442</td><td class="text-right">$1,417</td><td class="text-right">$1,284</td><td class="text-right">33</td><td class="text-right">0</td><td class="text-right">100%</td><td class="text-right">100%</td><td><span class="leased-bar" style="width:80.0px;background:var(--green)"></span></td></tr>
-<tr><td>1 BR</td><td>A5</td><td class="text-right">815</td><td class="text-right">8</td><td class="text-right">$1,574</td><td class="text-right">$1,544</td><td class="text-right">$1,312</td><td class="text-right">7</td><td class="text-right">1</td><td class="text-right">88%</td><td class="text-right">88%</td><td><span class="leased-bar" style="width:70.4px;background:var(--amber)"></span></td></tr>
-<tr><td>2 BR</td><td>B1</td><td class="text-right">1,047</td><td class="text-right">27</td><td class="text-right">$1,789</td><td class="text-right">$1,746</td><td class="text-right">$1,535</td><td class="text-right">25</td><td class="text-right">2</td><td class="text-right">93%</td><td class="text-right">96%</td><td><span class="leased-bar" style="width:76.8px;background:var(--green)"></span></td></tr>
-<tr><td>2 BR</td><td>B2</td><td class="text-right">1,098</td><td class="text-right">44</td><td class="text-right">$1,816</td><td class="text-right">$1,796</td><td class="text-right">$1,633</td><td class="text-right">38</td><td class="text-right">6</td><td class="text-right">86%</td><td class="text-right">93%</td><td><span class="leased-bar" style="width:74.4px;background:var(--amber)"></span></td></tr>
-<tr><td>2 BR</td><td>B3</td><td class="text-right">1,195</td><td class="text-right">28</td><td class="text-right">$2,006</td><td class="text-right">$1,953</td><td class="text-right">$1,743</td><td class="text-right">27</td><td class="text-right">1</td><td class="text-right">96%</td><td class="text-right">96%</td><td><span class="leased-bar" style="width:76.8px;background:var(--green)"></span></td></tr>
-<tr><td>2 BR</td><td>B4</td><td class="text-right">1,226</td><td class="text-right">3</td><td class="text-right">$1,870</td><td class="text-right">$1,845</td><td class="text-right">$1,669</td><td class="text-right">3</td><td class="text-right">0</td><td class="text-right">100%</td><td class="text-right">100%</td><td><span class="leased-bar" style="width:80.0px;background:var(--green)"></span></td></tr>
-<tr><td>2 BR</td><td>B5</td><td class="text-right">1,113</td><td class="text-right">9</td><td class="text-right">$1,777</td><td class="text-right">$1,759</td><td class="text-right">$1,526</td><td class="text-right">9</td><td class="text-right">0</td><td class="text-right">100%</td><td class="text-right">100%</td><td><span class="leased-bar" style="width:80.0px;background:var(--green)"></span></td></tr>
-<tr><td>2 BR</td><td>B6</td><td class="text-right">1,189</td><td class="text-right">8</td><td class="text-right">$1,823</td><td class="text-right">$1,734</td><td class="text-right">$1,444</td><td class="text-right">6</td><td class="text-right">2</td><td class="text-right">75%</td><td class="text-right">75%</td><td><span class="leased-bar" style="width:60.0px;background:var(--red)"></span></td></tr>
-<tr><td>2 BR</td><td>B7</td><td class="text-right">1,120</td><td class="text-right">2</td><td class="text-right">$1,891</td><td class="text-right">$1,834</td><td class="text-right">$1,573</td><td class="text-right">2</td><td class="text-right">0</td><td class="text-right">100%</td><td class="text-right">100%</td><td><span class="leased-bar" style="width:80.0px;background:var(--green)"></span></td></tr>
-<tr><td>2 BR</td><td>B8</td><td class="text-right">1,195</td><td class="text-right">6</td><td class="text-right">$1,655</td><td class="text-right">$1,950</td><td class="text-right">$1,806</td><td class="text-right">6</td><td class="text-right">0</td><td class="text-right">100%</td><td class="text-right">100%</td><td><span class="leased-bar" style="width:80.0px;background:var(--green)"></span></td></tr>
-<tr><td>3 BR</td><td>C1</td><td class="text-right">1,459</td><td class="text-right">16</td><td class="text-right">$2,391</td><td class="text-right">$2,297</td><td class="text-right">$2,013</td><td class="text-right">13</td><td class="text-right">3</td><td class="text-right">81%</td><td class="text-right">88%</td><td><span class="leased-bar" style="width:70.4px;background:var(--amber)"></span></td></tr>
-<tr><td>Studio</td><td>S1</td><td class="text-right">608</td><td class="text-right">3</td><td class="text-right">$1,399</td><td class="text-right">$1,377</td><td class="text-right">$1,259</td><td class="text-right">3</td><td class="text-right">0</td><td class="text-right">100%</td><td class="text-right">100%</td><td><span class="leased-bar" style="width:80.0px;background:var(--green)"></span></td></tr>
-<tr><td>Studio</td><td>S2</td><td class="text-right">608</td><td class="text-right">4</td><td class="text-right">$1,307</td><td class="text-right">$1,298</td><td class="text-right">$1,137</td><td class="text-right">4</td><td class="text-right">0</td><td class="text-right">100%</td><td class="text-right">100%</td><td><span class="leased-bar" style="width:80.0px;background:var(--green)"></span></td></tr>
-<tr class="totals" id="totalsRow"><td colspan="2"><strong>TOTALS</strong></td><td></td><td class="text-right"><strong>297</strong></td><td class="text-right"><strong>$1,695</strong></td><td class="text-right"><strong>$1,663</strong></td><td></td><td class="text-right"><strong>269</strong></td><td class="text-right"><strong>28</strong></td><td class="text-right"><strong>90.6%</strong></td><td class="text-right"><strong>92.9%</strong></td><td></td></tr>
-</tbody>
-</table>
 </div>
 </div>
 
@@ -563,6 +440,101 @@ Net Absorption = Move-Ins (5) − Move-Outs (4 expected) = +1. MTM excluded.</di
 </div>
 </div>
 
+<!-- AI INSIGHTS (merged from Today's Highlights + AI Recommendations) -->
+<div class="section">
+<div class="section-header" onclick="toggle(this)">🤖 AI Insights</div>
+<div class="section-body">
+<div class="ai-card" style="margin-top:0">
+<div class="ai-label">🤖 AI Insights</div>
+
+<div class="ai-rec"><strong>🎯 Occupancy Gap Analysis — 7 Net Move-Ins to Budget</strong><br>
+Physical occupancy <strong>UP to 90.6%</strong> (269/297) — <strong>gained 2 occupied units</strong> vs yesterday (267→269). 28 vacant: <strong>7 rented</strong> (in pipeline), <strong>21 unrented</strong>. Leased at 92.9% (279/297). Exposure at 11.8% (35 units). Budget target 93.0% (276 units) — <strong>7 net move-ins needed</strong>.<br>
+Budget occupancy = 93.0% = 276 units. Currently at 269 occupied (<strong>90.6%</strong>). Gap = <strong>7 units</strong> — narrowed from 9 yesterday.<br>
+With 5 MTD move-ins vs 4 move-outs, net absorption turned positive (+1). 7 vacant-rented units in pipeline — if all convert, occupancy reaches 92.9% (276/297).<br>
+At current pace of ~3 new leases/week (~13/month) and 4-5 move-outs/month, net gain = ~8-9 units/month. <strong>Hitting 276 by late March is achievable</strong> — but pipeline must convert on time. Execution on unit turns is critical.</div>
+
+<div class="ai-rec"><strong>🏠 Floor Plan Priorities — Revenue-Weighted Focus</strong><br>
+Ranking by revenue at risk (vacant units × market rent):<br>
+• <strong>B2 (86% occ, 38/44)</strong> — 6 vacant × $1,816 = <strong>$10,896/mo at risk</strong>. Biggest volume opportunity. Priority for ILS spend and tour routing.<br>
+• <strong>C1 (81% occ, 13/16)</strong> — 3 vacant × $2,391 = <strong>$7,173/mo at risk</strong>. Highest per-unit impact. Consider broker incentives ($500-750) for 3BR referrals — ROI positive within 1 month.<br>
+• <strong>B6 (75% occ, 6/8)</strong> — 2 vacant × $1,823 = <strong>$3,646/mo at risk</strong>. Worst occupancy rate. Consider $200-300 concession to accelerate. Sched rent ($1,734) already $89 below market — pricing isn't the barrier, traffic is.<br>
+• <strong>A1 (88% occ, 73/83)</strong> — 10 vacant × $1,516 = <strong>$15,160/mo at risk</strong>. Largest absolute vacancy but highest unit count (83). Net effective $1,355 suggests concessions already deployed. Focus on conversion rate, not more concessions.<br>
+• <strong>A3 (75% occ, 3/4)</strong> — 1 vacant × $1,738. Small count magnifies %. Targeted outreach to 1BR-large/upgrade prospects.</div>
+
+<div class="ai-rec"><strong>💰 Rent Gap Analysis — $8,758/Month Unrealized Revenue</strong><br>
+In-place avg $1,663 vs market avg $1,695 = <strong>$33/unit gap × 269 occupied = $8,758/month</strong> ($105,103 annualized).<br>
+By bedroom type:<br>
+• <strong>Studios:</strong> Budget $1,398 vs in-place $1,338 → $60 gap (small unit count, low impact)<br>
+• <strong>1 BR (A1-A5):</strong> Budget $1,555 vs in-place ~$1,486 → <strong>$69 gap</strong> — biggest opportunity given 131 occupied 1BR units = ~$9,039/mo<br>
+• <strong>2 BR (B1-B8):</strong> Budget $1,846 vs in-place ~$1,806 → $40 gap across 109 occupied = ~$4,360/mo<br>
+• <strong>3 BR (C1):</strong> Budget $2,391 vs in-place $2,297 → $94 gap × 13 = $1,222/mo<br>
+Prioritize 1BR renewals for rent increases — largest gap × highest occupied count. Each 1BR renewal at market closes ~$69/unit of the gap.<br>
+⚠️ <strong>B8 anomaly persists:</strong> Scheduled rent ($1,950) exceeds market ($1,655) by $295. Likely corporate/Barsala rate or data entry error. Verify.</div>
+
+<div class="ai-rec"><strong>⚠️ Notice Risk — 14 Unrented Notices = Revenue Exposure</strong><br>
+17 total on notice: 3 rented (secured), <strong>14 unrented</strong> (revenue risk). If all 14 vacate without backfill, exposure jumps from 11.8% to ~16.5%.<br>
+Current pipeline: 7 vacant-rented units being turned. Net pipeline deficit = 14 notice-unrented − 7 vacant-rented = <strong>7 units underwater</strong>.<br>
+<strong>Action:</strong> Route all tours to notice-unrented units first. Pre-market units 30 days before notice move-out date. Converting just 4 of 14 unrented notices to rented would bring pipeline to neutral.</div>
+
+<div class="ai-rec"><strong>📋 Renewal Risk — March & April Need Immediate Attention</strong> <span style="font-size:10px;color:var(--gray)">(60% minimum benchmark)</span><br>
+<strong>March:</strong> 13 leases expiring, <strong>8 renewed (62%)</strong> — improved from 54% two days ago. Above 60% benchmark ✓. 5 on notice. Target: get 2 more renewals to reach 77% and limit move-outs to 3.<br>
+<strong>April:</strong> 16 leases expiring, <strong>6 renewed (38%)</strong> — up from 19%. Still critical — 10 uncommitted residents. At historical ~35% non-renewal rate, expect 5-6 move-outs in April.<br>
+<strong>May:</strong> 16 expiring, only 1 renewed (6%). Early but monitor — renewal offers should go out 90 days prior (now).<br>
+<strong>Action:</strong> Personal outreach to all uncommitted March (5) and April (10) expirations this week. Offer early renewal incentive ($50-100 off first month) to lock in before notice deadlines. Each non-renewal costs ~$3,500 in turn + vacancy loss.</div>
+
+<div class="ai-rec"><strong>📈 Positive Momentum — Build on Today's Gains</strong><br>
+Occupancy moved from 89.9% → <strong>90.6%</strong> (269 occupied, +2 units). Net absorption turned positive (+1 MTD) for first time this month. A4 hit 100% occupied.<br>
+<strong>Leasing math to hit budget by March 31:</strong><br>
+• Current: 269 occupied. Target: 276. Gap: 7 units.<br>
+• 7 vacant-rented converting → gets to 276 (92.9%). Still need 0 more net leases.<br>
+• Feb remaining move-outs: ~1-2 units. March projected: 5-7 move-outs (5 notices + misc).<br>
+• Need <strong>6 gross new leases</strong> in next 5-6 weeks to hit 276 by end of March.<br>
+• At 3/week pace = ~18 leases possible. Needed: ~6. <strong>Achievable with current velocity.</strong></div>
+
+<div class="funnel-math">
+<strong>📊 Funnel Math — Weekly Velocity Check</strong><br>
+<strong>Lead Conversion (WTD 02/13–02/19):</strong> 3 new leads → 2 apps started → applications in process<br>
+<strong>Lead Sources:</strong> Google Search (1), Website (2) — both converting to apps. Online/organic channels driving pipeline.<br>
+<strong>Prior Week Lease Exec:</strong> 4 apps started → 3 completed → 3 approved → 1 cancelled = net 3 new leases<br>
+<strong>Renewals (prior WTD):</strong> 4 started → 5 completed → 4 approved = net 4 renewals<br>
+<strong>Monthly run rate:</strong> 3 new leases/wk × 4.3 wks = ~13/month. Need ~13 gross to hit budget. <strong>On pace but zero margin for slowdown.</strong><br>
+<strong>Pipeline health:</strong> 7 vacant-rented in queue. 21 vacant-unrented need conversion. 14 notice-unrented need backfill.<br>
+<span style="font-size:11px;color:var(--gray)">Budget target: 276 occupied (93%). Current: 269. Deficit: 7 units. With 7 vacant-rented converting, could reach 276 (92.9%) — then need 0 more net leases.</span>
+</div>
+</div></div>
+</div>
+</div>
+
+<!-- UNIT MIX & RENTS -->
+<div class="section">
+<div class="section-header" onclick="toggle(this)">🏢 Unit Mix &amp; Rents</div>
+<div class="section-body">
+<div class="toggle-row"><label><input type="checkbox" id="corpToggle" onchange="toggleCorp()"> Exclude Corporate Units (Barsala)</label></div>
+<table id="unitMixTable">
+<thead><tr><th>Type</th><th>Plan</th><th class="text-right">SQFT</th><th class="text-right">Units</th><th class="text-right">Mkt Rent</th><th class="text-right">Sched Rent</th><th class="text-right">Net Eff</th><th class="text-right">Occ</th><th class="text-right">Vac</th><th class="text-right">Occ%</th><th class="text-right">Leased%</th><th>Leased</th></tr></thead>
+<tbody>
+<tr><td>1 BR</td><td>A1</td><td class="text-right">777</td><td class="text-right">83</td><td class="text-right">$1,516</td><td class="text-right">$1,494</td><td class="text-right">$1,357</td><td class="text-right">73</td><td class="text-right">10</td><td class="text-right">88%</td><td class="text-right">90%</td><td><span class="leased-bar" style="width:72.0px;background:var(--amber)"></span></td></tr>
+<tr><td>1 BR</td><td>A2</td><td class="text-right">776</td><td class="text-right">19</td><td class="text-right">$1,506</td><td class="text-right">$1,446</td><td class="text-right">$1,308</td><td class="text-right">17</td><td class="text-right">2</td><td class="text-right">89%</td><td class="text-right">95%</td><td><span class="leased-bar" style="width:76.0px;background:var(--green)"></span></td></tr>
+<tr><td>1 BR</td><td>A3</td><td class="text-right">900</td><td class="text-right">4</td><td class="text-right">$1,738</td><td class="text-right">$1,727</td><td class="text-right">$1,726</td><td class="text-right">3</td><td class="text-right">1</td><td class="text-right">75%</td><td class="text-right">75%</td><td><span class="leased-bar" style="width:60.0px;background:var(--red)"></span></td></tr>
+<tr><td>1 BR</td><td>A4</td><td class="text-right">731</td><td class="text-right">33</td><td class="text-right">$1,442</td><td class="text-right">$1,417</td><td class="text-right">$1,284</td><td class="text-right">33</td><td class="text-right">0</td><td class="text-right">100%</td><td class="text-right">100%</td><td><span class="leased-bar" style="width:80.0px;background:var(--green)"></span></td></tr>
+<tr><td>1 BR</td><td>A5</td><td class="text-right">815</td><td class="text-right">8</td><td class="text-right">$1,574</td><td class="text-right">$1,544</td><td class="text-right">$1,312</td><td class="text-right">7</td><td class="text-right">1</td><td class="text-right">88%</td><td class="text-right">88%</td><td><span class="leased-bar" style="width:70.4px;background:var(--amber)"></span></td></tr>
+<tr><td>2 BR</td><td>B1</td><td class="text-right">1,047</td><td class="text-right">27</td><td class="text-right">$1,789</td><td class="text-right">$1,746</td><td class="text-right">$1,535</td><td class="text-right">25</td><td class="text-right">2</td><td class="text-right">93%</td><td class="text-right">96%</td><td><span class="leased-bar" style="width:76.8px;background:var(--green)"></span></td></tr>
+<tr><td>2 BR</td><td>B2</td><td class="text-right">1,098</td><td class="text-right">44</td><td class="text-right">$1,816</td><td class="text-right">$1,796</td><td class="text-right">$1,633</td><td class="text-right">38</td><td class="text-right">6</td><td class="text-right">86%</td><td class="text-right">93%</td><td><span class="leased-bar" style="width:74.4px;background:var(--amber)"></span></td></tr>
+<tr><td>2 BR</td><td>B3</td><td class="text-right">1,195</td><td class="text-right">28</td><td class="text-right">$2,006</td><td class="text-right">$1,953</td><td class="text-right">$1,743</td><td class="text-right">27</td><td class="text-right">1</td><td class="text-right">96%</td><td class="text-right">96%</td><td><span class="leased-bar" style="width:76.8px;background:var(--green)"></span></td></tr>
+<tr><td>2 BR</td><td>B4</td><td class="text-right">1,226</td><td class="text-right">3</td><td class="text-right">$1,870</td><td class="text-right">$1,845</td><td class="text-right">$1,669</td><td class="text-right">3</td><td class="text-right">0</td><td class="text-right">100%</td><td class="text-right">100%</td><td><span class="leased-bar" style="width:80.0px;background:var(--green)"></span></td></tr>
+<tr><td>2 BR</td><td>B5</td><td class="text-right">1,113</td><td class="text-right">9</td><td class="text-right">$1,777</td><td class="text-right">$1,759</td><td class="text-right">$1,526</td><td class="text-right">9</td><td class="text-right">0</td><td class="text-right">100%</td><td class="text-right">100%</td><td><span class="leased-bar" style="width:80.0px;background:var(--green)"></span></td></tr>
+<tr><td>2 BR</td><td>B6</td><td class="text-right">1,189</td><td class="text-right">8</td><td class="text-right">$1,823</td><td class="text-right">$1,734</td><td class="text-right">$1,444</td><td class="text-right">6</td><td class="text-right">2</td><td class="text-right">75%</td><td class="text-right">75%</td><td><span class="leased-bar" style="width:60.0px;background:var(--red)"></span></td></tr>
+<tr><td>2 BR</td><td>B7</td><td class="text-right">1,120</td><td class="text-right">2</td><td class="text-right">$1,891</td><td class="text-right">$1,834</td><td class="text-right">$1,573</td><td class="text-right">2</td><td class="text-right">0</td><td class="text-right">100%</td><td class="text-right">100%</td><td><span class="leased-bar" style="width:80.0px;background:var(--green)"></span></td></tr>
+<tr><td>2 BR</td><td>B8</td><td class="text-right">1,195</td><td class="text-right">6</td><td class="text-right">$1,655</td><td class="text-right">$1,950</td><td class="text-right">$1,806</td><td class="text-right">6</td><td class="text-right">0</td><td class="text-right">100%</td><td class="text-right">100%</td><td><span class="leased-bar" style="width:80.0px;background:var(--green)"></span></td></tr>
+<tr><td>3 BR</td><td>C1</td><td class="text-right">1,459</td><td class="text-right">16</td><td class="text-right">$2,391</td><td class="text-right">$2,297</td><td class="text-right">$2,013</td><td class="text-right">13</td><td class="text-right">3</td><td class="text-right">81%</td><td class="text-right">88%</td><td><span class="leased-bar" style="width:70.4px;background:var(--amber)"></span></td></tr>
+<tr><td>Studio</td><td>S1</td><td class="text-right">608</td><td class="text-right">3</td><td class="text-right">$1,399</td><td class="text-right">$1,377</td><td class="text-right">$1,259</td><td class="text-right">3</td><td class="text-right">0</td><td class="text-right">100%</td><td class="text-right">100%</td><td><span class="leased-bar" style="width:80.0px;background:var(--green)"></span></td></tr>
+<tr><td>Studio</td><td>S2</td><td class="text-right">608</td><td class="text-right">4</td><td class="text-right">$1,307</td><td class="text-right">$1,298</td><td class="text-right">$1,137</td><td class="text-right">4</td><td class="text-right">0</td><td class="text-right">100%</td><td class="text-right">100%</td><td><span class="leased-bar" style="width:80.0px;background:var(--green)"></span></td></tr>
+<tr class="totals" id="totalsRow"><td colspan="2"><strong>TOTALS</strong></td><td></td><td class="text-right"><strong>297</strong></td><td class="text-right"><strong>$1,695</strong></td><td class="text-right"><strong>$1,663</strong></td><td></td><td class="text-right"><strong>269</strong></td><td class="text-right"><strong>28</strong></td><td class="text-right"><strong>90.6%</strong></td><td class="text-right"><strong>92.9%</strong></td><td></td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
 <!-- FORMULA LEGEND -->
 <div class="section collapsed">
 <div class="section-header" onclick="toggle(this)">📐 Formula Legend</div>
@@ -624,4 +596,3 @@ function toggleCorp() {
 }
 </script>
 </body>
-</html>
