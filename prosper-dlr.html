@@ -127,7 +127,7 @@ tbody tr:hover{background:#EDF2F7}
 <!-- KPI CARDS -->
 <div class="kpi-grid">
 <div class="kpi-card"><div class="kpi-left"><div class="kpi-label">Physical Occupancy (25-26)</div><div class="kpi-value" style="color:var(--green)">100%</div><div class="kpi-sub">314 / 314 beds occupied</div></div></div>
-<div class="kpi-card"><div class="kpi-left"><div class="kpi-label">Leased % (Current Term)</div><div class="kpi-value" style="color:var(--green)">100%</div><div class="kpi-sub">All 314 beds leased thru Jul 2026</div></div></div>
+<div class="kpi-card"><div class="kpi-left"><div class="kpi-label">Renewal %</div><div class="kpi-value" style="color:var(--green)">59.74%</div><div class="kpi-sub">184 of 308 Jul-26 expirations renewed</div></div></div>
 <div class="kpi-card"><div class="kpi-left"><div class="kpi-label">Fall 2026-27 Pre-Lease Rate</div><div class="kpi-value" style="color:var(--amber)">62.10%</div><div class="kpi-sub">195 of 314 beds pre-leased</div></div></div>
 <div class="kpi-card"><div class="kpi-left"><div class="kpi-label">Avg Budget Rent (26-27)</div><div class="kpi-value">$1,457</div><div class="kpi-sub">Per bed (weighted avg all types)</div></div></div>
 <div class="kpi-card"><div class="kpi-left"><div class="kpi-label">Beds Still Needed</div><div class="kpi-value" style="color:var(--red)">119</div><div class="kpi-sub">314 − 195 = 119 to fill for Fall</div></div></div>
@@ -209,7 +209,7 @@ Source: Dominic's DLR email — Weekend 2/20-22/2026. Daily = 02/22, WTD = 02/20
 
 <!-- Lead Source Breakdown -->
 <div class="mini-card">
-<h3>Lead Source Breakdown (02/22)</h3>
+<h3>Lead Source Breakdown (WTD) <span style="font-size:10px;color:var(--gray);font-weight:400">MTD pipeline pending</span></h3>
 <div class="donut-wrap">
 <svg width="140" height="140" viewBox="0 0 140 140">
 <circle cx="70" cy="70" r="50" fill="none" stroke="#EDF2F7" stroke-width="18"/>
@@ -229,7 +229,7 @@ Source: Dominic's DLR email — Weekend 2/20-22/2026. Daily = 02/22, WTD = 02/20
 
 <!-- Conversion Funnel -->
 <div class="mini-card">
-<h3>Conversion Funnel (WTD)</h3>
+<h3>Conversion Funnel (WTD) <span style="font-size:10px;color:var(--gray);font-weight:400">MTD pipeline pending</span></h3>
 <div class="funnel-stage" style="background:var(--blue)"><span>Total Contacts</span><span class="num"><strong>9</strong></span></div>
 <div class="funnel-arrow">▼ 22% tour rate</div>
 <div class="funnel-stage" style="background:var(--blue);opacity:.85"><span>Tours</span><span class="num"><strong>2</strong></span></div>
@@ -260,20 +260,32 @@ Source: Dominic's DLR email — Weekend 2/20-22/2026. Daily = 02/22, WTD = 02/20
 
 <!-- Rent by Bed Category -->
 <div class="mini-card">
-<h3>Avg Budget Rent by Category (26-27)</h3>
+<h3>Avg Rent by Category — Budget vs Leased (26-27)</h3>
 <div class="bar-group">
 <label>Studios (S1/S2/S3) — 110 beds</label>
-<div class="bar-track"><div class="bar-fill" style="width:78%;background:var(--blue)">Avg $1,729</div></div>
+<div style="display:flex;gap:4px">
+<div class="bar-track" style="flex:1"><div class="bar-fill" style="width:78%;background:var(--blue)">Budget $1,729</div></div>
+<div class="bar-track" style="flex:1"><div class="bar-fill" style="width:78%;background:var(--green)">Leased $1,728</div></div>
+</div>
 </div>
 <div class="bar-group">
 <label>2-Bed (2A/2A1/2B/2C) — 80 beds</label>
-<div class="bar-track"><div class="bar-fill" style="width:66%;background:var(--blue)">Avg $1,485</div></div>
+<div style="display:flex;gap:4px">
+<div class="bar-track" style="flex:1"><div class="bar-fill" style="width:66%;background:var(--blue)">Budget $1,485</div></div>
+<div class="bar-track" style="flex:1"><div class="bar-fill" style="width:66%;background:var(--green)">Leased $1,484</div></div>
+</div>
 </div>
 <div class="bar-group">
 <label>4-Bed (4A/4B/4C/4D) — 124 beds</label>
-<div class="bar-track"><div class="bar-fill" style="width:54%;background:var(--blue)">Avg $1,198</div></div>
+<div style="display:flex;gap:4px">
+<div class="bar-track" style="flex:1"><div class="bar-fill" style="width:54%;background:var(--blue)">Budget $1,198</div></div>
+<div class="bar-track" style="flex:1"><div class="bar-fill" style="width:54%;background:var(--green)">Leased $1,198</div></div>
 </div>
-<div style="margin-top:8px;font-size:10px;color:var(--gray)">Per-bed weighted avg budget rent by category. Source: Dominic's email unit mix.</div>
+</div>
+<div style="margin-top:8px;font-size:10px;color:var(--gray)">
+<span style="display:inline-block;width:10px;height:10px;background:var(--blue);border-radius:2px;vertical-align:middle"></span> Budget Rate &nbsp;
+<span style="display:inline-block;width:10px;height:10px;background:var(--green);border-radius:2px;vertical-align:middle"></span> Leased Avg (renewal + new / 2) &nbsp;| Source: Dominic's email unit mix.
+</div>
 </div>
 </div>
 
