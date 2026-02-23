@@ -67,6 +67,7 @@ tbody tr:hover{background:#EDF2F7}
 .funnel-math strong{color:var(--navy)}
 .bar-group{margin-bottom:10px}
 .bar-group label{font-size:12px;color:var(--navy);font-weight:600;display:block;margin-bottom:3px}
+.bar-pair{display:flex;flex-direction:column;gap:3px}
 .bar-track{height:20px;background:#EDF2F7;border-radius:3px;position:relative;overflow:hidden}
 .bar-fill{height:100%;border-radius:3px;display:flex;align-items:center;padding-left:6px;color:#fff;font-size:10px;font-weight:700}
 .comments-area{background:#FAFBFC;border:1px dashed var(--border);border-radius:8px;padding:14px;min-height:80px;font-size:13px;color:#666;line-height:1.6;outline:none;transition:border-color .2s,background .2s}
@@ -209,13 +210,16 @@ Source: Dominic's DLR email — Weekend 2/20-22/2026. Daily = 02/22, WTD = 02/20
 
 <!-- Lead Source Breakdown -->
 <div class="mini-card">
-<h3>Lead Source Breakdown (WTD) <span style="font-size:10px;color:var(--gray);font-weight:400">MTD pipeline pending</span></h3>
+<h3>Lead Source Breakdown (02/22)</h3>
 <div class="donut-wrap">
 <svg width="140" height="140" viewBox="0 0 140 140">
 <circle cx="70" cy="70" r="50" fill="none" stroke="#EDF2F7" stroke-width="18"/>
-<circle cx="70" cy="70" r="50" fill="none" stroke="#2E86AB" stroke-width="18" stroke-dasharray="104.7 209.4" stroke-dashoffset="78.5" transform="rotate(-90 70 70)"/>
-<circle cx="70" cy="70" r="50" fill="none" stroke="#28a745" stroke-width="18" stroke-dasharray="52.4 261.8" stroke-dashoffset="-26.2" transform="rotate(-90 70 70)"/>
-<circle cx="70" cy="70" r="50" fill="none" stroke="#6C7A89" stroke-width="18" stroke-dasharray="157.1 157.1" stroke-dashoffset="-78.5" transform="rotate(-90 70 70)"/>
+<!-- Emails/Online: 6/9 = 66.7% → 209.4 -->
+<circle cx="70" cy="70" r="50" fill="none" stroke="#2E86AB" stroke-width="18" stroke-dasharray="209.4 104.7" stroke-dashoffset="78.5" transform="rotate(-90 70 70)"/>
+<!-- Tours: 2/9 = 22.2% → 69.8 -->
+<circle cx="70" cy="70" r="50" fill="none" stroke="#28a745" stroke-width="18" stroke-dasharray="69.8 244.3" stroke-dashoffset="-130.9" transform="rotate(-90 70 70)"/>
+<!-- Phone: 1/9 = 11.1% → 34.9 -->
+<circle cx="70" cy="70" r="50" fill="none" stroke="#6C7A89" stroke-width="18" stroke-dasharray="34.9 279.2" stroke-dashoffset="-200.7" transform="rotate(-90 70 70)"/>
 <text x="70" y="66" text-anchor="middle" font-size="20" font-weight="800" fill="var(--navy)">9</text>
 <text x="70" y="80" text-anchor="middle" font-size="10" fill="var(--gray)">contacts</text>
 </svg>
@@ -225,19 +229,20 @@ Source: Dominic's DLR email — Weekend 2/20-22/2026. Daily = 02/22, WTD = 02/20
 <div><span class="sw" style="background:#6C7A89"></span> Phone — 1 (11%)</div>
 </div>
 </div>
+<div class="footnote">Source: Dominic's DLR email (weekend 2/20-22/2026). 6 online leads, 2 tours, 1 phone call. Weekend activity — student leasing season ramping up.</div>
 </div>
 
 <!-- Conversion Funnel -->
 <div class="mini-card">
-<h3>Conversion Funnel (WTD) <span style="font-size:10px;color:var(--gray);font-weight:400">MTD pipeline pending</span></h3>
-<div class="funnel-stage" style="background:var(--blue)"><span>Total Contacts</span><span class="num"><strong>9</strong></span></div>
+<h3>Conversion Funnel (WTD)</h3>
+<div class="funnel-stage" style="background:var(--blue)"><span>Total Contacts</span><span class="num"><strong>9</strong> <span style="opacity:.65;font-size:14px;font-weight:400">/ 20</span></span></div>
 <div class="funnel-arrow">▼ 22% tour rate</div>
-<div class="funnel-stage" style="background:var(--blue);opacity:.85"><span>Tours</span><span class="num"><strong>2</strong></span></div>
+<div class="funnel-stage" style="background:var(--blue);opacity:.85"><span>Tours</span><span class="num"><strong>2</strong> <span style="opacity:.65;font-size:14px;font-weight:400">/ 10</span></span></div>
 <div class="funnel-arrow">▼ 50% app rate</div>
-<div class="funnel-stage" style="background:var(--amber)"><span>Applications</span><span class="num"><strong>1</strong></span></div>
+<div class="funnel-stage" style="background:var(--amber)"><span>Applications</span><span class="num"><strong>1</strong> <span style="opacity:.65;font-size:14px;font-weight:400">/ 5</span></span></div>
 <div class="funnel-arrow">▼ 100%</div>
-<div class="funnel-stage" style="background:var(--green)"><span>Leases Completed</span><span class="num"><strong>1</strong></span></div>
-<div style="margin-top:6px;font-size:10px;color:var(--gray);text-align:right">Weekend data only (2/20-22)</div>
+<div class="funnel-stage" style="background:var(--green)"><span>Leases Completed</span><span class="num"><strong>1</strong> <span style="opacity:.65;font-size:14px;font-weight:400">/ 5</span></span></div>
+<div style="margin-top:6px;font-size:10px;color:var(--gray);text-align:right">Actual / Weekly target needed (based on 5 leases/week goal)</div>
 <div style="margin-top:10px;font-size:11px;color:var(--navy)">
 ⚡ Weekend: 9 contacts → 2 tours → 1 app → 1 lease + 3 renewals. Need ~5 leases/week to reach 100% by Aug 15.
 </div>
@@ -249,43 +254,44 @@ Source: Dominic's DLR email — Weekend 2/20-22/2026. Daily = 02/22, WTD = 02/20
 <div class="funnel-math" style="margin-top:8px;background:#FFF8E1;border-color:#FFD54F">
 <strong>📊 Beds Needed — Reverse Funnel Calculation</strong><br><br>
 <strong>Goal:</strong> 119 beds to fill for Fall 2026-27 over ~25 weeks (to Aug 15) = <strong>~5.0 new leases/week</strong><br>
-<strong>Conversion rates:</strong> Tour 50% → App 100% → Close 100% (from weekend data)<br>
-<strong>Combined conversion:</strong> ~50%<br><br>
+<strong>Conversion rates:</strong> Tour 22% → App 50% → Close 100% (from weekend data)<br>
+<strong>Combined conversion:</strong> 0.22 × 0.50 × 1.00 = <strong>11%</strong><br><br>
 <strong style="font-size:13px;color:var(--navy)">To hit 5 leases/week: Need ~10 tours/week → ~20 contacts/week</strong><br><br>
+<span style="display:inline-block;padding:4px 10px;border-radius:4px;background:var(--amber);color:#856404;font-weight:600;font-size:11px">⚠️ Current pace: 1 lease this weekend vs 5 needed/week — ramping up</span><br>
 <span style="font-size:11px;color:var(--gray);margin-top:4px;display:block">Note: Student leasing is seasonal — velocity typically accelerates Feb–Apr. 22 weeks remaining per manager note. 314 total beds.</span>
 </div>
 </div>
 </div>
 </div>
 
-<!-- Rent by Bed Category -->
+<!-- Rent vs Budget by Type -->
 <div class="mini-card">
-<h3>Avg Rent by Category — Budget vs Leased (26-27)</h3>
+<h3>Rent vs Budget by Type (Current Snapshot)</h3>
 <div class="bar-group">
-<label>Studios (S1/S2/S3) — 110 beds</label>
-<div style="display:flex;gap:4px">
-<div class="bar-track" style="flex:1"><div class="bar-fill" style="width:78%;background:var(--blue)">Budget $1,729</div></div>
-<div class="bar-track" style="flex:1"><div class="bar-fill" style="width:78%;background:var(--green)">Leased $1,728</div></div>
+<label>Studios (S1/S2/S3)</label>
+<div class="bar-pair">
+<div class="bar-track"><div class="bar-fill" style="width:80%;background:var(--navy)">Budget $1,729</div></div>
+<div class="bar-track"><div class="bar-fill" style="width:80%;background:var(--blue)">In-Place $1,728</div></div>
 </div>
-</div>
-<div class="bar-group">
-<label>2-Bed (2A/2A1/2B/2C) — 80 beds</label>
-<div style="display:flex;gap:4px">
-<div class="bar-track" style="flex:1"><div class="bar-fill" style="width:66%;background:var(--blue)">Budget $1,485</div></div>
-<div class="bar-track" style="flex:1"><div class="bar-fill" style="width:66%;background:var(--green)">Leased $1,484</div></div>
-</div>
+<div style="font-size:10px;color:var(--red);margin-top:1px">▼ $1 below budget</div>
 </div>
 <div class="bar-group">
-<label>4-Bed (4A/4B/4C/4D) — 124 beds</label>
-<div style="display:flex;gap:4px">
-<div class="bar-track" style="flex:1"><div class="bar-fill" style="width:54%;background:var(--blue)">Budget $1,198</div></div>
-<div class="bar-track" style="flex:1"><div class="bar-fill" style="width:54%;background:var(--green)">Leased $1,198</div></div>
+<label>2-Bed (2A/2A1/2B/2C)</label>
+<div class="bar-pair">
+<div class="bar-track"><div class="bar-fill" style="width:69%;background:var(--navy)">Budget $1,485</div></div>
+<div class="bar-track"><div class="bar-fill" style="width:69%;background:var(--blue)">In-Place $1,484</div></div>
 </div>
+<div style="font-size:10px;color:var(--red);margin-top:1px">▼ $1 below budget</div>
 </div>
-<div style="margin-top:8px;font-size:10px;color:var(--gray)">
-<span style="display:inline-block;width:10px;height:10px;background:var(--blue);border-radius:2px;vertical-align:middle"></span> Budget Rate &nbsp;
-<span style="display:inline-block;width:10px;height:10px;background:var(--green);border-radius:2px;vertical-align:middle"></span> Leased Avg (renewal + new / 2) &nbsp;| Source: Dominic's email unit mix.
+<div class="bar-group">
+<label>4-Bed (4A/4B/4C/4D)</label>
+<div class="bar-pair">
+<div class="bar-track"><div class="bar-fill" style="width:55%;background:var(--navy)">Budget $1,198</div></div>
+<div class="bar-track"><div class="bar-fill" style="width:55%;background:var(--blue)">In-Place $1,198</div></div>
 </div>
+<div style="font-size:10px;color:var(--green);margin-top:1px">● On budget</div>
+</div>
+<div style="margin-top:8px;font-size:10px;color:var(--gray)">■ <span style="color:var(--navy)">Budget</span> &nbsp; ■ <span style="color:var(--blue)">In-Place</span></div>
 </div>
 </div>
 
