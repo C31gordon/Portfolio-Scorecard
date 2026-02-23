@@ -118,6 +118,11 @@ tbody tr:hover{background:#EDF2F7}
 <div class="date">Week of Feb 18–21, 2026</div>
 <div style="font-size:11px;opacity:.7;margin-top:2px">RISE Week: Fri–Thu &nbsp;|&nbsp; Extended to 02/21 for prototype</div>
 <div style="margin-top:6px"><span class="badge badge-green">Stabilized</span></div>
+<select style="background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.3);border-radius:6px;padding:6px 12px;font-size:13px;margin-top:8px;cursor:pointer;-webkit-appearance:none;appearance:none;padding-right:28px;background-image:url('data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%2712%27 height=%2712%27 viewBox=%270 0 12 12%27%3E%3Cpath fill=%27white%27 d=%27M6 8L1 3h10z%27/%3E%3C/svg%3E');background-repeat:no-repeat;background-position:right 8px center" onchange="if(this.value)window.location=this.value">
+<option value="" selected>Feb 18–21, 2026</option>
+<option value="" disabled>— Previous Weeks —</option>
+<option value="" disabled>Feb 11–14 (coming soon)</option>
+</select>
 </div>
 </div>
 
@@ -281,41 +286,67 @@ tbody tr:hover{background:#EDF2F7}
 <div class="section">
 <div class="section-header" onclick="toggle(this)">📊 Weekly Leasing Activity</div>
 <div class="section-body">
-<div style="font-size:11px;color:var(--gray);margin-bottom:10px">Daily breakdown: Feb 18–21. Totals represent 4 available reporting days.</div>
-<table>
+<div style="font-size:11px;color:var(--gray);margin-bottom:10px">
+Source: Box Score — Lead Activity section. Daily breakdown Feb 18–21 (4 reporting days).
+</div>
+
+<!-- New Leads by Contact Method — matches DLR exactly -->
+<table style="table-layout:fixed">
 <colgroup><col style="width:30%"><col style="width:14%"><col style="width:14%"><col style="width:14%"><col style="width:14%"><col style="width:14%"></colgroup>
-<thead><tr><th>Metric</th><th class="text-center">02/18 (Tue)</th><th class="text-center">02/19 (Wed)</th><th class="text-center">02/20 (Thu)</th><th class="text-center">02/21 (Fri)</th><th class="text-center">Week Total</th></tr></thead>
+<thead><tr><th>Contact Method</th><th class="text-center">02/18 (Tue)</th><th class="text-center">02/19 (Wed)</th><th class="text-center">02/20 (Thu)</th><th class="text-center">02/21 (Fri)</th><th class="text-center">Week Total</th></tr></thead>
 <tbody>
-<tr><td><strong>New Leads</strong></td><td class="text-center">3</td><td class="text-center">1</td><td class="text-center">6</td><td class="text-center">3</td><td class="text-center"><strong>13</strong></td></tr>
-<tr><td>&nbsp;&nbsp;Walk-In/Tours</td><td class="text-center">1</td><td class="text-center">1</td><td class="text-center">0</td><td class="text-center">1</td><td class="text-center">3</td></tr>
-<tr><td>&nbsp;&nbsp;Online</td><td class="text-center">0</td><td class="text-center">0</td><td class="text-center">3</td><td class="text-center">1</td><td class="text-center">4</td></tr>
-<tr><td>&nbsp;&nbsp;Call</td><td class="text-center">2</td><td class="text-center">0</td><td class="text-center">3</td><td class="text-center">0</td><td class="text-center">5</td></tr>
-<tr><td>&nbsp;&nbsp;Other</td><td class="text-center">0</td><td class="text-center">0</td><td class="text-center">0</td><td class="text-center">1</td><td class="text-center">1</td></tr>
-<tr style="background:#EDF2F7"><td><strong>Tours</strong></td><td class="text-center">1</td><td class="text-center">1</td><td class="text-center">0</td><td class="text-center">1</td><td class="text-center"><strong>3</strong></td></tr>
-<tr><td><strong>Apps Started</strong></td><td class="text-center">0</td><td class="text-center">0</td><td class="text-center">2</td><td class="text-center">1</td><td class="text-center"><strong>3</strong></td></tr>
-<tr><td><strong>Apps Completed</strong></td><td class="text-center">0</td><td class="text-center">0</td><td class="text-center">1</td><td class="text-center">0</td><td class="text-center"><strong>1</strong></td></tr>
-<tr><td><strong>Leases Signed</strong></td><td class="text-center">0</td><td class="text-center">1</td><td class="text-center">1</td><td class="text-center">0</td><td class="text-center"><strong>2</strong></td></tr>
-<tr style="border-top:2px solid var(--navy)"><td><strong>Move-Ins</strong></td><td class="text-center">1</td><td class="text-center">0</td><td class="text-center">1</td><td class="text-center">0</td><td class="text-center"><strong>2</strong></td></tr>
-<tr><td><strong>Move-Outs</strong></td><td class="text-center">0</td><td class="text-center">0</td><td class="text-center">0</td><td class="text-center">1</td><td class="text-center"><strong>1</strong></td></tr>
-<tr style="background:#EDF2F7"><td><strong>Net Absorption</strong></td><td class="text-center">+1</td><td class="text-center">0</td><td class="text-center">+1</td><td class="text-center">−1</td><td class="text-center"><strong>+1</strong></td></tr>
+<tr><td>First Visit/Tours</td><td class="text-center">1</td><td class="text-center">1</td><td class="text-center">0</td><td class="text-center">1</td><td class="text-center">3</td></tr>
+<tr><td>Online</td><td class="text-center">0</td><td class="text-center">0</td><td class="text-center">3</td><td class="text-center">1</td><td class="text-center">4</td></tr>
+<tr><td>Call</td><td class="text-center">2</td><td class="text-center">0</td><td class="text-center">3</td><td class="text-center">0</td><td class="text-center">5</td></tr>
+<tr><td>Email</td><td class="text-center">0</td><td class="text-center">0</td><td class="text-center">0</td><td class="text-center">0</td><td class="text-center">0</td></tr>
+<tr><td>Text</td><td class="text-center">0</td><td class="text-center">0</td><td class="text-center">0</td><td class="text-center">0</td><td class="text-center">0</td></tr>
+<tr><td>Other</td><td class="text-center">0</td><td class="text-center">0</td><td class="text-center">0</td><td class="text-center">1</td><td class="text-center">1</td></tr>
+<tr style="border-top:2px solid var(--navy)"><td><strong>Total New Leads</strong></td><td class="text-center"><strong>3</strong></td><td class="text-center"><strong>1</strong></td><td class="text-center"><strong>6</strong></td><td class="text-center"><strong>3</strong></td><td class="text-center"><strong>13</strong></td></tr>
 </tbody>
 </table>
 
-<!-- Follow-Up Activity -->
+<!-- Follow-Up Activity — matches DLR exactly -->
 <div style="margin-top:16px;border-top:1px solid var(--border);padding-top:12px">
 <div style="font-size:14px;font-weight:700;color:var(--navy);margin-bottom:8px">Follow-Up Activity</div>
-<table>
+<table style="table-layout:fixed">
 <colgroup><col style="width:30%"><col style="width:14%"><col style="width:14%"><col style="width:14%"><col style="width:14%"><col style="width:14%"></colgroup>
-<thead><tr><th>Type</th><th class="text-center">02/18</th><th class="text-center">02/19</th><th class="text-center">02/20</th><th class="text-center">02/21</th><th class="text-center">Week Total</th></tr></thead>
+<thead><tr><th>Activity Type</th><th class="text-center">02/18</th><th class="text-center">02/19</th><th class="text-center">02/20</th><th class="text-center">02/21</th><th class="text-center">Week Total</th></tr></thead>
 <tbody>
 <tr><td>Emails Sent</td><td class="text-center">5</td><td class="text-center">2</td><td class="text-center">15</td><td class="text-center">1</td><td class="text-center"><strong>23</strong></td></tr>
 <tr><td>Calls Made</td><td class="text-center">2</td><td class="text-center">1</td><td class="text-center">8</td><td class="text-center">3</td><td class="text-center"><strong>14</strong></td></tr>
 <tr><td>Texts Sent</td><td class="text-center">1</td><td class="text-center">2</td><td class="text-center">6</td><td class="text-center">1</td><td class="text-center"><strong>10</strong></td></tr>
-<tr style="background:#EDF2F7"><td><strong>Total Touchpoints</strong></td><td class="text-center"><strong>8</strong></td><td class="text-center"><strong>5</strong></td><td class="text-center"><strong>29</strong></td><td class="text-center"><strong>5</strong></td><td class="text-center"><strong>47</strong></td></tr>
+<tr><td>Chats</td><td class="text-center">0</td><td class="text-center">0</td><td class="text-center">0</td><td class="text-center">0</td><td class="text-center"><strong>0</strong></td></tr>
 </tbody>
 </table>
 </div>
-<div class="footnote">Source: Box Score Lead Activity & Lead Conversion reports. Thursday (02/20) was the strongest activity day — 6 leads, 29 follow-up touchpoints. Tuesday and Friday averaged ~6.5 touchpoints/day.</div>
+
+<!-- Property Pulse — matches DLR exactly -->
+<div style="margin-top:16px;border-top:1px solid var(--border);padding-top:12px">
+<div style="font-size:14px;font-weight:700;color:var(--navy);margin-bottom:8px">Property Pulse</div>
+<table style="table-layout:fixed">
+<colgroup><col style="width:30%"><col style="width:14%"><col style="width:14%"><col style="width:14%"><col style="width:14%"><col style="width:14%"></colgroup>
+<thead><tr><th>Metric</th><th class="text-center">02/18</th><th class="text-center">02/19</th><th class="text-center">02/20</th><th class="text-center">02/21</th><th class="text-center">Week Total</th></tr></thead>
+<tbody>
+<tr><td>Gross New Applications</td><td class="text-center">0</td><td class="text-center">0</td><td class="text-center">1</td><td class="text-center">0</td><td class="text-center"><strong>1</strong></td></tr>
+<tr><td>Denied Applications</td><td class="text-center">0</td><td class="text-center">0</td><td class="text-center">0</td><td class="text-center">0</td><td class="text-center"><strong>0</strong></td></tr>
+<tr><td>Cancelled Applications</td><td class="text-center">0</td><td class="text-center">0</td><td class="text-center">0</td><td class="text-center">0</td><td class="text-center"><strong>0</strong></td></tr>
+<tr style="background:#EDF2F7"><td><strong>Net New Applications</strong></td><td class="text-center"><strong>0</strong></td><td class="text-center"><strong>0</strong></td><td class="text-center"><strong>0</strong></td><td class="text-center"><strong>0</strong></td><td class="text-center"><strong>0</strong></td></tr>
+<tr><td>New Leases</td><td class="text-center">0</td><td class="text-center">1</td><td class="text-center">1</td><td class="text-center">0</td><td class="text-center"><strong>2</strong></td></tr>
+<tr><td>Move-Ins</td><td class="text-center">1</td><td class="text-center">0</td><td class="text-center">1</td><td class="text-center">0</td><td class="text-center"><strong>2</strong></td></tr>
+<tr><td>Move-Outs</td><td class="text-center">0</td><td class="text-center">0</td><td class="text-center">0</td><td class="text-center">1</td><td class="text-center"><strong>1</strong></td></tr>
+<tr><td>Notices</td><td class="text-center">0</td><td class="text-center">1</td><td class="text-center">0</td><td class="text-center">1</td><td class="text-center"><strong>2</strong></td></tr>
+<tr><td>Renewals</td><td class="text-center">0</td><td class="text-center">1</td><td class="text-center">0</td><td class="text-center">0</td><td class="text-center"><strong>1</strong></td></tr>
+<tr><td>Month to Month</td><td class="text-center">0</td><td class="text-center">0</td><td class="text-center">0</td><td class="text-center">0</td><td class="text-center"><strong>0</strong></td></tr>
+<tr><td>Skips</td><td class="text-center">0</td><td class="text-center">0</td><td class="text-center">0</td><td class="text-center">0</td><td class="text-center"><strong>0</strong></td></tr>
+<tr><td>Evictions</td><td class="text-center">0</td><td class="text-center">0</td><td class="text-center">0</td><td class="text-center">0</td><td class="text-center"><strong>0</strong></td></tr>
+<tr style="background:#EDF2F7"><td><strong>Net Absorption</strong></td><td class="text-center"><strong>+1</strong></td><td class="text-center"><strong>0</strong></td><td class="text-center"><strong>+1</strong></td><td class="text-center"><strong>−1</strong></td><td class="text-center"><strong>+1</strong></td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="footnote">Source: Box Score Lead Activity, Lead Conversions & Leasing Activity sections. All metrics and formulas consistent with Daily Leasing Report.<br>
+Gross New Apps = Application Completed (Lead Conversions). Net New Apps = Gross − Denied − Cancelled.<br>
+Net Absorption = Move-Ins − Move-Outs. Thursday (02/20) was the strongest activity day — 6 leads, 29 follow-up touchpoints.</div>
 </div>
 </div>
 
