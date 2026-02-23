@@ -140,6 +140,18 @@ tbody tr:hover{background:#EDF2F7}
 <div class="kpi-card"><div class="kpi-left"><div class="kpi-label">Comp Average Rent <span class="mock">MOCK</span></div><div class="kpi-value" style="color:var(--amber)">$1,728</div><div class="kpi-sub">Market survey <span class="mock">MOCK</span></div></div><svg width="60" height="24" viewBox="0 0 60 24" style="vertical-align:middle;margin-left:8px"><polyline fill="none" stroke="#ffc107" stroke-width="1.5" stroke-linejoin="round" points="2.0,22.0 11.3,16.4 20.7,10.9 30.0,13.1 39.3,8.7 48.7,5.3 58.0,2.0"/><circle cx="58.0" cy="2.0" r="2" fill="#ffc107"/></svg></div>
 </div>
 
+<!-- MANAGER NOTES (moved above daily activity) -->
+<div class="section">
+<div class="section-header" onclick="this.parentElement.classList.toggle('collapsed')">📝 Manager Notes</div>
+<div class="section-body">
+<div class="comments-label">Daily Activity Notes</div>
+<div class="comments-area" contenteditable="true" data-placeholder="Enter manager notes for today's activity, follow-ups, and action items..."></div>
+<div class="form-note" style="margin-top:12px">
+<strong>Note:</strong> Notes are saved to the property database when submitted. Use this section to document daily activity highlights, follow-ups, and action items.
+</div>
+</div>
+</div>
+
 <!-- TODAY'S ACTIVITY — From Box Score Lead Activity -->
 <div class="section">
 <div class="section-header" onclick="toggle(this)">📊 Daily Leasing Activity</div>
@@ -201,17 +213,23 @@ Source: Box Score — Lead Activity section. Daily = 02/22, WTD = 02/20–02/26 
 <!-- Conversion Funnel (MTD) — simplified, no targets -->
 <div class="mini-card">
 <h3>Conversion Funnel (MTD)</h3>
-<div class="funnel-stage" style="background:var(--blue)"><span>Total New Leads</span><span class="num">14</span></div>
+<div class="funnel-stage" style="background:var(--blue)"><span>Total New Leads</span><span class="num"><strong>14</strong> <span style="opacity:.65;font-size:14px;font-weight:400">/ 205</span></span></div>
 <div class="funnel-arrow">▼ 29% tour rate</div>
-<div class="funnel-stage" style="background:var(--blue);opacity:.85"><span>First Visit / Tours</span><span class="num">4</span></div>
+<div class="funnel-stage" style="background:var(--blue);opacity:.85"><span>First Visit / Tours</span><span class="num"><strong>4</strong> <span style="opacity:.65;font-size:14px;font-weight:400">/ 59</span></span></div>
 <div class="funnel-arrow">▼ 50% app rate</div>
-<div class="funnel-stage" style="background:var(--amber)"><span>Gross New Applications</span><span class="num">2</span></div>
+<div class="funnel-stage" style="background:var(--amber)"><span>Gross New Applications</span><span class="num"><strong>2</strong> <span style="opacity:.65;font-size:14px;font-weight:400">/ 30</span></span></div>
 <div class="funnel-arrow">▼ —</div>
-<div class="funnel-stage" style="background:var(--green)"><span>Net New Applications</span><span class="num">0</span></div>
+<div class="funnel-stage" style="background:var(--green)"><span>Net New Applications</span><span class="num"><strong>0</strong> <span style="opacity:.65;font-size:14px;font-weight:400">/ 23</span></span></div>
+<div style="margin-top:6px;font-size:10px;color:var(--gray);text-align:right">Actual / MTD target needed (based on 5 move-ins/week goal)</div>
 <div style="margin-top:10px;font-size:11px;color:var(--navy)">
 ⚡ 14 MTD leads → 4 tours (29%) → 2 apps started. Second app from Website lead on 02/22. 1 new lease & 1 renewal completed WTD. Follow-up: 23 emails, 14 calls MTD.
 </div>
-<div class="funnel-math" style="margin-top:12px;background:#FFF8E1;border-color:#FFD54F">
+<div style="margin-top:10px">
+<div style="cursor:pointer;font-size:12px;color:var(--blue);font-weight:600;" onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'block':'none'">
+▶ Show Reverse Funnel Calculation
+</div>
+<div style="display:none">
+<div class="funnel-math" style="margin-top:8px;background:#FFF8E1;border-color:#FFD54F">
 <strong>📊 Leads Needed — Reverse Funnel Calculation</strong><br><br>
 <strong>Goal:</strong> 297 units × 7% = ~21 move-ins/month = <strong>5 move-ins/week</strong><br>
 <strong>Conversion rates:</strong> Tour 29% → App 50% → Approval 80% → Close 70%<br>
@@ -219,6 +237,8 @@ Source: Box Score — Lead Activity section. Daily = 02/22, WTD = 02/20–02/26 
 <strong style="font-size:13px;color:var(--navy)">To hit 5 move-ins/week: Need 62 leads/week → 18 tours → 9 apps → 7 approved → 5 move-ins</strong><br><br>
 <span style="display:inline-block;padding:4px 10px;border-radius:4px;background:var(--red);color:#fff;font-weight:600;font-size:11px">⚠️ Current pace: 14 leads in 23 days (~4/week) vs 62 needed/week — 6% of target</span><br>
 <span style="font-size:11px;color:var(--gray);margin-top:4px;display:block">Formula: Leads Needed = Move-In Goal ÷ (Tour Rate × App Rate × Approval Rate × Close Rate) = 5 ÷ 0.081 ≈ 62/week</span>
+</div>
+</div>
 </div>
 </div>
 
@@ -525,18 +545,6 @@ Leased% moved from 92.9% → <strong>93.6%</strong> — now above the 93.0% budg
 <span style="font-size:11px;color:var(--gray)">Budget target: 276 occupied (93%). Current: 269. Deficit: 7 units. With 9 vacant-rented converting, reaches 278 (93.6%) — pipeline now exceeds budget target.</span>
 </div>
 </div></div>
-</div>
-</div>
-
-<!-- MANAGER NOTES -->
-<div class="section">
-<div class="section-header" onclick="this.parentElement.classList.toggle('collapsed')">📝 Manager Notes</div>
-<div class="section-body">
-<div class="comments-label">Daily Activity Notes</div>
-<div class="comments-area" contenteditable="true" data-placeholder="Enter manager notes for today's activity, follow-ups, and action items..."></div>
-<div class="form-note" style="margin-top:12px">
-<strong>Note:</strong> This is a static report. Notes entered here are for on-screen reference only and will not be saved when the page is refreshed. Future web app version will persist notes.
-</div>
 </div>
 </div>
 
