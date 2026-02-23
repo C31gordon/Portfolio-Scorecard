@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RISE Weekly Leasing Report — Prosper On Fayette</title>
+<style>
+:root{--navy:#1B2A4A;--blue:#2E86AB;--light:#F4F6F9;--white:#fff;--green:#28a745;--red:#dc3545;--amber:#ffc107;--gray:#6C7A89;--border:#E0E4EA;--shadow:0 2px 8px rgba(27,42,74,.08)}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--light);color:#333;line-height:1.5;font-size:14px}
+.container{max-width:1320px;margin:0 auto;padding:16px}
+.header{background:linear-gradient(135deg,var(--navy),#253A5E);color:#fff;padding:24px 32px;border-radius:12px;margin-bottom:20px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+.header-left{display:flex;align-items:center;gap:16px}
+.rise-logo{font-size:36px;font-weight:900;letter-spacing:2px;color:#2E86AB;text-shadow:0 2px 8px rgba(46,134,171,.3)}
+.header-left .header-text h1{font-size:26px;font-weight:700;letter-spacing:-.5px}
+.header-left .header-text h1 span{color:var(--blue)}
+.header-left .header-text .prop-name{font-size:16px;font-weight:600;margin-top:4px}
+.header-left .header-text .prop-location{font-size:13px;opacity:.7;margin-top:2px}
+.header-right{text-align:right}
+.header-right .date{font-size:18px;font-weight:600}
+.badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.5px}
+.badge-purple{background:#7C3AED;color:#fff}
+.badge-green{background:var(--green);color:#fff}
+.badge-blue{background:var(--blue);color:#fff}
+.exec-summary{background:linear-gradient(135deg,#F0F7FF,#E8F4FD);border-left:5px solid var(--navy);border-radius:0 12px 12px 0;padding:24px;margin-bottom:20px;line-height:1.8}
+.exec-summary h2{font-size:16px;color:var(--navy);margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.exec-summary .bullet{margin-bottom:6px;font-size:14px;padding-left:8px}
+.exec-summary .bullet strong{color:var(--navy)}
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px}
+.kpi-card{background:#fff;border-radius:10px;padding:16px;box-shadow:var(--shadow);border-top:3px solid var(--blue);text-align:center}
+.kpi-label{font-size:10px;text-transform:uppercase;letter-spacing:.8px;color:var(--gray);font-weight:600;margin-bottom:4px}
+.kpi-value{font-size:26px;font-weight:800;color:var(--navy)}
+.kpi-sub{font-size:11px;color:var(--gray);margin-top:2px}
+.kpi-delta{font-size:12px;font-weight:700;margin-top:4px}
+.delta-up{color:var(--green)}
+.delta-down{color:var(--red)}
+.delta-flat{color:var(--gray)}
+.section{background:#fff;border-radius:10px;box-shadow:var(--shadow);margin-bottom:20px;overflow:hidden}
+.section-header{background:linear-gradient(135deg,var(--navy),#253A5E);color:#fff;padding:13px 20px;font-size:15px;font-weight:600;cursor:pointer;display:flex;justify-content:space-between;align-items:center;user-select:none}
+.section-header::after{content:'▾';font-size:12px;transition:transform .2s}
+.section.collapsed .section-header::after{transform:rotate(-90deg)}
+.section.collapsed .section-body{display:none}
+.section-body{padding:20px;overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{background:var(--light);color:var(--navy);font-weight:600;text-transform:uppercase;font-size:10px;letter-spacing:.5px;padding:8px 10px;text-align:left;border-bottom:2px solid var(--border);white-space:nowrap}
+td{padding:7px 10px;border-bottom:1px solid var(--border);white-space:nowrap}
+tbody tr:nth-child(even){background:#FAFBFC}
+tbody tr:hover{background:#EDF2F7}
+.text-right{text-align:right}.text-center{text-align:center}
+.totals td{font-weight:700;background:#EDF2F7!important;border-top:2px solid var(--navy)}
+.chart-row{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:20px}
+.mini-card{background:#fff;border-radius:10px;box-shadow:var(--shadow);padding:20px}
+.mini-card h3{font-size:14px;color:var(--navy);margin-bottom:12px;font-weight:600}
+.donut-wrap{display:flex;align-items:center;gap:16px;flex-wrap:wrap;justify-content:center}
+.donut-legend{font-size:12px}
+.donut-legend div{margin-bottom:5px;display:flex;align-items:center;gap:6px}
+.donut-legend .sw{width:12px;height:12px;border-radius:3px;flex-shrink:0}
+.funnel-stage{padding:10px 14px;border-radius:6px;color:#fff;font-weight:600;font-size:13px;margin-bottom:2px;display:flex;justify-content:space-between;align-items:center}
+.funnel-stage .num{font-size:20px;font-weight:800}
+.funnel-arrow{text-align:center;color:var(--gray);font-size:11px;margin:1px 0}
+.bar-group{margin-bottom:10px}
+.bar-group label{font-size:12px;color:var(--navy);font-weight:600;display:block;margin-bottom:3px}
+.bar-track{height:20px;background:#EDF2F7;border-radius:3px;position:relative;overflow:hidden}
+.bar-fill{height:100%;border-radius:3px;display:flex;align-items:center;padding-left:6px;color:#fff;font-size:10px;font-weight:700}
+.ai-card{background:linear-gradient(135deg,#F0F7FF,#E8F4FD);border-left:4px solid var(--navy);padding:18px;border-radius:0 8px 8px 0;margin-top:16px;line-height:1.8;font-size:13px;color:#444}
+.ai-card .ai-label{font-size:12px;text-transform:uppercase;letter-spacing:.5px;color:var(--navy);font-weight:700;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.ai-card .ai-rec{margin-bottom:12px;padding-left:12px;border-left:2px solid var(--blue)}
+.trend-table td{text-align:center;font-size:12px}
+.trend-table th{text-align:center;font-size:10px}
+.footnote{font-size:10px;color:var(--gray);margin-top:8px;font-style:italic}
+.mock{background:#FFF3CD;color:#856404;font-size:9px;padding:1px 5px;border-radius:8px;font-weight:600}
+.occ-bar{display:inline-block;height:14px;border-radius:3px;min-width:4px;vertical-align:middle}
+.formula-table td{padding:6px 10px;vertical-align:top;font-size:12px}
+.formula-table .metric{font-weight:600;color:var(--navy);white-space:nowrap}
+.formula-table .formula{color:var(--gray);font-family:inherit;font-size:11px}
+@media print{body{background:#fff;font-size:11px}.container{padding:0}.section{break-inside:avoid;box-shadow:none;border:1px solid #ddd}.header{background:var(--navy)!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}.kpi-card,.mini-card{box-shadow:none;border:1px solid #ddd}.section.collapsed .section-body{display:block}}
+@media(max-width:768px){.header{flex-direction:column;text-align:center}.header-right{text-align:center}.kpi-grid{grid-template-columns:repeat(2,1fr)}.chart-row{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="container">
+
+<!-- HEADER -->
+<div class="header">
+<div class="header-left">
+<div class="rise-logo">RISE</div>
+<div class="header-text">
+<h1>Weekly Leasing Report</h1>
+<div class="prop-name">Prosper On Fayette</div>
+<div class="prop-location">Lexington, KY &nbsp;·&nbsp; Student Housing &nbsp;·&nbsp; 314 Beds</div>
+</div>
+</div>
+<div class="header-right">
+<div class="date">Week of Feb 13–19, 2026</div>
+<div style="font-size:11px;opacity:.7;margin-top:2px">RISE Week: Fri–Thu &nbsp;|&nbsp; Data from daily DLR snapshot (02/17)</div>
+<div style="margin-top:6px"><span class="badge badge-purple">Student Housing</span></div>
+<select style="background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.3);border-radius:6px;padding:6px 12px;font-size:13px;margin-top:8px;cursor:pointer;-webkit-appearance:none;appearance:none;padding-right:28px;background-image:url('data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%2712%27 height=%2712%27 viewBox=%270 0 12 12%27%3E%3Cpath fill=%27white%27 d=%27M6 8L1 3h10z%27/%3E%3C/svg%3E');background-repeat:no-repeat;background-position:right 8px center" onchange="if(this.value)window.location=this.value">
+<option value="" selected>Feb 13–19, 2026</option>
+<option value="" disabled>— Previous Weeks —</option>
+<option value="" disabled>(coming soon)</option>
+</select>
+</div>
+</div>
+
+<!-- EXECUTIVE SUMMARY -->
+<div class="exec-summary">
+<h2>📋 Executive Summary</h2>
+<div class="bullet">• <strong>100% occupied, pre-lease is the story.</strong> All 314 beds currently occupied. The focus is entirely on Fall 2026 pre-leasing — 309 beds expire in July, with 155 renewed (50.2%) and 154 still needed.</div>
+<div class="bullet">• <strong>Lead volume is critically low.</strong> Only 2 new leads captured this week (1 online, 1 other). At current pace (~0.8 leads/week), pre-lease velocity is far below the ~22 leads/week needed to fill 154 remaining beds by Fall.</div>
+<div class="bullet">• <strong>Conversion rates are strong on small sample.</strong> 2 leads → 1 tour (50%) → 1 app → 1 lease completed. Funnel efficiency is good — the bottleneck is top-of-funnel volume.</div>
+<div class="bullet">• <strong>Renewal campaign making progress.</strong> 155 of 309 July expirations renewed (50.2%). 154 on notice/turnover. Renewal push and new lease generation both need acceleration for Spring leasing season.</div>
+</div>
+
+<!-- KPI CARDS -->
+<div class="kpi-grid">
+<div class="kpi-card">
+<div class="kpi-label">Physical Occupancy</div>
+<div class="kpi-value" style="color:var(--green)">100%</div>
+<div class="kpi-sub">314 / 314 beds</div>
+<div class="kpi-delta delta-flat">— No change (fully occupied)</div>
+</div>
+<div class="kpi-card">
+<div class="kpi-label">Pre-Leased (Fall 2026)</div>
+<div class="kpi-value" style="color:var(--amber)">50.2%</div>
+<div class="kpi-sub">155 / 309 beds renewed</div>
+<div class="kpi-delta delta-down">154 beds still needed</div>
+</div>
+<div class="kpi-card">
+<div class="kpi-label">Exposure (Fall Turnover)</div>
+<div class="kpi-value" style="color:var(--red)">34.4%</div>
+<div class="kpi-sub">108 beds exposed</div>
+<div class="kpi-delta delta-flat">All exposure is Fall turnover</div>
+</div>
+<div class="kpi-card">
+<div class="kpi-label">Avg Market Rent</div>
+<div class="kpi-value">$1,422</div>
+<div class="kpi-sub">Per bed, all types</div>
+<div class="kpi-delta delta-flat">Sched rent $1,420 (−$2)</div>
+</div>
+<div class="kpi-card">
+<div class="kpi-label">Weekly New Leads</div>
+<div class="kpi-value" style="color:var(--red)">2</div>
+<div class="kpi-sub">Feb 13–19 <span class="mock">MOCK DAILY</span></div>
+<div class="kpi-delta delta-down">Need ~22/week for Fall target</div>
+</div>
+<div class="kpi-card">
+<div class="kpi-label">Weekly Leases</div>
+<div class="kpi-value">1</div>
+<div class="kpi-sub">1 new lease + 2 renewals</div>
+<div class="kpi-delta delta-flat">Need ~8 leases/week pace</div>
+</div>
+<div class="kpi-card">
+<div class="kpi-label">Weekly Move-Ins</div>
+<div class="kpi-value">0</div>
+<div class="kpi-sub">No current vacancies</div>
+<div class="kpi-delta delta-flat">100% occupied</div>
+</div>
+<div class="kpi-card">
+<div class="kpi-label">Make-Ready Status</div>
+<div class="kpi-value" style="color:var(--green)">N/A</div>
+<div class="kpi-sub">0 vacancies to turn</div>
+<div class="kpi-delta delta-flat">Jul 2026 turns TBD</div>
+</div>
+</div>
+
+<!-- WEEKLY LEASING ACTIVITY -->
+<div class="section">
+<div class="section-header" onclick="toggle(this)">📊 Weekly Leasing Activity</div>
+<div class="section-body">
+<div style="font-size:11px;color:var(--gray);margin-bottom:10px">
+Source: Daily DLR snapshot (02/17). Only single-day data available — daily breakdown is estimated. <span class="mock">MOCK DAILY SPLIT</span>
+</div>
+
+<table style="table-layout:fixed">
+<colgroup><col style="width:35%"><col style="width:22%"><col style="width:22%"><col style="width:21%"></colgroup>
+<thead><tr><th>Contact Method</th><th class="text-center">Week (02/13–02/19)</th><th class="text-center">MTD</th><th class="text-center">Notes</th></tr></thead>
+<tbody>
+<tr><td>First Visit/Tours</td><td class="text-center">1</td><td class="text-center">1</td><td class="text-center"><span class="mock">MOCK</span></td></tr>
+<tr><td>Online</td><td class="text-center">1</td><td class="text-center">1</td><td class="text-center">—</td></tr>
+<tr><td>Call</td><td class="text-center">0</td><td class="text-center">0</td><td class="text-center">—</td></tr>
+<tr><td>Email</td><td class="text-center">0</td><td class="text-center">0</td><td class="text-center">—</td></tr>
+<tr><td>Text</td><td class="text-center">0</td><td class="text-center">0</td><td class="text-center">—</td></tr>
+<tr><td>Other</td><td class="text-center">1</td><td class="text-center">1</td><td class="text-center">—</td></tr>
+<tr style="border-top:2px solid var(--navy)"><td><strong>Total New Leads</strong></td><td class="text-center"><strong>2</strong></td><td class="text-center"><strong>2</strong></td><td class="text-center">—</td></tr>
+</tbody>
+</table>
+
+<div style="margin-top:16px;border-top:1px solid var(--border);padding-top:12px">
+<div style="font-size:14px;font-weight:700;color:var(--navy);margin-bottom:8px">Follow-Up Activity</div>
+<table style="table-layout:fixed">
+<colgroup><col style="width:35%"><col style="width:22%"><col style="width:22%"><col style="width:21%"></colgroup>
+<thead><tr><th>Activity Type</th><th class="text-center">Week Total</th><th class="text-center">MTD</th><th class="text-center">Notes</th></tr></thead>
+<tbody>
+<tr><td>Emails Sent</td><td class="text-center">9</td><td class="text-center">9</td><td class="text-center">—</td></tr>
+<tr><td>Calls Made</td><td class="text-center">9</td><td class="text-center">9</td><td class="text-center">—</td></tr>
+<tr><td>Texts Sent</td><td class="text-center">7</td><td class="text-center">7</td><td class="text-center">—</td></tr>
+<tr><td>Chats</td><td class="text-center">0</td><td class="text-center">0</td><td class="text-center">—</td></tr>
+</tbody>
+</table>
+</div>
+
+<div style="margin-top:16px;border-top:1px solid var(--border);padding-top:12px">
+<div style="font-size:14px;font-weight:700;color:var(--navy);margin-bottom:8px">Lease Execution (02/13–02/19)</div>
+<table style="table-layout:fixed">
+<colgroup><col style="width:35%"><col style="width:22%"><col style="width:22%"><col style="width:21%"></colgroup>
+<thead><tr><th>Metric</th><th class="text-center">New Leases</th><th class="text-center">Renewals</th><th class="text-center">Notes</th></tr></thead>
+<tbody>
+<tr><td>Started</td><td class="text-center">1</td><td class="text-center">1</td><td class="text-center">—</td></tr>
+<tr><td>Completed</td><td class="text-center">1</td><td class="text-center">2</td><td class="text-center">—</td></tr>
+<tr><td>Approved</td><td class="text-center">1</td><td class="text-center">2</td><td class="text-center">—</td></tr>
+<tr><td>Cancelled</td><td class="text-center">0</td><td class="text-center">0</td><td class="text-center">—</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="footnote">Source: Prosper daily DLR (02/17/2026). WTD/MTD data may equal single-day snapshot due to limited reporting history. Daily breakdowns marked MOCK where extrapolated.</div>
+</div>
+</div>
+
+<!-- THREE-CARD ROW -->
+<div class="chart-row">
+
+<!-- Lead Source Breakdown -->
+<div class="mini-card">
+<h3>Lead Source Breakdown (Week)</h3>
+<div class="donut-wrap">
+<svg width="140" height="140" viewBox="0 0 140 140">
+<circle cx="70" cy="70" r="50" fill="none" stroke="#EDF2F7" stroke-width="18"/>
+<circle cx="70" cy="70" r="50" fill="none" stroke="#2E86AB" stroke-width="18" stroke-dasharray="157.1 157.1" stroke-dashoffset="78.5" transform="rotate(-90 70 70)"/>
+<circle cx="70" cy="70" r="50" fill="none" stroke="#6C7A89" stroke-width="18" stroke-dasharray="157.1 157.1" stroke-dashoffset="-78.5" transform="rotate(-90 70 70)"/>
+<text x="70" y="66" text-anchor="middle" font-size="20" font-weight="800" fill="var(--navy)">2</text>
+<text x="70" y="80" text-anchor="middle" font-size="10" fill="var(--gray)">leads</text>
+</svg>
+<div class="donut-legend">
+<div><span class="sw" style="background:#2E86AB"></span> Online — 1 (50%)</div>
+<div><span class="sw" style="background:#6C7A89"></span> Other — 1 (50%)</div>
+</div>
+</div>
+<div class="footnote">Very small sample. Student season typically accelerates Feb–Apr. ILS and social media campaigns critical to drive top-of-funnel volume.</div>
+</div>
+
+<!-- Conversion Funnel -->
+<div class="mini-card">
+<h3>Conversion Funnel (MTD)</h3>
+<div class="funnel-stage" style="background:var(--blue)"><span>Total New Leads</span><span class="num"><strong>2</strong> <span style="opacity:.65;font-size:14px;font-weight:400">/ 40</span></span></div>
+<div class="funnel-arrow">▼ 50% tour rate</div>
+<div class="funnel-stage" style="background:var(--blue);opacity:.85"><span>Tours</span><span class="num"><strong>1</strong> <span style="opacity:.65;font-size:14px;font-weight:400">/ 12</span></span></div>
+<div class="funnel-arrow">▼ 100% app rate</div>
+<div class="funnel-stage" style="background:var(--amber)"><span>Applications</span><span class="num"><strong>1</strong> <span style="opacity:.65;font-size:14px;font-weight:400">/ 6</span></span></div>
+<div class="funnel-arrow">▼ 100%</div>
+<div class="funnel-stage" style="background:var(--green)"><span>Leases Completed</span><span class="num"><strong>1</strong> <span style="opacity:.65;font-size:14px;font-weight:400">/ 5</span></span></div>
+<div style="margin-top:6px;font-size:10px;color:var(--gray);text-align:right">Actual / MTD target needed (based on ~10 new leases/month for Fall pre-lease)</div>
+<div style="margin-top:10px;font-size:11px;color:var(--navy)">
+⚡ Strong conversion on tiny sample. 2 leads → 1 tour → 1 app → 1 lease. Funnel efficiency isn't the problem — volume is.
+</div>
+</div>
+
+<!-- Rent by Bed Category -->
+<div class="mini-card">
+<h3>Rent by Bed Category</h3>
+<div class="bar-group">
+<label>Studios (S1/S2/S3)</label>
+<div class="bar-track"><div class="bar-fill" style="width:70%;background:var(--blue)">Avg $1,674/bed</div></div>
+</div>
+<div class="bar-group">
+<label>2-Bed (2A/2A1/2B/2C)</label>
+<div class="bar-track"><div class="bar-fill" style="width:60%;background:var(--blue)">Avg $1,448/bed</div></div>
+</div>
+<div class="bar-group">
+<label>4-Bed (4A/4B/4C/4D)</label>
+<div class="bar-track"><div class="bar-fill" style="width:49%;background:var(--blue)">Avg $1,174/bed</div></div>
+</div>
+<div style="margin-top:8px;font-size:10px;color:var(--gray)">Per-bed market rent averages. Studios command 43% premium over 4-bed types.</div>
+</div>
+</div>
+
+<!-- PRE-LEASE TRACKER (replaces Renewal Tracker for student) -->
+<div class="section">
+<div class="section-header" onclick="toggle(this)">🎓 Fall 2026 Pre-Lease Tracker</div>
+<div class="section-body">
+<table>
+<thead><tr><th>Expiration Month</th><th class="text-center">Total Expiring</th><th class="text-center">Renewed</th><th class="text-center">Notice / Turnover</th><th class="text-center">Renewal Rate</th><th class="text-center">Status</th></tr></thead>
+<tbody>
+<tr>
+<td><strong>Feb 2026</strong></td><td class="text-center">1</td><td class="text-center">0</td><td class="text-center">1</td>
+<td class="text-center" style="color:var(--red);font-weight:700">0%</td>
+<td class="text-center"><span class="badge" style="background:var(--red);color:#fff;font-size:9px">Notice</span></td>
+</tr>
+<tr>
+<td><strong>May 2026</strong></td><td class="text-center">2</td><td class="text-center">0</td><td class="text-center">2</td>
+<td class="text-center" style="color:var(--red);font-weight:700">0%</td>
+<td class="text-center"><span class="badge" style="background:var(--red);color:#fff;font-size:9px">Notice</span></td>
+</tr>
+<tr style="background:#F8D7DA">
+<td><strong>⚠️ Jul 2026</strong></td><td class="text-center" style="font-size:18px;font-weight:800;color:var(--red)">309</td><td class="text-center" style="color:var(--green);font-weight:700">155</td><td class="text-center" style="color:var(--red);font-weight:700">154</td>
+<td class="text-center" style="color:var(--amber);font-weight:700">50.2%</td>
+<td class="text-center"><span class="badge" style="background:var(--amber);color:#333;font-size:9px">⚠️ In Progress</span></td>
+</tr>
+</tbody>
+</table>
+
+<div style="margin-top:20px;text-align:center">
+<div style="font-size:14px;font-weight:700;color:var(--navy);margin-bottom:12px">July 2026 Pre-Lease Progress</div>
+<div style="height:32px;background:rgba(220,53,69,.15);border-radius:16px;overflow:hidden;max-width:600px;margin:0 auto;position:relative">
+<div style="height:100%;width:50.2%;background:linear-gradient(90deg,var(--green),var(--blue));border-radius:16px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:700">155 Renewed (50.2%)</div>
+</div>
+<div style="font-size:11px;color:var(--gray);margin-top:8px">154 beds remaining &nbsp;·&nbsp; ~5 months to fill (Feb–Jun) &nbsp;·&nbsp; Need ~31/month = ~8/week</div>
+</div>
+
+<div class="footnote">Student housing lease expirations are concentrated in July. 50.2% pre-lease rate at mid-February — student season typically accelerates through April. Industry benchmark: 60%+ by March 1.</div>
+</div>
+</div>
+
+<!-- BED MIX PERFORMANCE -->
+<div class="section">
+<div class="section-header" onclick="toggle(this)">🏢 Bed Mix Performance (End-of-Week)</div>
+<div class="section-body">
+<table>
+<thead><tr><th>Category</th><th>Type</th><th class="text-right">Beds</th><th class="text-right">Occ</th><th class="text-right">Occ%</th><th class="text-right">Mkt Rent</th><th class="text-right">Sched Rent</th><th class="text-right">Avail (Fall)</th><th class="text-right">Exposure</th></tr></thead>
+<tbody>
+<tr><td>Studio</td><td>S1</td><td class="text-right">60</td><td class="text-right">60</td><td class="text-right">100%</td><td class="text-right">$1,702</td><td class="text-right">$1,711</td><td class="text-right">22</td><td class="text-right" style="color:var(--amber)">37%</td></tr>
+<tr><td>Studio</td><td>S2</td><td class="text-right">28</td><td class="text-right">28</td><td class="text-right">100%</td><td class="text-right">$1,598</td><td class="text-right">$1,589</td><td class="text-right">6</td><td class="text-right">21%</td></tr>
+<tr><td>Studio</td><td>S3</td><td class="text-right">22</td><td class="text-right">22</td><td class="text-right">100%</td><td class="text-right">$1,723</td><td class="text-right">$1,723</td><td class="text-right">9</td><td class="text-right" style="color:var(--amber)">41%</td></tr>
+<tr><td>2-Bed</td><td>2A</td><td class="text-right">18</td><td class="text-right">18</td><td class="text-right">100%</td><td class="text-right">$1,446</td><td class="text-right">$1,447</td><td class="text-right">9</td><td class="text-right" style="color:var(--amber)">50%</td></tr>
+<tr><td>2-Bed</td><td>2A1</td><td class="text-right">22</td><td class="text-right">22</td><td class="text-right">100%</td><td class="text-right">$1,437</td><td class="text-right">$1,450</td><td class="text-right">13</td><td class="text-right" style="color:var(--red)">59%</td></tr>
+<tr><td>2-Bed</td><td>2B</td><td class="text-right">20</td><td class="text-right">20</td><td class="text-right">100%</td><td class="text-right">$1,459</td><td class="text-right">$1,446</td><td class="text-right">6</td><td class="text-right" style="color:var(--amber)">30%</td></tr>
+<tr><td>2-Bed</td><td>2C</td><td class="text-right">20</td><td class="text-right">20</td><td class="text-right">100%</td><td class="text-right">$1,451</td><td class="text-right">$1,450</td><td class="text-right">2</td><td class="text-right">10%</td></tr>
+<tr><td>4-Bed</td><td>4A</td><td class="text-right">40</td><td class="text-right">40</td><td class="text-right">100%</td><td class="text-right">$1,193</td><td class="text-right">$1,174</td><td class="text-right">13</td><td class="text-right" style="color:var(--amber)">33%</td></tr>
+<tr><td>4-Bed</td><td>4B</td><td class="text-right">44</td><td class="text-right">44</td><td class="text-right">100%</td><td class="text-right">$1,176</td><td class="text-right">$1,172</td><td class="text-right">16</td><td class="text-right" style="color:var(--amber)">36%</td></tr>
+<tr><td>4-Bed</td><td>4C</td><td class="text-right">24</td><td class="text-right">24</td><td class="text-right">100%</td><td class="text-right">$1,168</td><td class="text-right">$1,161</td><td class="text-right">7</td><td class="text-right" style="color:var(--amber)">29%</td></tr>
+<tr><td>4-Bed</td><td>4D</td><td class="text-right">16</td><td class="text-right">16</td><td class="text-right">100%</td><td class="text-right">$1,160</td><td class="text-right">$1,165</td><td class="text-right">5</td><td class="text-right" style="color:var(--amber)">31%</td></tr>
+<tr class="totals"><td colspan="2"><strong>TOTAL</strong></td><td class="text-right"><strong>314</strong></td><td class="text-right"><strong>314</strong></td><td class="text-right"><strong>100%</strong></td><td class="text-right"><strong>$1,422</strong></td><td class="text-right"><strong>$1,420</strong></td><td class="text-right"><strong>108</strong></td><td class="text-right"><strong style="color:var(--red)">34.4%</strong></td></tr>
+</tbody>
+</table>
+<div class="footnote">Exposure = Fall available beds / total beds per type. Highest exposure: 2A1 (59%), 2A (50%), S3 (41%). These bed types need prioritized marketing for Fall pre-lease. All beds currently occupied — exposure is future turnover only.</div>
+</div>
+</div>
+
+<!-- AI INSIGHTS -->
+<div class="section">
+<div class="section-header" onclick="toggle(this)">🤖 AI Insights — Weekly Analysis</div>
+<div class="section-body">
+<div class="ai-card" style="margin-top:0">
+<div class="ai-label">🤖 Weekly Intelligence</div>
+
+<div class="ai-rec"><strong>🎓 Pre-Lease Velocity — Critical Gap</strong><br>
+50.2% pre-leased at mid-February. Need 154 more beds by July. At current pace of ~1 new lease/week, that's 154 weeks — <strong>obviously insufficient</strong>. Need to hit ~8 leases/week starting now.<br>
+Student leasing is highly seasonal — expect velocity to pick up Feb–Apr as students secure Fall housing. But marketing must be in place <strong>now</strong> to capture that wave.<br>
+<strong style="display:block;margin-top:6px;padding-top:6px;border-top:1px solid var(--border)">Action: Audit current ILS presence (Apartments.com, student-specific platforms). Launch targeted social campaigns for UK students. Consider referral incentives ($200-300/bed) for current residents.</strong></div>
+
+<div class="ai-rec"><strong>📊 Lead Volume — The #1 Problem</strong><br>
+2 total leads in the reporting period. Reverse funnel math says we need <strong>22 leads/week</strong> to generate 8 leases/week at current conversion rates (50% tour × 100% app × 80% approval × 90% close = 36% combined).<br>
+Current pace: ~0.8 leads/week = <strong>4% of target</strong>.<br>
+The good news: conversion rates are excellent (small sample). Every incremental lead has a high probability of converting. The funnel works — it just needs fuel.<br>
+<strong style="display:block;margin-top:6px;padding-top:6px;border-top:1px solid var(--border)">Action: Triple top-of-funnel spend. Student housing lead gen is concentrated in Feb–Apr. Missing this window means carrying vacancies into Fall at $1,422/bed/month lost revenue.</strong></div>
+
+<div class="ai-rec"><strong>🏢 Bed Type Focus — Where to Market</strong><br>
+Highest Fall exposure by bed type (available beds as % of total):<br>
+• <strong>2A1:</strong> 13 of 22 beds available (59%) — $1,437/bed = $18,681/mo at risk<br>
+• <strong>2A:</strong> 9 of 18 beds available (50%) — $1,446/bed = $13,014/mo at risk<br>
+• <strong>S3:</strong> 9 of 22 beds available (41%) — $1,723/bed = $15,507/mo at risk<br>
+• <strong>S1:</strong> 22 of 60 beds available (37%) — $1,702/bed = $37,444/mo at risk<br>
+S1 has the largest absolute exposure — 22 beds at premium pricing. This should be the #1 marketing focus.<br>
+<strong style="display:block;margin-top:6px;padding-top:6px;border-top:1px solid var(--border)">Action: Prioritize S1 studios and 2A1 units in marketing. Studios appeal to upperclassmen/grad students — target those segments. Total Fall vacancy risk: 108 beds × ~$1,422 avg = $153,576/month if unfilled.</strong></div>
+
+<div class="ai-rec"><strong>💰 Revenue Position — Strong Current, Future Risk</strong><br>
+Current rent position is solid: Avg market $1,422 vs scheduled $1,420 — only $2 gap. No concessions needed at 100% occupancy.<br>
+But the Fall risk is significant: 108 beds turning over represents <strong>$153,576/month</strong> in potential lost revenue if not pre-leased. Even at the current 50.2% rate, the 54 unfilled beds after renewals = $76,788/month at risk.<br>
+<strong style="display:block;margin-top:6px;padding-top:6px;border-top:1px solid var(--border)">Action: Consider modest early-sign concessions ($100-200 off first month) to accelerate pre-lease velocity for Fall. The cost of concessions is far less than vacancy loss ($1,422/bed/month).</strong></div>
+
+</div>
+</div>
+</div>
+
+<!-- NEXT WEEK FOCUS -->
+<div class="section">
+<div class="section-header" onclick="toggle(this)">🎯 Next Week Focus</div>
+<div class="section-body">
+<div style="line-height:2;font-size:14px">
+<strong style="color:var(--navy)">1. Audit and boost lead generation.</strong> 2 leads/week is unsustainable. Review ILS spend, social media campaigns, and student-specific marketing channels. Target 15+ leads/week by end of February.<br>
+<strong style="color:var(--navy)">2. Launch resident referral program.</strong> Current residents are the best ambassadors. $200-300/bed referral bonus can accelerate pre-leasing at lower cost than paid marketing.<br>
+<strong style="color:var(--navy)">3. Push renewal outreach.</strong> 154 beds on notice/turnover for July. Some may be convertible — personal outreach to recent notice-givers to understand reasons and counter-offer.<br>
+<strong style="color:var(--navy)">4. Plan turnover operations.</strong> 108 beds turning in July. Begin planning the turn schedule, vendor contracts, and supply orders now to minimize downtime.<br>
+<strong style="color:var(--navy)">5. Competitive market survey.</strong> What are UK-area student properties offering? Pricing and concession intel needed to position competitively for Spring leasing push.
+</div>
+</div>
+</div>
+
+</div>
+
+<script>
+function toggle(el){el.parentElement.classList.toggle('collapsed')}
+</script>
+</body>
+</html>
