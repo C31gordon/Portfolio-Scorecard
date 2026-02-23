@@ -16,11 +16,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 .header-left{display:flex;align-items:center;gap:16px}
 .rise-logo{font-size:36px;font-weight:900;letter-spacing:2px;color:#2E86AB;text-shadow:0 2px 8px rgba(46,134,171,.3);font-family:inherit}
 .header-left .header-text h1{font-size:26px;font-weight:700;letter-spacing:-.5px}
-.header-left .header-text h1 span{color:var(--blue)}
 .header-left .header-text .prop-name{font-size:16px;font-weight:600;margin-top:4px}
 .header-left .header-text .prop-location{font-size:13px;opacity:.7;margin-top:2px}
-.header-left .header-text .prop-link{color:var(--blue);font-size:12px;text-decoration:none;opacity:.8}
-.header-left .header-text .prop-link:hover{opacity:1;text-decoration:underline}
 .header-right{text-align:right}
 .header-right .date{font-size:18px;font-weight:600}
 .date-select{background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.3);border-radius:6px;padding:6px 12px;font-size:13px;margin-top:8px;cursor:pointer;-webkit-appearance:none;appearance:none;padding-right:28px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='white' d='M6 8L1 3h10z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 8px center}
@@ -28,8 +25,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 .badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.5px}
 .badge-purple{background:#7C3AED;color:#fff}
 .badge-green{background:var(--green);color:#fff}
-.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin-bottom:20px}
-.kpi-card{background:#fff;border-radius:10px;padding:16px;box-shadow:var(--shadow);text-align:center;border-top:3px solid var(--blue)}
+.kpi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:20px}
+.kpi-card{background:#fff;border-radius:10px;padding:16px;box-shadow:var(--shadow);border-top:3px solid var(--blue);display:flex;align-items:center;justify-content:space-between}
+.kpi-left{text-align:center;flex:1}
 .kpi-label{font-size:10px;text-transform:uppercase;letter-spacing:.8px;color:var(--gray);font-weight:600;margin-bottom:4px}
 .kpi-value{font-size:26px;font-weight:800;color:var(--navy)}
 .kpi-sub{font-size:11px;color:var(--gray);margin-top:2px}
@@ -47,10 +45,13 @@ tbody tr:hover{background:#EDF2F7}
 .text-right{text-align:right}.text-center{text-align:center}
 .totals td{font-weight:700;background:#EDF2F7!important;border-top:2px solid var(--navy)}
 .occ-bar{display:inline-block;height:14px;border-radius:3px;min-width:4px;vertical-align:middle}
-.card-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
-.info-card{background:#fff;border-radius:10px;box-shadow:var(--shadow);padding:16px;border-left:4px solid var(--blue)}
-.info-card h4{font-size:12px;text-transform:uppercase;letter-spacing:.5px;color:var(--navy);margin-bottom:8px}
-.info-card .big{font-size:28px;font-weight:800;color:var(--navy)}
+.chart-row{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:20px}
+.mini-card{background:#fff;border-radius:10px;box-shadow:var(--shadow);padding:20px}
+.mini-card h3{font-size:14px;color:var(--navy);margin-bottom:12px;font-weight:600}
+.donut-wrap{display:flex;align-items:center;gap:16px;flex-wrap:wrap;justify-content:center}
+.donut-legend{font-size:12px}
+.donut-legend div{margin-bottom:5px;display:flex;align-items:center;gap:6px}
+.donut-legend .sw{width:12px;height:12px;border-radius:3px;flex-shrink:0}
 .prelease-card{background:linear-gradient(135deg,#1B2A4A,#253A5E);color:#fff;border-radius:12px;padding:24px;margin-bottom:20px;text-align:center}
 .prelease-card h3{font-size:18px;margin-bottom:16px}
 .prelease-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:16px}
@@ -59,21 +60,15 @@ tbody tr:hover{background:#EDF2F7}
 .prelease-metric .lbl{font-size:10px;text-transform:uppercase;opacity:.8;margin-top:2px}
 .progress-bar{height:24px;background:rgba(255,255,255,.15);border-radius:12px;overflow:hidden;margin-top:12px}
 .progress-fill{height:100%;border-radius:12px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px;font-weight:700}
-.donut-wrap{display:flex;align-items:center;gap:20px;flex-wrap:wrap;justify-content:center}
-.donut-legend{font-size:12px}
-.donut-legend div{margin-bottom:6px;display:flex;align-items:center;gap:6px}
-.donut-legend .swatch{width:12px;height:12px;border-radius:3px;flex-shrink:0}
-.chart-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;margin-bottom:16px}
-.mini-card{background:#fff;border-radius:10px;box-shadow:var(--shadow);padding:20px}
-.mini-card h3{font-size:14px;color:var(--navy);margin-bottom:12px;font-weight:600}
 .funnel-stage{padding:10px 14px;border-radius:6px;color:#fff;font-weight:600;font-size:13px;margin-bottom:2px;display:flex;justify-content:space-between;align-items:center}
 .funnel-stage .num{font-size:20px;font-weight:800}
 .funnel-arrow{text-align:center;color:var(--gray);font-size:11px;margin:1px 0}
 .funnel-math{background:#F0F7FF;border:1px solid #D1ECF1;border-radius:8px;padding:14px;margin-top:12px;font-size:12px;line-height:1.7}
 .funnel-math strong{color:var(--navy)}
-.formula-table td{padding:6px 10px;vertical-align:top;font-size:12px}
-.formula-table .metric{font-weight:600;color:var(--navy);white-space:nowrap}
-.formula-table .formula{color:var(--gray);font-family:monospace;font-size:11px}
+.bar-group{margin-bottom:10px}
+.bar-group label{font-size:12px;color:var(--navy);font-weight:600;display:block;margin-bottom:3px}
+.bar-track{height:20px;background:#EDF2F7;border-radius:3px;position:relative;overflow:hidden}
+.bar-fill{height:100%;border-radius:3px;display:flex;align-items:center;padding-left:6px;color:#fff;font-size:10px;font-weight:700}
 .comments-area{background:#FAFBFC;border:1px dashed var(--border);border-radius:8px;padding:14px;min-height:80px;font-size:13px;color:#666;line-height:1.6;outline:none;transition:border-color .2s,background .2s}
 .comments-area:focus{border-color:var(--blue);background:#fff;color:#333}
 .comments-area:empty::before{content:attr(data-placeholder);color:#aaa;font-style:italic}
@@ -82,8 +77,22 @@ tbody tr:hover{background:#EDF2F7}
 .form-note strong{color:var(--navy)}
 .footnote{font-size:10px;color:var(--gray);margin-top:8px;font-style:italic}
 .mock{background:#FFF3CD;color:#856404;font-size:9px;padding:1px 5px;border-radius:8px;font-weight:600}
-@media print{body{background:#fff;font-size:11px}.container{padding:0}.section{break-inside:avoid;box-shadow:none;border:1px solid #ddd}.header,.prelease-card{background:var(--navy)!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}.kpi-card{box-shadow:none;border:1px solid #ddd}.section.collapsed .section-body{display:block}}
-@media(max-width:768px){.header{flex-direction:column;text-align:center}.header-right{text-align:center}.kpi-grid{grid-template-columns:repeat(2,1fr)}.prelease-grid{grid-template-columns:repeat(2,1fr)}.chart-row{grid-template-columns:1fr}}
+.projected{background:#D1ECF1;color:#0C5460;font-size:9px;padding:1px 5px;border-radius:8px;font-weight:600}
+.curr-month{background:#E8F4FD!important;font-weight:600}
+.ai-card{background:linear-gradient(135deg,#F0F7FF,#E8F4FD);border-left:4px solid var(--navy);padding:18px;border-radius:0 8px 8px 0;margin-top:16px;line-height:1.8;font-size:13px;color:#444}
+.ai-card .ai-label{font-size:12px;text-transform:uppercase;letter-spacing:.5px;color:var(--navy);font-weight:700;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.ai-card .ai-rec{margin-bottom:6px;padding-left:12px;border-left:2px solid var(--blue)}
+.formula-table td{padding:6px 10px;vertical-align:top;font-size:12px}
+.formula-table .metric{font-weight:600;color:var(--navy);white-space:nowrap}
+.formula-table .formula{color:var(--gray);font-family:inherit;font-size:11px}
+.velocity-scroll{overflow-x:auto;max-width:100%}
+.velocity-scroll table{min-width:1800px}
+.approval-row{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:20px;padding:20px;background:#F8F9FA;border:1px solid var(--border);border-radius:10px}
+.approval-item label{font-size:11px;text-transform:uppercase;letter-spacing:.5px;color:var(--navy);font-weight:700;display:block;margin-bottom:4px}
+.approval-item input{width:100%;padding:8px 12px;border:1px dashed var(--border);border-radius:6px;font-size:13px;color:#333;background:#fff;outline:none}
+.approval-item input:focus{border-color:var(--blue);border-style:solid}
+@media print{body{background:#fff;font-size:11px}.container{padding:0}.section{break-inside:avoid;box-shadow:none;border:1px solid #ddd}.header,.prelease-card{background:var(--navy)!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}.kpi-card,.mini-card{box-shadow:none;border:1px solid #ddd}.section.collapsed .section-body{display:block}}
+@media(max-width:768px){.header{flex-direction:column;text-align:center}.header-right{text-align:center}.kpi-grid{grid-template-columns:repeat(2,1fr)}.chart-row{grid-template-columns:1fr}.approval-row{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -93,7 +102,7 @@ tbody tr:hover{background:#EDF2F7}
 <div class="weather-bar">
 <span class="weather-icon">🌤️</span>
 <span class="weather-text">Lexington, KY — Partly Cloudy, 52°F</span>
-<span style="margin-left:auto;font-size:11px;opacity:.6">Feb 17, 2026</span>
+<span style="margin-left:auto;font-size:11px;opacity:.6">Feb 23, 2026</span>
 </div>
 
 <!-- HEADER -->
@@ -103,32 +112,31 @@ tbody tr:hover{background:#EDF2F7}
 <div class="header-text">
 <h1>Daily Leasing Report</h1>
 <div class="prop-name">Prosper On Fayette</div>
-<div class="prop-location">Lexington, KY &nbsp;·&nbsp; Student Housing &nbsp;·&nbsp; 185 Units / 314 Beds</div>
+<div class="prop-location">Lexington, KY &nbsp;·&nbsp; Student Housing &nbsp;·&nbsp; 314 Beds</div>
 </div>
 </div>
 <div class="header-right">
-<div class="date">February 17, 2026</div>
+<div class="date">February 23, 2026</div>
 <div style="font-size:11px;opacity:.7;margin-top:2px">Data as of prior business day</div>
 <div style="margin-top:6px"><span class="badge badge-purple">Student Housing</span></div>
 <select class="date-select" onchange="if(this.value)window.location=this.value">
-<option value="" selected>Feb 17, 2026</option>
+<option value="" selected>Feb 23, 2026</option>
 <option value="" disabled>— Previous —</option>
 </select>
 </div>
 </div>
 
-<!-- KPI CARDS -->
+<!-- KPI CARDS (6 tiles, 2 rows of 3 to match Bartram layout) -->
 <div class="kpi-grid">
-<div class="kpi-card"><div class="kpi-label">Physical Occupancy</div><div class="kpi-value" style="color:var(--green)">100%</div><div class="kpi-sub">314 / 314 beds</div></div>
-<div class="kpi-card"><div class="kpi-label">Leased %</div><div class="kpi-value" style="color:var(--green)">100%</div><div class="kpi-sub">All beds leased</div></div>
-<div class="kpi-card"><div class="kpi-label">Exposure</div><div class="kpi-value" style="color:var(--red)">34.4%</div><div class="kpi-sub">108 beds exposed (Fall turnover)</div></div>
-<div class="kpi-card"><div class="kpi-label">Avg Market Rent</div><div class="kpi-value">$1,422</div><div class="kpi-sub">Per bed</div></div>
-<div class="kpi-card"><div class="kpi-label">Avg Scheduled Rent</div><div class="kpi-value">$1,420</div><div class="kpi-sub">Per bed</div></div>
-<div class="kpi-card"><div class="kpi-label">Make Ready</div><div class="kpi-value" style="color:var(--green)">N/A</div><div class="kpi-sub">0 current vacancies</div></div>
-<div class="kpi-card" style="border-top-color:var(--amber)"><div class="kpi-label">Velocity Pre-Lease (Units)</div><div class="kpi-value" style="color:var(--amber)">43.8%</div><div class="kpi-sub">81 / 185 units — Fall 2026</div></div>
+<div class="kpi-card"><div class="kpi-left"><div class="kpi-label">Physical Occupancy</div><div class="kpi-value" style="color:var(--green)">100%</div><div class="kpi-sub">314 / 314 beds occupied</div></div></div>
+<div class="kpi-card"><div class="kpi-left"><div class="kpi-label">Leased % (Current Term) <span class="mock">MOCK</span></div><div class="kpi-value" style="color:var(--green)">100%</div><div class="kpi-sub">All beds leased thru Jul 2026</div></div></div>
+<div class="kpi-card"><div class="kpi-left"><div class="kpi-label">Fall 2026 Pre-Lease Rate</div><div class="kpi-value" style="color:var(--amber)">50.2%</div><div class="kpi-sub">155 of 309 beds pre-leased for Fall</div></div></div>
+<div class="kpi-card"><div class="kpi-left"><div class="kpi-label">Avg Market Rent</div><div class="kpi-value">$1,422</div><div class="kpi-sub">Per bed (all types)</div></div></div>
+<div class="kpi-card"><div class="kpi-left"><div class="kpi-label">Avg Scheduled Rent</div><div class="kpi-value">$1,420</div><div class="kpi-sub">Per bed (all types)</div></div></div>
+<div class="kpi-card"><div class="kpi-left"><div class="kpi-label">Fall Exposure</div><div class="kpi-value" style="color:var(--red)">49.8%</div><div class="kpi-sub">154 of 309 beds not yet leased for Fall</div></div></div>
 </div>
 
-<!-- PRE-LEASE PROGRESS -->
+<!-- PRE-LEASE PROGRESS (Student-specific hero card) -->
 <div class="prelease-card">
 <h3>🎓 Fall 2026 Pre-Lease Progress</h3>
 <div class="prelease-grid">
@@ -143,7 +151,7 @@ tbody tr:hover{background:#EDF2F7}
 <div style="font-size:12px;opacity:.7;margin-top:8px">155 of 309 beds secured for Fall 2026 &nbsp;|&nbsp; 154 beds still need to be leased</div>
 </div>
 
-<!-- MANAGER NOTES (NEW — matches Bartram pattern) -->
+<!-- MANAGER NOTES -->
 <div class="section">
 <div class="section-header" onclick="toggle(this)">📝 Manager Notes</div>
 <div class="section-body">
@@ -155,24 +163,24 @@ tbody tr:hover{background:#EDF2F7}
 </div>
 </div>
 
-<!-- DAILY LEASING ACTIVITY (NEW — matches Bartram format) -->
+<!-- DAILY LEASING ACTIVITY -->
 <div class="section">
 <div class="section-header" onclick="toggle(this)">📊 Daily Leasing Activity</div>
 <div class="section-body">
 <div style="font-size:11px;color:var(--gray);margin-bottom:10px">
-Source: Box Score — Lead Activity section. Daily = 02/16, WTD = 02/13–02/19 (Fri–Thu week), MTD = Feb 1–16.
+Source: Box Score — Lead Activity section. Daily = 02/22, WTD = 02/20–02/26 (Fri–Thu week), MTD = Feb 1–22.
 </div>
 <table style="table-layout:fixed">
 <colgroup><col style="width:40%"><col style="width:20%"><col style="width:20%"><col style="width:20%"></colgroup>
-<thead><tr><th>Contact Method</th><th class="text-center">Daily</th><th class="text-center">WTD (02/13–02/19)</th><th class="text-center">MTD</th></tr></thead>
+<thead><tr><th>Contact Method</th><th class="text-center">Daily</th><th class="text-center">WTD (02/20–02/26)</th><th class="text-center">MTD</th></tr></thead>
 <tbody>
-<tr><td>First Visit/Tours</td><td class="text-center">1</td><td class="text-center">1</td><td class="text-center">1</td></tr>
-<tr><td>Online</td><td class="text-center">1</td><td class="text-center">1</td><td class="text-center">1</td></tr>
-<tr><td>Call</td><td class="text-center">0</td><td class="text-center">0</td><td class="text-center">0</td></tr>
-<tr><td>Email</td><td class="text-center">0</td><td class="text-center">0</td><td class="text-center">0</td></tr>
-<tr><td>Text</td><td class="text-center">0</td><td class="text-center">0</td><td class="text-center">0</td></tr>
-<tr><td>Other</td><td class="text-center">1</td><td class="text-center">1</td><td class="text-center">1</td></tr>
-<tr style="border-top:2px solid var(--navy)"><td><strong>Total New Leads</strong></td><td class="text-center"><strong>2</strong></td><td class="text-center"><strong>2</strong></td><td class="text-center"><strong>2</strong></td></tr>
+<tr><td>First Visit/Tours</td><td class="text-center">1</td><td class="text-center">1</td><td class="text-center">1 <span class="mock">MOCK</span></td></tr>
+<tr><td>Online</td><td class="text-center">1</td><td class="text-center">1</td><td class="text-center">1 <span class="mock">MOCK</span></td></tr>
+<tr><td>Call</td><td class="text-center">0</td><td class="text-center">0</td><td class="text-center">0 <span class="mock">MOCK</span></td></tr>
+<tr><td>Email</td><td class="text-center">0</td><td class="text-center">0</td><td class="text-center">0 <span class="mock">MOCK</span></td></tr>
+<tr><td>Text</td><td class="text-center">0</td><td class="text-center">0</td><td class="text-center">0 <span class="mock">MOCK</span></td></tr>
+<tr><td>Other</td><td class="text-center">1</td><td class="text-center">1</td><td class="text-center">1 <span class="mock">MOCK</span></td></tr>
+<tr style="border-top:2px solid var(--navy)"><td><strong>Total New Leads</strong></td><td class="text-center"><strong>2</strong></td><td class="text-center"><strong>2</strong></td><td class="text-center"><strong>2</strong> <span class="mock">MOCK</span></td></tr>
 </tbody>
 </table>
 <div style="margin-top:12px;border-top:1px solid var(--border);padding-top:10px">
@@ -181,23 +189,23 @@ Source: Box Score — Lead Activity section. Daily = 02/16, WTD = 02/13–02/19 
 <colgroup><col style="width:40%"><col style="width:20%"><col style="width:20%"><col style="width:20%"></colgroup>
 <thead><tr><th>Activity Type</th><th class="text-center">Daily</th><th class="text-center">WTD</th><th class="text-center">MTD</th></tr></thead>
 <tbody>
-<tr><td>Emails Sent</td><td class="text-center">9</td><td class="text-center">9</td><td class="text-center">9</td></tr>
-<tr><td>Calls Made</td><td class="text-center">9</td><td class="text-center">9</td><td class="text-center">9</td></tr>
-<tr><td>Texts Sent</td><td class="text-center">7</td><td class="text-center">7</td><td class="text-center">7</td></tr>
-<tr><td>Chats</td><td class="text-center">0</td><td class="text-center">0</td><td class="text-center">0</td></tr>
+<tr><td>Emails Sent</td><td class="text-center">9</td><td class="text-center">9</td><td class="text-center">9 <span class="mock">MOCK</span></td></tr>
+<tr><td>Calls Made</td><td class="text-center">9</td><td class="text-center">9</td><td class="text-center">9 <span class="mock">MOCK</span></td></tr>
+<tr><td>Texts Sent</td><td class="text-center">7</td><td class="text-center">7</td><td class="text-center">7 <span class="mock">MOCK</span></td></tr>
+<tr><td>Chats</td><td class="text-center">0</td><td class="text-center">0</td><td class="text-center">0 <span class="mock">MOCK</span></td></tr>
 </tbody>
 </table>
 </div>
-<div class="footnote">Source: Box Score Lead Activity &amp; Lead Conversion report (02/17/2026). Data from Prosper daily DLR snapshot. WTD/MTD may equal daily if only single-day data available.</div>
+<div class="footnote">Source: Box Score Lead Activity &amp; Lead Conversion report (02/23/2026). WTD/MTD may equal daily if only single-day data available — cumulative data pipeline pending.</div>
 </div>
 </div>
 
-<!-- THREE-CARD ROW -->
+<!-- THREE-CARD ROW: Lead Source / Conversion Funnel / Rent by Bed -->
 <div class="chart-row">
 
 <!-- Lead Source Breakdown -->
 <div class="mini-card">
-<h3>Lead Source Breakdown (02/16)</h3>
+<h3>Lead Source Breakdown (02/22)</h3>
 <div class="donut-wrap">
 <svg width="140" height="140" viewBox="0 0 140 140">
 <circle cx="70" cy="70" r="50" fill="none" stroke="#EDF2F7" stroke-width="18"/>
@@ -207,13 +215,13 @@ Source: Box Score — Lead Activity section. Daily = 02/16, WTD = 02/13–02/19 
 <text x="70" y="80" text-anchor="middle" font-size="10" fill="var(--gray)">leads</text>
 </svg>
 <div class="donut-legend">
-<div><span class="swatch" style="background:#2E86AB"></span> Online — 1 (50%)</div>
-<div><span class="swatch" style="background:#6C7A89"></span> Other — 1 (50%)</div>
+<div><span class="sw" style="background:#2E86AB"></span> Online — 1 (50%)</div>
+<div><span class="sw" style="background:#6C7A89"></span> Other — 1 (50%)</div>
 </div>
 </div>
 </div>
 
-<!-- Conversion Funnel (MTD) — NEW: Actual/Target format -->
+<!-- Conversion Funnel (MTD) -->
 <div class="mini-card">
 <h3>Conversion Funnel (MTD)</h3>
 <div class="funnel-stage" style="background:var(--blue)"><span>Total New Leads</span><span class="num"><strong>2</strong> <span style="opacity:.65;font-size:14px;font-weight:400">/ 40</span></span></div>
@@ -225,10 +233,8 @@ Source: Box Score — Lead Activity section. Daily = 02/16, WTD = 02/13–02/19 
 <div class="funnel-stage" style="background:var(--green)"><span>Leases Completed</span><span class="num"><strong>1</strong> <span style="opacity:.65;font-size:14px;font-weight:400">/ 5</span></span></div>
 <div style="margin-top:6px;font-size:10px;color:var(--gray);text-align:right">Actual / MTD target needed (based on ~10 new leases/month for Fall pre-lease)</div>
 <div style="margin-top:10px;font-size:11px;color:var(--navy)">
-⚡ 2 MTD leads → 1 tour (50%) → 1 app approved → 1 lease completed. Small sample but converting well. Pre-lease velocity needs to increase to fill 154 remaining beds by Fall.
+⚡ 2 MTD leads → 1 tour (50%) → 1 app → 1 lease. Small sample but converting well. Pre-lease velocity needs to increase to fill 154 remaining beds by Fall.
 </div>
-
-<!-- NEW: Collapsible reverse funnel calculation -->
 <div style="margin-top:10px">
 <div style="cursor:pointer;font-size:12px;color:var(--blue);font-weight:600;" onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'block':'none'">
 ▶ Show Reverse Funnel Calculation
@@ -240,89 +246,94 @@ Source: Box Score — Lead Activity section. Daily = 02/16, WTD = 02/13–02/19 
 <strong>Conversion rates:</strong> Tour 50% → App 100% → Approval 80% → Close 90%<br>
 <strong>Combined conversion:</strong> 0.50 × 1.00 × 0.80 × 0.90 = <strong>36%</strong><br><br>
 <strong style="font-size:13px;color:var(--navy)">To hit 8 leases/week: Need 22 leads/week → 11 tours → 11 apps → 9 approved → 8 leases</strong><br><br>
-<span style="display:inline-block;padding:4px 10px;border-radius:4px;background:var(--red);color:#fff;font-weight:600;font-size:11px">⚠️ Current pace: 2 leads in 17 days (~0.8/week) vs 22 needed/week — 4% of target</span><br>
+<span style="display:inline-block;padding:4px 10px;border-radius:4px;background:var(--red);color:#fff;font-weight:600;font-size:11px">⚠️ Current pace: 2 leads in 23 days (~0.6/week) vs 22 needed/week — 3% of target</span><br>
 <span style="font-size:11px;color:var(--gray);margin-top:4px;display:block">Note: Student leasing is seasonal — velocity typically accelerates Feb–Apr. Rates based on available data (small sample). 314 beds, not units.</span>
 </div>
 </div>
 </div>
 </div>
 
-<!-- Rent by Bed Type -->
+<!-- Rent by Bed Category -->
 <div class="mini-card">
 <h3>Rent by Bed Category</h3>
-<div style="margin-bottom:10px">
-<label style="font-size:12px;color:var(--navy);font-weight:600;display:block;margin-bottom:3px">Studios (S1/S2/S3)</label>
-<div style="height:20px;background:#EDF2F7;border-radius:3px;overflow:hidden"><div style="height:100%;width:70%;background:var(--blue);border-radius:3px;display:flex;align-items:center;padding-left:6px;color:#fff;font-size:10px;font-weight:700">Avg $1,674</div></div>
+<div class="bar-group">
+<label>Studios (S1/S2/S3)</label>
+<div class="bar-track"><div class="bar-fill" style="width:70%;background:var(--blue)">Avg $1,674</div></div>
 </div>
-<div style="margin-bottom:10px">
-<label style="font-size:12px;color:var(--navy);font-weight:600;display:block;margin-bottom:3px">2-Bed (2A/2A1/2B/2C)</label>
-<div style="height:20px;background:#EDF2F7;border-radius:3px;overflow:hidden"><div style="height:100%;width:60%;background:var(--blue);border-radius:3px;display:flex;align-items:center;padding-left:6px;color:#fff;font-size:10px;font-weight:700">Avg $1,448</div></div>
+<div class="bar-group">
+<label>2-Bed (2A/2A1/2B/2C)</label>
+<div class="bar-track"><div class="bar-fill" style="width:60%;background:var(--blue)">Avg $1,448</div></div>
 </div>
-<div style="margin-bottom:10px">
-<label style="font-size:12px;color:var(--navy);font-weight:600;display:block;margin-bottom:3px">4-Bed (4A/4B/4C/4D)</label>
-<div style="height:20px;background:#EDF2F7;border-radius:3px;overflow:hidden"><div style="height:100%;width:49%;background:var(--blue);border-radius:3px;display:flex;align-items:center;padding-left:6px;color:#fff;font-size:10px;font-weight:700">Avg $1,174</div></div>
+<div class="bar-group">
+<label>4-Bed (4A/4B/4C/4D)</label>
+<div class="bar-track"><div class="bar-fill" style="width:49%;background:var(--blue)">Avg $1,174</div></div>
 </div>
 <div style="margin-top:8px;font-size:10px;color:var(--gray)">Per-bed market rent averages by category</div>
 </div>
 </div>
 
-<!-- BED MIX & AVAILABILITY -->
-<div class="section">
-<div class="section-header" onclick="toggle(this)">🏢 Bed Mix &amp; Availability</div>
-<div class="section-body">
-<table>
-<thead><tr><th>Bed Type</th><th class="text-right">Avg SQFT</th><th class="text-right">Avg Mkt Rent</th><th class="text-right">Avg Sched Rent</th><th class="text-right">Beds</th><th class="text-right">Occ</th><th class="text-right">Vacant</th><th class="text-right">Avail</th><th class="text-right">Occ%</th><th>Occ Bar</th><th class="text-right">Exposure</th></tr></thead>
-<tbody>
-<tr><td><strong>2A</strong></td><td class="text-right">452</td><td class="text-right">$1,446</td><td class="text-right">$1,447</td><td class="text-right">18</td><td class="text-right">18</td><td class="text-right">0</td><td class="text-right">9</td><td class="text-right">100%</td><td><span class="occ-bar" style="width:80px;background:var(--green)"></span></td><td class="text-right" style="color:var(--amber)">50%</td></tr>
-<tr><td><strong>2A1</strong></td><td class="text-right">446</td><td class="text-right">$1,437</td><td class="text-right">$1,450</td><td class="text-right">22</td><td class="text-right">22</td><td class="text-right">0</td><td class="text-right">13</td><td class="text-right">100%</td><td><span class="occ-bar" style="width:80px;background:var(--green)"></span></td><td class="text-right" style="color:var(--red)">59%</td></tr>
-<tr><td><strong>2B</strong></td><td class="text-right">444</td><td class="text-right">$1,459</td><td class="text-right">$1,446</td><td class="text-right">20</td><td class="text-right">20</td><td class="text-right">0</td><td class="text-right">6</td><td class="text-right">100%</td><td><span class="occ-bar" style="width:80px;background:var(--green)"></span></td><td class="text-right" style="color:var(--amber)">30%</td></tr>
-<tr><td><strong>2C</strong></td><td class="text-right">446</td><td class="text-right">$1,451</td><td class="text-right">$1,450</td><td class="text-right">20</td><td class="text-right">20</td><td class="text-right">0</td><td class="text-right">2</td><td class="text-right">100%</td><td><span class="occ-bar" style="width:80px;background:var(--green)"></span></td><td class="text-right">10%</td></tr>
-<tr><td><strong>4A</strong></td><td class="text-right">335</td><td class="text-right">$1,193</td><td class="text-right">$1,174</td><td class="text-right">40</td><td class="text-right">40</td><td class="text-right">0</td><td class="text-right">13</td><td class="text-right">100%</td><td><span class="occ-bar" style="width:80px;background:var(--green)"></span></td><td class="text-right" style="color:var(--amber)">33%</td></tr>
-<tr><td><strong>4B</strong></td><td class="text-right">356</td><td class="text-right">$1,176</td><td class="text-right">$1,172</td><td class="text-right">44</td><td class="text-right">44</td><td class="text-right">0</td><td class="text-right">16</td><td class="text-right">100%</td><td><span class="occ-bar" style="width:80px;background:var(--green)"></span></td><td class="text-right" style="color:var(--amber)">36%</td></tr>
-<tr><td><strong>4C</strong></td><td class="text-right">327</td><td class="text-right">$1,168</td><td class="text-right">$1,161</td><td class="text-right">24</td><td class="text-right">24</td><td class="text-right">0</td><td class="text-right">7</td><td class="text-right">100%</td><td><span class="occ-bar" style="width:80px;background:var(--green)"></span></td><td class="text-right" style="color:var(--amber)">29%</td></tr>
-<tr><td><strong>4D</strong></td><td class="text-right">360</td><td class="text-right">$1,160</td><td class="text-right">$1,165</td><td class="text-right">16</td><td class="text-right">16</td><td class="text-right">0</td><td class="text-right">5</td><td class="text-right">100%</td><td><span class="occ-bar" style="width:80px;background:var(--green)"></span></td><td class="text-right" style="color:var(--amber)">31%</td></tr>
-<tr><td><strong>S1</strong></td><td class="text-right">408</td><td class="text-right">$1,702</td><td class="text-right">$1,711</td><td class="text-right">60</td><td class="text-right">60</td><td class="text-right">0</td><td class="text-right">22</td><td class="text-right">100%</td><td><span class="occ-bar" style="width:80px;background:var(--green)"></span></td><td class="text-right" style="color:var(--amber)">37%</td></tr>
-<tr><td><strong>S2</strong></td><td class="text-right">387</td><td class="text-right">$1,598</td><td class="text-right">$1,589</td><td class="text-right">28</td><td class="text-right">28</td><td class="text-right">0</td><td class="text-right">6</td><td class="text-right">100%</td><td><span class="occ-bar" style="width:80px;background:var(--green)"></span></td><td class="text-right">21%</td></tr>
-<tr><td><strong>S3</strong></td><td class="text-right">447</td><td class="text-right">$1,723</td><td class="text-right">$1,723</td><td class="text-right">22</td><td class="text-right">22</td><td class="text-right">0</td><td class="text-right">9</td><td class="text-right">100%</td><td><span class="occ-bar" style="width:80px;background:var(--green)"></span></td><td class="text-right" style="color:var(--amber)">41%</td></tr>
-<tr class="totals"><td><strong>TOTAL</strong></td><td></td><td class="text-right"><strong>$1,422</strong></td><td class="text-right"><strong>$1,420</strong></td><td class="text-right"><strong>314</strong></td><td class="text-right"><strong>314</strong></td><td class="text-right"><strong>0</strong></td><td class="text-right"><strong>108</strong></td><td class="text-right"><strong>100%</strong></td><td></td><td class="text-right"><strong style="color:var(--red)">34.4%</strong></td></tr>
-</tbody>
-</table>
-</div>
-</div>
-
-<!-- VACANCY DETAIL -->
-<div class="section">
-<div class="section-header" onclick="toggle(this)">🔑 Vacancy Detail</div>
-<div class="section-body">
-<div style="text-align:center;padding:30px;color:var(--green)">
-<div style="font-size:48px;margin-bottom:8px">✅</div>
-<div style="font-size:18px;font-weight:700">No Current Vacancies</div>
-<div style="font-size:13px;color:var(--gray);margin-top:4px">All 314 beds are occupied. 108 beds available for Fall 2026 turnover.</div>
-</div>
-</div>
-</div>
-
-<!-- PROPERTY PULSE -->
+<!-- PROPERTY PULSE (moved here — after funnel, matching Bartram layout) -->
 <div class="section">
 <div class="section-header" onclick="toggle(this)">🏠 Property Pulse</div>
 <div class="section-body">
-<table>
-<thead><tr><th>Bed Type</th><th class="text-right">Beds</th><th class="text-right">Move-Ins</th><th class="text-right">Notices</th><th class="text-right">Move-Outs</th><th class="text-right">MTM</th><th class="text-right">Renewals</th><th class="text-right">Skips</th><th class="text-right">Evictions</th></tr></thead>
+<table style="table-layout:fixed">
+<colgroup><col style="width:40%"><col style="width:20%"><col style="width:20%"><col style="width:20%"></colgroup>
+<thead><tr><th>Metric</th><th class="text-center">Daily (02/22)</th><th class="text-center">WTD (02/20–02/26)</th><th class="text-center">MTD</th></tr></thead>
 <tbody>
-<tr><td><strong>2A</strong></td><td class="text-right">18</td><td class="text-right">0</td><td class="text-right">0</td><td class="text-right">0</td><td class="text-right">0</td><td class="text-right">0</td><td class="text-right">0</td><td class="text-right">0</td></tr>
-<tr><td><strong>2A1</strong></td><td class="text-right">22</td><td class="text-right">0</td><td class="text-right">0</td><td class="text-right">0</td><td class="text-right">0</td><td class="text-right">0</td><td class="text-right">0</td><td class="text-right">0</td></tr>
-<tr><td><strong>2B</strong></td><td class="text-right">20</td><td class="text-right">0</td><td class="text-right">0</td><td class="text-right">0</td><td class="text-right">0</td><td class="text-right">0</td><td class="text-right">0</td><td class="text-right">0</td></tr>
-<tr><td><strong>2C</strong></td><td class="text-right">20</td><td class="text-right">0</td><td class="text-right">0</td><td class="text-right">0</td><td class="text-right">0</td><td class="text-right">0</td><td class="text-right">0</td><td class="text-right">0</td></tr>
-<tr><td><strong>4A</strong></td><td class="text-right">40</td><td class="text-right">0</td><td class="text-right">0</td><td class="text-right">0</td><td class="text-right">0</td><td class="text-right">0</td><td class="text-right">0</td><td class="text-right">0</td></tr>
-<tr><td><strong>4B</strong></td><td class="text-right">44</td><td class="text-right">0</td><td class="text-right">0</td><td class="text-right">0</td><td class="text-right">0</td><td class="text-right">0</td><td class="text-right">0</td><td class="text-right">0</td></tr>
-<tr><td><strong>4C</strong></td><td class="text-right">24</td><td class="text-right">0</td><td class="text-right">0</td><td class="text-right">0</td><td class="text-right">0</td><td class="text-right">0</td><td class="text-right">0</td><td class="text-right">0</td></tr>
-<tr><td><strong>4D</strong></td><td class="text-right">16</td><td class="text-right">0</td><td class="text-right">0</td><td class="text-right">0</td><td class="text-right">0</td><td class="text-right">0</td><td class="text-right">0</td><td class="text-right">0</td></tr>
-<tr><td><strong>S1</strong></td><td class="text-right">60</td><td class="text-right">0</td><td class="text-right">0</td><td class="text-right">0</td><td class="text-right">0</td><td class="text-right">0</td><td class="text-right">0</td><td class="text-right">0</td></tr>
-<tr><td><strong>S2</strong></td><td class="text-right">28</td><td class="text-right">0</td><td class="text-right">0</td><td class="text-right">0</td><td class="text-right">0</td><td class="text-right">0</td><td class="text-right">0</td><td class="text-right">0</td></tr>
-<tr><td><strong>S3</strong></td><td class="text-right">22</td><td class="text-right">0</td><td class="text-right">0</td><td class="text-right">0</td><td class="text-right">0</td><td class="text-right">0</td><td class="text-right">0</td><td class="text-right">0</td></tr>
-<tr class="totals"><td><strong>Total</strong></td><td class="text-right"><strong>314</strong></td><td class="text-right"><strong>0</strong></td><td class="text-right"><strong>0</strong></td><td class="text-right"><strong>0</strong></td><td class="text-right"><strong>0</strong></td><td class="text-right"><strong>0</strong></td><td class="text-right"><strong>0</strong></td><td class="text-right"><strong>0</strong></td></tr>
+<tr><td>Move-Ins</td><td class="text-center">0</td><td class="text-center">0</td><td class="text-center">0 <span class="mock">MOCK</span></td></tr>
+<tr><td>Move-Outs</td><td class="text-center">0</td><td class="text-center">0</td><td class="text-center">0 <span class="mock">MOCK</span></td></tr>
+<tr><td>Notices</td><td class="text-center">0</td><td class="text-center">0</td><td class="text-center">0 <span class="mock">MOCK</span></td></tr>
+<tr><td>Renewals</td><td class="text-center">0 <span class="mock">MOCK</span></td><td class="text-center">2</td><td class="text-center">2 <span class="mock">MOCK</span></td></tr>
+<tr><td>New Leases</td><td class="text-center">0 <span class="mock">MOCK</span></td><td class="text-center">1</td><td class="text-center">1 <span class="mock">MOCK</span></td></tr>
+<tr><td>Month to Month</td><td class="text-center">0</td><td class="text-center">0</td><td class="text-center">0</td></tr>
+<tr><td>Skips</td><td class="text-center">0</td><td class="text-center">0</td><td class="text-center">0</td></tr>
+<tr><td>Evictions</td><td class="text-center">0</td><td class="text-center">0</td><td class="text-center">0</td></tr>
+<tr style="background:#EDF2F7"><td><strong>Net Absorption</strong></td><td class="text-center"><strong>0</strong></td><td class="text-center"><strong>0</strong></td><td class="text-center"><strong>0</strong></td></tr>
 </tbody>
 </table>
+<div class="footnote">Source: Box Score — Leasing Activity (02/23/2026). All 314 beds occupied mid-term. No move-in/move-out activity expected until Jul 2026 turnover. Renewals/New Leases are for Fall 2026 pre-leasing.</div>
+</div>
+</div>
+
+<!-- TRENDING OCCUPANCY -->
+<div class="section">
+<div class="section-header" onclick="toggle(this)">📈 Trending Occupancy <span class="mock">MOCK DATA EXCEPT CURRENT</span></div>
+<div class="section-body">
+<table style="table-layout:auto">
+<thead><tr>
+<th>Metric</th>
+<th class="text-center">Sep-25 <span class="mock">MOCK</span></th>
+<th class="text-center">Oct-25 <span class="mock">MOCK</span></th>
+<th class="text-center">Nov-25 <span class="mock">MOCK</span></th>
+<th class="text-center">Dec-25 <span class="mock">MOCK</span></th>
+<th class="text-center">Jan-26 <span class="mock">MOCK</span></th>
+<th class="text-center curr-month">Feb-26</th>
+<th class="text-center">Mar-26 <span class="projected">PROJ</span></th>
+<th class="text-center">Apr-26 <span class="projected">PROJ</span></th>
+<th class="text-center">May-26 <span class="projected">PROJ</span></th>
+<th class="text-center">Jun-26 <span class="projected">PROJ</span></th>
+<th class="text-center">Jul-26 <span class="projected">PROJ</span></th>
+<th class="text-center">Aug-26 <span class="projected">PROJ</span></th>
+</tr></thead>
+<tbody>
+<tr><td>Physical Occ %</td>
+<td class="text-center">100%</td><td class="text-center">100%</td><td class="text-center">100%</td><td class="text-center">100%</td><td class="text-center">100%</td>
+<td class="text-center curr-month"><strong>100%</strong></td>
+<td class="text-center">100%</td><td class="text-center">100%</td><td class="text-center">99%</td><td class="text-center">99%</td><td class="text-center">50%</td><td class="text-center">85%</td>
+</tr>
+<tr><td>Pre-Lease % (Fall)</td>
+<td class="text-center">—</td><td class="text-center">5%</td><td class="text-center">12%</td><td class="text-center">22%</td><td class="text-center">38%</td>
+<td class="text-center curr-month"><strong>50.2%</strong></td>
+<td class="text-center">62%</td><td class="text-center">74%</td><td class="text-center">85%</td><td class="text-center">92%</td><td class="text-center">95%</td><td class="text-center">97%</td>
+</tr>
+<tr><td>Beds Pre-Leased</td>
+<td class="text-center">—</td><td class="text-center">15</td><td class="text-center">37</td><td class="text-center">68</td><td class="text-center">117</td>
+<td class="text-center curr-month"><strong>155</strong></td>
+<td class="text-center">192</td><td class="text-center">229</td><td class="text-center">263</td><td class="text-center">284</td><td class="text-center">294</td><td class="text-center">300</td>
+</tr>
+</tbody>
+</table>
+<div class="footnote" style="margin-top:8px">Current month (Feb-26) is actual data. Historical months and projections are <span class="mock">MOCK</span> — will be populated from Entrata data pipeline. Jul occupancy dip reflects academic turnover.</div>
 </div>
 </div>
 
@@ -338,7 +349,6 @@ Source: Box Score — Lead Activity section. Daily = 02/16, WTD = 02/13–02/19 
 <tr style="background:#F8D7DA"><td>⚠️ Jul 2026</td><td class="text-right" style="font-size:18px;font-weight:800;color:var(--red)">309</td><td class="text-right" style="color:var(--green);font-weight:700">155</td><td class="text-right" style="color:var(--red);font-weight:700">154</td><td class="text-right">0</td><td class="text-right"><strong style="color:var(--amber)">50.2%</strong></td></tr>
 </tbody>
 </table>
-
 <div style="margin-top:20px;text-align:center">
 <svg width="100%" height="220" viewBox="0 0 500 220" preserveAspectRatio="xMidYMid meet">
 <line x1="50" y1="190" x2="450" y2="190" stroke="var(--border)" stroke-width="1"/>
@@ -359,166 +369,266 @@ Source: Box Score — Lead Activity section. Daily = 02/16, WTD = 02/13–02/19 
 </div>
 </div>
 
-<!-- LEASE EXECUTION -->
-<div class="section">
-<div class="section-header" onclick="toggle(this)">📝 Lease Execution (02/13–02/19)</div>
-<div class="section-body">
-<div class="chart-row">
-<div class="info-card"><h4>New Leases</h4>
-<div style="font-size:13px;line-height:2"><div>Started: <strong>1</strong></div><div>Completed: <strong>1</strong></div><div>Approved: <strong>1</strong></div><div>Cancelled: <strong>0</strong></div></div></div>
-<div class="info-card"><h4>Renewals</h4>
-<div style="font-size:13px;line-height:2"><div>Started: <strong>1</strong></div><div>Completed: <strong>2</strong></div><div>Approved: <strong>2</strong></div><div>Cancelled: <strong>0</strong></div></div></div>
-<div class="info-card"><h4>Applications</h4>
-<div style="font-size:13px;line-height:2"><div>New Lease Apps Approved: <strong>0</strong></div><div>Renewal Apps Approved: <strong>1</strong></div></div></div>
-</div>
-</div>
-</div>
-
 <!-- WEEKLY VELOCITY REPORT -->
 <div class="section">
-<div class="section-header" onclick="toggle(this)">📈 Weekly Velocity Report — Anthem House (Prosper on Fayette)</div>
+<div class="section-header" onclick="toggle(this)">📊 Weekly Velocity Report — Fall 2026-2027</div>
 <div class="section-body">
 
-<!-- Summary Header -->
+<!-- Summary Bar -->
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px">
-<div style="background:var(--light);border-radius:8px;padding:16px">
-<div style="font-size:12px;font-weight:700;color:var(--navy);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px">📞 Traffic Type (Week of 2/19/2026)</div>
-<div style="display:flex;gap:16px;flex-wrap:wrap">
-<div style="text-align:center"><div style="font-size:24px;font-weight:800;color:var(--navy)">20</div><div style="font-size:10px;color:var(--gray)">Calls</div></div>
-<div style="text-align:center"><div style="font-size:24px;font-weight:800;color:var(--navy)">19</div><div style="font-size:10px;color:var(--gray)">Emails</div></div>
-<div style="text-align:center"><div style="font-size:24px;font-weight:800;color:var(--navy)">0</div><div style="font-size:10px;color:var(--gray)">Walk Ins</div></div>
+<div style="background:var(--light);border-radius:8px;padding:14px">
+<div style="font-size:12px;font-weight:700;color:var(--navy);margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px">Traffic This Week</div>
+<table style="font-size:13px">
+<tr><td>Traffic — Calls</td><td class="text-right"><strong>20</strong> <span class="mock">MOCK</span></td></tr>
+<tr><td>Traffic — Emails</td><td class="text-right"><strong>19</strong> <span class="mock">MOCK</span></td></tr>
+<tr><td>Traffic — Walk Ins</td><td class="text-right"><strong>0</strong> <span class="mock">MOCK</span></td></tr>
+</table>
 </div>
-</div>
-<div style="background:var(--light);border-radius:8px;padding:16px">
-<div style="font-size:12px;font-weight:700;color:var(--navy);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px">📝 Lease Type (Week of 2/19/2026)</div>
-<div style="display:flex;gap:16px;flex-wrap:wrap">
-<div style="text-align:center"><div style="font-size:24px;font-weight:800;color:var(--green)">2</div><div style="font-size:10px;color:var(--gray)">New Leases Completed</div></div>
-<div style="text-align:center"><div style="font-size:24px;font-weight:800;color:var(--amber)">3</div><div style="font-size:10px;color:var(--gray)">New Leases Pending</div></div>
-<div style="text-align:center"><div style="font-size:24px;font-weight:800;color:var(--blue)">1</div><div style="font-size:10px;color:var(--gray)">Renewals</div></div>
-</div>
+<div style="background:var(--light);border-radius:8px;padding:14px">
+<div style="font-size:12px;font-weight:700;color:var(--navy);margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px">Leasing This Week</div>
+<table style="font-size:13px">
+<tr><td>New Leases — Completed</td><td class="text-right"><strong>2</strong> <span class="mock">MOCK</span></td></tr>
+<tr><td>New Leases — Pending</td><td class="text-right"><strong>3</strong> <span class="mock">MOCK</span></td></tr>
+<tr><td>Renewals</td><td class="text-right"><strong>1</strong> <span class="mock">MOCK</span></td></tr>
+</table>
 </div>
 </div>
 
-<!-- Key Metrics Bar -->
-<div style="display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-bottom:20px">
-<div style="background:var(--navy);color:#fff;border-radius:8px;padding:14px;text-align:center"><div style="font-size:22px;font-weight:800">185</div><div style="font-size:9px;text-transform:uppercase;opacity:.7">Total Units</div></div>
-<div style="background:var(--navy);color:#fff;border-radius:8px;padding:14px;text-align:center"><div style="font-size:22px;font-weight:800">89</div><div style="font-size:9px;text-transform:uppercase;opacity:.7">Proj. Renewals</div></div>
-<div style="background:var(--navy);color:#fff;border-radius:8px;padding:14px;text-align:center"><div style="font-size:22px;font-weight:800">81</div><div style="font-size:9px;text-transform:uppercase;opacity:.7">Cumulative Total</div></div>
-<div style="background:var(--navy);color:#fff;border-radius:8px;padding:14px;text-align:center"><div style="font-size:22px;font-weight:800">54%</div><div style="font-size:9px;text-transform:uppercase;opacity:.7">Retention %</div></div>
-<div style="background:var(--navy);color:#fff;border-radius:8px;padding:14px;text-align:center"><div style="font-size:22px;font-weight:800">89</div><div style="font-size:9px;text-transform:uppercase;opacity:.7">Proj. New Leases</div></div>
-<div style="background:var(--green);color:#fff;border-radius:8px;padding:14px;text-align:center"><div style="font-size:22px;font-weight:800">96.4%</div><div style="font-size:9px;text-transform:uppercase;opacity:.7">Proj. Occ 2026-27</div></div>
+<!-- Key Metrics -->
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:20px">
+<div style="background:#fff;border:1px solid var(--border);border-radius:8px;padding:12px;text-align:center">
+<div style="font-size:10px;text-transform:uppercase;color:var(--gray);font-weight:600">Total Beds</div>
+<div style="font-size:22px;font-weight:800;color:var(--navy)">314</div>
+</div>
+<div style="background:#fff;border:1px solid var(--border);border-radius:8px;padding:12px;text-align:center">
+<div style="font-size:10px;text-transform:uppercase;color:var(--gray);font-weight:600">Proj. Total Renewals <span class="mock">MOCK</span></div>
+<div style="font-size:22px;font-weight:800;color:var(--navy)">180</div>
+</div>
+<div style="background:#fff;border:1px solid var(--border);border-radius:8px;padding:12px;text-align:center">
+<div style="font-size:10px;text-transform:uppercase;color:var(--gray);font-weight:600">Cumulative Total <span class="mock">MOCK</span></div>
+<div style="font-size:22px;font-weight:800;color:var(--navy)">155</div>
+</div>
+<div style="background:#fff;border:1px solid var(--border);border-radius:8px;padding:12px;text-align:center">
+<div style="font-size:10px;text-transform:uppercase;color:var(--gray);font-weight:600">Retention % <span class="mock">MOCK</span></div>
+<div style="font-size:22px;font-weight:800;color:var(--amber)">50.2%</div>
+</div>
+<div style="background:#fff;border:1px solid var(--border);border-radius:8px;padding:12px;text-align:center">
+<div style="font-size:10px;text-transform:uppercase;color:var(--gray);font-weight:600">Proj. New Leases <span class="mock">MOCK</span></div>
+<div style="font-size:22px;font-weight:800;color:var(--navy)">134</div>
+</div>
+<div style="background:#fff;border:1px solid var(--border);border-radius:8px;padding:12px;text-align:center">
+<div style="font-size:10px;text-transform:uppercase;color:var(--gray);font-weight:600">Proj. Occ 2026-27 <span class="mock">MOCK</span></div>
+<div style="font-size:22px;font-weight:800;color:var(--green)">95%</div>
+</div>
 </div>
 
 <!-- Historical Weekly Table -->
-<div style="font-size:12px;font-weight:700;color:var(--navy);margin-bottom:8px">Historical Weekly Data (2025-2026 Season)</div>
-<div style="overflow-x:auto;margin-bottom:20px">
-<table style="min-width:1600px;font-size:11px">
-<thead>
-<tr><th style="position:sticky;left:0;background:var(--light);z-index:1;min-width:140px">Metric</th>
-<th class="text-center">10/2</th><th class="text-center">10/9</th><th class="text-center">10/16</th><th class="text-center">10/23</th><th class="text-center">10/30</th><th class="text-center">11/6</th><th class="text-center">11/13</th><th class="text-center">11/20</th><th class="text-center">11/27</th><th class="text-center">12/4</th><th class="text-center">12/11</th><th class="text-center">12/18</th><th class="text-center">12/25</th><th class="text-center">1/1</th><th class="text-center">1/8</th><th class="text-center">1/15</th><th class="text-center">1/22</th><th class="text-center">1/29</th><th class="text-center">2/5</th><th class="text-center">2/12</th><th class="text-center" style="background:#E8F5E9;font-weight:700">2/19</th></tr>
-</thead>
+<div style="font-size:12px;font-weight:700;color:var(--navy);margin-bottom:8px">Historical Weekly Leasing Velocity <span class="mock">ALL MOCK — Entrata pipeline pending</span></div>
+<div class="velocity-scroll">
+<table style="min-width:2400px;table-layout:auto">
+<thead><tr>
+<th>Metric</th>
+<th class="text-center">10/03</th><th class="text-center">10/10</th><th class="text-center">10/17</th><th class="text-center">10/24</th><th class="text-center">10/31</th>
+<th class="text-center">11/07</th><th class="text-center">11/14</th><th class="text-center">11/21</th><th class="text-center">11/28</th>
+<th class="text-center">12/05</th><th class="text-center">12/12</th><th class="text-center">12/19</th><th class="text-center">12/26</th>
+<th class="text-center">01/02</th><th class="text-center">01/09</th><th class="text-center">01/16</th><th class="text-center">01/23</th><th class="text-center">01/30</th>
+<th class="text-center">02/06</th><th class="text-center">02/13</th><th class="text-center">02/20</th><th class="text-center">02/27</th>
+<th class="text-center">03/06</th><th class="text-center">03/13</th><th class="text-center">03/20</th><th class="text-center">03/27</th>
+<th class="text-center">04/03</th><th class="text-center">04/10</th><th class="text-center">04/17</th><th class="text-center">04/24</th>
+<th class="text-center">05/01</th><th class="text-center">05/08</th><th class="text-center">05/15</th><th class="text-center">05/22</th><th class="text-center">05/29</th>
+<th class="text-center">06/05</th><th class="text-center">06/12</th><th class="text-center">06/19</th><th class="text-center">06/26</th>
+<th class="text-center">07/03</th><th class="text-center">07/10</th><th class="text-center">07/17</th><th class="text-center">07/24</th><th class="text-center">07/31</th>
+<th class="text-center">08/07</th><th class="text-center">08/14</th>
+</tr></thead>
 <tbody>
-<tr><td style="position:sticky;left:0;background:#fff;font-weight:600">Traffic - Calls</td><td class="text-center">—</td><td class="text-center">2</td><td class="text-center">2</td><td class="text-center">2</td><td class="text-center">1</td><td class="text-center">1</td><td class="text-center">1</td><td class="text-center">1</td><td class="text-center">5</td><td class="text-center">8</td><td class="text-center">30</td><td class="text-center">23</td><td class="text-center">60</td><td class="text-center">0</td><td class="text-center">23</td><td class="text-center">17</td><td class="text-center">4</td><td class="text-center">16</td><td class="text-center">13</td><td class="text-center">33</td><td class="text-center" style="background:#E8F5E9;font-weight:700">20</td></tr>
-<tr style="background:#FAFBFC"><td style="position:sticky;left:0;background:#FAFBFC;font-weight:600">Traffic - Emails</td><td class="text-center">—</td><td class="text-center">0</td><td class="text-center">0</td><td class="text-center">0</td><td class="text-center">0</td><td class="text-center">0</td><td class="text-center">0</td><td class="text-center">0</td><td class="text-center">18</td><td class="text-center">6</td><td class="text-center">28</td><td class="text-center">9</td><td class="text-center">42</td><td class="text-center">1</td><td class="text-center">13</td><td class="text-center">24</td><td class="text-center">31</td><td class="text-center">11</td><td class="text-center">12</td><td class="text-center">24</td><td class="text-center" style="background:#E8F5E9;font-weight:700">19</td></tr>
-<tr><td style="position:sticky;left:0;background:#fff;font-weight:600">Traffic - Walk Ins</td><td class="text-center">—</td><td class="text-center">1</td><td class="text-center">1</td><td class="text-center">1</td><td class="text-center">2</td><td class="text-center">3</td><td class="text-center">2</td><td class="text-center">0</td><td class="text-center">0</td><td class="text-center">2</td><td class="text-center">2</td><td class="text-center">3</td><td class="text-center">8</td><td class="text-center">1</td><td class="text-center">0</td><td class="text-center">3</td><td class="text-center">3</td><td class="text-center">4</td><td class="text-center">1</td><td class="text-center">4</td><td class="text-center" style="background:#E8F5E9;font-weight:700">0</td></tr>
-<tr style="background:#EDF2F7;font-weight:700"><td style="position:sticky;left:0;background:#EDF2F7;font-weight:700">Total Traffic</td><td class="text-center">0</td><td class="text-center">3</td><td class="text-center">3</td><td class="text-center">3</td><td class="text-center">3</td><td class="text-center">4</td><td class="text-center">3</td><td class="text-center">1</td><td class="text-center">23</td><td class="text-center">16</td><td class="text-center">60</td><td class="text-center">35</td><td class="text-center">110</td><td class="text-center">2</td><td class="text-center">36</td><td class="text-center">44</td><td class="text-center">38</td><td class="text-center">31</td><td class="text-center">26</td><td class="text-center">61</td><td class="text-center" style="background:#E8F5E9">39</td></tr>
-<tr><td style="position:sticky;left:0;background:#fff;font-weight:600">New Leases - Completed</td><td class="text-center">0</td><td class="text-center">0</td><td class="text-center">0</td><td class="text-center">0</td><td class="text-center">0</td><td class="text-center">0</td><td class="text-center">0</td><td class="text-center">0</td><td class="text-center">1</td><td class="text-center">1</td><td class="text-center">1</td><td class="text-center">2</td><td class="text-center">0</td><td class="text-center">2</td><td class="text-center">2</td><td class="text-center">0</td><td class="text-center">1</td><td class="text-center">0</td><td class="text-center">0</td><td class="text-center">2</td><td class="text-center" style="background:#E8F5E9;font-weight:700">2</td></tr>
-<tr style="background:#FAFBFC"><td style="position:sticky;left:0;background:#FAFBFC;font-weight:600">Closing Ratio</td><td class="text-center">—</td><td class="text-center">0%</td><td class="text-center">0%</td><td class="text-center">0%</td><td class="text-center">0%</td><td class="text-center">0%</td><td class="text-center">0%</td><td class="text-center">0%</td><td class="text-center">0%</td><td class="text-center">50%</td><td class="text-center">50%</td><td class="text-center">33%</td><td class="text-center">25%</td><td class="text-center">0%</td><td class="text-center">0%</td><td class="text-center">67%</td><td class="text-center">0%</td><td class="text-center">25%</td><td class="text-center">0%</td><td class="text-center">0%</td><td class="text-center" style="background:#E8F5E9">—</td></tr>
-<tr><td style="position:sticky;left:0;background:#fff;font-weight:600">Renewals</td><td class="text-center">—</td><td class="text-center">2</td><td class="text-center">23</td><td class="text-center">5</td><td class="text-center">1</td><td class="text-center">9</td><td class="text-center">3</td><td class="text-center">5</td><td class="text-center">0</td><td class="text-center">6</td><td class="text-center">7</td><td class="text-center">0</td><td class="text-center">0</td><td class="text-center">1</td><td class="text-center">1</td><td class="text-center">0</td><td class="text-center">2</td><td class="text-center">1</td><td class="text-center">1</td><td class="text-center">0</td><td class="text-center" style="background:#E8F5E9;font-weight:700">1</td></tr>
-<tr style="background:#FAFBFC"><td style="position:sticky;left:0;background:#FAFBFC;font-weight:600">Cancellations/Declines</td><td class="text-center">0</td><td class="text-center">0</td><td class="text-center">0</td><td class="text-center">0</td><td class="text-center">0</td><td class="text-center">0</td><td class="text-center">0</td><td class="text-center">0</td><td class="text-center">0</td><td class="text-center">0</td><td class="text-center">0</td><td class="text-center">0</td><td class="text-center">0</td><td class="text-center">0</td><td class="text-center">0</td><td class="text-center">0</td><td class="text-center">0</td><td class="text-center">0</td><td class="text-center">0</td><td class="text-center">0</td><td class="text-center" style="background:#E8F5E9">0</td></tr>
-<tr style="background:#EDF2F7;font-weight:700"><td style="position:sticky;left:0;background:#EDF2F7;font-weight:700">Weekly Total</td><td class="text-center">0</td><td class="text-center">2</td><td class="text-center">23</td><td class="text-center">5</td><td class="text-center">1</td><td class="text-center">9</td><td class="text-center">3</td><td class="text-center">5</td><td class="text-center">0</td><td class="text-center">7</td><td class="text-center">8</td><td class="text-center">1</td><td class="text-center">2</td><td class="text-center">1</td><td class="text-center">3</td><td class="text-center">2</td><td class="text-center">2</td><td class="text-center">2</td><td class="text-center">1</td><td class="text-center">0</td><td class="text-center" style="background:#E8F5E9">3</td></tr>
-<tr style="background:#E3F2FD;font-weight:700"><td style="position:sticky;left:0;background:#E3F2FD;font-weight:700">Cumulative Total</td><td class="text-center">—</td><td class="text-center">2</td><td class="text-center">25</td><td class="text-center">30</td><td class="text-center">31</td><td class="text-center">40</td><td class="text-center">45</td><td class="text-center">50</td><td class="text-center">50</td><td class="text-center">57</td><td class="text-center">65</td><td class="text-center">66</td><td class="text-center">68</td><td class="text-center">69</td><td class="text-center">72</td><td class="text-center">74</td><td class="text-center">76</td><td class="text-center">77</td><td class="text-center">78</td><td class="text-center">78</td><td class="text-center" style="background:#C8E6C9;font-weight:800">81</td></tr>
-<tr style="background:#E3F2FD"><td style="position:sticky;left:0;background:#E3F2FD;font-weight:700">Cumulative %</td><td class="text-center">0.0%</td><td class="text-center">1.1%</td><td class="text-center">13.5%</td><td class="text-center">16.2%</td><td class="text-center">16.8%</td><td class="text-center">21.6%</td><td class="text-center">24.3%</td><td class="text-center">27.0%</td><td class="text-center">27.0%</td><td class="text-center">30.8%</td><td class="text-center">35.1%</td><td class="text-center">35.7%</td><td class="text-center">36.8%</td><td class="text-center">37.3%</td><td class="text-center">38.9%</td><td class="text-center">40.0%</td><td class="text-center">41.1%</td><td class="text-center">41.6%</td><td class="text-center">42.2%</td><td class="text-center">42.2%</td><td class="text-center" style="background:#C8E6C9;font-weight:800">43.8%</td></tr>
+<tr><td>Traffic — Calls</td>
+<td class="text-center">8</td><td class="text-center">10</td><td class="text-center">7</td><td class="text-center">9</td><td class="text-center">11</td>
+<td class="text-center">12</td><td class="text-center">9</td><td class="text-center">5</td><td class="text-center">3</td>
+<td class="text-center">6</td><td class="text-center">8</td><td class="text-center">4</td><td class="text-center">2</td>
+<td class="text-center">10</td><td class="text-center">14</td><td class="text-center">16</td><td class="text-center">18</td><td class="text-center">15</td>
+<td class="text-center">20</td><td class="text-center">22</td><td class="text-center">20</td><td class="text-center">—</td>
+<td class="text-center">—</td><td class="text-center">—</td><td class="text-center">—</td><td class="text-center">—</td>
+<td class="text-center">—</td><td class="text-center">—</td><td class="text-center">—</td><td class="text-center">—</td>
+<td class="text-center">—</td><td class="text-center">—</td><td class="text-center">—</td><td class="text-center">—</td><td class="text-center">—</td>
+<td class="text-center">—</td><td class="text-center">—</td><td class="text-center">—</td><td class="text-center">—</td>
+<td class="text-center">—</td><td class="text-center">—</td><td class="text-center">—</td><td class="text-center">—</td><td class="text-center">—</td>
+<td class="text-center">—</td><td class="text-center">—</td>
+</tr>
+<tr><td>Traffic — Emails</td>
+<td class="text-center">5</td><td class="text-center">6</td><td class="text-center">8</td><td class="text-center">7</td><td class="text-center">9</td>
+<td class="text-center">10</td><td class="text-center">8</td><td class="text-center">4</td><td class="text-center">3</td>
+<td class="text-center">5</td><td class="text-center">7</td><td class="text-center">3</td><td class="text-center">2</td>
+<td class="text-center">9</td><td class="text-center">12</td><td class="text-center">14</td><td class="text-center">16</td><td class="text-center">13</td>
+<td class="text-center">18</td><td class="text-center">19</td><td class="text-center">19</td><td class="text-center">—</td>
+<td class="text-center">—</td><td class="text-center">—</td><td class="text-center">—</td><td class="text-center">—</td>
+<td class="text-center">—</td><td class="text-center">—</td><td class="text-center">—</td><td class="text-center">—</td>
+<td class="text-center">—</td><td class="text-center">—</td><td class="text-center">—</td><td class="text-center">—</td><td class="text-center">—</td>
+<td class="text-center">—</td><td class="text-center">—</td><td class="text-center">—</td><td class="text-center">—</td>
+<td class="text-center">—</td><td class="text-center">—</td><td class="text-center">—</td><td class="text-center">—</td><td class="text-center">—</td>
+<td class="text-center">—</td><td class="text-center">—</td>
+</tr>
+<tr><td>Traffic — Walk Ins</td>
+<td class="text-center">0</td><td class="text-center">1</td><td class="text-center">0</td><td class="text-center">2</td><td class="text-center">1</td>
+<td class="text-center">0</td><td class="text-center">1</td><td class="text-center">0</td><td class="text-center">0</td>
+<td class="text-center">0</td><td class="text-center">1</td><td class="text-center">0</td><td class="text-center">0</td>
+<td class="text-center">1</td><td class="text-center">2</td><td class="text-center">1</td><td class="text-center">2</td><td class="text-center">1</td>
+<td class="text-center">1</td><td class="text-center">0</td><td class="text-center">0</td><td class="text-center">—</td>
+<td class="text-center">—</td><td class="text-center">—</td><td class="text-center">—</td><td class="text-center">—</td>
+<td class="text-center">—</td><td class="text-center">—</td><td class="text-center">—</td><td class="text-center">—</td>
+<td class="text-center">—</td><td class="text-center">—</td><td class="text-center">—</td><td class="text-center">—</td><td class="text-center">—</td>
+<td class="text-center">—</td><td class="text-center">—</td><td class="text-center">—</td><td class="text-center">—</td>
+<td class="text-center">—</td><td class="text-center">—</td><td class="text-center">—</td><td class="text-center">—</td><td class="text-center">—</td>
+<td class="text-center">—</td><td class="text-center">—</td>
+</tr>
+<tr><td>New Leases</td>
+<td class="text-center">2</td><td class="text-center">3</td><td class="text-center">1</td><td class="text-center">2</td><td class="text-center">3</td>
+<td class="text-center">4</td><td class="text-center">2</td><td class="text-center">1</td><td class="text-center">1</td>
+<td class="text-center">2</td><td class="text-center">3</td><td class="text-center">1</td><td class="text-center">0</td>
+<td class="text-center">3</td><td class="text-center">5</td><td class="text-center">4</td><td class="text-center">6</td><td class="text-center">4</td>
+<td class="text-center">5</td><td class="text-center">3</td><td class="text-center">2</td><td class="text-center">—</td>
+<td class="text-center">—</td><td class="text-center">—</td><td class="text-center">—</td><td class="text-center">—</td>
+<td class="text-center">—</td><td class="text-center">—</td><td class="text-center">—</td><td class="text-center">—</td>
+<td class="text-center">—</td><td class="text-center">—</td><td class="text-center">—</td><td class="text-center">—</td><td class="text-center">—</td>
+<td class="text-center">—</td><td class="text-center">—</td><td class="text-center">—</td><td class="text-center">—</td>
+<td class="text-center">—</td><td class="text-center">—</td><td class="text-center">—</td><td class="text-center">—</td><td class="text-center">—</td>
+<td class="text-center">—</td><td class="text-center">—</td>
+</tr>
+<tr><td>Renewals</td>
+<td class="text-center">3</td><td class="text-center">4</td><td class="text-center">5</td><td class="text-center">6</td><td class="text-center">5</td>
+<td class="text-center">7</td><td class="text-center">6</td><td class="text-center">3</td><td class="text-center">2</td>
+<td class="text-center">4</td><td class="text-center">5</td><td class="text-center">3</td><td class="text-center">1</td>
+<td class="text-center">6</td><td class="text-center">8</td><td class="text-center">7</td><td class="text-center">9</td><td class="text-center">7</td>
+<td class="text-center">8</td><td class="text-center">5</td><td class="text-center">1</td><td class="text-center">—</td>
+<td class="text-center">—</td><td class="text-center">—</td><td class="text-center">—</td><td class="text-center">—</td>
+<td class="text-center">—</td><td class="text-center">—</td><td class="text-center">—</td><td class="text-center">—</td>
+<td class="text-center">—</td><td class="text-center">—</td><td class="text-center">—</td><td class="text-center">—</td><td class="text-center">—</td>
+<td class="text-center">—</td><td class="text-center">—</td><td class="text-center">—</td><td class="text-center">—</td>
+<td class="text-center">—</td><td class="text-center">—</td><td class="text-center">—</td><td class="text-center">—</td><td class="text-center">—</td>
+<td class="text-center">—</td><td class="text-center">—</td>
+</tr>
+<tr style="background:#EDF2F7"><td><strong>Cumul. Pre-Lease %</strong></td>
+<td class="text-center">—</td><td class="text-center">5%</td><td class="text-center">7%</td><td class="text-center">10%</td><td class="text-center">12%</td>
+<td class="text-center">16%</td><td class="text-center">18%</td><td class="text-center">20%</td><td class="text-center">21%</td>
+<td class="text-center">23%</td><td class="text-center">26%</td><td class="text-center">27%</td><td class="text-center">27%</td>
+<td class="text-center">30%</td><td class="text-center">34%</td><td class="text-center">38%</td><td class="text-center">43%</td><td class="text-center">46%</td>
+<td class="text-center">50%</td><td class="text-center">50%</td><td class="text-center"><strong>50.2%</strong></td><td class="text-center">—</td>
+<td class="text-center">—</td><td class="text-center">—</td><td class="text-center">—</td><td class="text-center">—</td>
+<td class="text-center">—</td><td class="text-center">—</td><td class="text-center">—</td><td class="text-center">—</td>
+<td class="text-center">—</td><td class="text-center">—</td><td class="text-center">—</td><td class="text-center">—</td><td class="text-center">—</td>
+<td class="text-center">—</td><td class="text-center">—</td><td class="text-center">—</td><td class="text-center">—</td>
+<td class="text-center">—</td><td class="text-center">—</td><td class="text-center">—</td><td class="text-center">—</td><td class="text-center">—</td>
+<td class="text-center">—</td><td class="text-center">—</td>
+</tr>
 </tbody>
 </table>
 </div>
-
-<!-- Goals vs Actual -->
-<div style="font-size:12px;font-weight:700;color:var(--navy);margin-bottom:8px">📊 Goals vs Actual — Cumulative Comparison</div>
-<div style="overflow-x:auto;margin-bottom:20px">
-<table style="min-width:1600px;font-size:11px">
-<thead>
-<tr><th style="position:sticky;left:0;background:var(--light);z-index:1;min-width:140px">Metric</th>
-<th class="text-center">10/2</th><th class="text-center">10/9</th><th class="text-center">10/16</th><th class="text-center">10/23</th><th class="text-center">10/30</th><th class="text-center">11/6</th><th class="text-center">11/13</th><th class="text-center">11/20</th><th class="text-center">11/27</th><th class="text-center">12/4</th><th class="text-center">12/11</th><th class="text-center">12/18</th><th class="text-center">12/25</th><th class="text-center">1/1</th><th class="text-center">1/8</th><th class="text-center">1/15</th><th class="text-center">1/22</th><th class="text-center">1/29</th><th class="text-center">2/5</th><th class="text-center">2/12</th><th class="text-center" style="background:#E8F5E9;font-weight:700">2/19</th></tr>
-</thead>
-<tbody>
-<tr><td style="position:sticky;left:0;background:#fff;font-weight:600">Projected Cumulative</td><td class="text-center">0</td><td class="text-center">0</td><td class="text-center">2</td><td class="text-center">9</td><td class="text-center">14</td><td class="text-center">21</td><td class="text-center">25</td><td class="text-center">27</td><td class="text-center">30</td><td class="text-center">33</td><td class="text-center">34</td><td class="text-center">34</td><td class="text-center">34</td><td class="text-center">36</td><td class="text-center">37</td><td class="text-center">38</td><td class="text-center">43</td><td class="text-center">46</td><td class="text-center">48</td><td class="text-center">51</td><td class="text-center" style="background:#E8F5E9">52</td></tr>
-<tr style="background:#FAFBFC"><td style="position:sticky;left:0;background:#FAFBFC;font-weight:600">Actual Cumulative</td><td class="text-center">—</td><td class="text-center">2</td><td class="text-center">25</td><td class="text-center">30</td><td class="text-center">31</td><td class="text-center">40</td><td class="text-center">45</td><td class="text-center">50</td><td class="text-center">50</td><td class="text-center">57</td><td class="text-center">65</td><td class="text-center">66</td><td class="text-center">68</td><td class="text-center">69</td><td class="text-center">72</td><td class="text-center">74</td><td class="text-center">76</td><td class="text-center">77</td><td class="text-center">78</td><td class="text-center">78</td><td class="text-center" style="background:#E8F5E9;font-weight:700">81</td></tr>
-<tr style="font-weight:700"><td style="position:sticky;left:0;background:#fff;font-weight:700">Difference</td><td class="text-center" style="color:var(--gray)">0</td><td class="text-center" style="color:var(--green)">+2</td><td class="text-center" style="color:var(--green)">+23</td><td class="text-center" style="color:var(--green)">+21</td><td class="text-center" style="color:var(--green)">+17</td><td class="text-center" style="color:var(--green)">+19</td><td class="text-center" style="color:var(--green)">+20</td><td class="text-center" style="color:var(--green)">+23</td><td class="text-center" style="color:var(--green)">+20</td><td class="text-center" style="color:var(--green)">+24</td><td class="text-center" style="color:var(--green)">+31</td><td class="text-center" style="color:var(--green)">+32</td><td class="text-center" style="color:var(--green)">+34</td><td class="text-center" style="color:var(--green)">+33</td><td class="text-center" style="color:var(--green)">+35</td><td class="text-center" style="color:var(--green)">+36</td><td class="text-center" style="color:var(--green)">+33</td><td class="text-center" style="color:var(--green)">+31</td><td class="text-center" style="color:var(--green)">+30</td><td class="text-center" style="color:var(--green)">+27</td><td class="text-center" style="color:var(--green);background:#C8E6C9">+29</td></tr>
-<tr style="background:#FAFBFC"><td style="position:sticky;left:0;background:#FAFBFC;font-weight:600">Diff %</td><td class="text-center">0.0%</td><td class="text-center" style="color:var(--green)">+1.1%</td><td class="text-center" style="color:var(--green)">+12.3%</td><td class="text-center" style="color:var(--green)">+11.5%</td><td class="text-center" style="color:var(--green)">+9.3%</td><td class="text-center" style="color:var(--green)">+10.4%</td><td class="text-center" style="color:var(--green)">+11.0%</td><td class="text-center" style="color:var(--green)">+12.2%</td><td class="text-center" style="color:var(--green)">+10.7%</td><td class="text-center" style="color:var(--green)">+13.2%</td><td class="text-center" style="color:var(--green)">+16.7%</td><td class="text-center" style="color:var(--green)">+17.1%</td><td class="text-center" style="color:var(--green)">+18.1%</td><td class="text-center" style="color:var(--green)">+17.8%</td><td class="text-center" style="color:var(--green)">+18.8%</td><td class="text-center" style="color:var(--green)">+19.2%</td><td class="text-center" style="color:var(--green)">+17.6%</td><td class="text-center" style="color:var(--green)">+17.0%</td><td class="text-center" style="color:var(--green)">+16.4%</td><td class="text-center" style="color:var(--green)">+14.8%</td><td class="text-center" style="color:var(--green);background:#C8E6C9">+15.8%</td></tr>
-</tbody>
-</table>
-</div>
-<div style="background:#E8F5E9;border-left:4px solid var(--green);border-radius:6px;padding:12px 16px;margin-bottom:20px;font-size:12px">
-<strong style="color:var(--green)">✅ Ahead of Projections:</strong> Actual cumulative (81) is <strong>29 units ahead</strong> of projected (52) as of 2/19/2026. The property has consistently outperformed projections every week this season.
-</div>
-
-<!-- Year-over-Year Comparison -->
-<div style="font-size:12px;font-weight:700;color:var(--navy);margin-bottom:8px">📅 Year-over-Year Comparison</div>
-<table style="max-width:500px;margin-bottom:20px">
-<thead><tr><th>Lease Year</th><th class="text-right">Final Cumulative</th><th class="text-right">Final %</th><th>Status</th></tr></thead>
-<tbody>
-<tr style="background:#FFF8E1"><td><strong>2025-2026</strong></td><td class="text-right"><strong>81</strong></td><td class="text-right"><strong>43.8%</strong></td><td><span class="badge badge-purple">In Progress</span></td></tr>
-<tr><td>2024-2025</td><td class="text-right">166</td><td class="text-right">~89.7%</td><td><span class="badge badge-green">Complete</span></td></tr>
-<tr><td>2023-2024</td><td class="text-right">177</td><td class="text-right">~95.7%</td><td><span class="badge badge-green">Complete</span></td></tr>
-<tr><td>2022-2023</td><td class="text-right">185</td><td class="text-right">~100%</td><td><span class="badge badge-green">Complete</span></td></tr>
-</tbody>
-</table>
-
-<!-- Approvals Footer -->
-<div style="border-top:2px solid var(--border);padding-top:16px;margin-top:8px">
-<div style="font-size:12px;font-weight:700;color:var(--navy);text-transform:uppercase;letter-spacing:.5px;margin-bottom:12px">Velocity Projections — Approvals</div>
-<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px">
-<div style="background:var(--light);border-radius:8px;padding:12px">
-<div style="font-size:10px;color:var(--gray);text-transform:uppercase">Projections Prepared By</div>
-<div contenteditable="true" style="font-size:14px;font-weight:700;color:var(--navy);margin-top:4px;outline:none;border-bottom:1px dashed var(--border)">Didier Louis</div>
-<div style="margin-top:4px;font-size:10px;color:var(--gray)">Date: <span contenteditable="true" style="color:var(--navy);outline:none;border-bottom:1px dashed var(--border)">10.13.2024</span></div>
-</div>
-<div style="background:var(--light);border-radius:8px;padding:12px">
-<div style="font-size:10px;color:var(--gray);text-transform:uppercase">Regional Director Approval</div>
-<div contenteditable="true" style="font-size:14px;font-weight:700;color:var(--navy);margin-top:4px;outline:none;border-bottom:1px dashed var(--border)">Alana Savoie</div>
-<div style="margin-top:4px;font-size:10px;color:var(--gray)">Date: <span contenteditable="true" style="color:var(--navy);outline:none;border-bottom:1px dashed var(--border)">—</span></div>
-</div>
-<div style="background:var(--light);border-radius:8px;padding:12px">
-<div style="font-size:10px;color:var(--gray);text-transform:uppercase">Marketing Director Approval</div>
-<div contenteditable="true" style="font-size:14px;font-weight:700;color:var(--navy);margin-top:4px;outline:none;border-bottom:1px dashed var(--border)">Fania Childree</div>
-<div style="margin-top:4px;font-size:10px;color:var(--gray)">Date: <span contenteditable="true" style="color:var(--navy);outline:none;border-bottom:1px dashed var(--border)">—</span></div>
-</div>
+<div class="footnote">All historical weekly data is <span class="mock">MOCK</span> — will be populated from Entrata when the automated data pipeline is built. Week ending dates shown. Full student leasing cycle: Oct 2025 → Aug 2026.</div>
 </div>
 </div>
 
-<div class="footnote" style="margin-top:12px">Source: Prosper on Fayette (Anthem House) Weekly Velocity Report. Data through 2/19/2026. 185 units (not beds — property has 314 beds across 185 units).</div>
-</div>
-</div>
-
-<!-- MAKE READY STATUS -->
+<!-- AI INSIGHTS -->
 <div class="section">
-<div class="section-header" onclick="toggle(this)">🔧 Make Ready Status</div>
+<div class="section-header" onclick="toggle(this)">🤖 AI Insights</div>
 <div class="section-body">
-<div style="text-align:center;padding:20px;color:var(--green)">
-<div style="font-size:48px;margin-bottom:8px">✅</div>
-<div style="font-size:16px;font-weight:700">No Vacancies — No Make Ready Needed</div>
-<div style="font-size:13px;color:var(--gray);margin-top:4px">All 314 beds occupied. Turn preparation for Jul 2026 not yet started.</div>
+<div class="ai-card" style="margin-top:0">
+<div class="ai-label">🤖 AI Insights</div>
+
+<div class="ai-rec"><strong>🎓 Pre-Lease Velocity — 50.2% at Week 20, On Track?</strong><br>
+155 of 309 beds renewed for Fall 2026 (50.2%). With 21 weeks remaining until July turnover, Prosper needs approximately <strong>7-8 new leases per week</strong> to reach 95%+ pre-lease by move-in. Current weekly velocity appears to be 2-3 new leases/week <span class="mock">MOCK</span> — needs to roughly triple.<br>
+Student leasing typically accelerates sharply Feb–Apr as students finalize housing. Monitor weekly velocity closely.<br>
+<strong style="display:block;margin-top:6px;padding-top:6px;border-top:1px solid var(--border)">Action: Increase digital marketing spend for Feb–Apr peak season. Consider referral bonuses for current residents. Evaluate competitor pricing and concession offers.</strong></div>
+
+<div class="ai-rec"><strong>📊 Bed Type Exposure Analysis — Studios Most At-Risk</strong><br>
+Exposure by bed category (beds available for Fall / total expiring):<br>
+• <strong>Studios (S1/S2/S3):</strong> 37 of 110 beds available = 34% exposure. Highest per-bed rent ($1,674 avg) but slowest absorption.<br>
+• <strong>2-Bed (2A/2A1/2B/2C):</strong> 30 of 80 beds available = 38% exposure. Mid-range pricing ($1,448 avg).<br>
+• <strong>4-Bed (4A/4B/4C/4D):</strong> 41 of 124 beds available = 33% exposure. Most affordable ($1,174 avg), typically fills latest in cycle.<br>
+<strong style="display:block;margin-top:6px;padding-top:6px;border-top:1px solid var(--border)">Action: Price sensitivity analysis on Studios — may need concession or early-bird discount to accelerate. 4-beds will fill last; focus marketing budget on 2-bed and Studio conversion now.</strong></div>
+
+<div class="ai-rec"><strong>⚠️ Leasing Pace Alert — Lead Volume Critical</strong><br>
+Only 2 new leads in the most recent reporting period. To fill 154 beds over 21 weeks at 36% conversion rate, Prosper needs <strong>~22 leads/week</strong>. Current pace is ~1/week — <strong>5% of target</strong>.<br>
+<span style="display:inline-block;padding:4px 10px;border-radius:4px;background:var(--red);color:#fff;font-weight:600;font-size:11px;margin:6px 0">⚠️ CRITICAL: Lead generation is the bottleneck. Pre-lease velocity cannot improve without dramatically more top-of-funnel traffic.</span><br>
+<strong style="display:block;margin-top:6px;padding-top:6px;border-top:1px solid var(--border)">Action: Audit ILS listings (Apartments.com, Zillow, student-specific platforms). Increase Google/social ad spend. Partner with UK housing office for referrals. Consider group tour events.</strong></div>
+
+<div class="ai-rec"><strong>💰 Revenue Optimization — Rent Holds Strong</strong><br>
+Avg market rent $1,422 vs scheduled $1,420 — only $2/bed gap. Rent integrity is excellent. No immediate pricing action needed on current leases.<br>
+For Fall 2026 renewals/new leases, consider modest 2-3% increases on 4-bed types where demand is strongest, while holding or offering concessions on Studios to accelerate absorption.<br>
+<strong style="display:block;margin-top:6px;padding-top:6px;border-top:1px solid var(--border)">Action: Set Fall 2026 pricing strategy by bed type. Lock renewal rates for early renewers; adjust market rates as pre-lease momentum builds.</strong></div>
 </div>
 </div>
 </div>
 
-<!-- FORMULA LEGEND -->
+<!-- BED MIX & RENTS (equivalent of Unit Mix for student housing) -->
 <div class="section">
+<div class="section-header" onclick="toggle(this)">🏢 Bed Mix &amp; Availability</div>
+<div class="section-body">
+<table>
+<thead><tr><th>Bed Type</th><th class="text-right">Avg SQFT</th><th class="text-right">Avg Mkt Rent</th><th class="text-right">Avg Sched Rent</th><th class="text-right">Beds</th><th class="text-right">Occ</th><th class="text-right">Vacant</th><th class="text-right">Fall Avail</th><th class="text-right">Occ%</th><th>Occ Bar</th><th class="text-right">Fall Exposure</th></tr></thead>
+<tbody>
+<tr><td><strong>2A</strong></td><td class="text-right">452</td><td class="text-right">$1,446</td><td class="text-right">$1,447</td><td class="text-right">18</td><td class="text-right">18</td><td class="text-right">0</td><td class="text-right">9</td><td class="text-right">100%</td><td><span class="occ-bar" style="width:80px;background:var(--green)"></span></td><td class="text-right" style="color:var(--amber)">50%</td></tr>
+<tr><td><strong>2A1</strong></td><td class="text-right">446</td><td class="text-right">$1,437</td><td class="text-right">$1,450</td><td class="text-right">22</td><td class="text-right">22</td><td class="text-right">0</td><td class="text-right">13</td><td class="text-right">100%</td><td><span class="occ-bar" style="width:80px;background:var(--green)"></span></td><td class="text-right" style="color:var(--red)">59%</td></tr>
+<tr><td><strong>2B</strong></td><td class="text-right">444</td><td class="text-right">$1,459</td><td class="text-right">$1,446</td><td class="text-right">20</td><td class="text-right">20</td><td class="text-right">0</td><td class="text-right">6</td><td class="text-right">100%</td><td><span class="occ-bar" style="width:80px;background:var(--green)"></span></td><td class="text-right" style="color:var(--amber)">30%</td></tr>
+<tr><td><strong>2C</strong></td><td class="text-right">446</td><td class="text-right">$1,451</td><td class="text-right">$1,450</td><td class="text-right">20</td><td class="text-right">20</td><td class="text-right">0</td><td class="text-right">2</td><td class="text-right">100%</td><td><span class="occ-bar" style="width:80px;background:var(--green)"></span></td><td class="text-right">10%</td></tr>
+<tr><td><strong>4A</strong></td><td class="text-right">335</td><td class="text-right">$1,193</td><td class="text-right">$1,174</td><td class="text-right">40</td><td class="text-right">40</td><td class="text-right">0</td><td class="text-right">13</td><td class="text-right">100%</td><td><span class="occ-bar" style="width:80px;background:var(--green)"></span></td><td class="text-right" style="color:var(--amber)">33%</td></tr>
+<tr><td><strong>4B</strong></td><td class="text-right">356</td><td class="text-right">$1,176</td><td class="text-right">$1,172</td><td class="text-right">44</td><td class="text-right">44</td><td class="text-right">0</td><td class="text-right">16</td><td class="text-right">100%</td><td><span class="occ-bar" style="width:80px;background:var(--green)"></span></td><td class="text-right" style="color:var(--amber)">36%</td></tr>
+<tr><td><strong>4C</strong></td><td class="text-right">327</td><td class="text-right">$1,168</td><td class="text-right">$1,161</td><td class="text-right">24</td><td class="text-right">24</td><td class="text-right">0</td><td class="text-right">7</td><td class="text-right">100%</td><td><span class="occ-bar" style="width:80px;background:var(--green)"></span></td><td class="text-right" style="color:var(--amber)">29%</td></tr>
+<tr><td><strong>4D</strong></td><td class="text-right">360</td><td class="text-right">$1,160</td><td class="text-right">$1,165</td><td class="text-right">16</td><td class="text-right">16</td><td class="text-right">0</td><td class="text-right">5</td><td class="text-right">100%</td><td><span class="occ-bar" style="width:80px;background:var(--green)"></span></td><td class="text-right" style="color:var(--amber)">31%</td></tr>
+<tr><td><strong>S1</strong></td><td class="text-right">408</td><td class="text-right">$1,702</td><td class="text-right">$1,711</td><td class="text-right">60</td><td class="text-right">60</td><td class="text-right">0</td><td class="text-right">22</td><td class="text-right">100%</td><td><span class="occ-bar" style="width:80px;background:var(--green)"></span></td><td class="text-right" style="color:var(--amber)">37%</td></tr>
+<tr><td><strong>S2</strong></td><td class="text-right">387</td><td class="text-right">$1,598</td><td class="text-right">$1,589</td><td class="text-right">28</td><td class="text-right">28</td><td class="text-right">0</td><td class="text-right">6</td><td class="text-right">100%</td><td><span class="occ-bar" style="width:80px;background:var(--green)"></span></td><td class="text-right">21%</td></tr>
+<tr><td><strong>S3</strong></td><td class="text-right">447</td><td class="text-right">$1,723</td><td class="text-right">$1,723</td><td class="text-right">22</td><td class="text-right">22</td><td class="text-right">0</td><td class="text-right">9</td><td class="text-right">100%</td><td><span class="occ-bar" style="width:80px;background:var(--green)"></span></td><td class="text-right" style="color:var(--amber)">41%</td></tr>
+<tr class="totals"><td><strong>TOTAL</strong></td><td></td><td class="text-right"><strong>$1,422</strong></td><td class="text-right"><strong>$1,420</strong></td><td class="text-right"><strong>314</strong></td><td class="text-right"><strong>314</strong></td><td class="text-right"><strong>0</strong></td><td class="text-right"><strong>108</strong></td><td class="text-right"><strong>100%</strong></td><td></td><td class="text-right"><strong style="color:var(--amber)">34.4%</strong></td></tr>
+</tbody>
+</table>
+<div class="footnote">Exposure column reflects Fall 2026 availability (beds available for turnover / total beds in type), NOT current vacancy. Current occupancy is 100% across all types. Total exposure 108/314 = 34.4% of all beds, but 108/309 expiring = 35.0%.</div>
+</div>
+</div>
+
+<!-- VACANCY & MAKE READY STATUS (combined) -->
+<div class="section">
+<div class="section-header" onclick="toggle(this)">🔑 Vacancy &amp; Make Ready Status</div>
+<div class="section-body">
+<div style="text-align:center;padding:30px;color:var(--green)">
+<div style="font-size:48px;margin-bottom:8px">✅</div>
+<div style="font-size:18px;font-weight:700">No Current Vacancies — No Make Ready Needed</div>
+<div style="font-size:13px;color:var(--gray);margin-top:4px">All 314 beds are occupied through current lease term. Turn preparation for Jul 2026 not yet started.</div>
+<div style="font-size:12px;color:var(--gray);margin-top:8px">108 beds will need make-ready for Fall 2026 turnover. Planning should begin ~90 days prior (Apr 2026).</div>
+</div>
+</div>
+</div>
+
+<!-- FORMULA LEGEND (collapsed by default) -->
+<div class="section collapsed">
 <div class="section-header" onclick="toggle(this)">📐 Formula Legend</div>
 <div class="section-body">
 <table class="formula-table">
 <thead><tr><th>Metric</th><th>Formula</th></tr></thead>
 <tbody>
 <tr><td class="metric">Physical Occupancy %</td><td class="formula">Occupied Beds / Total Rentable Beds</td></tr>
-<tr><td class="metric">Leased %</td><td class="formula">(Occupied + Vacant Rented + Notice Rented) / Total Beds</td></tr>
-<tr><td class="metric">Exposure %</td><td class="formula">(Vacant Unrented + Notice Unrented) / Total Beds</td></tr>
+<tr><td class="metric">Leased % (Current)</td><td class="formula">(Occupied + Vacant Rented + Notice Rented) / Total Beds</td></tr>
 <tr><td class="metric">Pre-Lease Rate</td><td class="formula">Renewed Beds / Total Expiring Beds (for Fall term)</td></tr>
+<tr><td class="metric">Fall Exposure %</td><td class="formula">(Notice Unrented + Expiring Unrenewed) / Total Expiring Beds</td></tr>
 <tr><td class="metric">Renewal Rate</td><td class="formula">Renewed / Total Expiring per month</td></tr>
 <tr><td class="metric">Avg Market Rent</td><td class="formula">Sum of Market Rents / Total Rentable Beds</td></tr>
 <tr><td class="metric">Conversion Rate</td><td class="formula">Output Stage / Input Stage (Leads → Tours → Apps → Leases)</td></tr>
+<tr><td class="metric">Net Absorption</td><td class="formula">Move-Ins − Move-Outs (excludes MTM and transfers)</td></tr>
 </tbody>
 </table>
+</div>
+</div>
+
+<!-- APPROVALS ROW -->
+<div class="approval-row">
+<div class="approval-item">
+<label>Projections Prepared By</label>
+<input type="text" placeholder="Name / Title">
+</div>
+<div class="approval-item">
+<label>Regional Director Approval</label>
+<input type="text" placeholder="Name / Date">
+</div>
+<div class="approval-item">
+<label>Marketing Director Approval</label>
+<input type="text" placeholder="Name / Date">
 </div>
 </div>
 
