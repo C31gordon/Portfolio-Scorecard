@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RISE AI Operating System — Agent Architecture</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: #0a0e1a; color: #e0e0e0; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; overflow: hidden; }
+svg { width: 100vw; height: 100vh; }
+.node-group { cursor: pointer; }
+.node-rect { rx: 12; ry: 12; stroke-width: 2; transition: filter 0.2s, stroke-width 0.2s; }
+.node-group:hover .node-rect { stroke-width: 3; filter: brightness(1.3) drop-shadow(0 0 12px rgba(255,255,255,0.15)); }
+.node-label { font-size: 13px; font-weight: 600; fill: #fff; text-anchor: middle; pointer-events: none; }
+.node-sublabel { font-size: 10px; fill: rgba(255,255,255,0.7); text-anchor: middle; pointer-events: none; }
+.edge { stroke-width: 1.5; fill: none; opacity: 0.5; }
+.edge-data { stroke: #4fc3f7; }
+.edge-team { stroke: #888; stroke-dasharray: 4 2; }
+marker polygon { fill: #4fc3f7; }
+#tooltip { position: fixed; background: #1a1e2e; border: 1px solid #333; border-radius: 10px; padding: 14px 18px; max-width: 340px; font-size: 13px; line-height: 1.5; pointer-events: none; opacity: 0; transition: opacity 0.2s; z-index: 100; box-shadow: 0 8px 32px rgba(0,0,0,0.5); }
+#tooltip h3 { font-size: 15px; margin-bottom: 6px; }
+#tooltip p { color: #aaa; }
+.legend { position: fixed; bottom: 20px; left: 20px; background: rgba(26,30,46,0.9); border: 1px solid #333; border-radius: 10px; padding: 14px 18px; font-size: 12px; }
+.legend-item { display: flex; align-items: center; margin: 4px 0; }
+.legend-dot { width: 12px; height: 12px; border-radius: 3px; margin-right: 8px; }
+.title-bar { position: fixed; top: 0; left: 0; right: 0; padding: 16px 24px; background: linear-gradient(180deg, rgba(10,14,26,0.95), rgba(10,14,26,0)); z-index: 50; }
+.title-bar h1 { font-size: 20px; font-weight: 700; background: linear-gradient(135deg, #4fc3f7, #ab47bc); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+.title-bar p { font-size: 12px; color: #666; margin-top: 2px; }
+</style>
+</head>
+<body>
+<div class="title-bar">
+  <h1>RISE AI Operating System</h1>
+  <p>Multi-Agent Architecture — 4 Teams · 16 Agents · 6 Integrations</p>
+</div>
+
+<div id="tooltip"></div>
+
+<div class="legend">
+  <div class="legend-item"><div class="legend-dot" style="background:#ab47bc"></div>Orchestrator</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#4fc3f7"></div>Operations Team</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#66bb6a"></div>People Team</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#ffa726"></div>Finance Team</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#ef5350"></div>Growth Team</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#78909c"></div>External Systems</div>
+</div>
+
+<svg id="canvas">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 7" refX="10" refY="3.5" markerWidth="8" markerHeight="6" orient="auto-start-reverse">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#4fc3f7" opacity="0.6"/>
+    </marker>
+    <linearGradient id="glow-purple" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ab47bc" stop-opacity="0.15"/>
+      <stop offset="100%" stop-color="#ab47bc" stop-opacity="0.05"/>
+    </linearGradient>
+  </defs>
+</svg>
+
+<script>
+const W = window.innerWidth, H = window.innerHeight;
+const cx = W / 2, cy = H / 2;
+
+const colors = {
+  orchestrator: '#ab47bc',
+  ops: '#4fc3f7',
+  people: '#66bb6a',
+  finance: '#ffa726',
+  growth: '#ef5350',
+  system: '#78909c'
+};
+
+const agents = {
+  millie: { x: cx, y: cy - 30, w: 160, h: 50, label: 'Millie', sub: 'Orchestrator / AI CTO', color: colors.orchestrator, desc: 'Central orchestrator. Routes tasks to team leads, enforces permissions, manages cross-team workflows, maintains audit trails. The brain of RISE AI.' },
+
+  ops_lead: { x: cx - 340, y: cy - 150, w: 140, h: 42, label: 'Operations', sub: 'Team Lead', color: colors.ops, desc: 'Coordinates property operations: reporting, compliance, and maintenance workflows across all 31 properties.' },
+  dlr: { x: cx - 480, y: cy - 260, w: 130, h: 38, label: 'DLR Agent', sub: '', color: colors.ops, desc: 'Generates Daily Leasing Reports from Entrata data. Collects PM narrative input. Distributes to regionals and owners by 8 AM.' },
+  reports: { x: cx - 340, y: cy - 280, w: 130, h: 38, label: 'Report Generator', sub: '', color: colors.ops, desc: 'Produces weekly, monthly, and quarterly reports — financial summaries, occupancy trends, renewal tracking, market comps.' },
+  compliance: { x: cx - 200, y: cy - 260, w: 130, h: 38, label: 'Compliance Monitor', sub: '', color: colors.ops, desc: 'Tracks fair housing documentation, lease audits, regulatory deadlines, insurance certificates. Generates compliance dashboards.' },
+  maintenance: { x: cx - 480, y: cy - 200, w: 150, h: 38, label: 'Maintenance Coord.', sub: '', color: colors.ops, desc: 'Triages MoonRISE service tickets, tracks SLA compliance, identifies recurring issues, coordinates vendor scheduling.' },
+
+  people_lead: { x: cx + 340, y: cy - 150, w: 140, h: 42, label: 'People', sub: 'Team Lead', color: colors.people, desc: 'Manages the full employee lifecycle: recruiting, onboarding, training, and performance tracking via Paycor integration.' },
+  recruiting: { x: cx + 200, y: cy - 260, w: 130, h: 38, label: 'Recruiting Agent', sub: '', color: colors.people, desc: 'Optimizes job postings, screens resumes against property-specific criteria, ranks candidates, schedules interviews.' },
+  onboarding: { x: cx + 340, y: cy - 280, w: 130, h: 38, label: 'Onboarding Agent', sub: '', color: colors.people, desc: 'Generates property-specific onboarding checklists, assigns training modules, tracks 30/60/90-day milestones.' },
+  training: { x: cx + 480, y: cy - 260, w: 140, h: 38, label: 'Training Coord.', sub: '', color: colors.people, desc: 'Curates training content, tracks certifications (fair housing, safety, EPA 608), identifies skill gaps across portfolio.' },
+  performance: { x: cx + 480, y: cy - 200, w: 140, h: 38, label: 'Performance Tracker', sub: '', color: colors.people, desc: 'Aggregates KPIs per employee — lease conversion, response times, satisfaction scores. Surfaces trends for reviews.' },
+
+  finance_lead: { x: cx - 340, y: cy + 120, w: 140, h: 42, label: 'Finance', sub: 'Team Lead', color: colors.finance, desc: 'Oversees invoice processing, budget monitoring, revenue optimization, and collections across the portfolio.' },
+  invoice: { x: cx - 480, y: cy + 200, w: 130, h: 38, label: 'Invoice Processor', sub: '', color: colors.finance, desc: 'Ingests invoices via email/Egnyte, extracts data via OCR+LLM, validates against POs and budgets, routes for approval.' },
+  budget: { x: cx - 340, y: cy + 230, w: 130, h: 38, label: 'Budget Analyst', sub: '', color: colors.finance, desc: 'Monitors actuals vs. budget per property, flags variances >5%, projects quarterly burn rates.' },
+  revenue: { x: cx - 200, y: cy + 200, w: 140, h: 38, label: 'Revenue Optimizer', sub: '', color: colors.finance, desc: 'Analyzes rent roll, renewal rates, concession impact, loss-to-lease. Recommends pricing adjustments.' },
+  collections: { x: cx - 480, y: cy + 260, w: 130, h: 38, label: 'Collections Agent', sub: '', color: colors.finance, desc: 'Tracks delinquency, generates payment reminders, escalates per policy thresholds, reports aging.' },
+
+  growth_lead: { x: cx + 340, y: cy + 120, w: 140, h: 42, label: 'Growth', sub: 'Team Lead', color: colors.growth, desc: 'Drives leasing performance through marketing optimization, market intelligence, and resident experience management.' },
+  marketing: { x: cx + 200, y: cy + 200, w: 130, h: 38, label: 'Marketing Agent', sub: '', color: colors.growth, desc: 'Manages ILS listings, generates ad copy, tracks lead source ROI, optimizes marketing spend allocation.' },
+  leasing_opt: { x: cx + 340, y: cy + 230, w: 130, h: 38, label: 'Leasing Optimizer', sub: '', color: colors.growth, desc: 'Analyzes traffic-to-lease conversion funnels, identifies bottlenecks, A/B tests follow-up sequences.' },
+  market_intel: { x: cx + 480, y: cy + 200, w: 130, h: 38, label: 'Market Intel', sub: '', color: colors.growth, desc: 'Monitors comp properties — rents, concessions, occupancy. Tracks submarket trends. Feeds Revenue Optimizer.' },
+  resident_exp: { x: cx + 480, y: cy + 260, w: 150, h: 38, label: 'Resident Experience', sub: '', color: colors.growth, desc: 'Analyzes surveys, reviews, maintenance satisfaction. Identifies at-risk renewals. Generates sentiment reports.' },
+
+  // External systems
+  entrata: { x: cx - 180, y: cy + 380, w: 110, h: 36, label: 'Entrata', sub: 'PMS', color: colors.system, desc: 'Property management system. Source for leasing, financial, maintenance, and resident data across all 31 properties.' },
+  m365: { x: cx - 60, y: cy + 380, w: 110, h: 36, label: 'Microsoft 365', sub: 'Comms', color: colors.system, desc: 'Email, Calendar, Teams, SSO. Primary communication and authentication layer.' },
+  egnyte: { x: cx + 60, y: cy + 380, w: 110, h: 36, label: 'Egnyte', sub: 'Files', color: colors.system, desc: 'Cloud file system. Stores reports, invoices, policies, onboarding documents. Mounted at /Shared/Operations/.' },
+  paycor: { x: cx + 180, y: cy + 380, w: 110, h: 36, label: 'Paycor', sub: 'HR', color: colors.system, desc: 'HR and payroll system. Manages recruiting, onboarding, training, employee records, benefits.' },
+  moonrise: { x: cx - 300, y: cy + 380, w: 120, h: 36, label: 'MoonRISE', sub: 'Service Desk', color: colors.system, desc: 'Internal service desk for maintenance tickets, work orders, and SLA tracking.' },
+  n8n: { x: cx + 300, y: cy + 380, w: 110, h: 36, label: 'n8n', sub: 'Automation', color: colors.system, desc: 'Workflow automation platform. Handles ETL, scheduling, webhooks, and data routing between all systems and agents.' }
+};
+
+const edges = [
+  // Millie to team leads
+  ['millie', 'ops_lead'], ['millie', 'people_lead'], ['millie', 'finance_lead'], ['millie', 'growth_lead'],
+  // Ops agents
+  ['ops_lead', 'dlr'], ['ops_lead', 'reports'], ['ops_lead', 'compliance'], ['ops_lead', 'maintenance'],
+  // People agents
+  ['people_lead', 'recruiting'], ['people_lead', 'onboarding'], ['people_lead', 'training'], ['people_lead', 'performance'],
+  // Finance agents
+  ['finance_lead', 'invoice'], ['finance_lead', 'budget'], ['finance_lead', 'revenue'], ['finance_lead', 'collections'],
+  // Growth agents
+  ['growth_lead', 'marketing'], ['growth_lead', 'leasing_opt'], ['growth_lead', 'market_intel'], ['growth_lead', 'resident_exp'],
+];
+
+const systemEdges = [
+  ['entrata', 'millie'], ['m365', 'millie'], ['egnyte', 'millie'], ['paycor', 'millie'], ['moonrise', 'millie'], ['n8n', 'millie']
+];
+
+const svg = document.getElementById('canvas');
+const tooltip = document.getElementById('tooltip');
+
+// Draw system edges first (behind everything)
+systemEdges.forEach(([from, to]) => {
+  const a = agents[from], b = agents[to];
+  const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+  const mx = (a.x + b.x) / 2, my = (a.y + b.y) / 2 - 30;
+  path.setAttribute('d', `M${a.x},${a.y - a.h/2} Q${mx},${my} ${b.x},${b.y + b.h/2}`);
+  path.setAttribute('class', 'edge edge-data');
+  path.setAttribute('marker-end', 'url(#arrow)');
+  path.setAttribute('opacity', '0.25');
+  svg.appendChild(path);
+});
+
+// Draw team edges
+edges.forEach(([from, to]) => {
+  const a = agents[from], b = agents[to];
+  const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+  line.setAttribute('x1', a.x); line.setAttribute('y1', a.y);
+  line.setAttribute('x2', b.x); line.setAttribute('y2', b.y);
+  line.setAttribute('class', 'edge edge-team');
+  line.setAttribute('stroke', a.color || '#888');
+  line.setAttribute('opacity', '0.35');
+  svg.appendChild(line);
+});
+
+// Draw nodes
+Object.entries(agents).forEach(([id, n]) => {
+  const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+  g.setAttribute('class', 'node-group');
+
+  const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+  rect.setAttribute('x', n.x - n.w/2); rect.setAttribute('y', n.y - n.h/2);
+  rect.setAttribute('width', n.w); rect.setAttribute('height', n.h);
+  rect.setAttribute('class', 'node-rect');
+  rect.setAttribute('fill', n.color + '22');
+  rect.setAttribute('stroke', n.color);
+
+  // Bigger glow for orchestrator
+  if (id === 'millie') {
+    rect.setAttribute('fill', n.color + '33');
+    rect.setAttribute('stroke-width', '3');
+  }
+
+  const label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+  label.setAttribute('x', n.x); label.setAttribute('y', n.sub ? n.y - 2 : n.y + 4);
+  label.setAttribute('class', 'node-label');
+  label.textContent = n.label;
+
+  g.appendChild(rect);
+  g.appendChild(label);
+
+  if (n.sub) {
+    const sub = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    sub.setAttribute('x', n.x); sub.setAttribute('y', n.y + 14);
+    sub.setAttribute('class', 'node-sublabel');
+    sub.textContent = n.sub;
+    g.appendChild(sub);
+  }
+
+  g.addEventListener('mouseenter', (e) => {
+    tooltip.innerHTML = `<h3 style="color:${n.color}">${n.label}</h3><p>${n.desc}</p>`;
+    tooltip.style.opacity = 1;
+    tooltip.style.left = (e.clientX + 16) + 'px';
+    tooltip.style.top = (e.clientY - 10) + 'px';
+  });
+  g.addEventListener('mousemove', (e) => {
+    let tx = e.clientX + 16, ty = e.clientY - 10;
+    if (tx + 350 > W) tx = e.clientX - 356;
+    if (ty + 120 > H) ty = e.clientY - 120;
+    tooltip.style.left = tx + 'px';
+    tooltip.style.top = ty + 'px';
+  });
+  g.addEventListener('mouseleave', () => { tooltip.style.opacity = 0; });
+
+  svg.appendChild(g);
+});
+
+// Pulse animation for Millie
+const millie = agents.millie;
+const pulse = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+pulse.setAttribute('x', millie.x - millie.w/2 - 4); pulse.setAttribute('y', millie.y - millie.h/2 - 4);
+pulse.setAttribute('width', millie.w + 8); pulse.setAttribute('height', millie.h + 8);
+pulse.setAttribute('rx', 14); pulse.setAttribute('ry', 14);
+pulse.setAttribute('fill', 'none'); pulse.setAttribute('stroke', colors.orchestrator);
+pulse.setAttribute('stroke-width', '1');
+const anim = document.createElementNS('http://www.w3.org/2000/svg', 'animate');
+anim.setAttribute('attributeName', 'opacity'); anim.setAttribute('values', '0.6;0;0.6');
+anim.setAttribute('dur', '3s'); anim.setAttribute('repeatCount', 'indefinite');
+pulse.appendChild(anim);
+svg.insertBefore(pulse, svg.firstChild);
+</script>
+</body>
+</html>
