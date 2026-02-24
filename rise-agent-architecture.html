@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RISE AI Agent Architecture</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0d1117;color:#e6edf3;font-family:'Segoe UI',system-ui,-apple-system,sans-serif;overflow-x:hidden}
+.header{text-align:center;padding:32px 20px 8px}
+.header h1{font-size:clamp(1.4rem,3vw,2rem);font-weight:700;letter-spacing:1px;color:#fff}
+.header p{font-size:clamp(0.8rem,1.5vw,1rem);color:#8b949e;margin-top:4px}
+svg{display:block;margin:0 auto}
+.node-group{cursor:pointer}
+.node-rect{rx:12;ry:12;stroke-width:2;transition:filter .2s}
+.node-group:hover .node-rect{filter:brightness(1.3) drop-shadow(0 0 8px rgba(255,255,255,.15))}
+.node-label{font-family:'Segoe UI',system-ui,sans-serif;fill:#fff;font-weight:600;text-anchor:middle;pointer-events:none}
+.node-desc{font-family:'Segoe UI',system-ui,sans-serif;fill:#8b949e;font-size:10px;text-anchor:middle;pointer-events:none}
+.team-container{rx:16;ry:16;stroke-width:2;stroke-dasharray:none}
+.team-label{font-family:'Segoe UI',system-ui,sans-serif;fill:#fff;font-weight:700;font-size:14px}
+.team-purpose{font-family:'Segoe UI',system-ui,sans-serif;fill:#8b949e;font-size:10px}
+.conn-thick{stroke-width:3;fill:none;opacity:.7}
+.conn-thin{stroke-width:1.5;fill:none;opacity:.5}
+.conn-dashed{stroke-width:2;fill:none;opacity:.5;stroke-dasharray:6,4}
+.phase-badge{font-family:'Segoe UI',system-ui,sans-serif;font-size:9px;font-weight:600;fill:#fff;text-anchor:middle}
+.phase-bg{rx:6;ry:6}
+.legend{font-family:'Segoe UI',system-ui,sans-serif}
+.infra-bar{rx:10;ry:10}
+
+/* Tooltip */
+.tooltip{position:fixed;background:#1c2128;border:1px solid #30363d;border-radius:8px;padding:12px 16px;font-size:13px;color:#e6edf3;pointer-events:none;opacity:0;transition:opacity .15s;max-width:280px;z-index:100;box-shadow:0 4px 16px rgba(0,0,0,.4)}
+.tooltip h4{font-size:14px;margin-bottom:4px;color:#fff}
+.tooltip p{color:#8b949e;font-size:12px;line-height:1.4}
+.tooltip .tt-phase{display:inline-block;padding:2px 8px;border-radius:4px;font-size:10px;font-weight:600;margin-top:6px}
+</style>
+</head>
+<body>
+<div class="header">
+  <h1>🔷 RISE AI Agent Architecture</h1>
+  <p>Multi-Agent Ecosystem — Millie as Orchestrator</p>
+</div>
+<div id="tooltip" class="tooltip"></div>
+<svg id="diagram" viewBox="0 0 1200 920" preserveAspectRatio="xMidYMid meet" style="max-width:1200px;width:100%"></svg>
+
+<script>
+const svg = document.getElementById('diagram');
+const tooltip = document.getElementById('tooltip');
+const NS = 'http://www.w3.org/2000/svg';
+
+function el(tag, attrs, parent) {
+  const e = document.createElementNS(NS, tag);
+  for (const [k,v] of Object.entries(attrs||{})) e.setAttribute(k, v);
+  if (parent) parent.appendChild(e);
+  return e;
+}
+
+function text(parent, x, y, txt, cls, size) {
+  const t = el('text', {x, y, class: cls}, parent);
+  if (size) t.style.fontSize = size + 'px';
+  t.textContent = txt;
+  return t;
+}
+
+// Colors
+const C = {
+  millie: '#8b5cf6',
+  human: '#f59e0b',
+  ops: '#3b82f6',
+  comms: '#10b981',
+  hr: '#f97316',
+  finance: '#a855f7',
+  shared: '#5eead4',
+  infra: '#30363d'
+};
+
+// ── DATA ──
+const teams = [
+  {
+    id:'ops', color:C.ops, label:'Operations & Reporting', purpose:'Daily/weekly reporting, Entrata data pulls, operational metrics',
+    lead:{name:'Ops Agent', desc:'Operations Lead', phase:1, detail:'Coordinates all operational reporting workflows. Pulls data from Entrata, generates DLRs, WPOs, and compliance reports.', tier:'Regional'},
+    agents:[
+      {name:'DLR Bot', desc:'Daily Leasing Reports', phase:1, detail:'Generates daily leasing reports for 31 properties from 5 Entrata data sources. Format locked Feb 20.', tier:'PM'},
+      {name:'Scorecard Bot', desc:'Portfolio Scorecard', phase:1, detail:'Maintains interactive dashboard with 31 properties, 8 metric cards, drill-ins. Live on GitHub Pages.', tier:'Regional'},
+      {name:'WPO Bot', desc:'Weekly Performance', phase:2, detail:'Rolls up DLR data into weekly performance overviews with trend analysis and benchmarks.', tier:'PM'},
+      {name:'Compliance Bot', desc:'Audit & Compliance', phase:3, detail:'Monitors regulatory compliance, lease audit trails, and generates compliance reports.', tier:'Owner/Exec'}
+    ]
+  },
+  {
+    id:'comms', color:C.comms, label:'Communications & Email', purpose:'M365 email management, calendar, meeting briefs',
+    lead:{name:'Comms Agent', desc:'Communications Lead', phase:1, detail:'Manages email triage, calendar optimization, and meeting preparation across M365.', tier:'Owner/Exec'},
+    agents:[
+      {name:'Email Triage Bot', desc:'Priority Sorting', phase:1, detail:'Classifies incoming email by urgency and category. Routes to correct handler or flags for Courtney.', tier:'Owner/Exec'},
+      {name:'Auto-Reply Bot', desc:'Smart Responses', phase:2, detail:'Drafts context-aware email responses for routine inquiries using approved templates.', tier:'Owner/Exec'},
+      {name:'Calendar Bot', desc:'Schedule Manager', phase:2, detail:'Optimizes calendar, identifies conflicts, suggests meeting times, manages recurring events.', tier:'Owner/Exec'},
+      {name:'Meeting Prep Bot', desc:'Brief Generator', phase:2, detail:'Generates pre-meeting briefs with attendee info, agenda items, and relevant property data.', tier:'Owner/Exec'}
+    ]
+  },
+  {
+    id:'hr', color:C.hr, label:'Recruitment & HR', purpose:'AI-powered hiring workflows, onboarding automation',
+    lead:{name:'HR Agent', desc:'Recruitment Lead', phase:2, detail:'Orchestrates the full hiring pipeline from job posting through onboarding for 31 properties.', tier:'Regional'},
+    agents:[
+      {name:'Job Posting Bot', desc:'Listing Automation', phase:2, detail:'Creates and distributes job postings across platforms with property-specific requirements.', tier:'Regional'},
+      {name:'Resume Screen Bot', desc:'Candidate Filtering', phase:2, detail:'Screens resumes against role criteria, ranks candidates, flags top matches for review.', tier:'Regional'},
+      {name:'Onboarding Bot', desc:'New Hire Setup', phase:3, detail:'Automates onboarding checklists, system access provisioning, and training scheduling.', tier:'PM'},
+      {name:'Training Bot', desc:'Learning & Dev', phase:3, detail:'Delivers training content, tracks completion, identifies skill gaps across the portfolio.', tier:'Functional'}
+    ]
+  },
+  {
+    id:'finance', color:C.finance, label:'Finance & Analytics', purpose:'Financial reporting, invoice automation, market analysis',
+    lead:{name:'Finance Agent', desc:'Finance Lead', phase:2, detail:'Manages financial data pipelines, budget tracking, and analytical reporting for the portfolio.', tier:'Owner/Exec'},
+    agents:[
+      {name:'Invoice Bot', desc:'Invoice Processing', phase:2, detail:'Extracts invoice data, validates against POs, routes for approval. Targets 80% auto-processing.', tier:'Regional'},
+      {name:'Budget Bot', desc:'Budget Tracking', phase:2, detail:'Monitors actuals vs budget, flags variances >5%, generates monthly budget reports.', tier:'Regional'},
+      {name:'Market Intel Bot', desc:'Market Research', phase:3, detail:'Tracks comp set pricing, occupancy trends, and market conditions across all markets.', tier:'Owner/Exec'},
+      {name:'NOI Bot', desc:'NOI Optimization', phase:3, detail:'Analyzes Net Operating Income drivers, identifies optimization opportunities per property.', tier:'Owner/Exec'}
+    ]
+  }
+];
+
+const infra = ['Entrata','M365','Egnyte','n8n','Supabase','RealPage/Knock','Paycor'];
+
+// ── LAYOUT CONSTANTS ──
+const W = 1200, midX = W/2;
+const millieY = 50, sharedY = 148, teamTopY = 230;
+const teamW = 260, teamGap = 20;
+const totalTeamsW = teamW * 4 + teamGap * 3;
+const teamStartX = (W - totalTeamsW) / 2;
+const nodeW = 220, nodeH = 50, leadH = 54;
+const subStartY = 80; // relative within team container
+const subGap = 8;
+
+// ── DRAW CONNECTIONS FIRST (behind everything) ──
+const connLayer = el('g', {}, svg);
+const nodeLayer = el('g', {}, svg);
+
+// ── MILLIE NODE ──
+function drawNode(parent, cx, cy, w, h, name, desc, fill, stroke, extra) {
+  const g = el('g', {class:'node-group'}, parent);
+  el('rect', {x:cx-w/2, y:cy-h/2, width:w, height:h, fill, stroke, class:'node-rect'}, g);
+  text(g, cx, cy - 4, name, 'node-label', 13);
+  text(g, cx, cy + 12, desc, 'node-desc', 10);
+  if (extra) {
+    g.addEventListener('mouseenter', e => showTooltip(e, extra));
+    g.addEventListener('mousemove', e => moveTooltip(e));
+    g.addEventListener('mouseleave', hideTooltip);
+  }
+  return {cx, cy, g};
+}
+
+// Millie
+const millie = drawNode(nodeLayer, midX, millieY + 30, 240, 58, '🔷 Millie', 'Executive AI Agent — Orchestrator', '#1a1530', C.millie, {
+  title:'Millie', desc:'Central orchestrator for the entire RISE AI ecosystem. Coordinates all team leads, maintains context across initiatives, and ensures human-in-the-loop governance.', phase:1, tier:'Owner/Exec'
+});
+
+// Human in the loop
+const human = drawNode(nodeLayer, midX + 200, millieY + 30, 180, 50, '👤 Courtney', 'Human in the Loop', '#1a1a10', C.human, {
+  title:'Courtney (COO)', desc:'Final decision authority. All critical actions require human approval. Permission escalation flows through Courtney.', phase:1, tier:'Owner/Exec'
+});
+
+// Connection: human → millie
+const hLine = el('line', {x1:millie.cx+120, y1:millie.cy, x2:human.cx-90, y2:human.cy, stroke:C.human, class:'conn-thick', 'stroke-dasharray':'8,4'}, connLayer);
+
+// ── SHARED SERVICES BAR ──
+const sharedW = 320, sharedH = 52;
+const sharedX = midX - sharedW/2;
+el('rect', {x:sharedX, y:sharedY, width:sharedW, height:sharedH, fill:'rgba(94,234,212,0.08)', stroke:C.shared, class:'team-container', 'stroke-dasharray':'6,3'}, nodeLayer);
+text(nodeLayer, sharedX + 10, sharedY + 14, 'SHARED SERVICES', 'team-label', 11).setAttribute('fill', C.shared);
+const research = drawNode(nodeLayer, midX, sharedY + 32, 200, 36, '🔍 Research Agent', 'Cross-team intelligence', 'rgba(94,234,212,0.12)', C.shared, {
+  title:'Research Agent', desc:'Shared support role serving all 4 teams. Handles market research, competitor analysis, data gathering, and trend monitoring across the portfolio.', phase:1, tier:'Regional'
+});
+
+// Millie → Research
+el('line', {x1:midX, y1:millie.cy+29, x2:midX, y2:sharedY, stroke:C.shared, class:'conn-thick'}, connLayer);
+
+// ── DRAW TEAMS ──
+const leadPositions = [];
+teams.forEach((team, ti) => {
+  const tx = teamStartX + ti * (teamW + teamGap);
+  const agentCount = team.agents.length;
+  const containerH = subStartY + agentCount * (nodeH + subGap) + 16;
+
+  // Container
+  el('rect', {x:tx, y:teamTopY, width:teamW, height:containerH, fill:`rgba(${hexToRgb(team.color)},0.06)`, stroke:team.color, class:'team-container', 'stroke-opacity':'0.5'}, nodeLayer);
+  text(nodeLayer, tx + 14, teamTopY + 18, team.label, 'team-label', 12).setAttribute('fill', team.color);
+  const pt = text(nodeLayer, tx + 14, teamTopY + 32, team.purpose, 'team-purpose', 9);
+  pt.setAttribute('fill', '#6e7681');
+  // Wrap purpose text
+  wrapText(pt, teamW - 28);
+
+  // Lead
+  const leadCx = tx + teamW / 2;
+  const leadCy = teamTopY + subStartY + 10;
+  const lead = drawNode(nodeLayer, leadCx, leadCy, nodeW, leadH, '⭐ ' + team.lead.name, team.lead.desc, `rgba(${hexToRgb(team.color)},0.15)`, team.color, {
+    title:team.lead.name, desc:team.lead.detail, phase:team.lead.phase, tier:team.lead.tier
+  });
+  drawPhaseBadge(nodeLayer, leadCx + nodeW/2 - 18, leadCy - leadH/2 + 4, team.lead.phase);
+  leadPositions.push({cx:leadCx, cy:leadCy, color:team.color, tx, containerTop:teamTopY});
+
+  // Millie → Lead
+  el('line', {x1:midX + (ti - 1.5) * 40, y1:millie.cy+29, x2:leadCx, y2:teamTopY, stroke:team.color, class:'conn-thick'}, connLayer);
+
+  // Research → Lead (dashed)
+  el('line', {x1: midX + (ti-1.5)*60, y1:sharedY+sharedH, x2:leadCx, y2:teamTopY, stroke:C.shared, class:'conn-dashed'}, connLayer);
+
+  // Sub-agents
+  team.agents.forEach((agent, ai) => {
+    const ay = leadCy + leadH/2 + 16 + ai * (nodeH + subGap);
+    const sub = drawNode(nodeLayer, leadCx, ay + nodeH/2, nodeW, nodeH, agent.name, agent.desc, `rgba(${hexToRgb(team.color)},0.08)`, `rgba(${hexToRgb(team.color)},0.4)`, {
+      title:agent.name, desc:agent.detail, phase:agent.phase, tier:agent.tier
+    });
+    drawPhaseBadge(nodeLayer, leadCx + nodeW/2 - 18, ay + 4, agent.phase);
+    // Connection
+    el('line', {x1:leadCx, y1:leadCy+leadH/2, x2:leadCx, y2:ay, stroke:team.color, class:'conn-thin'}, connLayer);
+  });
+});
+
+// ── INFRASTRUCTURE BAR ──
+const infraY = 830;
+const infraBarW = totalTeamsW + 40;
+const infraBarX = (W - infraBarW) / 2;
+el('rect', {x:infraBarX, y:infraY, width:infraBarW, height:50, fill:'rgba(48,54,61,0.4)', stroke:'#30363d', class:'infra-bar'}, nodeLayer);
+text(nodeLayer, infraBarX + 16, infraY + 18, 'INFRASTRUCTURE', 'team-label', 11).setAttribute('fill', '#6e7681');
+const infraGap = infraBarW / (infra.length + 1);
+infra.forEach((name, i) => {
+  const ix = infraBarX + infraGap * (i + 1);
+  text(nodeLayer, ix, infraY + 38, name, 'node-label', 11).setAttribute('fill', '#8b949e');
+});
+
+// ── LEGEND ──
+const legX = 30, legY = 860;
+const legendItems = [
+  {label:'Phase 1 (Now)', color:'#22c55e'},
+  {label:'Phase 2 (Q2 2026)', color:'#eab308'},
+  {label:'Phase 3 (Q3 2026)', color:'#6366f1'},
+  {label:'Shared Service', color:C.shared},
+];
+text(nodeLayer, legX, legY + 12, 'LEGEND', 'team-label', 11).setAttribute('fill', '#6e7681');
+legendItems.forEach((item, i) => {
+  const lx = legX + 70 + i * 160;
+  el('rect', {x:lx, y:legY+2, width:12, height:12, fill:item.color, rx:3}, nodeLayer);
+  const t = text(nodeLayer, lx + 18, legY + 12, item.label, 'node-desc', 11);
+  t.setAttribute('fill', '#8b949e');
+  t.setAttribute('text-anchor', 'start');
+});
+
+// Permission tiers legend
+const tierY = legY + 28;
+text(nodeLayer, legX, tierY + 12, 'TIERS', 'team-label', 11).setAttribute('fill', '#6e7681');
+const tiers = ['Owner/Exec','Regional','PM','Functional'];
+tiers.forEach((t, i) => {
+  const tx2 = legX + 70 + i * 160;
+  const tt = text(nodeLayer, tx2, tierY + 12, '● ' + t, 'node-desc', 11);
+  tt.setAttribute('fill', '#6e7681');
+  tt.setAttribute('text-anchor', 'start');
+});
+
+// ── HELPERS ──
+function hexToRgb(hex) {
+  const r = parseInt(hex.slice(1,3),16);
+  const g = parseInt(hex.slice(3,5),16);
+  const b = parseInt(hex.slice(5,7),16);
+  return `${r},${g},${b}`;
+}
+
+function drawPhaseBadge(parent, x, y, phase) {
+  const colors = {1:'#22c55e', 2:'#eab308', 3:'#6366f1'};
+  const labels = {1:'P1', 2:'P2', 3:'P3'};
+  el('rect', {x:x-12, y, width:24, height:14, fill:colors[phase], class:'phase-bg'}, parent);
+  text(parent, x, y+10.5, labels[phase], 'phase-badge', 9);
+}
+
+function wrapText(textEl, maxW) {
+  // Simple: just truncate for SVG
+  const full = textEl.textContent;
+  if (full.length > 40) textEl.textContent = full.slice(0, 38) + '…';
+}
+
+function showTooltip(e, data) {
+  const phaseColors = {1:'#22c55e', 2:'#eab308', 3:'#6366f1'};
+  const phaseLabels = {1:'Phase 1 — Active Now', 2:'Phase 2 — Q2 2026', 3:'Phase 3 — Q3 2026'};
+  tooltip.innerHTML = `<h4>${data.title}</h4><p>${data.desc}</p><p style="margin-top:6px;color:#6e7681">Permission: ${data.tier}</p><span class="tt-phase" style="background:${phaseColors[data.phase]}">${phaseLabels[data.phase]}</span>`;
+  tooltip.style.opacity = '1';
+  moveTooltip(e);
+}
+function moveTooltip(e) {
+  tooltip.style.left = (e.clientX + 16) + 'px';
+  tooltip.style.top = (e.clientY - 10) + 'px';
+}
+function hideTooltip() { tooltip.style.opacity = '0'; }
+</script>
+</body>
+</html>
