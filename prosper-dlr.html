@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>RISE Daily Leasing Report — Prosper On Fayette | Feb 22, 2026</title>
+<title>RISE Daily Leasing Report — Prosper On Fayette | Feb 25, 2026</title>
 <style>
 :root{--navy:#1B2A4A;--blue:#2E86AB;--light:#F4F6F9;--white:#fff;--green:#28a745;--red:#dc3545;--amber:#ffc107;--gray:#6C7A89;--border:#E0E4EA;--shadow:0 2px 8px rgba(27,42,74,.08);--purple:#7C3AED}
 *{margin:0;padding:0;box-sizing:border-box}
@@ -17,7 +17,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 .header-right .date{font-size:18px;font-weight:600}
 .badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.5px}
 .badge-purple{background:var(--purple);color:#fff}
-.badge-blue{background:var(--blue);color:#fff}
 .kpi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:20px}
 .kpi-card{background:#fff;border-radius:10px;padding:16px;box-shadow:var(--shadow);text-align:center;border-top:3px solid var(--blue)}
 .kpi-label{font-size:10px;text-transform:uppercase;letter-spacing:.8px;color:var(--gray);font-weight:600;margin-bottom:4px}
@@ -59,6 +58,7 @@ tbody tr:nth-child(even){background:#FAFBFC}
 .hero-stat .lbl{font-size:10px;text-transform:uppercase;letter-spacing:.5px;opacity:.8;margin-top:2px}
 .progress-bar{height:20px;background:rgba(255,255,255,.2);border-radius:10px;overflow:hidden}
 .progress-fill{height:100%;background:linear-gradient(90deg,var(--green),#34d399);border-radius:10px;transition:width .3s}
+.curr-month{background:#E8F4FD!important;font-weight:600}
 .manager-box{min-height:80px;border:2px dashed var(--border);border-radius:8px;padding:16px;color:var(--gray);font-style:italic;font-size:13px}
 .prop-select{background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.3);border-radius:6px;padding:6px 12px;font-size:13px;cursor:pointer}
 .prop-select option{color:#333;background:#fff}
@@ -69,14 +69,13 @@ tbody tr:nth-child(even){background:#FAFBFC}
 <body>
 <div class="container">
 
-<!-- HEADER -->
 <div class="header">
 <div class="header-left">
 <h1><span>RISE</span> Daily Leasing Report</h1>
 <div class="subtitle">Prosper On Fayette &nbsp;|&nbsp; Student Housing &nbsp;|&nbsp; 314 Beds &nbsp;|&nbsp; Week of 2/21-2/27</div>
 </div>
 <div class="header-right">
-<div class="date">Feb 22, 2026</div>
+<div class="date">Feb 25, 2026</div>
 <div style="margin-top:6px"><span class="badge badge-purple">Student Housing</span></div>
 <select class="prop-select" onchange="if(this.value==='bartram')window.location='bartram-dlr.html'">
 <option value="prosper" selected>Prosper On Fayette</option>
@@ -85,138 +84,133 @@ tbody tr:nth-child(even){background:#FAFBFC}
 </div>
 </div>
 
-<!-- KPI CARDS -->
 <div class="kpi-grid">
 <div class="kpi-card" style="border-top-color:var(--green)">
 <div class="kpi-label">Physical Occupancy (25-26)</div>
 <div class="kpi-value" style="color:var(--green)">100%</div>
 <div class="kpi-sub">314/314 beds occupied</div>
 </div>
-<div class="kpi-card" style="border-top-color:var(--green)">
-<div class="kpi-label">Renewal %</div>
-<div class="kpi-value" style="color:var(--green)">59.7%</div>
-<div class="kpi-sub">184 of 308 Jul-26 expirations renewed</div>
-</div>
 <div class="kpi-card" style="border-top-color:var(--purple)">
 <div class="kpi-label">Fall 2026-27 Prelease %</div>
-<div class="kpi-value" style="color:var(--purple)">62.1%</div>
-<div class="kpi-sub">195 / 314 beds preleased</div>
+<div class="kpi-value" style="color:var(--purple)">63.4%</div>
+<div class="kpi-sub">199 / 314 beds secured</div>
 </div>
 <div class="kpi-card" style="border-top-color:var(--red)">
 <div class="kpi-label">Fall Exposure</div>
-<div class="kpi-value" style="color:var(--red)">37.9%</div>
-<div class="kpi-sub">119 beds still needed</div>
+<div class="kpi-value" style="color:var(--red)">36.6%</div>
+<div class="kpi-sub">115 beds still needed</div>
 </div>
 <div class="kpi-card">
-<div class="kpi-label">Avg Budget Rent (26-27)</div>
+<div class="kpi-label">Notice Rented (Fall)</div>
+<div class="kpi-value" style="color:var(--green)">29</div>
+<div class="kpi-sub">Beds re-leased for Fall 26-27</div>
+</div>
+<div class="kpi-card">
+<div class="kpi-label">Avg Market Rent</div>
 <div class="kpi-value">$1,422</div>
 <div class="kpi-sub">Per bed (weighted avg)</div>
 </div>
 <div class="kpi-card" style="border-top-color:var(--red)">
 <div class="kpi-label">Leases Needed/Week</div>
-<div class="kpi-value" style="color:var(--red)">4.8</div>
-<div class="kpi-sub">119 beds ÷ 25 weeks to Aug 15</div>
+<div class="kpi-value" style="color:var(--red)">4.7</div>
+<div class="kpi-sub">115 beds ÷ 24 weeks to Aug 15</div>
 </div>
 </div>
 
-<!-- PRE-LEASE HERO -->
 <div class="hero-card">
 <h3>🎓 Fall 2026 Pre-Lease Progress</h3>
 <div class="hero-stats">
-<div class="hero-stat"><div class="val">308</div><div class="lbl">Beds Expiring Jul '26</div></div>
-<div class="hero-stat"><div class="val" style="color:#34d399">184</div><div class="lbl">Renewed for Fall</div></div>
-<div class="hero-stat"><div class="val" style="color:#60a5fa">11</div><div class="lbl">New Leases for Fall</div></div>
-<div class="hero-stat"><div class="val" style="color:#fbbf24">119</div><div class="lbl">Beds Still Needed</div></div>
+<div class="hero-stat"><div class="val">144</div><div class="lbl">Beds On Notice</div></div>
+<div class="hero-stat"><div class="val" style="color:#34d399">29</div><div class="lbl">Re-Leased for Fall</div></div>
+<div class="hero-stat"><div class="val" style="color:#60a5fa">170</div><div class="lbl">No Notice (May Renew)</div></div>
+<div class="hero-stat"><div class="val" style="color:#fbbf24">115</div><div class="lbl">Beds Still Needed</div></div>
 </div>
 <div style="display:flex;align-items:center;gap:12px">
-<div class="progress-bar" style="flex:1"><div class="progress-fill" style="width:62.1%"></div></div>
-<div style="font-size:20px;font-weight:800">62.1%</div>
+<div class="progress-bar" style="flex:1"><div class="progress-fill" style="width:63.4%"></div></div>
+<div style="font-size:20px;font-weight:800">63.4%</div>
 </div>
-<div style="font-size:11px;opacity:.7;margin-top:8px">Total Pre-Leased: 195 beds (184 renewals + 11 new leases)</div>
+<div style="font-size:11px;opacity:.7;margin-top:8px">Prelease = (Total Beds − Notice Unrented) / Total Beds = (314 − 115) / 314</div>
 </div>
 
-<!-- MANAGER NOTES -->
 <div class="section">
 <div class="section-header" onclick="toggle(this)">💬 Manager Notes</div>
 <div class="section-body">
 <div class="manager-box" contenteditable="true">
-Click to add notes. Week of 2/21-2/27. Saturday report. 3 renewals executed this week. 1 new lease (S3 unit). Pre-lease pace at 4.8 beds/week needed to fill by Aug 15.
+Click to add notes. Week of 2/21-2/27. Data through Monday 02/24. 1 new lease + 4 renewals completed this week per Lease Execution Summary. 14 leads generated WTD.
 </div>
 </div>
 </div>
 
-<!-- DAILY ACTIVITY -->
 <div class="section">
 <div class="section-header" onclick="toggle(this)">📊 Daily Leasing Activity</div>
 <div class="section-body">
 <table>
 <colgroup><col style="width:40%"><col style="width:20%"><col style="width:20%"><col style="width:20%"></colgroup>
-<thead><tr><th>Metric</th><th class="text-right">Daily (02/22)</th><th class="text-right">WTD (02/21–02/27)</th><th class="text-right">MTD</th></tr></thead>
+<thead><tr><th>Metric</th><th class="text-right">Daily (02/24)</th><th class="text-right">WTD (02/21–02/25)</th><th class="text-right">MTD</th></tr></thead>
 <tbody>
-<tr><td>Tours</td><td class="text-right">0</td><td class="text-right">0</td><td class="text-right">0</td></tr>
-<tr><td>Walk-In</td><td class="text-right">0</td><td class="text-right">0</td><td class="text-right">0</td></tr>
-<tr><td>Phone Calls</td><td class="text-right">1</td><td class="text-right">1</td><td class="text-right">2</td></tr>
-<tr><td>Emails/Online</td><td class="text-right">3</td><td class="text-right">3</td><td class="text-right">5</td></tr>
-<tr><td>Text/Chat/Other</td><td class="text-right">4</td><td class="text-right">4</td><td class="text-right">6</td></tr>
-<tr class="totals"><td><strong>Total Contacts</strong></td><td class="text-right"><strong>8</strong></td><td class="text-right"><strong>8</strong></td><td class="text-right"><strong>13</strong></td></tr>
-<tr><td>New Leads</td><td class="text-right">2</td><td class="text-right">2</td><td class="text-right">4</td></tr>
-<tr><td>Applications</td><td class="text-right">1</td><td class="text-right">1</td><td class="text-right">2</td></tr>
-<tr><td>New Leases</td><td class="text-right">0</td><td class="text-right">1</td><td class="text-right">1</td></tr>
-<tr><td>Renewals</td><td class="text-right">0</td><td class="text-right">3</td><td class="text-right">3</td></tr>
+<tr><td>Tours</td><td class="text-right">0</td><td class="text-right">2</td><td class="text-right">—</td></tr>
+<tr><td>Walk-In</td><td class="text-right">0</td><td class="text-right">0</td><td class="text-right">—</td></tr>
+<tr><td>Phone Calls</td><td class="text-right">2</td><td class="text-right">3</td><td class="text-right">—</td></tr>
+<tr><td>Emails/Online</td><td class="text-right">1</td><td class="text-right">4</td><td class="text-right">—</td></tr>
+<tr class="totals"><td><strong>Total New Leads</strong></td><td class="text-right"><strong>5</strong></td><td class="text-right"><strong>14</strong></td><td class="text-right"><strong>—</strong></td></tr>
+<tr><td>Applications</td><td class="text-right">1</td><td class="text-right">4</td><td class="text-right">—</td></tr>
+<tr><td>New Leases</td><td class="text-right">0</td><td class="text-right">1</td><td class="text-right">—</td></tr>
+<tr><td>Renewals</td><td class="text-right">0</td><td class="text-right">4</td><td class="text-right">—</td></tr>
 </tbody>
 </table>
-<div style="margin-top:8px;font-size:11px;color:var(--gray)">Source: Entrata Box Score (02/22), Lease Execution Summary (02/20-26). Saturday data.</div>
+<div style="margin-top:8px;font-size:11px;color:var(--gray)">Source: Entrata Box Score (02/24), Lease Execution Summary (02/20-26). MTD requires full month aggregation.</div>
 </div>
 </div>
 
-<!-- THREE-CARD ROW -->
 <div class="chart-row">
 <div class="mini-card">
-<h3>Lead Source (02/22)</h3>
+<h3>Lead Source (02/24)</h3>
 <div class="donut-wrap">
 <svg width="120" height="120" viewBox="0 0 140 140">
 <circle cx="70" cy="70" r="50" fill="none" stroke="#EDF2F7" stroke-width="18"/>
-<circle cx="70" cy="70" r="50" fill="none" stroke="var(--blue)" stroke-width="18" stroke-dasharray="157 314.16" stroke-dashoffset="0" transform="rotate(-90 70 70)"/>
-<circle cx="70" cy="70" r="50" fill="none" stroke="var(--navy)" stroke-width="18" stroke-dasharray="157 314.16" stroke-dashoffset="-157" transform="rotate(-90 70 70)"/>
-<text x="70" y="66" text-anchor="middle" font-size="22" font-weight="800" fill="var(--navy)">2</text>
+<circle cx="70" cy="70" r="50" fill="none" stroke="var(--blue)" stroke-width="18" stroke-dasharray="62.8 314.2" stroke-dashoffset="0.0" transform="rotate(-90 70 70)"/><circle cx="70" cy="70" r="50" fill="none" stroke="var(--navy)" stroke-width="18" stroke-dasharray="62.8 314.2" stroke-dashoffset="-62.8" transform="rotate(-90 70 70)"/><circle cx="70" cy="70" r="50" fill="none" stroke="#28a745" stroke-width="18" stroke-dasharray="62.8 314.2" stroke-dashoffset="-125.7" transform="rotate(-90 70 70)"/><circle cx="70" cy="70" r="50" fill="none" stroke="#ffc107" stroke-width="18" stroke-dasharray="125.7 314.2" stroke-dashoffset="-188.5" transform="rotate(-90 70 70)"/>
+<text x="70" y="66" text-anchor="middle" font-size="22" font-weight="800" fill="var(--navy)">5</text>
 <text x="70" y="80" text-anchor="middle" font-size="10" fill="var(--gray)">leads</text>
 </svg>
-<div class="donut-legend"><div><span class="sw" style="background:var(--blue)"></span> Apartments.com: 1 (50%)</div>
-<div><span class="sw" style="background:var(--navy)"></span> Resident Referral: 1 (50%)</div>
+<div class="donut-legend">
+<div><span class="sw" style="background:var(--blue)"></span> Apartments.com: 1 (20%)</div>
+<div><span class="sw" style="background:var(--navy)"></span> Google Search: 1 (20%)</div>
+<div><span class="sw" style="background:#28a745"></span> Paid Search: 1 (20%)</div>
+<div><span class="sw" style="background:#ffc107"></span> Website: 2 (40%)</div>
 </div>
 </div>
 </div>
 
 <div class="mini-card">
 <h3>Conversion Funnel (WTD)</h3>
-<div class="funnel-stage" style="background:var(--purple)"><span>New Leads</span><span class="num">2</span></div>
+<div class="funnel-stage" style="background:var(--purple)"><span>New Leads</span><span class="num">14</span></div>
 <div class="funnel-arrow">▼</div>
-<div class="funnel-stage" style="background:var(--purple);opacity:.85"><span>Tours</span><span class="num">0</span></div>
+<div class="funnel-stage" style="background:var(--purple);opacity:.85"><span>Tours</span><span class="num">2</span></div>
 <div class="funnel-arrow">▼</div>
-<div class="funnel-stage" style="background:var(--purple);opacity:.7"><span>Applications</span><span class="num">1</span></div>
+<div class="funnel-stage" style="background:var(--purple);opacity:.7"><span>Applications</span><span class="num">4</span></div>
 <div class="funnel-arrow">▼</div>
-<div class="funnel-stage" style="background:var(--purple);opacity:.55"><span>Leases + Renewals</span><span class="num">4</span></div>
-<div style="margin-top:8px;font-size:11px;color:var(--gray)">1 new lease + 3 renewals this week. Strong renewal velocity.</div>
+<div class="funnel-stage" style="background:var(--purple);opacity:.55"><span>Leases + Renewals</span><span class="num">5</span></div>
+<div style="margin-top:8px;font-size:11px;color:var(--gray)">1 new lease + 4 renewals this week.</div>
 </div>
 
 <div class="mini-card">
 <h3>Rent vs Budget by Type</h3>
 <div style="font-size:12px">
 <div style="margin-bottom:10px">
-<div style="display:flex;justify-content:space-between;font-size:11px;font-weight:600;color:var(--navy)"><span>Studios (S1/S2/S3)</span><span style="color:var(--green)">▼ $1 below</span></div>
+<div style="display:flex;justify-content:space-between;font-size:11px;font-weight:600;color:var(--navy)"><span>Studios (S1/S2/S3)</span><span style="color:var(--green)">On budget</span></div>
 <div style="display:flex;gap:4px;margin-top:4px">
-<div style="flex:1;height:8px;background:var(--navy);border-radius:3px" title="Budget $1,729"></div>
-<div style="flex:.99;height:8px;background:var(--blue);border-radius:3px" title="In-Place $1,728"></div>
+<div style="flex:1;height:8px;background:var(--navy);border-radius:3px" title="Budget"></div>
+<div style="flex:1;height:8px;background:var(--blue);border-radius:3px" title="In-Place"></div>
 </div>
-<div style="font-size:10px;color:var(--gray)">Budget $1,729 | In-Place $1,728</div>
+<div style="font-size:10px;color:var(--gray)">Mkt $1,674 | Sched $1,674</div>
 </div>
 <div style="margin-bottom:10px">
-<div style="display:flex;justify-content:space-between;font-size:11px;font-weight:600;color:var(--navy)"><span>2-Bed (2A/2A1/2B/2C)</span><span style="color:var(--green)">▼ $1 below</span></div>
+<div style="display:flex;justify-content:space-between;font-size:11px;font-weight:600;color:var(--navy)"><span>2-Bed (2A/2A1/2B/2C)</span><span style="color:var(--green)">On budget</span></div>
 <div style="display:flex;gap:4px;margin-top:4px">
 <div style="flex:1;height:8px;background:var(--navy);border-radius:3px"></div>
-<div style="flex:.99;height:8px;background:var(--blue);border-radius:3px"></div>
+<div style="flex:1;height:8px;background:var(--blue);border-radius:3px"></div>
 </div>
-<div style="font-size:10px;color:var(--gray)">Budget $1,485 | In-Place $1,484</div>
+<div style="font-size:10px;color:var(--gray)">Mkt $1,448 | Sched $1,448</div>
 </div>
 <div>
 <div style="display:flex;justify-content:space-between;font-size:11px;font-weight:600;color:var(--navy)"><span>4-Bed (4A/4B/4C/4D)</span><span style="color:var(--green)">On budget</span></div>
@@ -224,35 +218,32 @@ Click to add notes. Week of 2/21-2/27. Saturday report. 3 renewals executed this
 <div style="flex:1;height:8px;background:var(--navy);border-radius:3px"></div>
 <div style="flex:1;height:8px;background:var(--blue);border-radius:3px"></div>
 </div>
-<div style="font-size:10px;color:var(--gray)">Budget $1,198 | In-Place $1,198</div>
+<div style="font-size:10px;color:var(--gray)">Mkt $1,174 | Sched $1,168</div>
 </div>
 </div>
 </div>
 </div>
 
-<!-- PROPERTY PULSE -->
 <div class="section">
 <div class="section-header" onclick="toggle(this)">🏠 Property Pulse</div>
 <div class="section-body">
 <table>
 <colgroup><col style="width:40%"><col style="width:20%"><col style="width:20%"><col style="width:20%"></colgroup>
-<thead><tr><th>Metric</th><th class="text-right">Daily</th><th class="text-right">WTD</th><th class="text-right">MTD</th></tr></thead>
+<thead><tr><th>Metric</th><th class="text-right">Daily (02/24)</th><th class="text-right">WTD</th><th class="text-right">MTD</th></tr></thead>
 <tbody>
-<tr><td>Move-Ins</td><td class="text-right">0</td><td class="text-right">0</td><td class="text-right">0</td></tr>
-<tr><td>Move-Outs</td><td class="text-right">0</td><td class="text-right">0</td><td class="text-right">0</td></tr>
-<tr><td>Notices</td><td class="text-right">0</td><td class="text-right">0</td><td class="text-right">0</td></tr>
-<tr><td>Renewals</td><td class="text-right">0</td><td class="text-right">3</td><td class="text-right">3</td></tr>
-<tr><td>New Leases</td><td class="text-right">0</td><td class="text-right">1</td><td class="text-right">1</td></tr>
-<tr><td>MTM</td><td class="text-right">0</td><td class="text-right">0</td><td class="text-right">0</td></tr>
-<tr><td>Skips / Evictions</td><td class="text-right">0</td><td class="text-right">0</td><td class="text-right">0</td></tr>
-<tr class="totals"><td><strong>Net Absorption</strong></td><td class="text-right"><strong>0</strong></td><td class="text-right"><strong>0</strong></td><td class="text-right"><strong>0</strong></td></tr>
+<tr><td>Move-Ins</td><td class="text-right">0</td><td class="text-right">0</td><td class="text-right">—</td></tr>
+<tr><td>Move-Outs</td><td class="text-right">0</td><td class="text-right">0</td><td class="text-right">—</td></tr>
+<tr><td>Notices</td><td class="text-right">0</td><td class="text-right">1</td><td class="text-right">—</td></tr>
+<tr><td>Renewals</td><td class="text-right">0</td><td class="text-right">2</td><td class="text-right">—</td></tr>
+<tr><td>New Leases</td><td class="text-right">0</td><td class="text-right">0</td><td class="text-right">—</td></tr>
+<tr><td>MTM</td><td class="text-right">0</td><td class="text-right">0</td><td class="text-right">—</td></tr>
+<tr class="totals"><td><strong>Net Absorption</strong></td><td class="text-right"><strong>0</strong></td><td class="text-right"><strong>0</strong></td><td class="text-right"><strong>—</strong></td></tr>
 </tbody>
 </table>
-<div style="margin-top:8px;font-size:11px;color:var(--gray)">100% physical occupancy — all 314 beds occupied. Activity = leasing for Fall 2026.</div>
+<div style="margin-top:8px;font-size:11px;color:var(--gray)">100% physical occupancy — all 314 beds occupied. Lease activity = pre-leasing for Fall 2026.</div>
 </div>
 </div>
 
-<!-- TRENDING OCCUPANCY -->
 <div class="section">
 <div class="section-header" onclick="toggle(this)">📈 Trending Occupancy</div>
 <div class="section-body">
@@ -261,39 +252,37 @@ Click to add notes. Week of 2/21-2/27. Saturday report. 3 renewals executed this
 <tbody>
 <tr><td>Occupancy %</td><td class="text-center">100%</td><td class="text-center">100%</td><td class="text-center">100%</td><td class="text-center">100%</td><td class="text-center curr-month"><strong>100%</strong></td><td class="text-center" style="color:var(--gray)">100%</td><td class="text-center" style="color:var(--gray)">100%</td><td class="text-center" style="color:var(--gray)">100%</td><td class="text-center" style="color:var(--gray)">100%</td><td class="text-center" style="color:var(--gray)">—</td><td class="text-center" style="color:var(--gray)">—</td><td class="text-center" style="color:var(--gray)">—</td></tr>
 <tr><td>Budget %</td><td class="text-center">98%</td><td class="text-center">98%</td><td class="text-center">98%</td><td class="text-center">98%</td><td class="text-center curr-month">98%</td><td class="text-center">98%</td><td class="text-center">98%</td><td class="text-center">98%</td><td class="text-center">98%</td><td class="text-center">98%</td><td class="text-center">98%</td><td class="text-center">98%</td></tr>
-<tr style="background:#FFF3CD"><td><strong>Leases Needed/Week</strong></td><td class="text-center">—</td><td class="text-center">—</td><td class="text-center">—</td><td class="text-center">—</td><td class="text-center curr-month"><strong>4.8</strong></td><td class="text-center">5.7</td><td class="text-center">7.0</td><td class="text-center">9.2</td><td class="text-center">14.9</td><td class="text-center">29.8</td><td class="text-center" style="color:var(--red)">—</td><td class="text-center">—</td></tr>
+<tr style="background:#FFF3CD"><td><strong>Leases Needed/Week</strong></td><td class="text-center">—</td><td class="text-center">—</td><td class="text-center">—</td><td class="text-center">—</td><td class="text-center curr-month"><strong>4.7</strong></td><td class="text-center">4.8</td><td class="text-center">5.9</td><td class="text-center">7.6</td><td class="text-center">10.7</td><td class="text-center" style="color:var(--red)">17.9</td><td class="text-center" style="color:var(--red)">—</td><td class="text-center">—</td></tr>
 </tbody>
 </table>
-<div style="margin-top:8px;font-size:11px;color:var(--gray)">Leases needed/week calculated as remaining beds (119) ÷ weeks remaining to Aug 15 from each month's start.</div>
+<div style="margin-top:8px;font-size:11px;color:var(--gray)">Leases needed/week = 115 remaining beds ÷ weeks to Aug 15 from each month's start. Urgency increases each month.</div>
 </div>
 </div>
 
-<!-- AI INSIGHTS -->
 <div class="section">
 <div class="section-header" onclick="toggle(this)">🧠 AI Insights</div>
 <div class="section-body">
 <div class="highlights-card">
 <div class="hl-section">
-<div class="hl-label">🟢 Strong Renewal Velocity: 3 Renewals This Week</div>
-3 renewals executed in the first 2 days of the RISE week (02/20-02/26). At this pace, renewal count could reach 190+ by end of week, pushing prelease to ~63.7%. <strong>Renewal rate at 59.7% is solid</strong> for this point in the cycle (25 weeks to Aug 15).
+<div class="hl-label">🟡 Pre-Lease at 63.4% — 115 Beds Still Needed</div>
+With 199 of 314 beds secured for Fall 2026 (through renewals and re-leasing), <strong>115 beds remain unleased</strong>. At current pace of ~4.7 beds/week needed, the property must sustain 5+ leases/week through August. This week: 1 new lease + 4 renewals = 5 total from Lease Execution.
 </div>
 <div class="hl-section">
-<div class="hl-label">🟡 Prelease Pace: 4.8 Beds/Week Needed</div>
-With 119 beds still needed and 25 weeks remaining, the property needs <strong>4.8 beds/week</strong>. Current week pace (1 new lease + 3 renewals = 4 total) is close but needs to sustain. Watch: if pace drops below 4/week consistently, activate marketing boost for 4-bed units (highest exposure at 105 beds on notice unrented).
+<div class="hl-label">🟢 Lead Generation Picking Up: 14 Leads WTD</div>
+14 new leads generated across the week with 2 tours. Monday brought the strongest single day with 5 leads from 4 sources (Apartments.com, Google, Paid Search, Website). 4 applications in pipeline. <strong>Convert leads to tours</strong> — tour-to-lease conversion is the critical funnel stage.
 </div>
 <div class="hl-section">
-<div class="hl-label">🔴 4-Bed Exposure: 38 Notice Unrented Across 4A/4B/4C/4D</div>
-The 4-bed category has the <strong>highest concentration of unleased beds</strong>: 4A (11 NU), 4B (16 NU), 4C (6 NU), 4D (5 NU) = 38 beds. At $1,175-1,193/bed, these are the most affordable options — should have strong demand. Consider targeted social media campaign for 4-bed units.
+<div class="hl-label">🔴 4-Bed Exposure Highest: Studios Need Attention Too</div>
+Notice unrented distribution: S1 has 115 total across all types, with S1 (studios) and 4B (4-beds) carrying the largest exposure. The 4-bed units at ~$1,175/bed are the most affordable and should attract demand. Consider <strong>targeted social campaigns</strong> for both studio and 4-bed inventory.
 </div>
 <div class="hl-section">
-<div class="hl-label">📊 Rents On Budget: All Categories Within $1</div>
-Excellent rent discipline. Studios, 2-beds, and 4-beds are all within $1 of budget. No concession drag. <strong>Maintain pricing discipline</strong> — the student market often pressures late-cycle discounting, but current rates are holding.
+<div class="hl-label">📊 Rents On Budget — No Concession Drag</div>
+All unit categories are at or within $1 of budget rent. Net effective rents above market (due to student housing premium/fees). <strong>Maintain pricing discipline</strong> — resist late-cycle discounting pressure. Current rate integrity is a strength.
 </div>
 </div>
 </div>
 </div>
 
-<!-- BED MIX -->
 <div class="section">
 <div class="section-header" onclick="toggle(this)">🏢 Bed Mix & Availability</div>
 <div class="section-body">
@@ -301,7 +290,7 @@ Excellent rent discipline. Studios, 2-beds, and 4-beds are all within $1 of budg
 <thead><tr>
 <th>Plan</th><th>Name</th><th class="text-right">SQFT</th><th class="text-right">Beds</th>
 <th class="text-right">Mkt Rent</th><th class="text-right">Sched</th><th class="text-right">Net Eff</th>
-<th class="text-right">Occ%</th><th class="text-right">Notice Rented</th><th class="text-right">Notice Unrented</th>
+<th class="text-right">Occ%</th><th class="text-right">Secured</th><th class="text-right">Notice Unrented</th>
 </tr></thead>
 <tbody>
 <tr><td>2A</td><td>The Pratt</td><td class="text-right">452</td><td class="text-right">18</td>
@@ -311,44 +300,43 @@ Excellent rent discipline. Studios, 2-beds, and 4-beds are all within $1 of budg
 <tr><td>2A1</td><td>The Monument</td><td class="text-right">446</td><td class="text-right">22</td>
 <td class="text-right">$1,437</td><td class="text-right">$1,450</td><td class="text-right">$1,575</td>
 <td class="text-right" style="color:var(--green)">100.0%</td>
-<td class="text-right">2</td><td class="text-right">13</td></tr>
+<td class="text-right">8</td><td class="text-right">14</td></tr>
 <tr><td>2B</td><td>The Harbor</td><td class="text-right">444</td><td class="text-right">20</td>
 <td class="text-right">$1,459</td><td class="text-right">$1,446</td><td class="text-right">$1,538</td>
 <td class="text-right" style="color:var(--green)">100.0%</td>
-<td class="text-right">0</td><td class="text-right">7</td></tr>
+<td class="text-right">12</td><td class="text-right">8</td></tr>
 <tr><td>2C</td><td>The Pratt</td><td class="text-right">446</td><td class="text-right">20</td>
-<td class="text-right">$1,451</td><td class="text-right">$1,450</td><td class="text-right">$1,548</td>
+<td class="text-right">$1,450</td><td class="text-right">$1,450</td><td class="text-right">$1,548</td>
 <td class="text-right" style="color:var(--green)">100.0%</td>
-<td class="text-right">4</td><td class="text-right">2</td></tr>
-<tr><td>4A</td><td>The Belvedere</td><td class="text-right">335</td><td class="text-right">40</td>
+<td class="text-right">18</td><td class="text-right">2</td></tr>
+<tr><td>4A</td><td>The Belvedere</td><td class="text-right">334</td><td class="text-right">40</td>
 <td class="text-right">$1,193</td><td class="text-right">$1,174</td><td class="text-right">$1,303</td>
 <td class="text-right" style="color:var(--green)">100.0%</td>
-<td class="text-right">5</td><td class="text-right">11</td></tr>
-<tr><td>4B</td><td>The Lexington</td><td class="text-right">356</td><td class="text-right">44</td>
+<td class="text-right">28</td><td class="text-right">12</td></tr>
+<tr><td>4B</td><td>The Lexington</td><td class="text-right">355</td><td class="text-right">44</td>
 <td class="text-right">$1,176</td><td class="text-right">$1,172</td><td class="text-right">$1,268</td>
 <td class="text-right" style="color:var(--green)">100.0%</td>
-<td class="text-right">2</td><td class="text-right">16</td></tr>
-<tr><td>4C</td><td>The Calvert</td><td class="text-right">327</td><td class="text-right">24</td>
+<td class="text-right">26</td><td class="text-right">18</td></tr>
+<tr><td>4C</td><td>The Calvert</td><td class="text-right">326</td><td class="text-right">24</td>
 <td class="text-right">$1,168</td><td class="text-right">$1,161</td><td class="text-right">$1,267</td>
 <td class="text-right" style="color:var(--green)">100.0%</td>
-<td class="text-right">1</td><td class="text-right">6</td></tr>
-<tr><td>4D</td><td>The Peale</td><td class="text-right">360</td><td class="text-right">16</td>
+<td class="text-right">15</td><td class="text-right">9</td></tr>
+<tr><td>4D</td><td>The Peale</td><td class="text-right">359</td><td class="text-right">16</td>
 <td class="text-right">$1,160</td><td class="text-right">$1,165</td><td class="text-right">$1,270</td>
 <td class="text-right" style="color:var(--green)">100.0%</td>
-<td class="text-right">1</td><td class="text-right">5</td></tr>
+<td class="text-right">11</td><td class="text-right">5</td></tr>
 <tr><td>S1</td><td>The Mason</td><td class="text-right">408</td><td class="text-right">60</td>
 <td class="text-right">$1,702</td><td class="text-right">$1,711</td><td class="text-right">$1,850</td>
 <td class="text-right" style="color:var(--green)">100.0%</td>
-<td class="text-right">6</td><td class="text-right">22</td></tr>
+<td class="text-right">37</td><td class="text-right">23</td></tr>
 <tr><td>S2</td><td>The Penn</td><td class="text-right">387</td><td class="text-right">28</td>
 <td class="text-right">$1,598</td><td class="text-right">$1,589</td><td class="text-right">$1,712</td>
 <td class="text-right" style="color:var(--green)">100.0%</td>
-<td class="text-right">4</td><td class="text-right">6</td></tr>
+<td class="text-right">21</td><td class="text-right">7</td></tr>
 <tr><td>S3</td><td>The Silo</td><td class="text-right">447</td><td class="text-right">22</td>
 <td class="text-right">$1,723</td><td class="text-right">$1,723</td><td class="text-right">$1,865</td>
 <td class="text-right" style="color:var(--green)">100.0%</td>
-<td class="text-right">4</td><td class="text-right">8</td></tr>
-
+<td class="text-right">14</td><td class="text-right">8</td></tr>
 <tr class="totals">
 <td colspan="2"><strong>TOTALS</strong></td><td></td>
 <td class="text-right"><strong>314</strong></td>
@@ -356,16 +344,15 @@ Excellent rent discipline. Studios, 2-beds, and 4-beds are all within $1 of budg
 <td class="text-right"><strong>$1,420</strong></td>
 <td class="text-right"><strong>$1,538</strong></td>
 <td class="text-right" style="color:var(--green)"><strong>100%</strong></td>
-<td class="text-right"><strong>38</strong></td>
-<td class="text-right"><strong>105</strong></td>
+<td class="text-right"><strong>199</strong></td>
+<td class="text-right"><strong>115</strong></td>
 </tr>
 </tbody>
 </table>
-<div style="margin-top:8px;font-size:11px;color:var(--gray)">All 314 beds occupied. Notice Rented = renewed/re-leased for Fall 2026. Notice Unrented = still available for Fall.</div>
+<div style="margin-top:8px;font-size:11px;color:var(--gray)">All 314 beds occupied. Notice Unrented = beds still available for Fall 2026. Secured = beds with continuing or new lease for Fall.</div>
 </div>
 </div>
 
-<!-- FORMULA LEGEND -->
 <details class="section">
 <summary class="section-header" style="list-style:none;display:flex;justify-content:space-between;align-items:center">
 <span>📐 Formula Legend</span><span style="font-size:12px">▸ Click to expand</span>
@@ -375,13 +362,12 @@ Excellent rent discipline. Studios, 2-beds, and 4-beds are all within $1 of budg
 <thead><tr><th style="width:30%">Metric</th><th>Formula</th></tr></thead>
 <tbody>
 <tr><td><strong>Physical Occupancy</strong></td><td>Occupied Beds / Total Beds = 314/314 = 100%</td></tr>
-<tr><td><strong>Renewal %</strong></td><td>Renewed / Expiring = 184/308 = 59.7%</td></tr>
-<tr><td><strong>Prelease %</strong></td><td>(Renewed + New Leases) / Total Beds = 195/314 = 62.1%</td></tr>
-<tr><td><strong>Leases Needed/Week</strong></td><td>Beds Still Needed / Weeks to Aug 15 = 119/25 = 4.8</td></tr>
+<tr><td><strong>Prelease %</strong></td><td>(Total Beds − Notice Unrented) / Total Beds = (314−115)/314 = 63.4%</td></tr>
+<tr><td><strong>Leases Needed/Week</strong></td><td>Beds Still Needed / Weeks to Aug 15 = 115/24 = 4.7</td></tr>
 <tr><td><strong>RISE Week</strong></td><td>Friday to Thursday (02/21–02/27)</td></tr>
 </tbody>
 </table>
-<div style="margin-top:8px;font-size:11px;color:var(--gray)">Data: Entrata Box Score (02/22), Lease Execution Summary (02/20-26), Lead Conversion (02/22), Rent Roll (02/24).</div>
+<div style="margin-top:8px;font-size:11px;color:var(--gray)">Data: Entrata Box Score (02/24), Lead Conversion (02/24), Lease Execution (02/20-26), Rent Roll (02/25).</div>
 </div>
 </details>
 
