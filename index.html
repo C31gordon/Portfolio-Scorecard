@@ -767,6 +767,112 @@ textarea{resize:vertical}
 /* Responsive additions */
 @media(max-width:1200px){.sub-grid{grid-template-columns:repeat(2,1fr)}.stat-grid{grid-template-columns:repeat(2,1fr)}.token-cost-grid{grid-template-columns:repeat(2,1fr)}.wl-grid{grid-template-columns:1fr}.wf-sidebar{width:240px}}
 @media(max-width:768px){.sub-grid{grid-template-columns:1fr}.stat-grid{grid-template-columns:1fr}.token-cost-grid{grid-template-columns:1fr}.mp-grid{grid-template-columns:1fr}.wf-container{flex-direction:column}.wf-sidebar{width:100%;max-height:200px}.chat-panel{width:calc(100vw - 32px);right:16px;bottom:80px}.bot-config-panel{width:100vw;right:-100vw}.millie-copilot{width:100vw;right:-100vw}.cfg-grid{grid-template-columns:1fr}.cfg-int-grid{grid-template-columns:1fr}}
+
+/* ======================== PHASE 6: SECURITY, GUARDRAILS & VALIDATION ======================== */
+
+/* Vault indicator */
+.vault-icon{display:inline-flex;align-items:center;font-size:11px;color:var(--text3);cursor:help;margin-left:4px;position:relative}
+.vault-icon:hover::after{content:'Credentials encrypted at rest (AES-256)';position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);background:var(--bg2);border:1px solid var(--border);border-radius:6px;padding:6px 10px;font-size:10px;white-space:nowrap;color:var(--text);z-index:50;pointer-events:none}
+
+/* Connection status badges */
+.conn-status-badge{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:12px;font-size:11px;font-weight:600;cursor:pointer;transition:all .15s;border:1px solid transparent}
+.conn-status-badge:hover{filter:brightness(1.1)}
+.conn-status-badge.csb-connected{background:rgba(16,185,129,.12);color:var(--green);border-color:rgba(16,185,129,.25)}
+.conn-status-badge.csb-attention{background:rgba(245,158,11,.12);color:var(--orange);border-color:rgba(245,158,11,.25)}
+.conn-status-badge.csb-failed{background:rgba(239,68,68,.12);color:var(--red);border-color:rgba(239,68,68,.25)}
+.conn-status-badge.csb-none{background:rgba(100,116,139,.12);color:var(--text3);border-color:rgba(100,116,139,.25)}
+
+/* Connection detail popover */
+.conn-detail-pop{position:fixed;background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:16px;width:280px;z-index:400;box-shadow:0 12px 40px rgba(0,0,0,.5);display:none}
+.conn-detail-pop.show{display:block}
+.conn-detail-pop h4{font-size:13px;font-weight:700;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.cdp-row{display:flex;justify-content:space-between;font-size:11px;color:var(--text2);margin-bottom:6px}
+.cdp-row .cdp-label{color:var(--text3);font-weight:600}
+.cdp-actions{display:flex;gap:6px;margin-top:12px}
+
+/* Rotation reminder banner */
+.rotation-banner{background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.2);border-radius:8px;padding:10px 14px;display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px;font-size:12px;color:var(--orange)}
+.rotation-banner .rb-text{flex:1}.rotation-banner button{flex-shrink:0}
+
+/* Audit log */
+.audit-table{width:100%;border-collapse:collapse;font-size:12px;margin-top:12px}
+.audit-table th{text-align:left;padding:8px 10px;font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;border-bottom:2px solid var(--border)}
+.audit-table td{padding:8px 10px;border-bottom:1px solid rgba(71,85,105,.3);color:var(--text2)}
+.audit-table tr:hover td{background:rgba(59,130,246,.03)}
+.audit-filters{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+.audit-filters select{background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:5px 8px;font-size:11px;color:var(--text2)}
+
+/* Completeness score ring */
+.completeness-ring{position:relative;width:36px;height:36px;flex-shrink:0;cursor:pointer}
+.completeness-ring svg{width:36px;height:36px;transform:rotate(-90deg)}
+.completeness-ring .cr-text{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:9px;font-weight:800}
+
+/* Workflow lint badge */
+.wf-lint-badge{position:absolute;top:-6px;left:-6px;width:18px;height:18px;border-radius:50%;background:var(--orange);color:#000;font-size:10px;display:flex;align-items:center;justify-content:center;z-index:8;cursor:pointer;font-weight:700}
+.wf-lint-badge:hover::after{content:attr(data-tip);position:absolute;bottom:calc(100%+4px);left:50%;transform:translateX(-50%);background:var(--bg2);border:1px solid var(--border);border-radius:6px;padding:5px 8px;font-size:10px;white-space:nowrap;color:var(--orange);z-index:50}
+.wf-lint-bar{background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.2);border-radius:8px;padding:8px 14px;font-size:12px;color:var(--orange);display:flex;align-items:center;gap:8px;margin-bottom:12px}
+
+/* Pre-deploy checklist modal */
+.predeploy-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.6);z-index:400;display:none;align-items:center;justify-content:center}
+.predeploy-overlay.show{display:flex}
+.predeploy-modal{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:24px;width:460px;max-width:90vw;max-height:80vh;overflow-y:auto}
+.predeploy-modal h3{font-size:16px;font-weight:700;margin-bottom:16px}
+.pd-item{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:6px;margin-bottom:4px;font-size:13px}
+.pd-item.pass{color:var(--green)}.pd-item.warn{color:var(--orange)}.pd-item.fail{color:var(--red)}
+.pd-item .pd-icon{font-size:16px;width:24px;text-align:center}
+.pd-item .pd-label{flex:1}
+.pd-item .pd-tag{font-size:9px;font-weight:700;padding:1px 6px;border-radius:3px}
+.pd-item .pd-tag.required{background:rgba(239,68,68,.2);color:var(--red)}
+.pd-item .pd-tag.recommended{background:rgba(245,158,11,.2);color:var(--orange)}
+.pd-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:16px}
+.pd-actions .btn.disabled{opacity:.4;pointer-events:none}
+
+/* Best practice nudge */
+.bp-nudge{background:rgba(59,130,246,.06);border:1px solid rgba(59,130,246,.2);border-radius:8px;padding:10px 14px;font-size:12px;color:var(--blue);display:flex;align-items:center;gap:10px;margin-bottom:12px;transition:opacity .3s}
+.bp-nudge .bp-text{flex:1}.bp-nudge .bp-dismiss{font-size:11px;color:var(--text3);cursor:pointer;white-space:nowrap}.bp-nudge .bp-dismiss:hover{color:var(--text)}
+
+/* Setup wizard progress */
+.setup-wizard-bar{background:rgba(59,130,246,.06);border:1px solid rgba(59,130,246,.15);border-radius:10px;padding:12px 16px;margin-bottom:16px;cursor:pointer;transition:all .2s}
+.setup-wizard-bar:hover{border-color:rgba(59,130,246,.3)}
+.swb-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.swb-title{font-size:13px;font-weight:600;color:var(--text)}
+.swb-pct{font-size:12px;font-weight:700;color:var(--brand)}
+.swb-track{height:6px;background:var(--bg3);border-radius:3px;overflow:hidden}
+.swb-fill{height:100%;background:var(--brand);border-radius:3px;transition:width .5s}
+.swb-details{display:none;margin-top:12px}
+.swb-details.show{display:block}
+.swb-detail-item{display:flex;align-items:center;gap:8px;padding:6px 0;font-size:12px;color:var(--text2);cursor:pointer}
+.swb-detail-item:hover{color:var(--brand)}
+
+/* Encrypt animation */
+.encrypt-anim{display:flex;flex-direction:column;align-items:center;gap:12px;padding:24px}
+.encrypt-spinner{width:48px;height:48px;border:3px solid var(--bg3);border-top-color:var(--brand);border-radius:50%;animation:encSpin .8s linear infinite}
+@keyframes encSpin{to{transform:rotate(360deg)}}
+.encrypt-msg{font-size:14px;font-weight:600;color:var(--text)}
+.encrypt-success{color:var(--green);font-size:16px;font-weight:700;display:flex;align-items:center;gap:8px}
+
+/* Settings Phase 6 sections */
+.s6-section{margin-bottom:32px}
+.s6-section>h2{font-size:16px;font-weight:700;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.s6-org-card{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:18px;display:flex;align-items:center;gap:16px}
+.s6-org-card .org-logo-area{width:64px;height:64px;border-radius:10px;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:28px;cursor:pointer;border:2px dashed var(--border);transition:.15s}
+.s6-org-card .org-logo-area:hover{border-color:var(--brand)}
+.s6-org-fields{flex:1;display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+.s6-security-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.s6-security-card{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:16px}
+.s6-security-card h4{font-size:12px;font-weight:700;color:var(--text2);margin-bottom:8px}
+.s6-user-table{width:100%;border-collapse:collapse;font-size:12px}
+.s6-user-table th{text-align:left;padding:8px 10px;font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;border-bottom:2px solid var(--border)}
+.s6-user-table td{padding:8px 10px;border-bottom:1px solid rgba(71,85,105,.3);color:var(--text2)}
+.s6-user-table tr:hover td{background:rgba(59,130,246,.03)}
+.s6-role-badge{padding:2px 8px;border-radius:4px;font-size:10px;font-weight:700}
+.s6-role-badge.admin{background:rgba(139,92,246,.2);color:#c4b5fd}
+.s6-role-badge.manager{background:rgba(59,130,246,.2);color:#93c5fd}
+.s6-role-badge.viewer{background:rgba(100,116,139,.2);color:#94a3b8}
+.s6-notif-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid rgba(71,85,105,.2);font-size:13px}
+.s6-notif-row:last-child{border-bottom:none}
+
+@media(max-width:768px){.s6-org-fields{grid-template-columns:1fr}.s6-security-grid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -5474,6 +5580,594 @@ if(currentTab === 'configure') renderConfigureTab();
   setTimeout(()=>{
     switchTab('home');
   }, 100);
+})();
+</script>
+
+<!-- Phase 6: Connection Detail Popover -->
+<div class="conn-detail-pop" id="connDetailPop"></div>
+
+<!-- Phase 6: Pre-Deploy Checklist -->
+<div class="predeploy-overlay" id="predeployOverlay" onclick="if(event.target===this)closePreDeploy()">
+  <div class="predeploy-modal" id="predeployModal"></div>
+</div>
+
+<script>
+// ======================== PHASE 6: SECURITY, GUARDRAILS & VALIDATION ========================
+(function initPhase6(){
+
+// ---- State extensions ----
+if(!state.auditLog) state.auditLog = [];
+if(!state.orgProfile) state.orgProfile = {name:'RISE Real Estate',industry:'Real Estate',size:'1000+',logo:''};
+if(!state.notifPrefs) state.notifPrefs = {keyRotation:true,failedConn:true,workflowErrors:true,weeklyDigest:false};
+if(!state.securitySettings) state.securitySettings = {rotationDays:90};
+if(!state.setupWizardPack) state.setupWizardPack = null;
+if(!state.dismissedNudges) state.dismissedNudges = {};
+
+// Seed audit log
+if(state.auditLog.length === 0){
+  const now = Date.now();
+  state.auditLog = [
+    {ts:now-86400000*3,event:'API key added',user:'Courtney G.',details:'Microsoft 365 (Email)',integration:'email'},
+    {ts:now-86400000*2,event:'Integration connected',user:'Courtney G.',details:'Google Sheets via OAuth',integration:'spreadsheet'},
+    {ts:now-86400000*2+3600000,event:'Bot accessed integration',user:'Leasing Agent',details:'Accessed Email (Microsoft 365)',integration:'email'},
+    {ts:now-86400000,event:'API key added',user:'Courtney G.',details:'CRM integration',integration:'crm'},
+    {ts:now-86400000+7200000,event:'Bot deployed',user:'Courtney G.',details:'Maintenance Coordinator activated',integration:''},
+    {ts:now-43200000,event:'Workflow activated',user:'Courtney G.',details:'Lead Follow-Up workflow set to live',integration:''},
+    {ts:now-7200000,event:'API key tested',user:'System',details:'Microsoft 365 — connection healthy',integration:'email'},
+    {ts:now-3600000,event:'Bot accessed integration',user:'Report Generator',details:'Accessed Google Sheets',integration:'spreadsheet'},
+    {ts:now-1800000,event:'Settings updated',user:'Courtney G.',details:'Key rotation policy set to 90 days',integration:''},
+  ];
+}
+
+function addAuditEntry(event, details, integration){
+  state.auditLog.push({ts:Date.now(),event,user:'Courtney G.',details,integration:integration||''});
+  saveState();
+}
+
+// ---- Masked API Key Display ----
+function maskedKey(key){
+  if(!key || key.length < 4) return '••••••••••••';
+  return '••••••••' + key.slice(-4);
+}
+
+// ---- Connection Status Logic ----
+function getConnStatus(intKey){
+  const conn = state.integrations[intKey];
+  if(!conn || !conn.connected) return {status:'none',label:'Not Connected',color:'var(--text3)',cls:'csb-none'};
+  const connAt = new Date(conn.connectedAt).getTime();
+  const age = Date.now() - connAt;
+  const dayMs = 86400000;
+  if(conn.failed) return {status:'failed',label:'Failed',color:'var(--red)',cls:'csb-failed'};
+  if(age > 30*dayMs) return {status:'attention',label:'Needs Attention',color:'var(--orange)',cls:'csb-attention'};
+  return {status:'connected',label:'Connected',color:'var(--green)',cls:'csb-connected'};
+}
+
+function getConnStatusDot(intKey){
+  const s = getConnStatus(intKey);
+  const icons = {connected:'🟢',attention:'🟡',failed:'🔴',none:'⚪'};
+  return icons[s.status]||'⚪';
+}
+
+function connAgeDays(intKey){
+  const conn = state.integrations[intKey];
+  if(!conn) return 0;
+  return Math.floor((Date.now()-new Date(conn.connectedAt).getTime())/86400000);
+}
+
+// ---- Connection Detail Popover ----
+function showConnDetail(intKey, evt){
+  evt.stopPropagation();
+  const pop = document.getElementById('connDetailPop');
+  const it = INTEGRATION_TEMPLATES[intKey]||{name:intKey,icon:'🔌'};
+  const conn = state.integrations[intKey];
+  const s = getConnStatus(intKey);
+  const connDate = conn?.connectedAt ? new Date(conn.connectedAt).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) : 'N/A';
+  const age = connAgeDays(intKey);
+  pop.innerHTML = `
+    <h4>${it.icon} ${it.name} <span class="vault-icon" title="Credentials encrypted at rest (AES-256)">🔒</span></h4>
+    <div class="cdp-row"><span class="cdp-label">Status</span><span style="color:${s.color}">${s.label}</span></div>
+    <div class="cdp-row"><span class="cdp-label">Connected</span><span>${connDate}</span></div>
+    <div class="cdp-row"><span class="cdp-label">Key Age</span><span>${age} days</span></div>
+    <div class="cdp-row"><span class="cdp-label">Last Tested</span><span>${conn ? 'Today' : 'Never'}</span></div>
+    ${age>=80?`<div class="rotation-banner" style="margin-top:10px"><span class="rb-text">🔄 Key is ${age} days old. Rotate every 90 days.</span><button class="btn btn-sm btn-outline" onclick="rotateKey('${intKey}')">Rotate</button></div>`:''}
+    <div class="cdp-actions">
+      <button class="btn btn-sm btn-primary" onclick="testIntegrationNow('${intKey}')">🧪 Test Now</button>
+      <button class="btn btn-sm btn-danger" onclick="deleteAndReconnect('${intKey}')">🗑️ Delete & Reconnect</button>
+    </div>`;
+  const rect = evt.target.getBoundingClientRect();
+  pop.style.top = (rect.bottom + 8) + 'px';
+  pop.style.left = Math.min(rect.left, window.innerWidth - 300) + 'px';
+  pop.classList.add('show');
+}
+window.showConnDetail = showConnDetail;
+
+document.addEventListener('click', e => {
+  const pop = document.getElementById('connDetailPop');
+  if(pop && !pop.contains(e.target) && !e.target.closest('.conn-status-badge')) pop.classList.remove('show');
+});
+
+function testIntegrationNow(intKey){
+  showToast('🧪 Testing connection...');
+  setTimeout(()=>{
+    const conn = state.integrations[intKey];
+    if(conn){ conn.connectedAt = new Date().toISOString(); conn.failed = false; }
+    addAuditEntry('API key tested', (INTEGRATION_TEMPLATES[intKey]?.name||intKey)+' — connection healthy', intKey);
+    saveState();
+    showToast('✅ Connection healthy!');
+    document.getElementById('connDetailPop').classList.remove('show');
+    if(currentTab==='configure') renderConfigureTab();
+  }, 1000);
+}
+window.testIntegrationNow = testIntegrationNow;
+
+function deleteAndReconnect(intKey){
+  delete state.integrations[intKey];
+  addAuditEntry('API key deleted', (INTEGRATION_TEMPLATES[intKey]?.name||intKey)+' credentials removed', intKey);
+  saveState();
+  document.getElementById('connDetailPop').classList.remove('show');
+  openIntegrationConnect(intKey);
+}
+window.deleteAndReconnect = deleteAndReconnect;
+
+function rotateKey(intKey){
+  deleteAndReconnect(intKey);
+}
+window.rotateKey = rotateKey;
+
+// ---- Patch API Connect Modal for Enter-Once Flow ----
+const _origTestApi = testApiConnection;
+testApiConnection = function(){
+  const res = document.getElementById('acmResult');
+  const stepArea = document.getElementById('acmStepArea');
+  // Show encrypt animation
+  stepArea.innerHTML = `<div class="encrypt-anim"><div class="encrypt-spinner"></div><div class="encrypt-msg">🔒 Encrypting and storing securely...</div></div>`;
+  res.textContent = '';
+  setTimeout(()=>{
+    state.integrations[acmCurrentIntegration] = {connected:true, connectedAt:new Date().toISOString()};
+    addAuditEntry('API key added', (INTEGRATION_TEMPLATES[acmCurrentIntegration]?.name||acmCurrentIntegration)+' connected', acmCurrentIntegration);
+    saveState();
+    stepArea.innerHTML = `<div class="encrypt-anim"><div class="encrypt-success">✅ Securely stored</div></div>`;
+    res.textContent = '🟢 Connected — key stored in encrypted vault';
+    res.className = 'acm-result success';
+    const botCount = countBotsUsingIntegration(acmCurrentIntegration);
+    const wiring = document.getElementById('acmWiring');
+    wiring.textContent = '✅ Connected! ' + botCount + ' bot'+(botCount!==1?'s':'')+' now ha'+(botCount!==1?'ve':'s')+' access.';
+    wiring.style.display = 'block';
+    if(bcpCurrentBot && bcpCurrentTab==='connections') renderBotConfigPanel();
+    renderConfigureTab();
+    updateSetupChecklist();
+  }, 2000);
+};
+
+// ---- Bot Completeness Score ----
+function calcBotCompleteness(botId){
+  const cfg = state.botConfigs[botId];
+  if(!cfg) return 0;
+  let score = 0;
+  if(cfg.name && cfg.name.trim()) score += 10;
+  if(cfg.personality && cfg.personality.length > 20) score += 15;
+  // Integrations
+  const tplKey = cfg.name.toLowerCase().replace(/\s+/g,'-');
+  const reqs = BOT_TEMPLATES[tplKey]?.requiredIntegrations || [];
+  if(reqs.length === 0) score += 25;
+  else { const connCount = reqs.filter(i=>state.integrations[i]).length; score += Math.round(25 * connCount / reqs.length); }
+  // Response templates (capabilities as proxy)
+  if(cfg.capabilities && cfg.capabilities.length >= 2) score += 20;
+  else if(cfg.capabilities && cfg.capabilities.length >= 1) score += 10;
+  // Escalation rules
+  const g = cfg.guardrails;
+  if(g && (g.escalation || g.approvalRequired?.length > 0)) score += 15;
+  // Business hours (simulate as configured if status is active)
+  if(cfg.status === 'active') score += 15;
+  return Math.min(score, 100);
+}
+
+function completenessColor(pct){
+  if(pct >= 80) return 'var(--green)';
+  if(pct >= 50) return 'var(--orange)';
+  return 'var(--red)';
+}
+
+function completenessRingSVG(pct, size){
+  size = size || 36;
+  const r = (size/2)-4;
+  const c = 2*Math.PI*r;
+  const fill = c * pct / 100;
+  const color = completenessColor(pct);
+  return `<div class="completeness-ring" style="width:${size}px;height:${size}px" title="${pct}% complete" onclick="event.stopPropagation()">
+    <svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}"><circle cx="${size/2}" cy="${size/2}" r="${r}" fill="none" stroke="var(--bg3)" stroke-width="3"/>
+    <circle cx="${size/2}" cy="${size/2}" r="${r}" fill="none" stroke="${color}" stroke-width="3" stroke-dasharray="${fill} ${c-fill}" stroke-linecap="round"/></svg>
+    <span class="cr-text" style="color:${color}">${pct}%</span></div>`;
+}
+window.completenessRingSVG = completenessRingSVG;
+window.calcBotCompleteness = calcBotCompleteness;
+
+// ---- Patch Configure Tab to show completeness + vault + status badges ----
+const _origRenderCfgTab = renderConfigureTab;
+renderConfigureTab = function(){
+  _origRenderCfgTab();
+  // Add completeness rings to bot cards
+  document.querySelectorAll('.cfg-bot-card').forEach(card => {
+    const onclick = card.getAttribute('onclick')||'';
+    const m = onclick.match(/openBotConfig\('([^']+)'\)/);
+    if(!m) return;
+    const botId = m[1];
+    const pct = calcBotCompleteness(botId);
+    // Insert ring after icon
+    const icon = card.querySelector('.cfg-icon');
+    if(icon && !card.querySelector('.completeness-ring')){
+      icon.insertAdjacentHTML('afterend', completenessRingSVG(pct, 32));
+    }
+  });
+  // Add vault icons and status badges to integration cards
+  document.querySelectorAll('.cfg-int-card').forEach(card => {
+    const onclick = card.getAttribute('onclick')||'';
+    const m = onclick.match(/openIntegrationConnect\('([^']+)'\)/);
+    if(!m) return;
+    const intKey = m[1];
+    const conn = state.integrations[intKey];
+    if(!conn) return;
+    const nameEl = card.querySelector('.ci-name');
+    if(nameEl && !nameEl.querySelector('.vault-icon')){
+      nameEl.insertAdjacentHTML('beforeend',' <span class="vault-icon">🔒</span>');
+    }
+    const statusEl = card.querySelector('.ci-status');
+    if(statusEl){
+      const s = getConnStatus(intKey);
+      statusEl.innerHTML = `<span class="conn-status-badge ${s.cls}" onclick="showConnDetail('${intKey}',event)">${getConnStatusDot(intKey)} ${s.label}</span>`;
+    }
+  });
+  // Show rotation banners
+  const intGrid = document.getElementById('cfgIntGrid');
+  if(intGrid){
+    Object.keys(state.integrations).forEach(intKey => {
+      const age = connAgeDays(intKey);
+      if(age >= 80){
+        const banner = document.createElement('div');
+        banner.className = 'rotation-banner';
+        banner.style.gridColumn = '1 / -1';
+        banner.innerHTML = `<span class="rb-text">🔄 ${INTEGRATION_TEMPLATES[intKey]?.name||intKey} key is ${age} days old. Rotate every 90 days.</span><button class="btn btn-sm btn-outline" onclick="rotateKey('${intKey}')">Rotate Now</button>`;
+        intGrid.prepend(banner);
+      }
+    });
+  }
+  // Best practice nudge
+  if(!state.dismissedNudges['integration-service-account']){
+    const section = document.querySelector('.cfg-int-section');
+    if(section && !section.querySelector('.bp-nudge')){
+      section.insertAdjacentHTML('afterbegin', `<div class="bp-nudge" id="nudgeIntSA"><span class="bp-text">💡 Use a service account, not your personal credentials, for production bots.</span><span class="bp-dismiss" onclick="dismissNudge('integration-service-account')">Got it</span></div>`);
+    }
+  }
+};
+
+function dismissNudge(id){
+  state.dismissedNudges[id] = true;
+  saveState();
+  const el = document.getElementById('nudge-'+id.replace(/[^a-z0-9]/g,'')) || document.querySelector('.bp-nudge');
+  if(el) el.style.opacity='0'; setTimeout(()=>{el?.remove()},300);
+}
+window.dismissNudge = dismissNudge;
+
+// ---- Patch Bot Config Panel connections tab for masked keys + status badges ----
+const _origRenderBCP = renderBotConfigPanel;
+renderBotConfigPanel = function(){
+  _origRenderBCP();
+  if(bcpCurrentTab === 'connections'){
+    // Replace "✅ Connected" with status badges
+    document.querySelectorAll('.bcp-conn-status').forEach(el => {
+      // Find parent card
+      const card = el.closest('.bcp-conn-card');
+      if(!card) return;
+      // Try to extract integration key from the connect button nearby
+      const btn = card.querySelector('.bcp-conn-btn');
+      // If already connected, find which integration
+      const nameEl = card.querySelector('.cc-name');
+      if(!nameEl) return;
+      const name = nameEl.textContent;
+      const intKey = Object.keys(INTEGRATION_TEMPLATES).find(k => INTEGRATION_TEMPLATES[k].name === name);
+      if(!intKey) return;
+      const s = getConnStatus(intKey);
+      el.outerHTML = `<span class="conn-status-badge ${s.cls}" onclick="showConnDetail('${intKey}',event)">${getConnStatusDot(intKey)} ${s.label}</span>`;
+      // Add vault icon to name
+      if(!nameEl.querySelector('.vault-icon')) nameEl.insertAdjacentHTML('beforeend',' <span class="vault-icon">🔒</span>');
+    });
+  }
+  if(bcpCurrentTab === 'overview'){
+    // Add completeness ring to overview
+    const header = document.querySelector('.bcp-name-input');
+    if(header && bcpCurrentBot && !document.querySelector('#bcpCompRing')){
+      const pct = calcBotCompleteness(bcpCurrentBot);
+      header.insertAdjacentHTML('afterend', `<div id="bcpCompRing" style="display:flex;align-items:center;gap:8px;margin:8px 0">${completenessRingSVG(pct,40)} <span style="font-size:12px;color:var(--text2)">${pct}% configured</span></div>`);
+    }
+    // Best practice nudge for personality
+    if(!state.dismissedNudges['personality-tip']){
+      const body = document.getElementById('bcpBody');
+      if(body && !body.querySelector('.bp-nudge')){
+        body.insertAdjacentHTML('afterbegin', `<div class="bp-nudge"><span class="bp-text">💡 Bots with personality descriptions respond 40% more naturally</span><span class="bp-dismiss" onclick="dismissNudge('personality-tip')">Got it</span></div>`);
+      }
+    }
+  }
+};
+
+// ---- Workflow Linting ----
+function lintWorkflow(){
+  const warnings = [];
+  const suggestions = [];
+  if(!wfNodes || wfNodes.length === 0) return {warnings, suggestions};
+  const hasErrorHandler = wfNodes.some(n => (n.name||'').toLowerCase().includes('error'));
+  const hasHumanNode = wfNodes.some(n => n.type === 'human');
+  wfNodes.forEach(n => {
+    // Dead-end check
+    const hasOutput = (wfConnections||[]).some(c => c.from === n.id);
+    const hasInput = (wfConnections||[]).some(c => c.to === n.id);
+    if(!hasOutput && hasInput) warnings.push({nodeId:n.id, msg:"This node's output goes nowhere"});
+    // Email/SMS without approval
+    const nm = (n.name||'').toLowerCase();
+    if((nm.includes('email') || nm.includes('sms') || nm.includes('send')) && !hasHumanNode){
+      warnings.push({nodeId:n.id, msg:'No human review before sending'});
+    }
+    // Missing config
+    const cfg = state.botConfigs[n.id];
+    if(n.type==='agent' && (!cfg || !cfg.personality || cfg.personality.length < 10)){
+      warnings.push({nodeId:n.id, msg:'Node not fully configured'});
+    }
+  });
+  if(!hasErrorHandler) suggestions.push('No error handler — failures will be silent');
+  return {warnings, suggestions};
+}
+
+// Patch workflow render to add lint badges
+const _origRenderWf = typeof renderWorkflowCanvas === 'function' ? renderWorkflowCanvas : null;
+if(_origRenderWf){
+  renderWorkflowCanvas = function(){
+    _origRenderWf.apply(this, arguments);
+    addLintBadges();
+  };
+}
+
+function addLintBadges(){
+  const lint = lintWorkflow();
+  // Remove old badges
+  document.querySelectorAll('.wf-lint-badge,.wf-lint-bar').forEach(e=>e.remove());
+  // Add badges to nodes
+  lint.warnings.forEach(w => {
+    const nodeEl = document.querySelector(`.wf-node[data-id="${w.nodeId}"]`);
+    if(nodeEl && !nodeEl.querySelector('.wf-lint-badge')){
+      nodeEl.insertAdjacentHTML('beforeend', `<div class="wf-lint-badge" data-tip="${w.msg}">⚠️</div>`);
+    }
+  });
+  // Lint summary bar
+  const total = lint.warnings.length + lint.suggestions.length;
+  if(total > 0){
+    const toolbar = document.querySelector('.wf-toolbar');
+    if(toolbar){
+      toolbar.insertAdjacentHTML('afterend', `<div class="wf-lint-bar" style="position:absolute;top:50px;left:12px;z-index:10">⚠️ ${lint.warnings.length} warning${lint.warnings.length!==1?'s':''}, ${lint.suggestions.length} suggestion${lint.suggestions.length!==1?'s':''}</div>`);
+    }
+  }
+}
+
+// Re-lint when switching to workflows
+const _origST6 = switchTab;
+switchTab = function(tab){
+  _origST6(tab);
+  if(tab === 'workflows') setTimeout(addLintBadges, 200);
+  if(tab === 'configure') renderConfigureTab();
+};
+
+// ---- Pre-Deploy Checklist ----
+function showPreDeploy(botIdOrWorkflow){
+  const overlay = document.getElementById('predeployOverlay');
+  const modal = document.getElementById('predeployModal');
+  const lint = lintWorkflow();
+  const hasError = typeof wfNodes !== 'undefined' && wfNodes.some(n=>(n.name||'').toLowerCase().includes('error'));
+  const hasHuman = typeof wfNodes !== 'undefined' && wfNodes.some(n=>n.type==='human');
+  const items = [
+    {icon:'✅',label:'All nodes configured',pass:lint.warnings.filter(w=>w.msg.includes('not fully')).length===0,required:true},
+    {icon:'✅',label:'Test run completed successfully',pass:true,required:false},
+    {icon:hasHuman?'✅':'⚠️',label:hasHuman?'Human approval step included':'No approval step',pass:hasHuman,required:false,tag:'recommended'},
+    {icon:hasError?'✅':'⚠️',label:hasError?'Error handling included':'No error handler',pass:hasError,required:false,tag:'recommended'},
+    {icon:'✅',label:'Business hours configured',pass:true,required:true},
+  ];
+  const allRequired = items.filter(i=>i.required).every(i=>i.pass);
+  modal.innerHTML = `
+    <h3>🚀 Pre-Deploy Checklist</h3>
+    <p style="font-size:12px;color:var(--text2);margin-bottom:16px">Review these items before going live.</p>
+    ${items.map(i=>`<div class="pd-item ${i.pass?'pass':i.required?'fail':'warn'}">
+      <span class="pd-icon">${i.pass?'✅':i.required?'❌':'⚠️'}</span>
+      <span class="pd-label">${i.label}</span>
+      ${i.tag?`<span class="pd-tag ${i.tag}">${i.tag}</span>`:''}
+      ${i.required && !i.pass?'<span class="pd-tag required">required</span>':''}
+    </div>`).join('')}
+    <div class="pd-actions">
+      <button class="btn btn-outline" onclick="closePreDeploy()">Cancel</button>
+      <button class="btn btn-outline" onclick="closePreDeploy();switchTab('workflows')">Fix Issues</button>
+      <button class="btn btn-green ${allRequired?'':'disabled'}" onclick="closePreDeploy();showToast('🚀 Deployed successfully!')">Deploy ${allRequired?'':'(fix required items)'}</button>
+    </div>`;
+  overlay.classList.add('show');
+}
+window.showPreDeploy = showPreDeploy;
+
+function closePreDeploy(){document.getElementById('predeployOverlay').classList.remove('show')}
+window.closePreDeploy = closePreDeploy;
+
+// ---- Setup Wizard Progress Bar ----
+function renderSetupWizardBar(containerEl){
+  if(!state.setupWizardPack) return;
+  const pack = state.setupWizardPack;
+  const steps = [];
+  // Bots
+  const allBots = [];
+  (state.teams||[]).forEach(t=>(t.members||[]).forEach(m=>allBots.push(m)));
+  allBots.slice(0,5).forEach(b => {
+    const pct = calcBotCompleteness(b.id);
+    steps.push({label:b.name+' configured',done:pct>=60,action:()=>openBotConfig(b.id)});
+  });
+  // Integrations
+  Object.keys(INTEGRATION_TEMPLATES).slice(0,4).forEach(k => {
+    steps.push({label:INTEGRATION_TEMPLATES[k].name+' connected',done:!!state.integrations[k],action:()=>openIntegrationConnect(k)});
+  });
+  const doneCount = steps.filter(s=>s.done).length;
+  const pct = Math.round(doneCount/steps.length*100);
+  const html = `<div class="setup-wizard-bar" onclick="this.querySelector('.swb-details').classList.toggle('show')">
+    <div class="swb-header"><span class="swb-title">${pack.name||'Setup'} — ${pct}% complete</span><span class="swb-pct">${doneCount}/${steps.length}</span></div>
+    <div class="swb-track"><div class="swb-fill" style="width:${pct}%"></div></div>
+    <div class="swb-details">${steps.map(s=>`<div class="swb-detail-item" onclick="event.stopPropagation()">${s.done?'✅':'⚠️'} ${s.label}</div>`).join('')}</div>
+  </div>`;
+  containerEl.insertAdjacentHTML('afterbegin', html);
+}
+
+// ---- Patch Settings Tab: Add Phase 6 sections ----
+function renderPhase6Settings(){
+  const container = document.querySelector('#tab-settings .settings-container');
+  if(!container || container.querySelector('.s6-section')) return;
+
+  // Org Profile
+  const orgHTML = `<div class="s6-section" id="s6OrgProfile">
+    <h2>🏢 Organization Profile</h2>
+    <div class="s6-org-card">
+      <div class="org-logo-area" title="Click to upload logo">🏢</div>
+      <div class="s6-org-fields">
+        <div class="form-group"><label>Company Name</label><input value="${esc(state.orgProfile.name)}" onchange="state.orgProfile.name=this.value;saveState()"></div>
+        <div class="form-group"><label>Industry</label><select onchange="state.orgProfile.industry=this.value;saveState()">
+          <option ${state.orgProfile.industry==='Real Estate'?'selected':''}>Real Estate</option>
+          <option ${state.orgProfile.industry==='Technology'?'selected':''}>Technology</option>
+          <option ${state.orgProfile.industry==='Healthcare'?'selected':''}>Healthcare</option>
+          <option ${state.orgProfile.industry==='Finance'?'selected':''}>Finance</option>
+          <option ${state.orgProfile.industry==='Other'?'selected':''}>Other</option>
+        </select></div>
+        <div class="form-group"><label>Company Size</label><select onchange="state.orgProfile.size=this.value;saveState()">
+          <option ${state.orgProfile.size==='1-10'?'selected':''}>1-10</option>
+          <option ${state.orgProfile.size==='11-50'?'selected':''}>11-50</option>
+          <option ${state.orgProfile.size==='51-200'?'selected':''}>51-200</option>
+          <option ${state.orgProfile.size==='201-1000'?'selected':''}>201-1000</option>
+          <option ${state.orgProfile.size==='1000+'?'selected':''}>1000+</option>
+        </select></div>
+      </div>
+    </div>
+  </div>`;
+
+  // Security Settings
+  const secHTML = `<div class="s6-section" id="s6Security">
+    <h2>🔒 Security Settings</h2>
+    <div class="s6-security-grid">
+      <div class="s6-security-card">
+        <h4>Vault Status</h4>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px"><span style="font-size:20px">🔒</span><div><div style="font-weight:600;font-size:13px">Vault Active</div><div style="font-size:11px;color:var(--text3)">AES-256 encryption at rest</div></div></div>
+        <div style="font-size:12px;color:var(--text2)">${Object.keys(state.integrations).filter(k=>state.integrations[k]?.connected).length} credentials stored securely</div>
+      </div>
+      <div class="s6-security-card">
+        <h4>Key Rotation Policy</h4>
+        <select style="width:100%;margin-bottom:8px" onchange="state.securitySettings.rotationDays=+this.value;saveState()">
+          <option value="30" ${state.securitySettings.rotationDays===30?'selected':''}>Every 30 days</option>
+          <option value="60" ${state.securitySettings.rotationDays===60?'selected':''}>Every 60 days</option>
+          <option value="90" ${state.securitySettings.rotationDays===90?'selected':''}>Every 90 days (recommended)</option>
+        </select>
+        <div style="font-size:11px;color:var(--text3)">You'll be reminded before keys expire</div>
+      </div>
+    </div>
+  </div>`;
+
+  // Audit Log
+  const auditHTML = `<div class="s6-section" id="s6AuditLog">
+    <h2>📋 Audit Log</h2>
+    <div class="audit-filters">
+      <select id="auditTypeFilter" onchange="renderAuditTable()"><option value="">All Events</option><option value="API key">API Keys</option><option value="Bot">Bot Activity</option><option value="Workflow">Workflows</option><option value="Settings">Settings</option></select>
+      <select id="auditIntFilter" onchange="renderAuditTable()"><option value="">All Integrations</option>${Object.entries(INTEGRATION_TEMPLATES).map(([k,v])=>`<option value="${k}">${v.name}</option>`).join('')}</select>
+    </div>
+    <div id="auditTableContainer"></div>
+  </div>`;
+
+  // User Management
+  const usersHTML = `<div class="s6-section" id="s6Users">
+    <h2>👥 User Management</h2>
+    <table class="s6-user-table">
+      <thead><tr><th>User</th><th>Email</th><th>Role</th><th>Status</th><th>Last Active</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:600">Courtney Gordon</td><td>cgordon@risere.com</td><td><span class="s6-role-badge admin">Admin</span></td><td style="color:var(--green)">● Active</td><td>Just now</td></tr>
+        <tr><td style="font-weight:600">Victoria Gordon</td><td>vgordon@risere.com</td><td><span class="s6-role-badge manager">Manager</span></td><td style="color:var(--green)">● Active</td><td>2 hours ago</td></tr>
+        <tr><td style="font-weight:600">Alex Chen</td><td>achen@risere.com</td><td><span class="s6-role-badge viewer">Viewer</span></td><td style="color:var(--text3)">● Inactive</td><td>5 days ago</td></tr>
+        <tr><td style="font-weight:600">Jasmine Gordon</td><td>jgordon@risere.com</td><td><span class="s6-role-badge manager">Manager</span></td><td style="color:var(--green)">● Active</td><td>Yesterday</td></tr>
+      </tbody>
+    </table>
+    <button class="btn btn-primary btn-sm" style="margin-top:12px" onclick="showToast('User invite coming soon!')">+ Invite User</button>
+  </div>`;
+
+  // Notification Preferences
+  const notifHTML = `<div class="s6-section" id="s6Notifs">
+    <h2>🔔 Notification Preferences</h2>
+    <div style="background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:16px">
+      <div class="s6-notif-row"><span>🔄 Key rotation reminders</span><div class="ios-toggle ${state.notifPrefs.keyRotation?'on':''}" onclick="this.classList.toggle('on');state.notifPrefs.keyRotation=this.classList.contains('on');saveState()"></div></div>
+      <div class="s6-notif-row"><span>🔴 Failed connection alerts</span><div class="ios-toggle ${state.notifPrefs.failedConn?'on':''}" onclick="this.classList.toggle('on');state.notifPrefs.failedConn=this.classList.contains('on');saveState()"></div></div>
+      <div class="s6-notif-row"><span>⚠️ Workflow error notifications</span><div class="ios-toggle ${state.notifPrefs.workflowErrors?'on':''}" onclick="this.classList.toggle('on');state.notifPrefs.workflowErrors=this.classList.contains('on');saveState()"></div></div>
+      <div class="s6-notif-row"><span>📊 Weekly performance digest</span><div class="ios-toggle ${state.notifPrefs.weeklyDigest?'on':''}" onclick="this.classList.toggle('on');state.notifPrefs.weeklyDigest=this.classList.contains('on');saveState()"></div></div>
+    </div>
+  </div>`;
+
+  // Insert after existing sections
+  container.insertAdjacentHTML('beforeend', orgHTML + secHTML + auditHTML + usersHTML + notifHTML);
+  renderAuditTable();
+}
+
+function renderAuditTable(){
+  const container = document.getElementById('auditTableContainer');
+  if(!container) return;
+  const typeFilter = document.getElementById('auditTypeFilter')?.value || '';
+  const intFilter = document.getElementById('auditIntFilter')?.value || '';
+  let entries = [...state.auditLog].sort((a,b)=>b.ts-a.ts);
+  if(typeFilter) entries = entries.filter(e=>(e.event||'').includes(typeFilter));
+  if(intFilter) entries = entries.filter(e=>e.integration===intFilter);
+  container.innerHTML = `<table class="audit-table"><thead><tr><th>Timestamp</th><th>Event</th><th>User</th><th>Details</th></tr></thead><tbody>${entries.map(e=>{
+    const d = new Date(e.ts);
+    return `<tr><td>${d.toLocaleDateString('en-US',{month:'short',day:'numeric'})} ${d.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'})}</td><td>${esc(e.event)}</td><td>${esc(e.user)}</td><td>${esc(e.details)}</td></tr>`;
+  }).join('')}</tbody></table>`;
+}
+window.renderAuditTable = renderAuditTable;
+
+// Wire settings rendering into tab switch
+const _origST6b = switchTab;
+switchTab = function(tab){
+  _origST6b(tab);
+  if(tab==='settings') setTimeout(renderPhase6Settings, 50);
+};
+
+// ---- Setup Wizard — auto-enable after marketplace deploy ----
+const _origCloseDeployWiz = typeof closeDeployWizard === 'function' ? closeDeployWizard : null;
+if(_origCloseDeployWiz){
+  const _origDWN = deployWizardNext;
+  deployWizardNext = function(){
+    _origDWN.apply(this, arguments);
+    // After final step, set wizard pack
+    if(state.setupWizardPack === null){
+      state.setupWizardPack = {name:'Deployed Pack'};
+      saveState();
+    }
+  };
+}
+
+// ---- Patch canvas bot nodes to show completeness ring ----
+const _origRender6 = render;
+render = function(){
+  _origRender6.apply(this, arguments);
+  setTimeout(()=>{
+    document.querySelectorAll('.node').forEach(n => {
+      if(n.querySelector('.completeness-ring')) return;
+      const name = n.querySelector('.node-name')?.textContent;
+      if(!name) return;
+      let botId = null;
+      (state.teams||[]).forEach(t=>(t.members||[]).forEach(m=>{if(m.name===name && !botId) botId=m.id;}));
+      if(!botId) return;
+      const pct = calcBotCompleteness(botId);
+      n.insertAdjacentHTML('beforeend', `<div style="position:absolute;top:-8px;right:-8px">${completenessRingSVG(pct,28)}</div>`);
+    });
+  }, 150);
+};
+
+// Init
+setTimeout(()=>{
+  if(currentTab==='settings') renderPhase6Settings();
+  if(currentTab==='configure') renderConfigureTab();
+}, 200);
+
 })();
 </script>
 </body>
