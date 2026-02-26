@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RISE Daily Leasing Report — Bartram Park</title>
+<style>
+:root{--navy:#1B2A4A;--blue:#2E86AB;--light:#F4F6F9;--white:#fff;--green:#28a745;--red:#dc3545;--amber:#ffc107;--gray:#6C7A89;--border:#E0E4EA;--shadow:0 2px 8px rgba(27,42,74,.08)}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--light);color:#333;line-height:1.5;font-size:14px}
+.container{max-width:1320px;margin:0 auto;padding:16px}
+.weather-bar{background:linear-gradient(135deg,#253A5E,#1B2A4A);color:#fff;padding:8px 20px;border-radius:8px;margin-bottom:12px;display:flex;align-items:center;gap:8px;font-size:13px}
+.weather-bar .weather-icon{font-size:18px}
+.weather-bar .weather-text{opacity:.9}
+.header{background:linear-gradient(135deg,var(--navy),#253A5E);color:#fff;padding:24px 32px;border-radius:12px;margin-bottom:20px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+.header-left{display:flex;align-items:center;gap:16px}
+.rise-logo{font-size:36px;font-weight:900;letter-spacing:2px;color:#2E86AB;text-shadow:0 2px 8px rgba(46,134,171,.3);font-family:inherit}
+.header-left .header-text h1{font-size:26px;font-weight:700;letter-spacing:-.5px}
+.header-left .header-text h1 span{color:var(--blue)}
+.header-left .header-text .prop-name{font-size:16px;font-weight:600;margin-top:4px}
+.header-left .header-text .prop-location{font-size:13px;opacity:.7;margin-top:2px}
+.header-left .header-text .prop-link{color:var(--blue);font-size:12px;text-decoration:none;opacity:.8}
+.header-left .header-text .prop-link:hover{opacity:1;text-decoration:underline}
+.header-right{text-align:right}
+.header-right .date{font-size:18px;font-weight:600}
+.date-select{background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.3);border-radius:6px;padding:6px 12px;font-size:13px;margin-top:8px;cursor:pointer;-webkit-appearance:none;appearance:none;padding-right:28px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='white' d='M6 8L1 3h10z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 8px center}
+.date-select option{color:#333;background:#fff}
+.date-select option:disabled{color:#bbb}
+.badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.5px}
+.badge-green{background:var(--green);color:#fff}
+.kpi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:20px}
+.kpi-card{background:#fff;border-radius:10px;padding:16px;box-shadow:var(--shadow);border-top:3px solid var(--blue);display:flex;align-items:center;justify-content:space-between}
+.kpi-left{text-align:center;flex:1}
+.kpi-label{font-size:10px;text-transform:uppercase;letter-spacing:.8px;color:var(--gray);font-weight:600;margin-bottom:4px}
+.kpi-value{font-size:26px;font-weight:800;color:var(--navy)}
+.kpi-sub{font-size:11px;color:var(--gray);margin-top:2px}
+.kpi-trend-up{color:var(--red);font-size:16px;font-weight:700}
+.kpi-trend-down{color:var(--green);font-size:16px;font-weight:700}
+.section{background:#fff;border-radius:10px;box-shadow:var(--shadow);margin-bottom:20px;overflow:hidden}
+.section-header{background:linear-gradient(135deg,var(--navy),#253A5E);color:#fff;padding:13px 20px;font-size:15px;font-weight:600;cursor:pointer;display:flex;justify-content:space-between;align-items:center;user-select:none}
+.section-header::after{content:'▾';font-size:12px;transition:transform .2s}
+.section.collapsed .section-header::after{transform:rotate(-90deg)}
+.section.collapsed .section-body{display:none}
+.section-body{padding:20px;overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:13px;table-layout:fixed}
+th{background:var(--light);color:var(--navy);font-weight:600;text-transform:uppercase;font-size:10px;letter-spacing:.5px;padding:8px 10px;text-align:left;border-bottom:2px solid var(--border);white-space:nowrap}
+td{padding:7px 10px;border-bottom:1px solid var(--border);white-space:nowrap}
+tbody tr:nth-child(even){background:#FAFBFC}
+tbody tr:hover{background:#EDF2F7}
+.text-right{text-align:right}.text-center{text-align:center}
+.totals td{font-weight:700;background:#EDF2F7!important;border-top:2px solid var(--navy)}
+.chart-row{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:20px}
+.mini-card{background:#fff;border-radius:10px;box-shadow:var(--shadow);padding:20px}
+.mini-card h3{font-size:14px;color:var(--navy);margin-bottom:12px;font-weight:600}
+.donut-wrap{display:flex;align-items:center;gap:16px;flex-wrap:wrap;justify-content:center}
+.donut-legend{font-size:12px}
+.donut-legend div{margin-bottom:5px;display:flex;align-items:center;gap:6px}
+.donut-legend .sw{width:12px;height:12px;border-radius:3px;flex-shrink:0}
+.funnel-stage{padding:10px 14px;border-radius:6px;color:#fff;font-weight:600;font-size:13px;margin-bottom:2px;display:flex;justify-content:space-between;align-items:center}
+.funnel-stage .num{font-size:20px;font-weight:800}
+.funnel-arrow{text-align:center;color:var(--gray);font-size:11px;margin:1px 0}
+.bar-group{margin-bottom:10px}
+.bar-group label{font-size:12px;color:var(--navy);font-weight:600;display:block;margin-bottom:3px}
+.bar-pair{display:flex;flex-direction:column;gap:3px}
+.bar-track{height:20px;background:#EDF2F7;border-radius:3px;position:relative;overflow:hidden}
+.bar-fill{height:100%;border-radius:3px;display:flex;align-items:center;padding-left:6px;color:#fff;font-size:10px;font-weight:700}
+.highlights-card{background:linear-gradient(135deg,#F8FAFC,#EDF2F7);border-left:4px solid var(--blue);padding:18px;border-radius:0 8px 8px 0;line-height:1.8;font-size:13px;color:#444}
+.highlights-card strong{color:var(--navy)}
+.highlights-card .hl-section{margin-bottom:8px}
+.highlights-card .hl-label{font-size:11px;text-transform:uppercase;letter-spacing:.5px;color:var(--blue);font-weight:700}
+.ai-card{background:linear-gradient(135deg,#F0F7FF,#E8F4FD);border-left:4px solid var(--navy);padding:18px;border-radius:0 8px 8px 0;margin-top:16px;line-height:1.8;font-size:13px;color:#444}
+.ai-card .ai-label{font-size:12px;text-transform:uppercase;letter-spacing:.5px;color:var(--navy);font-weight:700;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.ai-card .ai-rec{margin-bottom:6px;padding-left:12px;border-left:2px solid var(--blue)}
+.leased-bar{display:inline-block;height:14px;border-radius:3px;min-width:4px;vertical-align:middle}
+.toggle-row{display:flex;align-items:center;gap:8px;margin-bottom:12px;font-size:13px}
+.toggle-row input{cursor:pointer}
+.curr-month{background:#E8F4FD!important;font-weight:600}
+.formula-table td{padding:6px 10px;vertical-align:top;font-size:12px}
+.formula-table .metric{font-weight:600;color:var(--navy);white-space:nowrap}
+.formula-table .formula{color:var(--gray);font-family:inherit;font-size:11px}
+.occ-bar{display:inline-block;height:14px;border-radius:3px;min-width:4px;vertical-align:middle}
+.mock{background:#FFF3CD;color:#856404;font-size:9px;padding:1px 5px;border-radius:8px;font-weight:600}
+.projected{background:#D1ECF1;color:#0C5460;font-size:9px;padding:1px 5px;border-radius:8px;font-weight:600}
+.budget-badge{background:#D4EDDA;color:#155724;font-size:9px;padding:1px 5px;border-radius:8px;font-weight:600}
+.mock-row td{background:#FFFDF0!important}
+.holiday-banner{background:linear-gradient(135deg,#FFF3CD,#FFEEBA);border:1px solid #ffc107;border-radius:8px;padding:10px 16px;margin-bottom:12px;font-size:13px;color:#856404;font-weight:600;display:flex;align-items:center;gap:8px}
+.comments-area{background:#FAFBFC;border:1px dashed var(--border);border-radius:8px;padding:14px;min-height:80px;font-size:13px;color:#666;line-height:1.6;outline:none;transition:border-color .2s,background .2s}
+.comments-area:focus{border-color:var(--blue);background:#fff;color:#333}
+.comments-area:empty::before{content:attr(data-placeholder);color:#aaa;font-style:italic}
+.comments-label{font-size:12px;text-transform:uppercase;letter-spacing:.5px;color:var(--navy);font-weight:700;margin-bottom:6px}
+.footnote{font-size:10px;color:var(--gray);margin-top:8px;font-style:italic}
+.funnel-math{background:#F0F7FF;border:1px solid #D1ECF1;border-radius:8px;padding:14px;margin-top:12px;font-size:12px;line-height:1.7}
+.funnel-math strong{color:var(--navy)}
+.form-note{background:#F8F9FA;border:1px solid var(--border);border-radius:6px;padding:10px 14px;margin-top:12px;font-size:11px;color:var(--gray);line-height:1.6}
+.form-note strong{color:var(--navy)}
+@media print{body{background:#fff;font-size:11px}.container{padding:0}.section{break-inside:avoid;box-shadow:none;border:1px solid #ddd}.header{background:var(--navy)!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}.kpi-card,.mini-card{box-shadow:none;border:1px solid #ddd}.section.collapsed .section-body{display:block}}
+@media(max-width:768px){.header{flex-direction:column;text-align:center}.header-right{text-align:center}.kpi-grid{grid-template-columns:repeat(2,1fr)}.chart-row{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="container">
+
+<!-- WEATHER BAR -->
+<div class="weather-bar">
+<span class="weather-icon">☁️</span>
+<span class="weather-text">Jacksonville, FL — Partly Cloudy, 72°F</span>
+<span style="margin-left:auto;font-size:11px;opacity:.6">Feb 25, 2026</span>
+</div>
+
+<!-- HEADER with RISE text logo -->
+<div class="header">
+<div class="header-left">
+<div class="rise-logo">RISE</div>
+<div class="header-text">
+<h1>Daily Leasing Report</h1>
+<div class="prop-name">RISE Bartram Park</div>
+<div class="prop-location">Jacksonville, FL &nbsp;·&nbsp; Conventional &nbsp;·&nbsp; 297 Units</div>
+<a href="https://www.risebartrampark.com" target="_blank" class="prop-link">www.risebartrampark.com</a>
+</div>
+</div>
+<div class="header-right">
+<div class="date">February 25, 2026</div>
+<div style="font-size:11px;opacity:.7;margin-top:2px">Data as of 02/24/2026</div>
+<div style="margin-top:6px"><span class="badge badge-green">Lease Up</span></div>
+<select class="date-select" onchange="if(this.value)window.location=this.value">
+<option value="" selected>Feb 25, 2026</option>
+<option value="bartram-daily-0221.html">Feb 21, 2026</option>
+<option value="bartram-daily-0220.html">Feb 20, 2026</option>
+</select>
+</div>
+</div>
+
+<!-- KPI CARDS -->
+<div class="kpi-grid">
+<div class="kpi-card"><div class="kpi-left"><div class="kpi-label">Physical Occupancy</div><div class="kpi-value">90.6%</div><div class="kpi-sub">269 / 297 units</div></div><svg width="60" height="24" viewBox="0 0 60 24" style="vertical-align:middle;margin-left:8px"><polyline fill="none" stroke="#2E86AB" stroke-width="1.5" stroke-linejoin="round" points="2.0,22.0 11.3,19.6 20.7,14.8 30.0,9.2 39.3,4.4 48.7,2.0 58.0,10.3"/><circle cx="58.0" cy="10.3" r="2" fill="#2E86AB"/></svg></div>
+<div class="kpi-card"><div class="kpi-left"><div class="kpi-label">Leased %</div><div class="kpi-value">93.6%</div><div class="kpi-sub">(269 occ + 9 vacant rented) / 297</div></div><svg width="60" height="24" viewBox="0 0 60 24" style="vertical-align:middle;margin-left:8px"><polyline fill="none" stroke="#2E86AB" stroke-width="1.5" stroke-linejoin="round" points="2.0,22.0 11.3,17.5 20.7,11.5 30.0,5.0 39.3,2.0 48.7,3.5 58.0,6.0"/><circle cx="58.0" cy="6.0" r="2" fill="#2E86AB"/></svg></div>
+<div class="kpi-card"><div class="kpi-left"><div class="kpi-label">Lease Trend</div><div class="kpi-value" style="color:var(--amber)">87.9%</div><div class="kpi-sub">36 exposed units (12.1% exposure)</div></div><svg width="60" height="24" viewBox="0 0 60 24" style="vertical-align:middle;margin-left:8px"><polyline fill="none" stroke="#ffc107" stroke-width="1.5" stroke-linejoin="round" points="2.0,2.0 11.3,4.7 20.7,10.2 30.0,16.5 39.3,22.0 48.7,19.6 58.0,10.2"/><circle cx="58.0" cy="10.2" r="2" fill="#ffc107"/></svg></div>
+<div class="kpi-card"><div class="kpi-left"><div class="kpi-label">Avg Market Rent</div><div class="kpi-value">$1,695</div><div class="kpi-sub">All floor plans</div></div><svg width="60" height="24" viewBox="0 0 60 24" style="vertical-align:middle;margin-left:8px"><polyline fill="none" stroke="#2E86AB" stroke-width="1.5" stroke-linejoin="round" points="2.0,22.0 11.3,18.0 20.7,14.0 30.0,10.0 39.3,6.0 48.7,3.6 58.0,2.0"/><circle cx="58.0" cy="2.0" r="2" fill="#2E86AB"/></svg></div>
+<div class="kpi-card"><div class="kpi-left"><div class="kpi-label">Net Effective Rent</div><div class="kpi-value">$1,489</div><div class="kpi-sub">Market $1,695 − concessions</div><div style="font-size:10px;color:var(--blue);margin-top:2px">🏷️ 2 Months Free (14-15 mo lease, apply by 2/28)</div></div><svg width="60" height="24" viewBox="0 0 60 24" style="vertical-align:middle;margin-left:8px"><polyline fill="none" stroke="#2E86AB" stroke-width="1.5" stroke-linejoin="round" points="2.0,22.0 11.3,18.0 20.7,14.0 30.0,10.0 39.3,7.6 48.7,4.4 58.0,2.0"/><circle cx="58.0" cy="2.0" r="2" fill="#2E86AB"/></svg></div>
+<div class="kpi-card"><div class="kpi-left"><div class="kpi-label">Comp Average Rent <span class="mock">MOCK</span></div><div class="kpi-value" style="color:var(--amber)">$1,728</div><div class="kpi-sub">Market survey <span class="mock">MOCK</span></div></div><svg width="60" height="24" viewBox="0 0 60 24" style="vertical-align:middle;margin-left:8px"><polyline fill="none" stroke="#ffc107" stroke-width="1.5" stroke-linejoin="round" points="2.0,22.0 11.3,16.4 20.7,10.9 30.0,13.1 39.3,8.7 48.7,5.3 58.0,2.0"/><circle cx="58.0" cy="2.0" r="2" fill="#ffc107"/></svg></div>
+</div>
+
+<!-- MANAGER NOTES (moved above daily activity) -->
+<div class="section">
+<div class="section-header" onclick="this.parentElement.classList.toggle('collapsed')">📝 Manager Notes</div>
+<div class="section-body">
+<div class="comments-label">Daily Activity Notes</div>
+<div class="comments-area" contenteditable="true" data-placeholder="Enter manager notes for today's activity, follow-ups, and action items..."></div>
+<div class="form-note" style="margin-top:12px">
+<strong>Note:</strong> Notes are saved to the property database when submitted. Use this section to document daily activity highlights, follow-ups, and action items.
+</div>
+</div>
+</div>
+
+<!-- TODAY'S ACTIVITY — From Box Score Lead Activity -->
+<div class="section">
+<div class="section-header" onclick="toggle(this)">📊 Daily Leasing Activity</div>
+<div class="section-body">
+<div style="font-size:11px;color:var(--gray);margin-bottom:10px">
+Source: Box Score — Lead Activity section. Daily = 02/24, WTD = 02/20–02/26 (Fri–Thu week), MTD = Feb 1–24.
+</div>
+<table style="table-layout:fixed">
+<colgroup><col style="width:40%"><col style="width:20%"><col style="width:20%"><col style="width:20%"></colgroup>
+<thead><tr><th>Contact Method</th><th class="text-center">Daily</th><th class="text-center">WTD (02/20–02/26)</th><th class="text-center">MTD</th></tr></thead>
+<tbody>
+<tr><td>First Visit/Tours</td><td class="text-center">1</td><td class="text-center">2</td><td class="text-center">5</td></tr>
+<tr><td>Online</td><td class="text-center">1</td><td class="text-center">6</td><td class="text-center">5</td></tr>
+<tr><td>Call</td><td class="text-center">0</td><td class="text-center">7</td><td class="text-center">5</td></tr>
+<tr><td>Email</td><td class="text-center">0</td><td class="text-center">0</td><td class="text-center">0</td></tr>
+<tr><td>Text</td><td class="text-center">0</td><td class="text-center">0</td><td class="text-center">1</td></tr>
+<tr><td>Other</td><td class="text-center">1</td><td class="text-center">3</td><td class="text-center">6</td></tr>
+<tr style="border-top:2px solid var(--navy)"><td><strong>Total New Leads</strong></td><td class="text-center"><strong>2</strong></td><td class="text-center"><strong>18</strong></td><td class="text-center"><strong>22</strong></td></tr>
+</tbody>
+</table>
+<div style="margin-top:12px;border-top:1px solid var(--border);padding-top:10px">
+<div style="font-size:14px;font-weight:700;color:var(--navy);margin-bottom:8px">Follow-Up Activity</div>
+<table style="table-layout:fixed">
+<colgroup><col style="width:40%"><col style="width:20%"><col style="width:20%"><col style="width:20%"></colgroup>
+<thead><tr><th>Activity Type</th><th class="text-center">Daily</th><th class="text-center">WTD</th><th class="text-center">MTD</th></tr></thead>
+<tbody>
+<tr><td>Emails Sent</td><td class="text-center">9</td><td class="text-center">35</td><td class="text-center">42</td></tr>
+<tr><td>Calls Made</td><td class="text-center">3</td><td class="text-center">25</td><td class="text-center">28</td></tr>
+<tr><td>Texts Sent</td><td class="text-center">3</td><td class="text-center">18</td><td class="text-center">21</td></tr>
+<tr><td>Chats</td><td class="text-center">0</td><td class="text-center">0</td><td class="text-center">0</td></tr>
+</tbody>
+</table>
+</div>
+<div class="footnote">Source: Box Score Lead Activity &amp; Lead Conversion report (02/25/2026). WTD = RISE week 02/20–02/26. MTD cumulative from available daily snapshots.</div>
+</div>
+</div>
+
+<!-- THREE-CARD ROW -->
+<div class="chart-row">
+
+<!-- Lead Source Breakdown (MTD) -->
+<div class="mini-card">
+<h3>Lead Source Breakdown (02/24)</h3>
+<div class="donut-wrap">
+<svg width="140" height="140" viewBox="0 0 140 140">
+<circle cx="70" cy="70" r="50" fill="none" stroke="#EDF2F7" stroke-width="18"/>
+<!-- Google Search: 1/2 = 50%, Apartment List: 1/2 = 50% -->
+<circle cx="70" cy="70" r="50" fill="none" stroke="#2E86AB" stroke-width="18" stroke-dasharray="157.1 157.1" stroke-dashoffset="78.5" transform="rotate(-90 70 70)"/>
+<circle cx="70" cy="70" r="50" fill="none" stroke="#28a745" stroke-width="18" stroke-dasharray="157.1 157.1" stroke-dashoffset="-78.6" transform="rotate(-90 70 70)"/>
+<text x="70" y="66" text-anchor="middle" font-size="20" font-weight="800" fill="var(--navy)">2</text>
+<text x="70" y="80" text-anchor="middle" font-size="10" fill="var(--gray)">leads</text>
+</svg>
+<div class="donut-legend">
+<div><span class="sw" style="background:#2E86AB"></span> Google Search — 1 (50%)</div>
+<div><span class="sw" style="background:#28a745"></span> Apartment List — 1 (50%)</div>
+</div>
+</div>
+<div class="footnote">Source: Lead Conversion report (02/25/2026). 2 new leads — Google Search (Other contact) and Apartment List (Online). Monday — leasing office open, follow-up activity strong.</div>
+</div>
+
+<!-- Conversion Funnel (MTD) — simplified, no targets -->
+<div class="mini-card">
+<h3>Conversion Funnel (MTD)</h3>
+<div class="funnel-stage" style="background:var(--blue)"><span>Total New Leads</span><span class="num"><strong>22</strong> <span style="opacity:.65;font-size:14px;font-weight:400">/ 205</span></span></div>
+<div class="funnel-arrow">▼ 23% tour rate</div>
+<div class="funnel-stage" style="background:var(--blue);opacity:.85"><span>First Visit / Tours</span><span class="num"><strong>5</strong> <span style="opacity:.65;font-size:14px;font-weight:400">/ 59</span></span></div>
+<div class="funnel-arrow">▼ 40% app rate</div>
+<div class="funnel-stage" style="background:var(--amber)"><span>Gross New Applications</span><span class="num"><strong>2</strong> <span style="opacity:.65;font-size:14px;font-weight:400">/ 30</span></span></div>
+<div class="funnel-arrow">▼ —</div>
+<div class="funnel-stage" style="background:var(--green)"><span>Net New Applications</span><span class="num"><strong>0</strong> <span style="opacity:.65;font-size:14px;font-weight:400">/ 23</span></span></div>
+<div style="margin-top:6px;font-size:10px;color:var(--gray);text-align:right">Actual / MTD target needed (based on 5 move-ins/week goal)</div>
+<div style="margin-top:10px;font-size:11px;color:var(--navy)">
+⚡ 22 MTD leads → 5 tours (23%) → 2 apps started. Monday saw 2 new leads (Google Search + Apartment List). 1 new lease &amp; 1 renewal completed WTD. Follow-up accelerating: 42 emails, 28 calls, 21 texts MTD.
+</div>
+<div style="margin-top:10px">
+<div style="cursor:pointer;font-size:12px;color:var(--blue);font-weight:600;" onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'block':'none'">
+▶ Show Reverse Funnel Calculation
+</div>
+<div style="display:none">
+<div class="funnel-math" style="margin-top:8px;background:#FFF8E1;border-color:#FFD54F">
+<strong>📊 Leads Needed — Reverse Funnel Calculation</strong><br><br>
+<strong>Goal:</strong> 297 units × 7% = ~21 move-ins/month = <strong>5 move-ins/week</strong><br>
+<strong>Conversion rates:</strong> Tour 29% → App 50% → Approval 80% → Close 70%<br>
+<strong>Combined conversion:</strong> 0.29 × 0.50 × 0.80 × 0.70 = <strong>8.1%</strong><br><br>
+<strong style="font-size:13px;color:var(--navy)">To hit 5 move-ins/week: Need 62 leads/week → 18 tours → 9 apps → 7 approved → 5 move-ins</strong><br><br>
+<span style="display:inline-block;padding:4px 10px;border-radius:4px;background:var(--red);color:#fff;font-weight:600;font-size:11px">⚠️ Current pace: 22 leads in 24 days (~6/week) vs 62 needed/week — 10% of target</span><br>
+<span style="font-size:11px;color:var(--gray);margin-top:4px;display:block">Formula: Leads Needed = Move-In Goal ÷ (Tour Rate × App Rate × Approval Rate × Close Rate) = 5 ÷ 0.081 ≈ 62/week</span>
+</div>
+</div>
+</div>
+</div>
+
+<!-- Rent vs Budget by Type -->
+<div class="mini-card">
+<h3>Rent vs Budget by Type (Current Snapshot) <span class="mock">MOCK BUDGET</span></h3>
+<div class="bar-group">
+<label>Studio (S1/S2)</label>
+<div class="bar-pair">
+<div class="bar-track"><div class="bar-fill" style="width:58%;background:var(--navy)">Budget $1,398 <span class="mock">MOCK</span></div></div>
+<div class="bar-track"><div class="bar-fill" style="width:57%;background:var(--blue)">In-Place $1,377</div></div>
+</div>
+<div style="font-size:10px;color:var(--red);margin-top:1px">▼ $21 below budget</div>
+</div>
+<div class="bar-group">
+<label>1 BR (A1–A5)</label>
+<div class="bar-pair">
+<div class="bar-track"><div class="bar-fill" style="width:65%;background:var(--navy)">Budget $1,555 <span class="mock">MOCK</span></div></div>
+<div class="bar-track"><div class="bar-fill" style="width:62%;background:var(--blue)">In-Place $1,485</div></div>
+</div>
+<div style="font-size:10px;color:var(--red);margin-top:1px">▼ $70 below budget</div>
+</div>
+<div class="bar-group">
+<label>2 BR (B1–B8)</label>
+<div class="bar-pair">
+<div class="bar-track"><div class="bar-fill" style="width:77%;background:var(--navy)">Budget $1,846 <span class="mock">MOCK</span></div></div>
+<div class="bar-track"><div class="bar-fill" style="width:75%;background:var(--blue)">In-Place $1,806</div></div>
+</div>
+<div style="font-size:10px;color:var(--red);margin-top:1px">▼ $40 below budget</div>
+</div>
+<div class="bar-group">
+<label>3 BR (C1)</label>
+<div class="bar-pair">
+<div class="bar-track"><div class="bar-fill" style="width:100%;background:var(--navy)">Budget $2,391 <span class="mock">MOCK</span></div></div>
+<div class="bar-track"><div class="bar-fill" style="width:96%;background:var(--blue)">In-Place $2,297</div></div>
+</div>
+<div style="font-size:10px;color:var(--red);margin-top:1px">▼ $94 below budget</div>
+</div>
+<div style="margin-top:8px;font-size:10px;color:var(--gray)">■ <span style="color:var(--navy)">Budget</span> &nbsp; ■ <span style="color:var(--blue)">In-Place</span></div>
+</div>
+</div>
+
+<!-- PROPERTY PULSE — Simplified -->
+<div class="section">
+<div class="section-header" onclick="toggle(this)">🏠 Property Pulse</div>
+<div class="section-body">
+<table style="table-layout:fixed">
+<colgroup><col style="width:40%"><col style="width:20%"><col style="width:20%"><col style="width:20%"></colgroup>
+<thead><tr><th>Metric</th><th class="text-center">Daily (02/24)</th><th class="text-center">WTD (02/20–02/26)</th><th class="text-center">MTD</th></tr></thead>
+<tbody>
+<tr><td>Gross New Applications</td><td class="text-center">0</td><td class="text-center">2</td><td class="text-center">2</td></tr>
+<tr><td>Denied Applications</td><td class="text-center">0</td><td class="text-center">0</td><td class="text-center">0</td></tr>
+<tr><td>Cancelled Applications</td><td class="text-center">0</td><td class="text-center">0</td><td class="text-center">0</td></tr>
+<tr style="background:#EDF2F7"><td><strong>Net New Applications</strong></td><td class="text-center"><strong>0</strong></td><td class="text-center"><strong>0</strong></td><td class="text-center"><strong>0</strong></td></tr>
+<tr><td>New Leases</td><td class="text-center">0</td><td class="text-center">1</td><td class="text-center">1</td></tr>
+<tr><td>Move-Ins</td><td class="text-center">0</td><td class="text-center">1</td><td class="text-center">3</td></tr>
+<tr><td>Move-Outs</td><td class="text-center">0</td><td class="text-center">0</td><td class="text-center">0</td></tr>
+<tr><td>Notices</td><td class="text-center">2</td><td class="text-center">4</td><td class="text-center">5</td></tr>
+<tr><td>Renewals</td><td class="text-center">0</td><td class="text-center">1</td><td class="text-center">2</td></tr>
+<tr><td>Month to Month</td><td class="text-center">0</td><td class="text-center">0</td><td class="text-center">0</td></tr>
+<tr><td>Skips</td><td class="text-center">0</td><td class="text-center">0</td><td class="text-center">0</td></tr>
+<tr><td>Evictions</td><td class="text-center">0</td><td class="text-center">0</td><td class="text-center">0</td></tr>
+<tr style="background:#EDF2F7"><td><strong>Net Absorption</strong></td><td class="text-center"><strong>0</strong></td><td class="text-center"><strong>+1</strong></td><td class="text-center"><strong>+3</strong></td></tr>
+</tbody>
+</table>
+<div class="footnote">Source: Box Score — Leasing Activity &amp; Lead Conversions sections (02/25/2026).<br>
+Gross New Apps = Application Completed (Lead Conversions). Net New Apps = Gross − Denied − Cancelled.<br>
+Net Absorption = Move-Ins (0) − Move-Outs (0) = 0 daily. MTD: +3. 2 new notices on 02/24 — exposure increased to 36 (12.1%).</div>
+</div>
+</div>
+
+<!-- TRENDING OCCUPANCY -->
+<div class="section">
+<div class="section-header" onclick="toggle(this)">📈 Trending Occupancy <span class="mock">MOCK DATA EXCEPT CURRENT MONTH</span></div>
+<div class="section-body">
+<table style="table-layout:auto">
+<thead><tr>
+<th>Metric</th>
+<th class="text-center">Sep-25 <span class="mock">MOCK</span></th>
+<th class="text-center">Oct-25 <span class="mock">MOCK</span></th>
+<th class="text-center">Nov-25 <span class="mock">MOCK</span></th>
+<th class="text-center">Dec-25 <span class="mock">MOCK</span></th>
+<th class="text-center">Jan-26 <span class="mock">MOCK</span></th>
+<th class="text-center curr-month">Feb-26</th>
+<th class="text-center">Mar-26 <span class="projected">PROJ</span></th>
+<th class="text-center">Apr-26 <span class="projected">PROJ</span></th>
+<th class="text-center">May-26 <span class="projected">PROJ</span></th>
+<th class="text-center">Jun-26 <span class="projected">PROJ</span></th>
+<th class="text-center">Jul-26 <span class="projected">PROJ</span></th>
+<th class="text-center">Aug-26 <span class="projected">PROJ</span></th>
+</tr></thead>
+<tbody>
+<tr><td>Occupancy %</td>
+<td class="text-center">91.9%</td><td class="text-center">91.2%</td><td class="text-center">90.6%</td><td class="text-center">89.9%</td><td class="text-center">89.6%</td>
+<td class="text-center curr-month"><strong>90.6%</strong></td>
+<td class="text-center">90.6%</td><td class="text-center">91.6%</td><td class="text-center">92.9%</td><td class="text-center">93.3%</td><td class="text-center">93.3%</td><td class="text-center">93.3%</td>
+</tr>
+<tr><td>Budget Occ % <span class="mock">MOCK</span></td>
+<td class="text-center">93.0%</td><td class="text-center">93.0%</td><td class="text-center">93.0%</td><td class="text-center">93.0%</td><td class="text-center">93.0%</td>
+<td class="text-center curr-month">93.0%</td>
+<td class="text-center">93.5%</td><td class="text-center">94.0%</td><td class="text-center">94.5%</td><td class="text-center">95.0%</td><td class="text-center">95.0%</td><td class="text-center">95.0%</td>
+</tr>
+<tr><td>Variance</td>
+<td class="text-center" style="color:var(--red)">-1.1%</td><td class="text-center" style="color:var(--red)">-1.8%</td><td class="text-center" style="color:var(--red)">-2.4%</td><td class="text-center" style="color:var(--red)">-3.1%</td><td class="text-center" style="color:var(--red)">-3.4%</td>
+<td class="text-center curr-month" style="color:var(--red)"><strong>-2.4%</strong></td>
+<td class="text-center" style="color:var(--red)">-2.9%</td><td class="text-center" style="color:var(--red)">-2.4%</td><td class="text-center" style="color:var(--red)">-1.6%</td><td class="text-center" style="color:var(--red)">-1.7%</td><td class="text-center" style="color:var(--red)">-1.7%</td><td class="text-center" style="color:var(--red)">-1.7%</td>
+</tr>
+<tr><td>Exp Move-Outs <span class="projected">PROJ</span></td>
+<td class="text-center">10</td><td class="text-center">9</td><td class="text-center">8</td><td class="text-center">7</td><td class="text-center">9</td>
+<td class="text-center curr-month">5</td>
+<td class="text-center">7</td><td class="text-center">8</td><td class="text-center">8</td><td class="text-center">10</td><td class="text-center">10</td><td class="text-center">10</td>
+</tr>
+<tr><td>Exp Move-Ins <span class="projected">PROJ</span></td>
+<td class="text-center">9</td><td class="text-center">7</td><td class="text-center">6</td><td class="text-center">5</td><td class="text-center">8</td>
+<td class="text-center curr-month">5</td>
+<td class="text-center">9</td><td class="text-center">11</td><td class="text-center">12</td><td class="text-center">11</td><td class="text-center">10</td><td class="text-center">10</td>
+</tr>
+<tr><td><strong>Move-ins Needed</strong></td>
+<td class="text-center">10</td><td class="text-center">12</td><td class="text-center">14</td><td class="text-center">18</td><td class="text-center">22</td>
+<td class="text-center curr-month"><strong>25</strong></td>
+<td class="text-center">22</td><td class="text-center">19</td><td class="text-center">15</td><td class="text-center">15</td><td class="text-center">15</td><td class="text-center">15</td>
+</tr>
+</tbody>
+</table>
+
+<details style="margin-top:12px">
+<summary style="cursor:pointer;font-size:12px;font-weight:600;color:var(--navy);padding:8px 0;user-select:none">📐 Projection Methodology ▸</summary>
+<div style="background:#F8FAFC;border:1px solid var(--border);border-radius:8px;padding:12px;font-size:11px;line-height:1.6;color:var(--gray)">
+<strong>Formula:</strong> Projected Occ = (Current Occupied − Expected Move-Outs + Expected Move-Ins) / 297<br>
+<strong>Move-outs:</strong> Lease expirations by month × 35% non-renewal rate + 2/mo miscellaneous.<br>
+<strong>Move-ins:</strong> Current leasing velocity (3 new leases/wk = ~13/mo base) × seasonal adjustment.<br>
+<strong>Result:</strong> Projected to reach 93.3% by Jun-26, closing budget gap from -3.1% to -1.7%.
+</div>
+</details>
+
+<div style="margin-top:16px">
+<div style="font-size:12px;font-weight:600;color:var(--navy);margin-bottom:6px">Occupancy Trend: Actual/Projected vs Budget</div>
+<div style="font-size:11px;color:var(--gray);margin-bottom:8px">
+<span style="color:var(--blue)">● Actual</span> &nbsp;
+<span style="color:var(--blue);opacity:.5">● Projected</span> &nbsp;
+<span style="color:var(--green)">- - Budget</span> <span class="budget-badge">BUDGET</span>
+</div>
+<svg width="100%" height="120" viewBox="0 0 560 120" preserveAspectRatio="xMidYMid meet">
+<line x1="40" y1="10" x2="540" y2="10" stroke="#E0E4EA" stroke-width="1" stroke-dasharray="3,3"/>
+<text x="36" y="13" fill="#999" font-size="7" text-anchor="end">95%</text>
+<line x1="40" y1="32" x2="540" y2="32" stroke="#E0E4EA" stroke-width="1" stroke-dasharray="3,3"/>
+<text x="36" y="35" fill="#999" font-size="7" text-anchor="end">93%</text>
+<line x1="40" y1="54" x2="540" y2="54" stroke="#E0E4EA" stroke-width="1" stroke-dasharray="3,3"/>
+<text x="36" y="57" fill="#999" font-size="7" text-anchor="end">91%</text>
+<line x1="40" y1="76" x2="540" y2="76" stroke="#E0E4EA" stroke-width="1" stroke-dasharray="3,3"/>
+<text x="36" y="79" fill="#999" font-size="7" text-anchor="end">89%</text>
+<line x1="40" y1="98" x2="540" y2="98" stroke="#E0E4EA" stroke-width="1" stroke-dasharray="3,3"/>
+<text x="36" y="101" fill="#999" font-size="7" text-anchor="end">87%</text>
+<line x1="40" y1="105" x2="540" y2="105" stroke="var(--border)" stroke-width="1"/>
+<polyline fill="none" stroke="var(--green)" stroke-width="2" stroke-dasharray="6,3" stroke-linejoin="round"
+  points="60,32 105,32 150,32 195,32 240,32 285,32 330,26.5 375,21 420,15.5 465,10 510,10 540,10"/>
+<polyline fill="none" stroke="var(--blue)" stroke-width="2.5" stroke-linejoin="round"
+  points="60,43 105,47.7 150,52.4 195,57.1 240,60.4 285,57.1"/>
+<polyline fill="none" stroke="var(--blue)" stroke-width="2" stroke-dasharray="6,3" stroke-linejoin="round" opacity=".5"
+  points="285,57.1 330,52.4 375,42.5 420,33.1 465,28.6 510,28.6 540,28.6"/>
+<g fill="var(--blue)">
+<circle cx="60" cy="43" r="3"/><circle cx="105" cy="47.7" r="3"/><circle cx="150" cy="52.4" r="3"/>
+<circle cx="195" cy="57.1" r="3"/><circle cx="240" cy="60.4" r="3"/><circle cx="285" cy="57.1" r="4" fill="var(--navy)"/>
+</g>
+<g fill="var(--blue)" opacity=".5">
+<circle cx="330" cy="52.4" r="3"/><circle cx="375" cy="42.5" r="3"/><circle cx="420" cy="33.1" r="3"/>
+<circle cx="465" cy="28.6" r="3"/><circle cx="510" cy="28.6" r="3"/><circle cx="540" cy="28.6" r="3"/>
+</g>
+<g fill="var(--green)" opacity=".6">
+<circle cx="60" cy="32" r="2.5"/><circle cx="105" cy="32" r="2.5"/><circle cx="150" cy="32" r="2.5"/>
+<circle cx="195" cy="32" r="2.5"/><circle cx="240" cy="32" r="2.5"/><circle cx="285" cy="32" r="2.5"/>
+<circle cx="330" cy="26.5" r="2.5"/><circle cx="375" cy="21" r="2.5"/><circle cx="420" cy="15.5" r="2.5"/>
+<circle cx="465" cy="10" r="2.5"/><circle cx="510" cy="10" r="2.5"/><circle cx="540" cy="10" r="2.5"/>
+</g>
+<g font-size="7" fill="#999" text-anchor="middle">
+<text x="60" y="115">Sep</text><text x="105" y="115">Oct</text><text x="150" y="115">Nov</text>
+<text x="195" y="115">Dec</text><text x="240" y="115">Jan</text>
+<text x="285" y="115" font-weight="700" fill="var(--navy)">Feb</text>
+<text x="330" y="115">Mar</text><text x="375" y="115">Apr</text><text x="420" y="115">May</text>
+<text x="465" y="115">Jun</text><text x="510" y="115">Jul</text><text x="540" y="115">Aug</text>
+</g>
+</svg>
+</div>
+</div>
+</div>
+
+<!-- LEASE EXPIRATION MANAGEMENT -->
+<div class="section">
+<div class="section-header" onclick="toggle(this)">📅 Lease Expiration Management</div>
+<div class="section-body">
+<table id="lemTable" style="table-layout:auto">
+<thead><tr><th>Metric</th><th class="text-center curr-month">Feb-26</th><th class="text-center">Mar-26</th><th class="text-center">Apr-26</th><th class="text-center">May-26</th><th class="text-center">Jun-26</th><th class="text-center">Jul-26</th><th class="text-center">Aug-26</th><th class="text-center">Sep-26</th><th class="text-center">Oct-26</th><th class="text-center">Nov-26</th><th class="text-center">Dec-26</th><th class="text-center">Jan-27</th></tr></thead>
+<tbody>
+<tr><td>Total Expiring</td><td class="text-center curr-month">3</td><td class="text-center">13</td><td class="text-center">16</td><td class="text-center">16</td><td class="text-center">24</td><td class="text-center">22</td><td class="text-center">23</td><td class="text-center">24</td><td class="text-center">22</td><td class="text-center">17</td><td class="text-center">16</td><td class="text-center">23</td></tr>
+<tr><td>Renewed</td><td class="text-center curr-month">1</td><td class="text-center">8</td><td class="text-center">7</td><td class="text-center">1</td><td class="text-center">0</td><td class="text-center">0</td><td class="text-center">0</td><td class="text-center">0</td><td class="text-center">0</td><td class="text-center">0</td><td class="text-center">0</td><td class="text-center">0</td></tr>
+<tr><td>Notice</td><td class="text-center curr-month">2</td><td class="text-center">5</td><td class="text-center">5</td><td class="text-center">2</td><td class="text-center">0</td><td class="text-center">0</td><td class="text-center">2</td><td class="text-center">0</td><td class="text-center">0</td><td class="text-center">0</td><td class="text-center">1</td><td class="text-center">1</td></tr>
+<tr><td>Undecided Expirations</td><td class="text-center curr-month">0</td><td class="text-center">0</td><td class="text-center">4</td><td class="text-center">13</td><td class="text-center">24</td><td class="text-center">22</td><td class="text-center">21</td><td class="text-center">24</td><td class="text-center">22</td><td class="text-center">17</td><td class="text-center">15</td><td class="text-center">22</td></tr>
+<tr id="renewalRow"><td><strong>Renewal Rate</strong></td>
+<td class="text-center curr-month" style="color:var(--red);font-weight:700">33%</td>
+<td class="text-center" style="color:var(--amber);font-weight:700">62%</td>
+<td class="text-center" style="color:var(--amber);font-weight:700">44%</td>
+<td class="text-center" style="color:var(--red);font-weight:700">6%</td>
+<td class="text-center" style="color:var(--red);font-weight:700">0%</td>
+<td class="text-center" style="color:var(--red);font-weight:700">0%</td>
+<td class="text-center" style="color:var(--red);font-weight:700">0%</td>
+<td class="text-center" style="color:var(--red);font-weight:700">0%</td>
+<td class="text-center" style="color:var(--red);font-weight:700">0%</td>
+<td class="text-center" style="color:var(--red);font-weight:700">0%</td>
+<td class="text-center" style="color:var(--red);font-weight:700">0%</td>
+<td class="text-center" style="color:var(--red);font-weight:700">0%</td>
+</tr>
+</tbody>
+</table>
+<div class="footnote">Source: Entrata Rent Roll (02/25/2026). Renewed = "Current (Renewed)" status. Notice = "Notice" or "Notice (Eviction)". Undecided = "Current" with no action taken. All data from rent roll — no MOCK values.</div>
+
+<div style="margin-top:20px">
+<div style="font-size:12px;font-weight:600;color:var(--navy);margin-bottom:6px">Actual vs Target Expirations</div>
+<div style="font-size:11px;color:var(--gray);margin-bottom:8px"><span style="color:var(--blue)">— Actual</span> &nbsp; <span style="color:var(--gray)">- - Target (Bell Curve)</span></div>
+<svg width="100%" height="140" viewBox="0 0 500 140" preserveAspectRatio="xMidYMid meet">
+<line x1="40" y1="120" x2="460" y2="120" stroke="var(--border)" stroke-width="1"/>
+<polyline fill="none" stroke="var(--gray)" stroke-width="1.5" stroke-dasharray="5,3"
+  points="55,98 93,98 131,83 169,68 207,53 245,38 283,30 321,30 359,38 397,45 435,55 460,83"/>
+<polyline fill="none" stroke="var(--blue)" stroke-width="2.5" stroke-linejoin="round"
+  points="55,90 93,69 131,58 169,58 207,30 245,37 283,34 321,30 359,37 397,55 435,58 460,34"/>
+<g fill="var(--blue)">
+<circle cx="55" cy="90" r="4" fill="var(--navy)"/><circle cx="93" cy="69" r="3"/><circle cx="131" cy="58" r="3"/>
+<circle cx="169" cy="58" r="3"/><circle cx="207" cy="30" r="3"/><circle cx="245" cy="37" r="3"/>
+<circle cx="283" cy="34" r="3"/><circle cx="321" cy="30" r="3"/><circle cx="359" cy="37" r="3"/>
+<circle cx="397" cy="55" r="3"/><circle cx="435" cy="58" r="3"/><circle cx="460" cy="34" r="3"/>
+</g>
+<g font-size="7" fill="#999" text-anchor="middle">
+<text x="55" y="132" font-weight="700" fill="var(--navy)">Feb</text><text x="93" y="132">Mar</text><text x="131" y="132">Apr</text>
+<text x="169" y="132">May</text><text x="207" y="132">Jun</text><text x="245" y="132">Jul</text>
+<text x="283" y="132">Aug</text><text x="321" y="132">Sep</text><text x="359" y="132">Oct</text>
+<text x="397" y="132">Nov</text><text x="435" y="132">Dec</text><text x="460" y="132">Jan</text>
+</g>
+</svg>
+</div>
+</div>
+</div>
+
+<!-- AI INSIGHTS (merged from Today's Highlights + AI Recommendations) -->
+<div class="section">
+<div class="section-header" onclick="toggle(this)">🤖 AI Insights</div>
+<div class="section-body">
+<div class="ai-card" style="margin-top:0">
+<div class="ai-label">🤖 AI Insights</div>
+
+<div class="ai-rec"><strong>🎯 Occupancy Gap Analysis — 7 Net Move-Ins to Budget</strong><br>
+Physical occupancy <strong>holds at 90.6%</strong> (269/297). 28 vacant: <strong>9 rented</strong> (pipeline stable), <strong>19 unrented</strong>. Leased <strong>93.6%</strong> (278/297). Exposure <strong>worsened to 12.1%</strong> (36 units, up from 33) — 2 new notices on 02/24 added to exposure without offsetting leasing activity. Occupied No-Notice dropped to 250 (from 253 on 02/22). Budget target 93.0% (276 units) — <strong>7 net move-ins still needed</strong>.<br>
+Leased% still exceeds budget (93.6% vs 93.0%), but the gap between leased and occupied is widening as notices accumulate. 19 on notice/eviction now (vs 16 on 02/22). Pipeline (9 VR) converting would hit 278 occupied (93.6%), but notice attrition could offset.<br>
+<strong style="display:block;margin-top:6px;padding-top:6px;border-top:1px solid var(--border)">Action: Prioritize unit turn speed on 9 vacant-rented units. 2 new notices today mean notice count is accelerating — focus retention outreach on remaining undecided residents. Every day of vacancy costs ~$55/unit.</strong></div>
+
+<div class="ai-rec"><strong>🏠 Floor Plan Priorities — Revenue-Weighted Focus</strong><br>
+Ranking by revenue at risk (vacant units × market rent):<br>
+• <strong>A1 (89% occ, 74/83)</strong> — 9 vacant × $1,516 = <strong>$13,644/mo at risk</strong>. Largest absolute vacancy. Leased% improved to 92% (2 VR in pipeline). Net effective $1,355 = heavy concessions deployed.<br>
+• <strong>B2 (86% occ, 38/44)</strong> — 6 vacant × $1,816 = <strong>$10,896/mo at risk</strong>. Leased% improved to 93% (3 VR + 1 NR). Pipeline building here.<br>
+• <strong>C1 (81% occ, 13/16)</strong> — 3 vacant × $2,391 = <strong>$7,173/mo at risk</strong>. Highest per-unit impact. 1 VR in pipeline (leased 88%). Consider broker incentives.<br>
+• <strong>B1 (89% occ, 24/27)</strong> — 3 vacant × $1,789 = <strong>$5,367/mo at risk</strong>. 3 Notice Unrented — all 3 vacancies are from notices. Leased 96% due to 2 VR.<br>
+• <strong>B6 (75% occ, 6/8)</strong> — 2 vacant × $1,823 = <strong>$3,646/mo at risk</strong>. Worst occupancy rate. 1 Notice Unrented further pressuring. Zero VR — no pipeline here.<br>
+<strong style="display:block;margin-top:6px;padding-top:6px;border-top:1px solid var(--border)">Action: A1 and B2 represent $24,540/mo combined risk — prioritize these for ILS spend and tour routing. B6 has zero pipeline — needs targeted marketing or pricing review.</strong></div>
+
+<div class="ai-rec"><strong>💰 Rent Gap Analysis — $8,877/Month Unrealized Revenue</strong><br>
+In-place avg $1,662 vs market avg $1,695 = <strong>$33/unit gap × 269 occupied = $8,877/month</strong> ($106,524 annualized).<br>
+By bedroom type:<br>
+• <strong>Studios:</strong> Budget $1,398 <span class="mock">MOCK</span> vs in-place $1,338 → $60 gap (small unit count, low impact)<br>
+• <strong>1 BR (A1-A5):</strong> Budget $1,555 <span class="mock">MOCK</span> vs in-place ~$1,485 → <strong>$70 gap</strong> — biggest opportunity given 134 occupied 1BR units = ~$9,380/mo<br>
+• <strong>2 BR (B1-B8):</strong> Budget $1,846 <span class="mock">MOCK</span> vs in-place ~$1,806 → $40 gap across 109 occupied = ~$4,360/mo<br>
+• <strong>3 BR (C1):</strong> Budget $2,391 <span class="mock">MOCK</span> vs in-place $2,297 → $94 gap × 13 = $1,222/mo<br>
+Prioritize 1BR renewals for rent increases — largest gap × highest occupied count. Each 1BR renewal at market closes ~$70/unit of the gap.<br>
+⚠️ <strong>B8 anomaly persists:</strong> Scheduled rent ($1,950) exceeds market ($1,655) by $295. Likely corporate/Barsala rate or data entry error.<br>
+<strong style="display:block;margin-top:6px;padding-top:6px;border-top:1px solid var(--border)">Action: Push all 1BR renewals to market rate ($1,555+). Verify B8 rent data with property manager. Close $70/unit 1BR gap first — highest volume impact.</strong></div>
+
+<div class="ai-rec"><strong>⚠️ Notice Risk — 19 On Notice, Exposure Rising</strong><br>
+19 total on notice (269 occupied − 250 occupied no-notice). 9 vacant-rented in pipeline (stable). Exposure <strong>UP to 36 available units (12.1%)</strong> — worst since tracking began. 2 new notices on 02/24 added without any offsetting leasing activity.<br>
+Notice trend: 16 (02/22) → 17 (02/23) → 19 (02/24). Notices outpacing new leases 5:1 WTD. 4 eviction notices active.<br>
+<strong style="display:block;margin-top:6px;padding-top:6px;border-top:1px solid var(--border)">Action: Immediate retention outreach to undecided April expirations (4 remaining). Pre-market all notice units. Notices accelerating — if trend continues, occupancy could dip below 90% by mid-March.</strong></div>
+
+<div class="ai-rec"><strong>📋 Renewal Risk — February Down, April Critical</strong> <span style="font-size:10px;color:var(--gray)">(60% minimum benchmark)</span><br>
+<strong>February:</strong> 3 remaining expirations, <strong>1 renewed (33%)</strong>. Below benchmark ✗. 2 on notice. Month closing with weak renewal rate.<br>
+<strong>March:</strong> 13 leases expiring, <strong>8 renewed (62%)</strong>. Above benchmark ✓. 5 on notice, 0 undecided — fully committed. Expect 5 move-outs.<br>
+<strong>April:</strong> 16 leases expiring, <strong>7 renewed (44%)</strong>. Below benchmark ✗. 5 on notice (up from 3), <strong>4 undecided</strong>. 2 more April residents gave notice since 02/22. Critical — outreach needed to remaining 4 undecided this week.<br>
+<strong>May:</strong> 16 expiring, only 1 renewed (6%). 2 on notice (up from 1), 13 undecided. Renewal offers should go out now (90-day window).<br>
+<strong>Summer surge:</strong> Jun-Sep averages 23 expirations/month with 0 renewals secured — <strong>91 total undecided</strong>. Begin outreach cadence now.<br>
+<strong style="display:block;margin-top:6px;padding-top:6px;border-top:1px solid var(--border)">Action: Personal outreach to 4 uncommitted April expirations this week. Begin May outreach (13 undecided). Start summer renewal campaign for Jun-Sep (91 undecided leases). Notice trend is accelerating — each non-renewal costs ~$3,500 in turn + vacancy loss.</strong></div>
+
+<div class="ai-rec"><strong>📈 Pipeline Stable, Notices Accelerating — Execution Window Narrowing</strong><br>
+Leased% holds at <strong>93.6%</strong> — still above budget (93.0%). Physical occupancy 90.6% (269/297). Pipeline: 9 vacant-rented (stable), but exposure worsened (36 units, 12.1%).<br>
+<strong>Key change since 02/22:</strong> Notices increased 16→19 (+3 in 2 days). Occupied No-Notice down 253→250. Zero new leases on 02/23 or 02/24. Follow-up activity strong (9 emails, 3 calls, 3 texts on 02/24), but no conversions yet.<br>
+<strong>Leasing math to hit budget by March 31:</strong><br>
+• Current: 269 occupied. Target: 276. Gap: 7 units.<br>
+• 9 vacant-rented converting → 278 (93.6%). Exceeds budget by 2.<br>
+• Risk: 19 on notice — if all move out without replacement, occupancy drops to 84.2%. Must outpace attrition.<br>
+• Make-ready: Only 5 of 28 vacant are ready (18%). 23 not ready — <strong>turn time is the bottleneck</strong>.<br>
+<strong style="display:block;margin-top:6px;padding-top:6px;border-top:1px solid var(--border)">Action: Accelerate make-ready on the 23 not-ready units. 9 VR converting covers the budget gap, but notice attrition (19 and rising) could erase it. Speed of execution is everything this week.</strong></div>
+
+<div class="funnel-math">
+<strong>📊 Funnel Math — Weekly Velocity Check</strong><br>
+<strong>Lead Activity (02/24):</strong> 2 new leads (Google Search + Apartment List) → 1 tour → 0 apps<br>
+<strong>Lead Sources:</strong> Google Search (Other contact method) and Apartment List (Online). Paid/organic mix. Monday traffic returning after quiet weekend.<br>
+<strong>Follow-Up Activity:</strong> 9 emails, 3 calls, 3 texts — strong Monday activity. Team actively working pipeline.<br>
+<strong>MTD Pipeline:</strong> 22 leads → 5 tours (23% rate) → 2 apps started → 0 completed yet<br>
+<strong>Pipeline health:</strong> 9 vacant-rented in queue (stable). 19 vacant-unrented need conversion. Make-ready: only 5 of 28 vacant are ready (18%) — <strong>23 not ready</strong>.<br>
+<span style="font-size:11px;color:var(--gray)">Budget target: 276 occupied (93%). Current: 269. Deficit: 7 units. With 9 vacant-rented converting, reaches 278 (93.6%) — but 19 on notice is highest since tracking began.</span>
+</div>
+</div></div>
+</div>
+</div>
+
+<!-- UNIT MIX & RENTS -->
+<div class="section">
+<div class="section-header" onclick="toggle(this)">🏢 Unit Mix &amp; Rents</div>
+<div class="section-body">
+<div class="toggle-row"><label><input type="checkbox" id="corpToggle" onchange="toggleCorp()"> Exclude Corporate Units (Barsala)</label></div>
+<table id="unitMixTable">
+<thead><tr><th>Type</th><th>Plan</th><th class="text-right">SQFT</th><th class="text-right">Units</th><th class="text-right">Mkt Rent</th><th class="text-right">Sched Rent</th><th class="text-right">Net Eff</th><th class="text-right">Occ</th><th class="text-right">Vac</th><th class="text-right">Occ%</th><th class="text-right">Leased%</th><th>Leased</th></tr></thead>
+<tbody>
+<tr><td>1 BR</td><td>A1</td><td class="text-right">777</td><td class="text-right">83</td><td class="text-right">$1,516</td><td class="text-right">$1,494</td><td class="text-right">$1,355</td><td class="text-right">74</td><td class="text-right">9</td><td class="text-right">89%</td><td class="text-right">92%</td><td><span class="leased-bar" style="width:73.6px;background:var(--amber)"></span></td></tr>
+<tr><td>1 BR</td><td>A2</td><td class="text-right">776</td><td class="text-right">19</td><td class="text-right">$1,506</td><td class="text-right">$1,446</td><td class="text-right">$1,303</td><td class="text-right">17</td><td class="text-right">2</td><td class="text-right">89%</td><td class="text-right">95%</td><td><span class="leased-bar" style="width:76px;background:var(--green)"></span></td></tr>
+<tr><td>1 BR</td><td>A3</td><td class="text-right">900</td><td class="text-right">4</td><td class="text-right">$1,738</td><td class="text-right">$1,727</td><td class="text-right">$1,726</td><td class="text-right">3</td><td class="text-right">1</td><td class="text-right">75%</td><td class="text-right">75%</td><td><span class="leased-bar" style="width:60.0px;background:var(--red)"></span></td></tr>
+<tr><td>1 BR</td><td>A4</td><td class="text-right">731</td><td class="text-right">33</td><td class="text-right">$1,442</td><td class="text-right">$1,415</td><td class="text-right">$1,282</td><td class="text-right">33</td><td class="text-right">0</td><td class="text-right">100%</td><td class="text-right">100%</td><td><span class="leased-bar" style="width:80.0px;background:var(--green)"></span></td></tr>
+<tr><td>1 BR</td><td>A5</td><td class="text-right">815</td><td class="text-right">8</td><td class="text-right">$1,574</td><td class="text-right">$1,544</td><td class="text-right">$1,312</td><td class="text-right">7</td><td class="text-right">1</td><td class="text-right">88%</td><td class="text-right">88%</td><td><span class="leased-bar" style="width:70.4px;background:var(--amber)"></span></td></tr>
+<tr><td>2 BR</td><td>B1</td><td class="text-right">1,047</td><td class="text-right">27</td><td class="text-right">$1,789</td><td class="text-right">$1,745</td><td class="text-right">$1,525</td><td class="text-right">24</td><td class="text-right">3</td><td class="text-right">89%</td><td class="text-right">96%</td><td><span class="leased-bar" style="width:76.8px;background:var(--green)"></span></td></tr>
+<tr><td>2 BR</td><td>B2</td><td class="text-right">1,098</td><td class="text-right">44</td><td class="text-right">$1,816</td><td class="text-right">$1,796</td><td class="text-right">$1,633</td><td class="text-right">38</td><td class="text-right">6</td><td class="text-right">86%</td><td class="text-right">93%</td><td><span class="leased-bar" style="width:74.4px;background:var(--green)"></span></td></tr>
+<tr><td>2 BR</td><td>B3</td><td class="text-right">1,195</td><td class="text-right">28</td><td class="text-right">$2,006</td><td class="text-right">$1,953</td><td class="text-right">$1,738</td><td class="text-right">27</td><td class="text-right">1</td><td class="text-right">96%</td><td class="text-right">96%</td><td><span class="leased-bar" style="width:76.8px;background:var(--green)"></span></td></tr>
+<tr><td>2 BR</td><td>B4</td><td class="text-right">1,226</td><td class="text-right">3</td><td class="text-right">$1,870</td><td class="text-right">$1,845</td><td class="text-right">$1,669</td><td class="text-right">3</td><td class="text-right">0</td><td class="text-right">100%</td><td class="text-right">100%</td><td><span class="leased-bar" style="width:80.0px;background:var(--green)"></span></td></tr>
+<tr><td>2 BR</td><td>B5</td><td class="text-right">1,113</td><td class="text-right">9</td><td class="text-right">$1,777</td><td class="text-right">$1,759</td><td class="text-right">$1,526</td><td class="text-right">9</td><td class="text-right">0</td><td class="text-right">100%</td><td class="text-right">100%</td><td><span class="leased-bar" style="width:80.0px;background:var(--green)"></span></td></tr>
+<tr><td>2 BR</td><td>B6</td><td class="text-right">1,189</td><td class="text-right">8</td><td class="text-right">$1,823</td><td class="text-right">$1,734</td><td class="text-right">$1,444</td><td class="text-right">6</td><td class="text-right">2</td><td class="text-right">75%</td><td class="text-right">75%</td><td><span class="leased-bar" style="width:60.0px;background:var(--red)"></span></td></tr>
+<tr><td>2 BR</td><td>B7</td><td class="text-right">1,120</td><td class="text-right">2</td><td class="text-right">$1,891</td><td class="text-right">$1,834</td><td class="text-right">$1,573</td><td class="text-right">2</td><td class="text-right">0</td><td class="text-right">100%</td><td class="text-right">100%</td><td><span class="leased-bar" style="width:80.0px;background:var(--green)"></span></td></tr>
+<tr><td>2 BR</td><td>B8</td><td class="text-right">1,195</td><td class="text-right">6</td><td class="text-right">$1,655</td><td class="text-right">$1,950</td><td class="text-right">$1,806</td><td class="text-right">6</td><td class="text-right">0</td><td class="text-right">100%</td><td class="text-right">100%</td><td><span class="leased-bar" style="width:80.0px;background:var(--green)"></span></td></tr>
+<tr><td>3 BR</td><td>C1</td><td class="text-right">1,459</td><td class="text-right">16</td><td class="text-right">$2,391</td><td class="text-right">$2,297</td><td class="text-right">$2,013</td><td class="text-right">13</td><td class="text-right">3</td><td class="text-right">81%</td><td class="text-right">88%</td><td><span class="leased-bar" style="width:70.4px;background:var(--amber)"></span></td></tr>
+<tr><td>Studio</td><td>S1</td><td class="text-right">608</td><td class="text-right">3</td><td class="text-right">$1,399</td><td class="text-right">$1,377</td><td class="text-right">$1,259</td><td class="text-right">3</td><td class="text-right">0</td><td class="text-right">100%</td><td class="text-right">100%</td><td><span class="leased-bar" style="width:80.0px;background:var(--green)"></span></td></tr>
+<tr><td>Studio</td><td>S2</td><td class="text-right">608</td><td class="text-right">4</td><td class="text-right">$1,307</td><td class="text-right">$1,298</td><td class="text-right">$1,137</td><td class="text-right">4</td><td class="text-right">0</td><td class="text-right">100%</td><td class="text-right">100%</td><td><span class="leased-bar" style="width:80.0px;background:var(--green)"></span></td></tr>
+<tr class="totals" id="totalsRow"><td colspan="2"><strong>TOTALS</strong></td><td></td><td class="text-right"><strong>297</strong></td><td class="text-right"><strong>$1,695</strong></td><td class="text-right"><strong>$1,662</strong></td><td></td><td class="text-right"><strong>269</strong></td><td class="text-right"><strong>28</strong></td><td class="text-right"><strong>90.6%</strong></td><td class="text-right"><strong>93.6%</strong></td><td></td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<!-- FORMULA LEGEND -->
+<div class="section collapsed">
+<div class="section-header" onclick="toggle(this)">📐 Formula Legend</div>
+<div class="section-body">
+<table class="formula-table">
+<thead><tr><th>Metric</th><th>Formula</th></tr></thead>
+<tbody>
+<tr><td class="metric">Physical Occupancy %</td><td class="formula">Occupied Units / Total Rentable Units</td></tr>
+<tr><td class="metric">Leased %</td><td class="formula">(Occupied + Vacant Rented + Notice Rented) / Total Rentable Units</td></tr>
+<tr><td class="metric">Exposure %</td><td class="formula">(Vacant Unrented + Notice Unrented) / Total Rentable Units</td></tr>
+<tr><td class="metric">Renewal Rate</td><td class="formula">Renewed / Total Expiring per month</td></tr>
+<tr><td class="metric">Net Absorption</td><td class="formula">Move-Ins − Move-Outs (excludes MTM and transfers)</td></tr>
+<tr><td class="metric">Net Effective Rent</td><td class="formula">Asking Rent − (One-Time Concession / Lease Term) − Monthly Concession</td></tr>
+<tr><td class="metric">Gross Applications</td><td class="formula">Completed applications from Lease Execution Summary</td></tr>
+<tr><td class="metric">Net Leases</td><td class="formula">Approved new leases from Lease Execution Summary</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+<script>
+function toggle(el){el.parentElement.classList.toggle('collapsed')}
+
+const corporateUnits = {};
+
+function toggleCorp() {
+  const checked = document.getElementById('corpToggle').checked;
+  const table = document.getElementById('unitMixTable');
+  if (!table) return;
+  const rows = table.querySelectorAll('tbody tr:not(.totals)');
+  let totalUnits = 0, totalOcc = 0, totalVac = 0;
+  rows.forEach(row => {
+    const cells = row.querySelectorAll('td');
+    if (cells.length < 11) return;
+    const plan = cells[1].textContent.trim();
+    const origUnits = parseInt(cells[3].dataset.orig || cells[3].textContent);
+    const origOcc = parseInt(cells[7].dataset.orig || cells[7].textContent);
+    if (!cells[3].dataset.orig) { cells[3].dataset.orig = origUnits; cells[7].dataset.orig = origOcc; }
+    const corp = corporateUnits[plan] || { corpUnits: 0, corpOccupied: 0 };
+    const adjUnits = checked ? origUnits - corp.corpUnits : origUnits;
+    const adjOcc = checked ? origOcc - corp.corpOccupied : origOcc;
+    const adjVac = adjUnits - adjOcc;
+    cells[3].innerHTML = adjUnits;
+    cells[7].innerHTML = adjOcc;
+    cells[8].innerHTML = adjVac;
+    cells[9].innerHTML = adjUnits > 0 ? Math.round(adjOcc / adjUnits * 100) + '%' : '—';
+    totalUnits += adjUnits; totalOcc += adjOcc; totalVac += adjVac;
+  });
+  const totals = document.getElementById('totalsRow');
+  if (totals) {
+    const tc = totals.querySelectorAll('td');
+    tc[2].innerHTML = '<strong>' + totalUnits + '</strong>';
+    tc[6].innerHTML = '<strong>' + totalOcc + '</strong>';
+    tc[7].innerHTML = '<strong>' + totalVac + '</strong>';
+    tc[8].innerHTML = '<strong>' + (totalUnits > 0 ? (totalOcc / totalUnits * 100).toFixed(1) + '%' : '—') + '</strong>';
+  }
+}
+</script>
+</body>
